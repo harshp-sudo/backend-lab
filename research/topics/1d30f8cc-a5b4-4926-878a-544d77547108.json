@@ -1,0 +1,384 @@
+{
+  "topicId": "1d30f8cc-a5b4-4926-878a-544d77547108",
+  "title": "Caching Fundamentals",
+  "path": "topics/system-design/caching-architecture/caching-foundations-and-technologies/caching-fundamentals.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Caching Fundamentals\" interview production hit ratio stale cache failures",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "strategy",
+      "title": "AWS Builders Library: caching challenges and strategies",
+      "url": "https://aws.amazon.com/builders-library/caching-challenges-and-strategies/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Measured cache value, modal failure behavior and origin protection."
+    },
+    {
+      "id": "aside",
+      "title": "Microsoft Azure Architecture: cache-aside pattern",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Application-owned loading and invalidation order; example ordering does not eliminate every concurrent stale fill."
+    },
+    {
+      "id": "single",
+      "title": "Go x/sync: singleflight",
+      "url": "https://pkg.go.dev/golang.org/x/sync/singleflight",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Per-Group duplicate in-flight function suppression; not a distributed ownership primitive."
+    },
+    {
+      "id": "http",
+      "title": "RFC 9111: HTTP Caching",
+      "url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Shared/private storage, cache keys, validation and freshness semantics."
+    },
+    {
+      "id": "browser",
+      "title": "MDN: HTTP caching",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Browser/private versus shared HTTP caching and representation policy."
+    },
+    {
+      "id": "persist",
+      "title": "Redis: persistence",
+      "url": "https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "RDB/AOF durability and operational costs depend on configuration and failure model."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-unhelpful-hit-rate",
+      "theme": "Hit rate is 99%, but p99 is still bad. What do you inspect?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "strategy"
+      ],
+      "technicalSources": [
+        "strategy"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A product endpoint reports excellent hits while a few requests take seconds. The team wants more cache memory. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Caching Fundamentals to unhelpful hit rate."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Hit rate is 99%, but p99 is still bad. What do you inspect?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Trace slow requests by key class, result size, cache lookup, origin wait and fill work"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: More memory may help capacity misses, but targeted access/query improvements can be better"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If slow requests are cache hits transferring giant values, changing TTL will not remove serialization/network cost."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to strategy; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-cold-origin-capacity",
+      "theme": "The cache is empty and the origin cannot absorb full traffic. What is the recovery plan?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "strategy",
+        "single"
+      ],
+      "technicalSources": [
+        "strategy",
+        "single"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Normal traffic is 1,000 RPS with 50 origin reads/second. A restart removes the cache and origin capacity is 150 reads/second. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Caching Fundamentals to cold origin capacity."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The cache is empty and the origin cannot absorb full traffic. What is the recovery plan?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Admit bounded origin work, coalesce overlapping keys, prioritize useful warm-up and apply explicit degradation/refusal for excess demand"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Some users wait or receive reduced service; overprovisioning origin for full uncached load is another cost choice"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Unbounded retries can prevent recovery altogether."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to strategy, single; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-negative-timeout",
+      "theme": "A product lookup times out. Should you cache “not found”?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "aside",
+        "strategy"
+      ],
+      "technicalSources": [
+        "aside",
+        "strategy"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Repeated requests are expensive, but a transient origin failure cannot establish whether the item exists. What result do you store?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Caching Fundamentals to negative timeout."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A product lookup times out. Should you cache “not found”?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Keep failure distinct from authoritative absence, return an honest bounded error/degraded result and control repeated origin work separately"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Negative caching can protect the origin but delays visibility of newly created data; direct authoritative checks may suit correctness-sensitive reads"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Treating every exception as absence converts an availability fault into incorrect product state."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to aside, strategy; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-personalized-copy",
+      "theme": "Two users ask for the same item ID but see different fields. Can the key be only the ID?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "http",
+        "browser"
+      ],
+      "technicalSources": [
+        "http",
+        "browser"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A shared cache stores a representation with customer-specific prices and permissions. Isolation is mandatory. What will you choose?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Caching Fundamentals to personalized copy."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Two users ask for the same item ID but see different fields. Can the key be only the ID?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Bypass unsafe shared reuse or define a reviewed identity/visibility-aware key and authorization policy"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: More key variants reduce reuse and increase invalidation work; origin reads are simpler if affordable"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: TTL only limits exposure duration and does not make an unauthorized representation acceptable."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to http, browser; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-durable-dedup-state",
+      "theme": "The “disposable cache” stores the only payment deduplication record. What must change?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "strategy",
+        "persist"
+      ],
+      "technicalSources": [
+        "strategy",
+        "persist"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Eviction permits an old payment request to execute again. The service had assumed every Redis key could be lost safely. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Caching Fundamentals to durable dedup state."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The “disposable cache” stores the only payment deduplication record. What must change?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Move the durable operation identity/outcome into an authoritative boundary or explicitly engineer storage/recovery to uphold the business promise"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Durable state adds retention and coordination; a naturally idempotent domain operation may simplify some cases"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Cache product choice alone cannot establish exactly-once effects."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to strategy, persist; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-no-reuse",
+      "theme": "Nearly every request has unique parameters. Is adding a cache still a win?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "strategy"
+      ],
+      "technicalSources": [
+        "strategy"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A report endpoint generates one-off personalized queries. Cache lookup/serialization adds latency and memory fills with entries never read again. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Caching Fundamentals to no reuse."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Nearly every request has unique parameters. Is adding a cache still a win?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Measure reuse and avoid or restrict caching for that workload"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Selective admission costs policy and measurement; keeping the direct origin path is a valid simpler choice"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If the workload later develops hot repeated keys, reevaluate with real evidence."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to strategy; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://aws.amazon.com/builders-library/caching-challenges-and-strategies/",
+    "https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside",
+    "https://pkg.go.dev/golang.org/x/sync/singleflight",
+    "https://www.rfc-editor.org/rfc/rfc9111.html",
+    "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching",
+    "https://redis.io/docs/latest/operate/oss_and_stack/management/persistence/"
+  ]
+}

@@ -1,0 +1,388 @@
+{
+  "topicId": "919d1138-71dd-4c5e-a406-c42534617c8d",
+  "title": "Cache Invalidation",
+  "path": "topics/system-design/caching-architecture/lifecycle-eviction-and-consistency/cache-invalidation.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Cache Invalidation\" interview race conditions stale reads",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "aside",
+      "title": "Microsoft Azure Architecture: cache-aside pattern",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Application-owned loading and invalidation order; example ordering does not eliminate every concurrent stale fill."
+    },
+    {
+      "id": "pubsub",
+      "title": "Redis: Pub/Sub delivery semantics",
+      "url": "https://redis.io/docs/latest/develop/pubsub/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "At-most-once Pub/Sub delivery does not retain missed invalidations; official indexed text checked."
+    },
+    {
+      "id": "tracking",
+      "title": "Redis: client-side caching",
+      "url": "https://redis.io/docs/latest/develop/clients/client-side-caching/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Local cache tracking/invalidation responsibilities and client scope."
+    },
+    {
+      "id": "memscale",
+      "title": "Nishtala et al.: Scaling Memcache at Facebook, NSDI 2013",
+      "url": "https://www.usenix.org/system/files/conference/nsdi13/nsdi13-final170_update.pdf",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Original stale-fill/lease and load-control design; its extensions are not assumed to exist in stock Memcached."
+    },
+    {
+      "id": "strategy",
+      "title": "AWS Builders Library: caching challenges and strategies",
+      "url": "https://aws.amazon.com/builders-library/caching-challenges-and-strategies/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Measured cache value, modal failure behavior and origin protection."
+    },
+    {
+      "id": "http",
+      "title": "RFC 9111: HTTP Caching",
+      "url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Shared/private storage, cache keys, validation and freshness semantics."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-missed-notification",
+      "theme": "One worker misses an invalidation while disconnected. What happens on reconnect?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "pubsub",
+        "tracking"
+      ],
+      "technicalSources": [
+        "pubsub",
+        "tracking"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Local copies have no useful expiry and updates were sent only over Pub/Sub. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache Invalidation to missed notification."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: One worker misses an invalidation while disconnected. What happens on reconnect?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Treat the coherence gap explicitly: discard affected local state or reconcile/replay from retained authoritative change/version information"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Rebuilds cost origin capacity; durable change streams add retention/consumer management"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Reconnecting alone cannot replay messages the selected Pub/Sub contract never retained."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to pubsub, tracking; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-inflight-old-fill",
+      "theme": "An invalidation arrives before an old load completes. What must a fill check?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "memscale",
+        "aside"
+      ],
+      "technicalSources": [
+        "memscale",
+        "aside"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Version 2 is known obsolete-to-replace, but an earlier reader still holds version 1 and tries to populate. What will you implement?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache Invalidation to inflight old fill."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An invalidation arrives before an old load completes. What must a fill check?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use a coordinated version/lease guard that can reject the old fill under an explicit retained metadata protocol, or route strict reads to authority"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Guarding adds coordination; accepting a bounded stale display is simpler under a different requirement"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: The cited Memcache lease design is an engineered extension, not a default feature of every cache."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to memscale, aside; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-derived-fanout",
+      "theme": "A category rename leaves thousands of cached pages with the old name. How do you choose invalidation scope?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "aside",
+        "strategy"
+      ],
+      "technicalSources": [
+        "aside",
+        "strategy"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Precise reverse dependencies are incomplete and a fleet-wide flush would overwhelm the origin. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache Invalidation to derived fanout."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A category rename leaves thousands of cached pages with the old name. How do you choose invalidation scope?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Choose a reviewed dependency/version boundary for that category or representation family, repair dependency registration and stage controlled refill"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Precise tracking costs metadata; a coarser version costs misses and cleanup"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: State which tier and reader promise the operation actually covers."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to aside, strategy; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-out-of-order-change",
+      "theme": "Invalidation version 9 arrives after version 10. Should it replace the current marker?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "pubsub",
+        "memscale"
+      ],
+      "technicalSources": [
+        "pubsub",
+        "memscale"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Consumers retry and messages can reorder. A newer cached view must not be made obsolete under an older identity. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache Invalidation to out of order change."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Invalidation version 9 arrives after version 10. Should it replace the current marker?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use meaningful authoritative version/order information and monotonic application of invalidation metadata"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Version state needs ownership and retention; an ordered per-key log can simplify some pipelines"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Losing metadata requires recovery rather than resetting the minimum to an unsafe value."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to pubsub, memscale; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-delete-recreate",
+      "theme": "A deleted object is recreated under the same key and an old fill resurrects its former view. What changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "aside",
+        "memscale"
+      ],
+      "technicalSources": [
+        "aside",
+        "memscale"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Readers from before deletion can complete after the new object exists. What identity rule will you choose?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache Invalidation to delete recreate."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A deleted object is recreated under the same key and an old fill resurrects its former view. What changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use a version/generation that distinguishes the recreated entity and preserve deletion/guard information for the required in-flight horizon"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Generations/tombstones cost retention and lookup work; never reusing object identity can be simpler"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A TTL on payloads alone does not stop an older load from beginning a new lifetime after deletion."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to aside, memscale; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-permission-change",
+      "theme": "A user loses access but its cached view still exists. Is deleting the product key sufficient?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "tracking",
+        "http"
+      ],
+      "technicalSources": [
+        "tracking",
+        "http"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Visibility depends on membership as well as product contents, and several tiers hold derived responses. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache Invalidation to permission change."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A user loses access but its cached view still exists. Is deleting the product key sufficient?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Include permission dependencies in the invalidation/access policy and enforce the current required authorization boundary at delivery"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Immediate revocation can cost current checks or broader invalidation; a documented bounded exposure policy is a different promise"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Product-version changes alone do not represent every permission change."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to tracking, http; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside",
+    "https://redis.io/docs/latest/develop/pubsub/",
+    "https://redis.io/docs/latest/develop/clients/client-side-caching/",
+    "https://www.usenix.org/system/files/conference/nsdi13/nsdi13-final170_update.pdf",
+    "https://aws.amazon.com/builders-library/caching-challenges-and-strategies/",
+    "https://www.rfc-editor.org/rfc/rfc9111.html"
+  ]
+}

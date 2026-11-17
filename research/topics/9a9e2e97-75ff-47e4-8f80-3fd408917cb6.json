@@ -1,0 +1,366 @@
+{
+  "topicId": "9a9e2e97-75ff-47e4-8f80-3fd408917cb6",
+  "title": "Composite Indexes",
+  "path": "topics/system-design/database-design-management/query-performance-and-indexing/composite-indexes.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Composite Indexes\" interview column order range leftmost",
+      "date": "2026-11-17",
+      "result": "success; interview-oriented themes located, but exact frequency/rank/company claims not verified; prompts are original production adaptations"
+    }
+  ],
+  "sources": [
+    {
+      "id": "multi",
+      "title": "PostgreSQL 18: multicolumn indexes",
+      "url": "https://www.postgresql.org/docs/18/indexes-multicolumn.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Column order, range predicates and planner-dependent skip scan."
+    },
+    {
+      "id": "indexes",
+      "title": "PostgreSQL 18: using EXPLAIN",
+      "url": "https://www.postgresql.org/docs/18/using-explain.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Compare plan estimates, actual work and safe measurement."
+    },
+    {
+      "id": "cover",
+      "title": "PostgreSQL 18: covering indexes",
+      "url": "https://www.postgresql.org/docs/18/indexes-index-only-scans.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Included payload versus search keys and visibility checks."
+    },
+    {
+      "id": "isolation",
+      "title": "PostgreSQL 18: transaction isolation",
+      "url": "https://www.postgresql.org/docs/18/transaction-iso.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Snapshot, concurrency anomalies and serializable behavior."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-status-before-time",
+      "theme": "The index works for one status but sorts heavily for all statuses. What will you change?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "multi",
+        "indexes"
+      ],
+      "technicalSources": [
+        "multi",
+        "indexes"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "An index on tenant/status/created_at supports a single-status feed. A new page needs all statuses for one tenant in global recent-first order, with a small LIMIT. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Composite Indexes to status before time."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The index works for one status but sorts heavily for all statuses. What will you change?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to multi, indexes; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-missing-prefix-skip-scan",
+      "theme": "A query filters only a later key. Is adding another index always necessary?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "multi",
+        "indexes"
+      ],
+      "technicalSources": [
+        "multi",
+        "indexes"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A PostgreSQL 18 table has an index on region/customer_id. Region has only a few values, and customer lookup omits region. The plan uses the existing index efficiently. How will you evaluate the claimed leftmost-prefix violation?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Composite Indexes to missing prefix skip scan."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A query filters only a later key. Is adding another index always necessary?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to multi, indexes; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-two-indexes-limit",
+      "theme": "Two separate indexes filter correctly but the latest-fifty endpoint remains slow. Why?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "multi",
+        "indexes"
+      ],
+      "technicalSources": [
+        "multi",
+        "indexes"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "An endpoint filters by tenant and creation time and sorts newest first. Separate indexes produce a bitmap plan followed by a large sort. How will you test a different design?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Composite Indexes to two indexes limit."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Two separate indexes filter correctly but the latest-fifty endpoint remains slow. Why?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to multi, indexes; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-selectivity-only-rule",
+      "theme": "Tenant ID has low selectivity globally. Should it be last in every index?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "multi",
+        "indexes"
+      ],
+      "technicalSources": [
+        "multi",
+        "indexes"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Every customer-facing query fixes a tenant, then filters and orders that tenant’s rows. An index review demands putting the globally most selective column first without examining queries. What will you decide?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Composite Indexes to selectivity only rule."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Tenant ID has low selectivity globally. Should it be last in every index?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to multi, indexes; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-included-price-filter",
+      "theme": "Price is included in a covering index, yet a price filter scans many entries. Why?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "cover",
+        "multi"
+      ],
+      "technicalSources": [
+        "cover",
+        "multi"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "An index has tenant/time keys and includes total_cents as payload. A new price-range query examines a large tenant history even though all requested columns are stored. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Composite Indexes to included price filter."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Price is included in a covering index, yet a price filter scans many entries. Why?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to cover, multi; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-timestamp-cursor-ties",
+      "theme": "Pagination skips orders sharing the same creation timestamp. What should the cursor encode?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "multi",
+        "isolation"
+      ],
+      "technicalSources": [
+        "multi",
+        "isolation"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A feed orders only by created_at and uses an exclusive timestamp boundary. Several orders share that timestamp. Readers need stable navigation within a tenant/status feed. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Composite Indexes to timestamp cursor ties."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Pagination skips orders sharing the same creation timestamp. What should the cursor encode?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to multi, isolation; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Engine-specific examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://www.postgresql.org/docs/18/indexes-multicolumn.html",
+    "https://www.postgresql.org/docs/18/using-explain.html",
+    "https://www.postgresql.org/docs/18/indexes-index-only-scans.html",
+    "https://www.postgresql.org/docs/18/transaction-iso.html"
+  ]
+}

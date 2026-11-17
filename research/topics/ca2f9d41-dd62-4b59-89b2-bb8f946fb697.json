@@ -1,0 +1,379 @@
+{
+  "topicId": "ca2f9d41-dd62-4b59-89b2-bb8f946fb697",
+  "title": "API Documentation (OpenAPI/Swagger)",
+  "path": "topics/system-design/api-design-and-communication/api-lifecycle-data-and-developer-experience/api-documentation.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"API Documentation\" \"OpenAPI\" \"Swagger\" interview contract drift",
+      "date": "2026-11-17",
+      "result": "success; interview-oriented themes located, but exact frequency/rank/company claims not verified; prompts are original production adaptations"
+    }
+  ],
+  "sources": [
+    {
+      "id": "oas",
+      "title": "OpenAPI Specification 3.1.1",
+      "url": "https://spec.openapis.org/oas/v3.1.1.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Explicit example version, schema dialect, operations and declared security requirements."
+    },
+    {
+      "id": "swagger",
+      "title": "Swagger: OpenAPI and tooling overview",
+      "url": "https://swagger.io/docs/specification/v3_0/about/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "The description standard versus UI/editor/code generation products; tooling compatibility must be checked."
+    },
+    {
+      "id": "compat",
+      "title": "Google AIP-180: backwards compatibility",
+      "url": "https://google.aip.dev/180",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Source, wire and semantic compatibility; consumer assumptions and additive-change limits."
+    },
+    {
+      "id": "problem",
+      "title": "RFC 9457: Problem Details for HTTP APIs",
+      "url": "https://www.rfc-editor.org/rfc/rfc9457.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Problem representation, extension members and safe diagnostic disclosure."
+    },
+    {
+      "id": "idem",
+      "title": "AWS Builders Library: making retries safe with idempotent APIs",
+      "url": "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Caller-provided request identity, late requests and same-key/different-intent handling."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-spec-runtime-drift",
+      "theme": "The documentation says a field is optional, but production rejects requests without it. What is authoritative?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "oas",
+        "compat"
+      ],
+      "technicalSources": [
+        "oas",
+        "compat"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Clients generated from the published description fail against the deployed API. Teams each claim their artifact is correct. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies API Documentation (OpenAPI/Swagger) to spec runtime drift."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The documentation says a field is optional, but production rejects requests without it. What is authoritative?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: Clients generated from the published description fail against the deployed API. Teams each claim their artifact is correct. What will you do?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Identify the intended supported public contract and actual affected consumers, add a reproducible fixture, then align the implementation/description…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Strict contract-first or disciplined code-first can both work; two manually drifting sources impose more reconciliation."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Preserve a migration path where the published promise is relied on."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to oas, compat; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-declared-auth",
+      "theme": "Swagger UI shows authentication, but an anonymous direct request succeeds. What failed?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "oas"
+      ],
+      "technicalSources": [
+        "oas"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The OpenAPI document declares bearer security, yet no runtime middleware or service check protects the operation. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies API Documentation (OpenAPI/Swagger) to declared auth."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Swagger UI shows authentication, but an anonymous direct request succeeds. What failed?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: The OpenAPI document declares bearer security, yet no runtime middleware or service check protects the operation. What will you change?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Enforce authentication and owner authorization in the actual runtime, inspect gateway/direct paths and add real unauthorized/forbidden fixtures. Keep the…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Runtime enforcement adds configuration and test work; a deliberate public operation may instead need an explicit documented exception."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Object-level permissions still matter after a valid bearer token."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to oas; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-generator-nullability",
+      "theme": "A 3.0-to-3.1 document migration changes generated null handling. What is the rollout?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "oas",
+        "swagger",
+        "compat"
+      ],
+      "technicalSources": [
+        "oas",
+        "swagger",
+        "compat"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The service behavior is meant to stay stable, but regenerated clients reject or omit values differently. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies API Documentation (OpenAPI/Swagger) to generator nullability."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A 3.0-to-3.1 document migration changes generated null handling. What is the rollout?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: The service behavior is meant to stay stable, but regenerated clients reject or omit values differently. What will you do?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Pin the document dialect and generator versions, inspect supported schema/nullability semantics and test representative old/new client serialization…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Keeping an older supported toolchain can be a temporary alternative; migration adds compatibility fixtures."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Successful code generation is not compatibility proof."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to oas, swagger, compat; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-mock-proof",
+      "theme": "All mock tests pass while production errors use another shape. How do you close the gap?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "oas",
+        "problem"
+      ],
+      "technicalSources": [
+        "oas",
+        "problem"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The mock is generated from the same OpenAPI file as the clients. The actual service returns a different error media type and missing machine codes. What will you test?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies API Documentation (OpenAPI/Swagger) to mock proof."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: All mock tests pass while production errors use another shape. How do you close the gap?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: The mock is generated from the same OpenAPI file as the clients. The actual service returns a different error media type and missing machine codes.…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Run contract fixtures against the implementation for known failures as well as success, verify status/content type/body and safe diagnostics, and fix the…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Real fixtures require setup and controlled data; targeted tests for important operations can keep cost bounded."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Avoid copying production secrets into test examples."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to oas, problem; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-undocumented-recovery",
+      "theme": "The schema documents idempotencyKey as a string. Is that enough for safe retries?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "oas",
+        "idem"
+      ],
+      "technicalSources": [
+        "oas",
+        "idem"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A partner needs to recover timed-out order submissions, but retention, key conflicts and in-progress outcomes are absent from the reference. What will you add?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies API Documentation (OpenAPI/Swagger) to undocumented recovery."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The schema documents idempotencyKey as a string. Is that enough for safe retries?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A partner needs to recover timed-out order submissions, but retention, key conflicts and in-progress outcomes are absent from the reference. What will…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Document the complete behavioral contract in operation prose/examples: identity scope, meaningful payload equality, duplicate concurrency, outcome replay,…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Behavioral documentation needs maintained fixtures and review; an explicit operation-status resource can simplify client reasoning."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Generated SDKs still need correct retry policy rather than automatically retrying every failure."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to oas, idem; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-generated-client-break",
+      "theme": "A new enum in the description breaks a partner SDK. Can you call it documentation-only?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "compat",
+        "oas",
+        "swagger"
+      ],
+      "technicalSources": [
+        "compat",
+        "oas",
+        "swagger"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The backend adds a state and regenerated client code becomes incompatible with an old consumer. What will you do before release?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies API Documentation (OpenAPI/Swagger) to generated client break."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A new enum in the description breaks a partner SDK. Can you call it documentation-only?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: The backend adds a state and regenerated client code becomes incompatible with an old consumer. What will you do before release?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Review the actual source/wire/semantic compatibility, test representative consumers and unknown-value behavior, and provide a compatible migration/version…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Generated clients reduce handwritten work but couple consumers to tooling choices; tolerant handwritten parsing is an alternative with its own…"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: A change in the description can expose or create a real contract break even when the docs page simply gains one line."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to compat, oas, swagger; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://spec.openapis.org/oas/v3.1.1.html",
+    "https://swagger.io/docs/specification/v3_0/about/",
+    "https://google.aip.dev/180",
+    "https://www.rfc-editor.org/rfc/rfc9457.html",
+    "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/"
+  ]
+}

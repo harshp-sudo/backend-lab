@@ -1,0 +1,362 @@
+{
+  "topicId": "a7cb0502-f4f4-4afd-9f24-369bcea1f618",
+  "title": "Server-Sent Events (SSE)",
+  "path": "topics/system-design/api-design-and-communication/real-time-and-async-communication/server-sent-events.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Server-Sent Events\" interview reconnect Last-Event-ID proxy buffering",
+      "date": "2026-11-17",
+      "result": "success; interview-oriented themes located, but exact frequency/rank/company claims not verified; prompts are original production adaptations"
+    }
+  ],
+  "sources": [
+    {
+      "id": "sse",
+      "title": "WHATWG HTML: server-sent events",
+      "url": "https://html.spec.whatwg.org/multipage/server-sent-events.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Event stream framing, event IDs, reconnection and EventSource API."
+    },
+    {
+      "id": "proxy",
+      "title": "NGINX: HTTP proxy module",
+      "url": "https://nginx.org/en/docs/http/ngx_http_proxy_module.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Selected proxy buffering and read timeout configuration; not universal defaults."
+    },
+    {
+      "id": "validation",
+      "title": "OWASP: input validation cheat sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Syntactic/semantic validation, allowlists and explicit resource boundaries."
+    },
+    {
+      "id": "http",
+      "title": "RFC 9110: HTTP Semantics",
+      "url": "https://www.rfc-editor.org/rfc/rfc9110.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "HTTP method, conditional request and response-status semantics; not a guarantee about business side effects."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-proxy-burst",
+      "theme": "A local SSE demo streams immediately, but production batches updates. What do you inspect?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "sse",
+        "proxy"
+      ],
+      "technicalSources": [
+        "sse",
+        "proxy"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The app logs a flush every second, yet the browser receives thirty events together through the reverse proxy. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Server-Sent Events (SSE) to proxy burst."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A local SSE demo streams immediately, but production batches updates. What do you inspect?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: The app logs a flush every second, yet the browser receives thirty events together through the reverse proxy. What will you do?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Measure emission and arrival times at each hop, inspect content type and buffering/compression behavior, and apply supported route-specific streaming…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Disabling buffering changes resource/efficiency trade-offs; periodic status polling may be simpler for coarse progress."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: A framework flush only empties one buffer and does not prove browser receipt."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to sse, proxy; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-missing-history",
+      "theme": "Last-Event-ID is supplied, but the server no longer has that history. What is the response?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "sse"
+      ],
+      "technicalSources": [
+        "sse"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A tab resumes after two days while event retention is one hour. Financial task completion must not be silently missed. How will you recover?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Server-Sent Events (SSE) to missing history."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Last-Event-ID is supplied, but the server no longer has that history. What is the response?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A tab resumes after two days while event retention is one hour. Financial task completion must not be silently missed. How will you recover?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Detect an expired/unknown cursor and trigger a documented snapshot/status resynchronization. Authorize that state request, establish a new continuation…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Snapshots cost read/catch-up work; retaining more history costs storage and operational capacity."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: If every historical event is legally required, a durable export/audit contract is separate from this UI stream."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to sse; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-auth-stream-expiry",
+      "theme": "An authenticated EventSource remains open after permissions change. What do you enforce?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "sse",
+        "validation"
+      ],
+      "technicalSources": [
+        "sse",
+        "validation"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A user is removed from a private report workspace during a long stream. Reconnect must not restore access. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Server-Sent Events (SSE) to auth stream expiry."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An authenticated EventSource remains open after permissions change. What do you enforce?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A user is removed from a private report workspace during a long stream. Reconnect must not restore access. What will you do?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Define bounded session/revocation behavior and enforce the owning workspace policy for continuing delivery and reconnect/replay. Close or reauthorize…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Frequent reauthorization adds lookups or revocation distribution; a documented short credential lifetime can fit a different risk model."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Existing cached report downloads require the same permission-lifecycle review."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to sse, validation; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-final-event-lost",
+      "theme": "A report finishes while the browser is disconnected. How does the user learn that?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "sse",
+        "http"
+      ],
+      "technicalSources": [
+        "sse",
+        "http"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The worker deletes its job record after emitting a completion event. A disconnected user sees “running” forever. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Server-Sent Events (SSE) to final event lost."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A report finishes while the browser is disconnected. How does the user learn that?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: The worker deletes its job record after emitting a completion event. A disconnected user sees “running” forever. What will you change?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Persist a terminal job outcome and result reference with an appropriate retention policy. On reconnect or page startup, read status or replay retained…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Retained terminal state costs storage and expiry design; a durable notification inbox is another approach for longer-lived obligations."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Define what happens after result expiry instead of returning a misleading running state."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to sse, http; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-many-tabs",
+      "theme": "Many open tabs hit connection limits. Should every widget create its own stream?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "sse"
+      ],
+      "technicalSources": [
+        "sse"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A dashboard opens one EventSource per widget and users open several tabs. Some streams wait and update latency becomes unpredictable. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Server-Sent Events (SSE) to many tabs."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Many open tabs hit connection limits. Should every widget create its own stream?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A dashboard opens one EventSource per widget and users open several tabs. Some streams wait and update latency becomes unpredictable. What will you do?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Consolidate compatible subscriptions into a bounded per-page stream, inspect actual HTTP version and client/proxy concurrency limits, and close unused…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Multiplexing adds event routing and may tie unrelated subscriptions to one failure boundary."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: HTTP/2 changes limits but does not create infinite server capacity or remove slow-consumer queues."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to sse; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-progress-storm",
+      "theme": "A slow client accumulates thousands of progress events. Must every percentage be replayed?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "sse",
+        "proxy"
+      ],
+      "technicalSources": [
+        "sse",
+        "proxy"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The UI needs current progress and a reliable terminal result, not every intermediate percentage. Slow clients consume too much memory. What will you choose?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Server-Sent Events (SSE) to progress storm."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A slow client accumulates thousands of progress events. Must every percentage be replayed?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: The UI needs current progress and a reliable terminal result, not every intermediate percentage. Slow clients consume too much memory. What will you…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Coalesce replaceable progress to the newest state, bound outbound queues and preserve authoritative terminal outcome/status. Disconnect/resync clients…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Coalescing loses intermediate observations; a full event log is preferable for auditing or per-event obligations."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Receiving an event is still distinct from the client completing its associated work."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to sse, proxy; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://html.spec.whatwg.org/multipage/server-sent-events.html",
+    "https://nginx.org/en/docs/http/ngx_http_proxy_module.html",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html",
+    "https://www.rfc-editor.org/rfc/rfc9110.html"
+  ]
+}

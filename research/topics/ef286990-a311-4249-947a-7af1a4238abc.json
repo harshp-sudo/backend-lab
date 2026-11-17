@@ -1,0 +1,410 @@
+{
+  "topicId": "ef286990-a311-4249-947a-7af1a4238abc",
+  "title": "TTL & Eviction Policies",
+  "path": "topics/system-design/caching-architecture/lifecycle-eviction-and-consistency/ttl-and-eviction-policies.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"TTL\" \"Eviction Policies\" cache interview memory stampede",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "expire",
+      "title": "Redis: EXPIRE command",
+      "url": "https://redis.io/docs/latest/commands/expire/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Expiration, replacement behavior and conditional expiry options with version availability."
+    },
+    {
+      "id": "evict",
+      "title": "Redis: key eviction",
+      "url": "https://redis.io/docs/latest/reference/eviction/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Memory limits, eviction eligibility and workload-sensitive policies; current text checked through official indexed documentation."
+    },
+    {
+      "id": "memops",
+      "title": "Memcached: maintenance",
+      "url": "https://docs.memcached.org/serverguide/maintenance/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Memory, eviction and health metrics plus accidental global invalidation behavior."
+    },
+    {
+      "id": "memproto",
+      "title": "Memcached: basic text protocol",
+      "url": "https://docs.memcached.org/protocols/basic/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Item/key byte rules, expiration encoding and gets/cas semantics in the basic text protocol."
+    },
+    {
+      "id": "aside",
+      "title": "Microsoft Azure Architecture: cache-aside pattern",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Application-owned loading and invalidation order; example ordering does not eliminate every concurrent stale fill."
+    },
+    {
+      "id": "strategy",
+      "title": "AWS Builders Library: caching challenges and strategies",
+      "url": "https://aws.amazon.com/builders-library/caching-challenges-and-strategies/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Measured cache value, modal failure behavior and origin protection."
+    },
+    {
+      "id": "http",
+      "title": "RFC 9111: HTTP Caching",
+      "url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Shared/private storage, cache keys, validation and freshness semantics."
+    },
+    {
+      "id": "replica",
+      "title": "Redis: replication",
+      "url": "https://redis.io/docs/latest/operate/oss_and_stack/management/replication/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Asynchronous replication and failover/data-loss considerations."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-unexpired-eviction",
+      "theme": "Keys with an hour left on TTL disappear under load. Is expiration broken?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "evict",
+        "memops"
+      ],
+      "technicalSources": [
+        "evict",
+        "memops"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The cache reaches its memory budget during a scan-heavy workload. What will you inspect?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies TTL & Eviction Policies to unexpired eviction."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Keys with an hour left on TTL disappear under load. Is expiration broken?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Separate expiry from capacity eviction, inspect actual policy/eligibility and key-size/reuse metrics, and measure which removals create expensive misses"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: More memory may help a real working-set limit; selective caching can be cheaper"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: An hour of lifetime is not a promise that the entry survives memory pressure or restart."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to evict, memops; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-ttl-source-age",
+      "theme": "A ten-second cache serves minute-old values. How is that possible?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "replica",
+        "http"
+      ],
+      "technicalSources": [
+        "replica",
+        "http"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A lagging replica supplies old data on every fill, each with a new TTL. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies TTL & Eviction Policies to ttl source age."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A ten-second cache serves minute-old values. How is that possible?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Define required source freshness/version and fill from a suitable authoritative or minimum-version path where needed"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Fresh-source reads cost capacity/latency; a weaker stale-display contract may be acceptable"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A short TTL controls reuse after fill, not automatically age relative to the authoritative change."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to replica, http; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-sliding-hot-stale",
+      "theme": "A hot key never refreshes because reads renew its idle lifetime. What policy fits?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "expire",
+        "aside"
+      ],
+      "technicalSources": [
+        "expire",
+        "aside"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The product expects periodic freshness even for continuously accessed data. What will you choose?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies TTL & Eviction Policies to sliding hot stale."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A hot key never refreshes because reads renew its idle lifetime. What policy fits?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use an appropriate fixed freshness deadline or independent validation/refresh policy rather than relying only on idle expiry"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Fixed expiry can create repeated hot-key regeneration, so coalescing/stale policy may be needed"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Idle expiry is useful for reclaiming inactive entries under a different goal; it does not by itself guarantee periodic source refresh."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to expire, aside; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-jitter-budget",
+      "theme": "A sixty-second ceiling becomes ninety seconds after jitter. What is wrong?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "strategy",
+        "http"
+      ],
+      "technicalSources": [
+        "strategy",
+        "http"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Engineers add zero-to-thirty seconds to every configured sixty-second lifetime. The full freshness contract matters. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies TTL & Eviction Policies to jitter budget."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A sixty-second ceiling becomes ninety seconds after jitter. What is wrong?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Choose a distribution whose upper bound fits the justified reuse budget, account for source/tier age and keep stricter changes on an appropriate invalidati"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Earlier expiry increases origin reads; scheduling proactive refresh can be another controlled choice"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Jitter cannot make an unknown-age source fresh and does not independently fence a late stale fill."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to strategy, http; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-policy-scan-thrash",
+      "theme": "A nightly scan evicts hot interactive data. Which policy change is justified?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "evict",
+        "memops"
+      ],
+      "technicalSources": [
+        "evict",
+        "memops"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Recency-based retention follows the scan while expensive frequently reused keys disappear. What will you measure and compare?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies TTL & Eviction Policies to policy scan thrash."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A nightly scan evicts hot interactive data. Which policy change is justified?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Measure reuse/size/miss cost by workload and compare admission filtering, isolation or a suitable frequency-aware policy supported by the engine"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Frequency history can retain yesterday’s hot items too long; separate pools or bypassing low-value scan caching may be simpler"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: No policy universally wins, and an engine’s approximation/eligibility can differ from a textbook algorithm."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to evict, memops; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-negative-lifetime",
+      "theme": "Missing-item caching reduces load but delays new product visibility. What is the trade-off?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "aside",
+        "memproto"
+      ],
+      "technicalSources": [
+        "aside",
+        "memproto"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Bots request nonexistent IDs repeatedly while real users create products. What will you choose?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies TTL & Eviction Policies to negative lifetime."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Missing-item caching reduces load but delays new product visibility. What is the trade-off?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use a scoped short negative lifetime only for confirmed absence, invalidate/version creation as required and bound aggregate origin admission"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Shorter negatives increase repeated origin work; a trustworthy existence/version service may help at additional cost"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Never negative-cache a timeout as proof the object is absent."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to aside, memproto; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://redis.io/docs/latest/commands/expire/",
+    "https://redis.io/docs/latest/reference/eviction/",
+    "https://docs.memcached.org/serverguide/maintenance/",
+    "https://docs.memcached.org/protocols/basic/",
+    "https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside",
+    "https://aws.amazon.com/builders-library/caching-challenges-and-strategies/",
+    "https://www.rfc-editor.org/rfc/rfc9111.html",
+    "https://redis.io/docs/latest/operate/oss_and_stack/management/replication/"
+  ]
+}

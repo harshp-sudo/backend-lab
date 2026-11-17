@@ -1,0 +1,351 @@
+{
+  "topicId": "149f04a9-cdda-494f-851c-e267fc118f03",
+  "title": "Pagination Strategies",
+  "path": "topics/system-design/api-design-and-communication/api-lifecycle-data-and-developer-experience/pagination-strategies.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Pagination Strategies\" interview cursor offset concurrent inserts",
+      "date": "2026-11-17",
+      "result": "success; interview-oriented themes located, but exact frequency/rank/company claims not verified; prompts are original production adaptations"
+    }
+  ],
+  "sources": [
+    {
+      "id": "pages",
+      "title": "Google AIP-158: pagination",
+      "url": "https://google.aip.dev/158",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Opaque page tokens and request-context consistency; an example API policy rather than a universal protocol."
+    },
+    {
+      "id": "pgpage",
+      "title": "PostgreSQL 18: LIMIT and OFFSET",
+      "url": "https://www.postgresql.org/docs/18/queries-limit.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Deterministic ordering and the work required to skip offset rows."
+    },
+    {
+      "id": "pgsnap",
+      "title": "PostgreSQL 18: transaction isolation",
+      "url": "https://www.postgresql.org/docs/18/transaction-iso.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Snapshot scope differs across requests/transactions; a cursor alone is not a shared database snapshot."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-offset-drift",
+      "theme": "New orders make page two repeat page-one items. How do you redesign navigation?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "pgpage",
+        "pages"
+      ],
+      "technicalSources": [
+        "pgpage",
+        "pages"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A newest-first feed uses offsets. Inserts arrive while the user reads, and deep pages are slow. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Pagination Strategies to offset drift."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: New orders make page two repeat page-one items. How do you redesign navigation?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A newest-first feed uses offsets. Inserts arrive while the user reads, and deep pages are slow. What will you do?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Offer keyset continuation under a total order such as non-null created_at DESC plus unique order_id DESC, backed by a measured suitable access path.…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Random page-number jumps become less natural; offsets remain reasonable for small stable lists."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: A cursor interface without a changed query plan does not remove deep offset work by itself."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to pgpage, pages; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-timestamp-ties",
+      "theme": "Several orders share the cursor timestamp and disappear. What must the token contain?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "pgpage",
+        "pages"
+      ],
+      "technicalSources": [
+        "pgpage",
+        "pages"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The page ends at 12:00:00, but more records have that exact timestamp. The next query uses strictly older timestamps. How will you fix it?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Pagination Strategies to timestamp ties."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Several orders share the cursor timestamp and disappear. What must the token contain?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: The page ends at 12:00:00, but more records have that exact timestamp. The next query uses strictly older timestamps. How will you fix it?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Define a total order with a unique tie-breaker, include both boundary values and order context in the server continuation and use the matching seek…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: The token grows slightly and backward navigation needs its own direction policy; a surrogate immutable sequence can be another suitable order if…"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: An inclusive timestamp alone can create repeated loops rather than solve the ambiguity."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to pgpage, pages; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-cursor-filter-change",
+      "theme": "A client changes status=open to status=closed but reuses its token. What happens?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "pages"
+      ],
+      "technicalSources": [
+        "pages"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The token was issued for one tenant/status/sort view. Reuse under changed filters would produce confusing or unauthorized traversal. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Pagination Strategies to cursor filter change."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A client changes status=open to status=closed but reuses its token. What happens?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: The token was issued for one tenant/status/sort view. Reuse under changed filters would produce confusing or unauthorized traversal. What will you do?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Validate the token’s bound query context against the new request and reject/restart according to the contract. Reauthorize current caller access for every…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Binding context reduces flexible token reuse but makes meaning predictable; server-side state offers control at storage/expiry cost."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: A signed token is still not authorization and base64 alone does not protect integrity or confidentiality."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to pages; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-exact-export",
+      "theme": "Finance needs every row from one instant. Is keyset pagination sufficient?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "pgsnap",
+        "pages"
+      ],
+      "technicalSources": [
+        "pgsnap",
+        "pages"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "An export spans thirty minutes while order state and deletion continue. Missing or mixed-time rows are unacceptable. What will you offer?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Pagination Strategies to exact export."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Finance needs every row from one instant. Is keyset pagination sufficient?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: An export spans thirty minutes while order state and deletion continue. Missing or mixed-time rows are unacceptable. What will you offer?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Create an explicit consistent export under a supported database snapshot/version mechanism or materialize the dataset asynchronously. Return durable job…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Snapshot retention or materialization consumes resources; a best-effort live traversal is cheaper when exactness is unnecessary."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Choose a mechanism the actual storage engine can sustain."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to pgsnap, pages; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-empty-page-token",
+      "theme": "A page returns zero items and a next token. Should the client stop?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "pages"
+      ],
+      "technicalSources": [
+        "pages"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A backend scan bounds work before filtering and may produce an empty page with more scan state. The API follows a documented token-driven continuation policy. What should the consumer do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Pagination Strategies to empty page token."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A page returns zero items and a next token. Should the client stop?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A backend scan bounds work before filtering and may produce an empty page with more scan state. The API follows a documented token-driven continuation…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Follow the next token under a bounded request/work policy, not items.length alone, until the explicit end marker. Detect repeated/non-progressing tokens…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Additional requests cost latency; a guarantee of filled pages may require more unbounded server work."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Do not silently mix the two conventions."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to pages; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-mutable-sort",
+      "theme": "An order’s updated_at changes while traversing and it appears twice. Is the cursor broken?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "pgsnap",
+        "pages"
+      ],
+      "technicalSources": [
+        "pgsnap",
+        "pages"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The live collection sorts by a mutable update timestamp. Clients want efficient browsing, but a billing integration assumes every order appears exactly once. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Pagination Strategies to mutable sort."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An order’s updated_at changes while traversing and it appears twice. Is the cursor broken?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: The live collection sorts by a mutable update timestamp. Clients want efficient browsing, but a billing integration assumes every order appears…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: State the live-view movement behavior and use stable IDs for duplicate-aware browsing. For billing, provide a durable change feed/checkpoint or consistent…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Immutable order can hide later updates unless another mechanism exposes them; a change feed costs retention/checkpointing."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Client-side deduplication alone cannot recover a row moved entirely past the traversal boundary."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to pgsnap, pages; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://google.aip.dev/158",
+    "https://www.postgresql.org/docs/18/queries-limit.html",
+    "https://www.postgresql.org/docs/18/transaction-iso.html"
+  ]
+}

@@ -1,0 +1,355 @@
+{
+  "topicId": "e0906628-551b-45db-8816-a6575c1604e9",
+  "title": "Request Validation",
+  "path": "topics/system-design/api-design-and-communication/reliability-security-and-traffic-control/request-validation.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Request Validation\" interview API security unknown fields",
+      "date": "2026-11-17",
+      "result": "success; interview-oriented themes located, but exact frequency/rank/company claims not verified; prompts are original production adaptations"
+    }
+  ],
+  "sources": [
+    {
+      "id": "validation",
+      "title": "OWASP: input validation cheat sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Syntactic/semantic validation, allowlists and explicit resource boundaries."
+    },
+    {
+      "id": "jsonschema",
+      "title": "JSON Schema: 2020-12 validation vocabulary",
+      "url": "https://json-schema.org/draft/2020-12/json-schema-validation",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Versioned structural validation keywords and explicit dialect assumptions."
+    },
+    {
+      "id": "authz",
+      "title": "OWASP: authorization cheat sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Authorization is distinct from input shape and must be enforced for requested actions/objects."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-mass-assignment",
+      "theme": "A valid JSON body sets approvedBy and bypasses a workflow. Where do you fix it?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "validation",
+        "authz"
+      ],
+      "technicalSources": [
+        "validation",
+        "authz"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The service deserializes into its database entity, which contains public and internal fields. A caller adds an internal approval property. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Request Validation to mass assignment."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A valid JSON body sets approvedBy and bypasses a workflow. Where do you fix it?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: The service deserializes into its database entity, which contains public and internal fields. A caller adds an internal approval property. What will…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Use an explicit request model/allowlist, map only permitted fields and enforce approval authorization in the owning domain operation. Reject or…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Separate models add mapping work; a carefully configured explicit binder can be another implementation."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Hiding a field from generated documentation is not access control."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to validation, authz; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-coercion-drift",
+      "theme": "The gateway accepts quantity=\"10\", while the service rejects or interprets it differently. What is the contract?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "jsonschema",
+        "validation"
+      ],
+      "technicalSources": [
+        "jsonschema",
+        "validation"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Clients rely on implicit numeric-string coercion in one validator, but the service expects an integer. Releases behave differently. How will you resolve it?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Request Validation to coercion drift."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The gateway accepts quantity=\"10\", while the service rejects or interprets it differently. What is the contract?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: Clients rely on implicit numeric-string coercion in one validator, but the service expects an integer. Releases behave differently. How will you…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Choose the public input representation and coercion policy explicitly, align dialect/runtime configuration and test the exact boundary values through both…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Coercion can ease legacy clients but adds ambiguity; strict typed input is simpler for new contracts."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Consider null, empty strings, fractional numbers and oversized values, not only “10.” A schema file cannot override an independently…"
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to jsonschema, validation; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-stock-race",
+      "theme": "Two valid requests each buy the last item. Was validation missing a field?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "validation",
+        "authz"
+      ],
+      "technicalSources": [
+        "validation",
+        "authz"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Each request passes the quantity schema and a separate stock check, then both decrement. Overselling is forbidden. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Request Validation to stock race."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Two valid requests each buy the last item. Was validation missing a field?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: Each request passes the quantity schema and a separate stock check, then both decrement. Overselling is forbidden. What will you do?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Keep structural validation, but move the stock decision and decrement into the authoritative concurrency-safe operation, such as a conditional…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Serialization/conditional contention can reduce throughput; a reservation model may fit more complex fulfillment."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: If overselling is acceptable for a specific product, document that changed business constraint rather than accidentally relying on it."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to validation, authz; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-nested-payload",
+      "theme": "A schema-valid payload exhausts CPU and memory. What did the contract omit?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "validation",
+        "jsonschema"
+      ],
+      "technicalSources": [
+        "validation",
+        "jsonschema"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A public endpoint accepts very deep nested arrays and a large compressed body. The parser and validator consume excessive resources before returning. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Request Validation to nested payload."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A schema-valid payload exhausts CPU and memory. What did the contract omit?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A public endpoint accepts very deep nested arrays and a large compressed body. The parser and validator consume excessive resources before returning.…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Set limits at byte/decompression, parser depth/collection and semantic work boundaries; use appropriate streaming/resource-limited parsing where…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Tight bounds can reject legitimate bulk work; a dedicated asynchronous bounded upload workflow may serve it better."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: A valid shape is not a resource budget unless its dimensions are actually bounded."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to validation, jsonschema; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-canonical-id",
+      "theme": "Gateway and service decode the same path differently. Which value is authorized?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "validation",
+        "authz"
+      ],
+      "technicalSources": [
+        "validation",
+        "authz"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "An encoded identifier passes one allowlist but resolves to a different backend path after another decoding step. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Request Validation to canonical id."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Gateway and service decode the same path differently. Which value is authorized?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: An encoded identifier passes one allowlist but resolves to a different backend path after another decoding step. What will you do?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Define one accepted canonical interpretation across the boundary, reject ambiguous/double-decoded forms and authorize the actual resolved resource using…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Strict canonical forms can require client migration; a versioned compatibility adapter may be necessary."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Parameterized storage access and output encoding remain separate protections."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to validation, authz; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-safe-validation-errors",
+      "theme": "Validation errors echo tokens and reveal private record existence. How do you keep them useful?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "validation",
+        "authz"
+      ],
+      "technicalSources": [
+        "validation",
+        "authz"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Developers want complete payloads and internal constraint names returned for easy debugging. The API handles personal data and credentials. What will you expose?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Request Validation to safe validation errors."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Validation errors echo tokens and reveal private record existence. How do you keep them useful?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: Developers want complete payloads and internal constraint names returned for easy debugging. The API handles personal data and credentials. What will…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Return stable safe error categories and field pointers sufficient for correction, with an opaque correlation reference to controlled internal diagnostics.…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Less public detail can slow debugging; secure support tooling is an alternative to returning secrets."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: User-visible wording can change without changing the stable machine contract."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to validation, authz; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html",
+    "https://json-schema.org/draft/2020-12/json-schema-validation",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html"
+  ]
+}

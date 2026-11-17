@@ -1,0 +1,410 @@
+{
+  "topicId": "6dc74c43-8a26-4102-85ad-57cd75f22882",
+  "title": "Cache-Aside Pattern",
+  "path": "topics/system-design/caching-architecture/read-and-write-caching-patterns/cache-aside-pattern.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Cache-Aside Pattern\" interview stale data race invalidation",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "aside",
+      "title": "Microsoft Azure Architecture: cache-aside pattern",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Application-owned loading and invalidation order; example ordering does not eliminate every concurrent stale fill."
+    },
+    {
+      "id": "tracking",
+      "title": "Redis: client-side caching",
+      "url": "https://redis.io/docs/latest/develop/clients/client-side-caching/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Local cache tracking/invalidation responsibilities and client scope."
+    },
+    {
+      "id": "pubsub",
+      "title": "Redis: Pub/Sub delivery semantics",
+      "url": "https://redis.io/docs/latest/develop/pubsub/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "At-most-once Pub/Sub delivery does not retain missed invalidations; official indexed text checked."
+    },
+    {
+      "id": "strategy",
+      "title": "AWS Builders Library: caching challenges and strategies",
+      "url": "https://aws.amazon.com/builders-library/caching-challenges-and-strategies/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Measured cache value, modal failure behavior and origin protection."
+    },
+    {
+      "id": "single",
+      "title": "Go x/sync: singleflight",
+      "url": "https://pkg.go.dev/golang.org/x/sync/singleflight",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Per-Group duplicate in-flight function suppression; not a distributed ownership primitive."
+    },
+    {
+      "id": "replica",
+      "title": "Redis: replication",
+      "url": "https://redis.io/docs/latest/operate/oss_and_stack/management/replication/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Asynchronous replication and failover/data-loss considerations."
+    },
+    {
+      "id": "memguide",
+      "title": "Memcached: user guide",
+      "url": "https://docs.memcached.org/userguide/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Application keying, client lifecycle and cache-aside use."
+    },
+    {
+      "id": "patterns",
+      "title": "Ehcache 3.11: cache usage patterns",
+      "url": "https://www.ehcache.org/documentation/3.11/caching-patterns.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Pattern ownership and synchronous versus deferred system-of-record writes."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-late-fill",
+      "theme": "Deletion succeeds after a write, then an old value reappears. What is the interleaving?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "aside",
+        "tracking"
+      ],
+      "technicalSources": [
+        "aside",
+        "tracking"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A reader fetched version 1 before version 2 committed and populated after the writer deleted the key. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache-Aside Pattern to late fill."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Deletion succeeds after a write, then an old value reappears. What is the interleaving?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Reproduce the ordering, define the allowed stale window and choose a mechanism that meets it: guarded/version-addressed fills with trustworthy version stat"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Guard/version discovery adds state and work; a bounded stale view is simpler if acceptable"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A lost/evicted version marker must not make obsolete fills valid."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to aside, tracking; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-origin-commit-delete-fails",
+      "theme": "The database committed but cache deletion timed out. What does success mean?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "aside",
+        "pubsub"
+      ],
+      "technicalSources": [
+        "aside",
+        "pubsub"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The API must acknowledge the real durable change while readers may still find an old copy. What recovery will you implement?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache-Aside Pattern to origin commit delete fails."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The database committed but cache deletion timed out. What does success mean?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Keep the authoritative outcome truthful and arrange invalidation retry/repair through a durable mechanism if the freshness promise needs it"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Repair infrastructure costs operations; a short explicitly accepted stale window can need less"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A local transaction rollback cannot undo a committed external cache/origin sequence, and a timeout does not prove deletion never happened."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to aside, pubsub; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-cache-lookup-outage",
+      "theme": "Redis is unavailable. Should every read go straight to SQL?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "strategy",
+        "single"
+      ],
+      "technicalSources": [
+        "strategy",
+        "single"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Normal cache hits hide most load and the database cannot absorb full request volume. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache-Aside Pattern to cache lookup outage."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Redis is unavailable. Should every read go straight to SQL?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Apply bounded origin concurrency/rate admission, coalesce safe same-key work and use documented degradation or allowed stale responses"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Some reads fail or wait; provisioning the origin for full uncached load is another cost choice"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Coalescing does not reduce distinct-key misses, and retries can amplify the outage."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to strategy, single; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-missing-new-product",
+      "theme": "A newly created product stays invisible because not-found was cached. How do you recover?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "aside",
+        "memguide"
+      ],
+      "technicalSources": [
+        "aside",
+        "memguide"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Negative entries live for ten minutes, but the product team needs new catalog items visible promptly. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache-Aside Pattern to missing new product."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A newly created product stays invisible because not-found was cached. How do you recover?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Align negative lifetime/invalidation with creation visibility: invalidate the scoped negative entry on creation, use an appropriately shorter policy or ver"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Shorter negative reuse increases origin work for nonexistent keys; existence/version metadata is another coordination cost"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A broad deletion may still race with a late negative fill, so apply the same ordering reasoning as positive values."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to aside, memguide; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-stale-replica-fill",
+      "theme": "A miss reads a lagging replica and caches an old value with a new TTL. Is the TTL enough?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "aside",
+        "replica"
+      ],
+      "technicalSources": [
+        "aside",
+        "replica"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The writer invalidated correctly, but the selected source replica is behind. What policy will you choose?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache-Aside Pattern to stale replica fill."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A miss reads a lagging replica and caches an old value with a new TTL. Is the TTL enough?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Define source freshness for cache fills"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Fresher source reads may cost latency/capacity; ordinary stale display can be acceptable"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: TTL measures cache lifetime, not the age of a source snapshot, so resetting it cannot establish a strict origin-freshness bound alone."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to aside, replica; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-many-call-sites",
+      "theme": "Different services implement inconsistent miss and invalidation logic. Should cache-aside remain scattered?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "aside",
+        "patterns"
+      ],
+      "technicalSources": [
+        "aside",
+        "patterns"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "One caller caches errors, another omits tenant scope and a third never expires entries. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache-Aside Pattern to many call sites."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Different services implement inconsistent miss and invalidation logic. Should cache-aside remain scattered?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Centralize the application policy in a reviewed reusable access layer or adopt a verified read-through abstraction where appropriate"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Centralization introduces a shared dependency and may hide costs; cache-aside can remain explicit when a few call sites are disciplined"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Merely moving code into a loader does not create a freshness or distributed-transaction guarantee."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to aside, patterns; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside",
+    "https://redis.io/docs/latest/develop/clients/client-side-caching/",
+    "https://redis.io/docs/latest/develop/pubsub/",
+    "https://aws.amazon.com/builders-library/caching-challenges-and-strategies/",
+    "https://pkg.go.dev/golang.org/x/sync/singleflight",
+    "https://redis.io/docs/latest/operate/oss_and_stack/management/replication/",
+    "https://docs.memcached.org/userguide/",
+    "https://www.ehcache.org/documentation/3.11/caching-patterns.html"
+  ]
+}

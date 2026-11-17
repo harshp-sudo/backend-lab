@@ -1,0 +1,388 @@
+{
+  "topicId": "2d228451-de51-44a1-9b17-06942413e9f8",
+  "title": "Replication",
+  "path": "topics/system-design/database-design-management/scaling-and-high-availability/replication.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Replication\" database interview lag durability failover",
+      "date": "2026-11-17",
+      "result": "success; interview-oriented themes located, but exact frequency/rank/company claims not verified; prompts are original production adaptations"
+    }
+  ],
+  "sources": [
+    {
+      "id": "repl",
+      "title": "PostgreSQL 18: standby replication",
+      "url": "https://www.postgresql.org/docs/18/warm-standby.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Standby acknowledgment modes, lag and recovery considerations."
+    },
+    {
+      "id": "walconfig",
+      "title": "PostgreSQL 18: WAL configuration",
+      "url": "https://www.postgresql.org/docs/18/runtime-config-wal.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Durability depends on flush, commit and replication settings."
+    },
+    {
+      "id": "wal",
+      "title": "PostgreSQL 18: write-ahead logging",
+      "url": "https://www.postgresql.org/docs/18/wal-intro.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Logged recovery rather than flushing every modified data page at commit."
+    },
+    {
+      "id": "backup",
+      "title": "PostgreSQL 18: continuous archiving and recovery",
+      "url": "https://www.postgresql.org/docs/18/continuous-archiving.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Independent base backups, WAL archives and point-in-time recovery."
+    },
+    {
+      "id": "isolation",
+      "title": "PostgreSQL 18: transaction isolation",
+      "url": "https://www.postgresql.org/docs/18/transaction-iso.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Snapshot, concurrency anomalies and serializable behavior."
+    },
+    {
+      "id": "mongorepl",
+      "title": "MongoDB: replication",
+      "url": "https://www.mongodb.com/docs/manual/replication/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Replica-set topology, elections and application-visible behavior."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-read-after-write-lag",
+      "theme": "The API confirms an order, but a replica read says it does not exist. How will you fix the user contract?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "repl",
+        "isolation"
+      ],
+      "technicalSources": [
+        "repl",
+        "isolation"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Writes go to a primary and order-detail reads are round-robin among asynchronous replicas. Users immediately reload after checkout. What will you change without promising every follower is current?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Replication to read after write lag."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The API confirms an order, but a replica read says it does not exist. How will you fix the user contract?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to repl, isolation; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-acknowledged-write-lost",
+      "theme": "An acknowledged order disappears after failover. Which guarantee was missing?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "repl",
+        "walconfig"
+      ],
+      "technicalSources": [
+        "repl",
+        "walconfig"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The primary acknowledged before its asynchronous standby received the last changes. The primary host was lost and the standby was promoted. The business now requires a stricter loss budget. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Replication to acknowledged write lost."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An acknowledged order disappears after failover. Which guarantee was missing?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to repl, walconfig; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-synchronous-latency",
+      "theme": "Commit latency jumps when a remote standby slows. How will you trade durability and availability?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "repl",
+        "walconfig"
+      ],
+      "technicalSources": [
+        "repl",
+        "walconfig"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A write policy waits for a geographically distant durable copy. Network degradation pushes checkout beyond its latency budget. Product asks to disable waiting immediately while keeping the same zero-loss claim. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Replication to synchronous latency."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Commit latency jumps when a remote standby slows. How will you trade durability and availability?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to repl, walconfig; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-slot-retention-storage",
+      "theme": "A stopped consumer fills primary storage. Delete all retained logs?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "repl",
+        "backup"
+      ],
+      "technicalSources": [
+        "repl",
+        "backup"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A replica/subscriber is offline while its retention mechanism keeps required WAL. Disk headroom is shrinking. What will you do to protect production and preserve a recovery plan?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Replication to slot retention storage."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A stopped consumer fills primary storage. Delete all retained logs?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to repl, backup; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-replicated-bad-delete",
+      "theme": "A bad DELETE reaches every replica. Where will recovery come from?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "backup",
+        "wal"
+      ],
+      "technicalSources": [
+        "backup",
+        "wal"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "An operator deletes valid historical orders and the live standbys faithfully replay the transaction. The deletion is detected an hour later. What recovery options will you evaluate?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Replication to replicated bad delete."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A bad DELETE reaches every replica. Where will recovery come from?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to backup, wal; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-read-replicas-write-bottleneck",
+      "theme": "Five read replicas do not improve order-write throughput. Why?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "repl",
+        "mongorepl"
+      ],
+      "technicalSources": [
+        "repl",
+        "mongorepl"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A single-primary database is saturated on write logging and index maintenance. The team adds followers and expects linear write scaling. What will you measure and choose instead?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Replication to read replicas write bottleneck."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Five read replicas do not improve order-write throughput. Why?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to repl, mongorepl; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Engine-specific examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://www.postgresql.org/docs/18/warm-standby.html",
+    "https://www.postgresql.org/docs/18/runtime-config-wal.html",
+    "https://www.postgresql.org/docs/18/wal-intro.html",
+    "https://www.postgresql.org/docs/18/continuous-archiving.html",
+    "https://www.postgresql.org/docs/18/transaction-iso.html",
+    "https://www.mongodb.com/docs/manual/replication/"
+  ]
+}

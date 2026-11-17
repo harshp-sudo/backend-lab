@@ -1,0 +1,371 @@
+{
+  "topicId": "d4401a5f-8f6f-4734-8476-396856cfd4c7",
+  "title": "gRPC",
+  "path": "topics/system-design/api-design-and-communication/api-styles-and-protocols/grpc.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"gRPC\" interview deadlines retry streaming backpressure",
+      "date": "2026-11-17",
+      "result": "success; interview-oriented themes located, but exact frequency/rank/company claims not verified; prompts are original production adaptations"
+    }
+  ],
+  "sources": [
+    {
+      "id": "deadline",
+      "title": "gRPC: deadlines",
+      "url": "https://grpc.io/docs/guides/deadlines/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Deadline propagation and application responsibility for cancelled work."
+    },
+    {
+      "id": "retry",
+      "title": "gRPC: retry",
+      "url": "https://grpc.io/docs/guides/retry/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Configured retry, transparent retry and bounded attempts."
+    },
+    {
+      "id": "flow",
+      "title": "gRPC: flow control",
+      "url": "https://grpc.io/docs/guides/flow-control/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Streaming write buffering, receiver pacing and deadlock risks."
+    },
+    {
+      "id": "proto",
+      "title": "Protocol Buffers: proto3 language guide",
+      "url": "https://protobuf.dev/programming-guides/proto3/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Field numbers, presence and wire evolution constraints."
+    },
+    {
+      "id": "grpcweb",
+      "title": "gRPC: browser gRPC-Web tutorial",
+      "url": "https://grpc.io/docs/platforms/web/basics/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Browser-specific clients and proxy integration differ from native gRPC capabilities."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-deadline-chain",
+      "theme": "A frontend times out but downstream work runs for another minute. What changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "deadline"
+      ],
+      "technicalSources": [
+        "deadline"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The user operation has a 500 ms budget. Each of three service hops starts a fresh 500 ms timeout, and cancelled handlers keep spawning queries. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies gRPC to deadline chain."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A frontend times out but downstream work runs for another minute. What changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: The user operation has a 500 ms budget. Each of three service hops starts a fresh 500 ms timeout, and cancelled handlers keep spawning queries. What…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Propagate the remaining deadline, cap each local step within it and make cancellation observable to spawned work. Trace elapsed time by hop and stop…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Shorter budgets can expose slow dependencies earlier; an async operation is preferable if legitimate work cannot fit."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: A deadline does not remove the need for database timeouts or safe cleanup of work already in progress."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to deadline; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-retry-reservation",
+      "theme": "A reservation returns DEADLINE_EXCEEDED. Is retrying safe?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "retry",
+        "deadline"
+      ],
+      "technicalSources": [
+        "retry",
+        "deadline"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A stock reservation may commit just before the reply is lost. The caller needs the reservation exactly once for this purchase intent. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies gRPC to retry reservation."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A reservation returns DEADLINE_EXCEEDED. Is retrying safe?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A stock reservation may commit just before the reply is lost. The caller needs the reservation exactly once for this purchase intent. What will you do?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Reuse a stable operation ID, enforce duplicate-safe domain execution and recover the stored result. Configure only bounded retry attempts within the total…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: This requires durable identity/outcome retention; a naturally repeatable set operation is simpler where it fits."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Neither gRPC retry configuration nor a client error status alone supplies business deduplication."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to retry, deadline; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-stream-buffers",
+      "theme": "A bidirectional stream stalls while both sides are writing. How do you debug it?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "flow"
+      ],
+      "technicalSources": [
+        "flow"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Large messages fill flow-control windows. Both applications synchronously send all output before reading any input, and memory pressure is rising. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies gRPC to stream buffers."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A bidirectional stream stalls while both sides are writing. How do you debug it?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: Large messages fill flow-control windows. Both applications synchronously send all output before reading any input, and memory pressure is rising.…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Inspect read/write scheduling and buffer metrics, then use bounded concurrent or interleaved reads and writes. Respect framework flow control and…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Concurrency introduces ordering/shutdown coordination; a simpler request/response or smaller bounded batches may fit better."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: If durable receipt matters, add a separate acknowledgment/checkpoint contract."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to flow; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-protobuf-reuse",
+      "theme": "A deleted protobuf field number is available. Can you reuse it?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "proto"
+      ],
+      "technicalSources": [
+        "proto"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Old mobile/service clients still send stored messages containing field 4. A new deployment assigns field 4 a different business meaning. How will you avoid corruption?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies gRPC to protobuf reuse."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A deleted protobuf field number is available. Can you reuse it?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: Old mobile/service clients still send stored messages containing field 4. A new deployment assigns field 4 a different business meaning. How will you…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Keep field identities stable, reserve the removed number/name and assign a fresh number to the new meaning. Test mixed-version readers/writers and…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Keeping obsolete fields increases contract maintenance; a deliberately new major service/message boundary is an alternative for a true break."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Numeric wire compatibility can still conceal a units or enum-behavior change, so review meanings and defaults too."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to proto; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-browser-parity",
+      "theme": "An internal bidirectional RPC must serve browsers. Can you ship the same stub?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "grpcweb",
+        "flow"
+      ],
+      "technicalSources": [
+        "grpcweb",
+        "flow"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A dashboard needs live updates and commands. Backend clients use native bidirectional gRPC, but the browser environment and edge proxy have different transport capabilities. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies gRPC to browser parity."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An internal bidirectional RPC must serve browsers. Can you ship the same stub?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A dashboard needs live updates and commands. Backend clients use native bidirectional gRPC, but the browser environment and edge proxy have different…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Evaluate the actual gRPC-Web client/proxy/server support and streaming modes, then choose a supported browser contract. If necessary expose commands via…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: A separate edge adds translation and lifecycle work; a fully supported browser RPC path can be simpler for the required modes."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Reconnection and replay remain application concerns whichever browser transport is selected."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to grpcweb, flow; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-retry-amplification",
+      "theme": "An outage turns one RPC into twenty-seven attempts. What is the policy?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "retry",
+        "deadline"
+      ],
+      "technicalSources": [
+        "retry",
+        "deadline"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Three layers independently retry three times while the dependency is overloaded. Error rates and queue times worsen. How will you contain the failure?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies gRPC to retry amplification."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An outage turns one RPC into twenty-seven attempts. What is the policy?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: Three layers independently retry three times while the dependency is overloaded. Error rates and queue times worsen. How will you contain the failure?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Choose a primary retry owner, enforce one end-to-end attempt/time budget, use bounded backoff with jitter where appropriate and honor overload signals.…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Fewer retries may surface transient errors sooner; controlled recovery can be preferable to exhausting the whole fleet."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Changing status codes to trigger more retries does not create capacity and can repeat committed effects."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to retry, deadline; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://grpc.io/docs/guides/deadlines/",
+    "https://grpc.io/docs/guides/retry/",
+    "https://grpc.io/docs/guides/flow-control/",
+    "https://protobuf.dev/programming-guides/proto3/",
+    "https://grpc.io/docs/platforms/web/basics/"
+  ]
+}
