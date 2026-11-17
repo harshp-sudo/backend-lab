@@ -1,0 +1,399 @@
+{
+  "topicId": "b1e035b0-a98f-4b6f-b5e3-052286dded23",
+  "title": "Error Handling & Status Codes",
+  "path": "topics/system-design/api-design-and-communication/api-lifecycle-data-and-developer-experience/error-handling-and-status-codes.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Error Handling\" \"Status Codes\" interview API retries",
+      "date": "2026-11-17",
+      "result": "success; interview-oriented themes located, but exact frequency/rank/company claims not verified; prompts are original production adaptations"
+    }
+  ],
+  "sources": [
+    {
+      "id": "http",
+      "title": "RFC 9110: HTTP Semantics",
+      "url": "https://www.rfc-editor.org/rfc/rfc9110.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "HTTP method, conditional request and response-status semantics; not a guarantee about business side effects."
+    },
+    {
+      "id": "problem",
+      "title": "RFC 9457: Problem Details for HTTP APIs",
+      "url": "https://www.rfc-editor.org/rfc/rfc9457.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Problem representation, extension members and safe diagnostic disclosure."
+    },
+    {
+      "id": "429",
+      "title": "RFC 6585: additional HTTP status codes",
+      "url": "https://www.rfc-editor.org/rfc/rfc6585.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "429 and optional Retry-After behavior; counting policy is application-specific."
+    },
+    {
+      "id": "idem",
+      "title": "AWS Builders Library: making retries safe with idempotent APIs",
+      "url": "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Caller-provided request identity, late requests and same-key/different-intent handling."
+    },
+    {
+      "id": "ghttp",
+      "title": "GraphQL: serving over HTTP",
+      "url": "https://graphql.org/learn/serving-over-http/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Transport/media type and error-layer distinctions."
+    },
+    {
+      "id": "gexec",
+      "title": "GraphQL: execution",
+      "url": "https://graphql.org/learn/execution/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Resolver execution and selected field results."
+    },
+    {
+      "id": "grpcstatus",
+      "title": "gRPC: status codes",
+      "url": "https://grpc.io/docs/guides/status-codes/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "RPC status distinguishes conditions and must not be inferred solely from HTTP transport status."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-all-200",
+      "theme": "Every failure returns 200 with success=false. How do you fix the contract safely?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "http",
+        "problem"
+      ],
+      "technicalSources": [
+        "http",
+        "problem"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Proxies and client SDKs treat invalid requests and service failures as success, but some old clients depend on the current envelope. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Error Handling & Status Codes to all 200."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Every failure returns 200 with success=false. How do you fix the contract safely?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: Proxies and client SDKs treat invalid requests and service failures as success, but some old clients depend on the current envelope. What will you do?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Define a consistent status/problem mapping for known conditions, keep stable machine identifiers and introduce it through a measured…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Migration and parallel support cost effort; a tightly controlled client fleet may allow a coordinated change."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Leaving misleading 200 responses permanently also obscures real failure behavior."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to http, problem; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-timeout-charge",
+      "theme": "A 504 reaches the client after an order/payment may have committed. What should it do?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "http",
+        "idem"
+      ],
+      "technicalSources": [
+        "http",
+        "idem"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The gateway lost the downstream reply. The UI wants to show “failed” and submit another fresh purchase. How will you handle recovery?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Error Handling & Status Codes to timeout charge."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A 504 reaches the client after an order/payment may have committed. What should it do?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: The gateway lost the downstream reply. The UI wants to show “failed” and submit another fresh purchase. How will you handle recovery?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Show an unresolved/pending outcome, preserve the original operation identity and query/retry according to the authoritative outcome contract. Use bounded…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Status reconciliation adds state/UI complexity; an async operation resource can make it explicit."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Changing to a new key can create another real purchase even though the first reply was an error."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to http, idem; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-auth-error",
+      "theme": "Should an expired credential and a forbidden order use the same response?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "http"
+      ],
+      "technicalSources": [
+        "http"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Clients need to know when reauthentication may help, but the API must avoid revealing private resource existence. What will you choose?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Error Handling & Status Codes to auth error."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Should an expired credential and a forbidden order use the same response?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: Clients need to know when reauthentication may help, but the API must avoid revealing private resource existence. What will you choose?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Use documented authentication challenge behavior for missing/invalid credentials and a deliberate permission/existence policy for authenticated access.…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Uniform concealment can reduce information leakage but makes debugging harder; safe correlation/support can compensate."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Returning 401 for every permission denial can cause endless token refresh, while exposing object details in a 403/404 can defeat the…"
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to http; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-safe-problem",
+      "theme": "Developers want SQL errors and submitted tokens in Problem Details. What belongs there?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "problem"
+      ],
+      "technicalSources": [
+        "problem"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Support needs enough context to resolve validation and unexpected failures. The same endpoint accepts credentials and personal information. What will you expose?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Error Handling & Status Codes to safe problem."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Developers want SQL errors and submitted tokens in Problem Details. What belongs there?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: Support needs enough context to resolve validation and unexpected failures. The same endpoint accepts credentials and personal information. What will…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Return stable problem types, safe field categories and an opaque correlation reference. Redact secrets and unnecessary existence/internal details; retain…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Reduced public detail requires better support tooling; known non-sensitive validation bounds can still be explained clearly."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Logging every raw body can simply move the leak to another system."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to problem; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-partial-graphql",
+      "theme": "A response has useful data and a field error. Should the adapter discard it all?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "ghttp",
+        "gexec",
+        "grpcstatus"
+      ],
+      "technicalSources": [
+        "ghttp",
+        "gexec",
+        "grpcstatus"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A GraphQL order screen has a valid order total but its optional customer lookup failed. The HTTP adapter currently returns either blanket 200 success or blanket 500 with no data. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Error Handling & Status Codes to partial graphql."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A response has useful data and a field error. Should the adapter discard it all?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A GraphQL order screen has a valid order total but its optional customer lookup failed. The HTTP adapter currently returns either blanket 200 success…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Define the client’s partial-result contract and preserve field-level error meaning where useful, including nullability behavior. Distinguish request…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Partial handling complicates UI states; a simpler all-or-fail read model can fit another requirement."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: gRPC/SOAP need their own adapters rather than copying GraphQL conventions blindly."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to ghttp, gexec, grpcstatus; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-retry-classification",
+      "theme": "A client retries every 4xx and 5xx until the deadline. What policy would you publish?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "http",
+        "429",
+        "idem"
+      ],
+      "technicalSources": [
+        "http",
+        "429",
+        "idem"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Validation failures, conflicts, 429s and transient dependency faults are treated identically, creating load and duplicate side effects. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Error Handling & Status Codes to retry classification."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A client retries every 4xx and 5xx until the deadline. What policy would you publish?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: Validation failures, conflicts, 429s and transient dependency faults are treated identically, creating load and duplicate side effects. What will you…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Publish stable error categories and condition-specific actions: correct input, refresh/reconcile state, authenticate, wait or safely retry. Bound total…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: A detailed taxonomy requires client implementation and compatibility care; a smaller stable set with clear guidance may be enough."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Retry-After is guidance, not a guarantee that capacity will be reserved."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to http, 429, idem; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://www.rfc-editor.org/rfc/rfc9110.html",
+    "https://www.rfc-editor.org/rfc/rfc9457.html",
+    "https://www.rfc-editor.org/rfc/rfc6585.html",
+    "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+    "https://graphql.org/learn/serving-over-http/",
+    "https://graphql.org/learn/execution/",
+    "https://grpc.io/docs/guides/status-codes/"
+  ]
+}

@@ -1,0 +1,15 @@
+<article class="kb-hub" data-node-id="4cc92180-39d9-4181-8d8e-942be0958557">
+<h1>API Design &amp; Communication</h1>
+<div class="kb-callout--insight"><p>A restaurant needs a menu, a way to place orders, rules for busy periods and a way to tell diners when the menu changes. An API is the agreement between the person asking and the kitchen doing the work. Good agreements explain both the happy path and what to do when an order or reply gets lost.</p></div><p>Start with a concrete client task and choose an interaction style. Then follow a request through authentication, validation and failure. Finally define how clients traverse data, interpret errors and survive contract changes. This branch complements backend responsibility boundaries and database correctness; it owns the client-facing agreement.</p>
+<section><h2>🗺️ Roadmap</h2><p>Read this as a map of learning choices, not a claim that every child is a required technical dependency.</p><figure class="kb-diagram"><pre class="mermaid">flowchart TD
+ accTitle: API Design &amp; Communication roadmap
+ accDescr: Immediate child learning paths in catalog order.
+ ROOT[&quot;API contracts&quot;]
+ ROOT --&gt; N0[&quot;API Styles &amp; Protocols&quot;]
+ ROOT --&gt; N1[&quot;Live updates&quot;]
+ ROOT --&gt; N2[&quot;Reliable API calls&quot;]
+ ROOT --&gt; N3[&quot;Lifecycle and DX&quot;]</pre><figcaption>Explore every immediate child in the same order as the sidebar.</figcaption></figure></section>
+<section><h2>Suggested reading guide</h2><p>Choose a request/response contract in API Styles &amp; Protocols before choosing a framework. Different clients and workloads may justify different styles within one system.</p><p>Use Real-Time &amp; Async Communication when waiting for a normal response is the wrong interaction. Distinguish connection delivery from durable event ownership.</p><p>Study Reliability, Security &amp; Traffic Control with a failed or repeated operation. Finish with API Lifecycle, Data &amp; Developer Experience to keep the contract usable over time.</p></section>
+<section><h2>Explore this branch</h2><ul data-child-links><li><a href="#/system-design/api-design-and-communication/api-styles-and-protocols">API Styles &amp; Protocols</a></li><li><a href="#/system-design/api-design-and-communication/real-time-and-async-communication">Real-Time &amp; Async Communication</a></li><li><a href="#/system-design/api-design-and-communication/reliability-security-and-traffic-control">Reliability, Security &amp; Traffic Control</a></li><li><a href="#/system-design/api-design-and-communication/api-lifecycle-data-and-developer-experience">API Lifecycle, Data &amp; Developer Experience</a></li></ul></section>
+<div class="kb-callout--impact"><p>Practice by defending one decision and explaining the failure or changed constraint that would alter it. Opening this hub does not mark any lesson mastered.</p></div><footer><p><a href="#/system-design">Return to the parent overview</a></p></footer>
+</article>

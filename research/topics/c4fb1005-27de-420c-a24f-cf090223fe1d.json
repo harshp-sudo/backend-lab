@@ -1,0 +1,377 @@
+{
+  "topicId": "c4fb1005-27de-420c-a24f-cf090223fe1d",
+  "title": "SOAP",
+  "path": "topics/system-design/api-design-and-communication/api-styles-and-protocols/soap.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"SOAP\" interview WSDL faults interoperability security",
+      "date": "2026-11-17",
+      "result": "success; interview-oriented themes located, but exact frequency/rank/company claims not verified; prompts are original production adaptations"
+    }
+  ],
+  "sources": [
+    {
+      "id": "soap",
+      "title": "W3C: SOAP 1.2 messaging framework, second edition",
+      "url": "https://www.w3.org/TR/soap12-part1/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Envelope, processing roles, mustUnderstand, faults and extension boundaries."
+    },
+    {
+      "id": "wsdl",
+      "title": "W3C: WSDL 2.0 primer",
+      "url": "https://www.w3.org/TR/wsdl20-primer/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Abstract interfaces versus concrete bindings/endpoints; distinguish WSDL versions."
+    },
+    {
+      "id": "soapbinding",
+      "title": "W3C: SOAP 1.2 adjuncts, second edition",
+      "url": "https://www.w3.org/TR/soap12-part2/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "SOAP 1.2 HTTP binding and fault/transport mapping are explicit protocol details."
+    },
+    {
+      "id": "idem",
+      "title": "AWS Builders Library: making retries safe with idempotent APIs",
+      "url": "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Caller-provided request identity, late requests and same-key/different-intent handling."
+    },
+    {
+      "id": "compat",
+      "title": "Google AIP-180: backwards compatibility",
+      "url": "https://google.aip.dev/180",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Source, wire and semantic compatibility; consumer assumptions and additive-change limits."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-namespace-interoperability",
+      "theme": "A partner rejects a message that looks identical in logs. What do you inspect?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "soap",
+        "wsdl",
+        "soapbinding"
+      ],
+      "technicalSources": [
+        "soap",
+        "wsdl",
+        "soapbinding"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A new client uses the same operation name, but production reports a body-processing fault. The old client still works. How will you diagnose this?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies SOAP to namespace interoperability."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A partner rejects a message that looks identical in logs. What do you inspect?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A new client uses the same operation name, but production reports a body-processing fault. The old client still works. How will you diagnose this?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Compare exact SOAP version, qualified element namespaces, binding/action headers, schema expectations and the pinned WSDL used by both clients. Capture a…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Strict matching exposes drift but can require partner coordination; a deliberately versioned adapter is an alternative for legacy callers."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Relaxing namespace validation may hide the fault while dispatching a different operation or bypassing expected validation."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to soap, wsdl, soapbinding; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-unknown-required-header",
+      "theme": "A proxy drops an unknown required header to restore availability. Is that acceptable?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "soap"
+      ],
+      "technicalSources": [
+        "soap"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "An intermediary encounters a targeted mandatory header added under an agreed policy. Dropping it makes downstream requests succeed, but the instruction may carry a security requirement. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies SOAP to unknown required header."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A proxy drops an unknown required header to restore availability. Is that acceptable?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: An intermediary encounters a targeted mandatory header added under an agreed policy. Dropping it makes downstream requests succeed, but the…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Determine the header’s role, required processing and supported policy. Reject or route to a compatible implementation if it cannot be processed, rather…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Failing closed can reduce availability; a negotiated optional extension or parallel compatible endpoint may be appropriate after explicit…"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Transport encryption cannot compensate for an instruction that a required message-processing role ignored."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to soap; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-timeout-partner-charge",
+      "theme": "A SOAP payment call times out. Which error tells you whether it charged?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "soapbinding",
+        "idem"
+      ],
+      "technicalSources": [
+        "soapbinding",
+        "idem"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The partner may commit a transfer before a network timeout. Your integration must avoid a second transfer, but currently retries every generated exception. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies SOAP to timeout partner charge."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A SOAP payment call times out. Which error tells you whether it charged?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: The partner may commit a transfer before a network timeout. Your integration must avoid a second transfer, but currently retries every generated…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Separate received SOAP faults from transport uncertainty. Reuse the partner’s business operation identity and query its authoritative…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Recovery adds status polling and retained identifiers; a naturally idempotent partner operation would simplify it."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: If the partner offers no duplicate-safe recovery, surface/manual-reconcile uncertainty instead of inventing a guarantee."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to soapbinding, idem; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-tls-intermediary",
+      "theme": "TLS ends at an intermediary, but the signed message must survive onward routing. What is missing?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "soap",
+        "wsdl"
+      ],
+      "technicalSources": [
+        "soap",
+        "wsdl"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A regulated partner requires end-to-end integrity of selected business content across an intermediary. The team says “SOAP uses HTTPS, so this is solved.” How will you respond?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies SOAP to tls intermediary."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: TLS ends at an intermediary, but the signed message must survive onward routing. What is missing?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A regulated partner requires end-to-end integrity of selected business content across an intermediary. The team says “SOAP uses HTTPS, so this is…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Document actual TLS termination/trust boundaries, then agree the required message-security extension/profile and which content is protected. Validate…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Message security adds key lifecycle and interoperability complexity; direct mutually trusted TLS connections may be enough for a different…"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Any content transformation must be reconciled with the protected message contract."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to soap, wsdl; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-required-element-rollout",
+      "theme": "A required XML element breaks old generated clients. Can the schema be patched in place?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "wsdl",
+        "compat"
+      ],
+      "technicalSources": [
+        "wsdl",
+        "compat"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The partner adds a required tax field to an existing operation while many clients update quarterly. The field is necessary for new transactions. What rollout will you choose?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies SOAP to required element rollout."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A required XML element breaks old generated clients. Can the schema be patched in place?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: The partner adds a required tax field to an existing operation while many clients update quarterly. The field is necessary for new transactions. What…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Treat the newly required input as a compatibility change. Negotiate a migration window, offer a parallel/versioned contract or a valid backward-compatible…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Parallel contracts cost support and routing; coordinated upgrades can work in a tightly controlled fleet."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Retire the old path only after actual consumer migration evidence."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to wsdl, compat; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-fault-recovery",
+      "theme": "Every SOAP fault is mapped to a generic retry. Why does load increase?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "soap",
+        "soapbinding"
+      ],
+      "technicalSources": [
+        "soap",
+        "soapbinding"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Malformed partner requests repeatedly fail, while genuine transient service faults and lost responses are treated identically. Retries consume integration capacity. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies SOAP to fault recovery."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Every SOAP fault is mapped to a generic retry. Why does load increase?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: Malformed partner requests repeatedly fail, while genuine transient service faults and lost responses are treated identically. Retries consume…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Classify safe fault codes/details according to the selected SOAP version, binding and domain contract. Return actionable input/policy errors without…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: A richer classification requires stable contracts and client handling; a documented simple fault taxonomy may be enough initially."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: If the same invalid request cannot succeed unchanged, waiting longer does not fix it."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to soap, soapbinding; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://www.w3.org/TR/soap12-part1/",
+    "https://www.w3.org/TR/wsdl20-primer/",
+    "https://www.w3.org/TR/soap12-part2/",
+    "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+    "https://google.aip.dev/180"
+  ]
+}

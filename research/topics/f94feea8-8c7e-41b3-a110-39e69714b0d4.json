@@ -1,0 +1,379 @@
+{
+  "topicId": "f94feea8-8c7e-41b3-a110-39e69714b0d4",
+  "title": "Sharding",
+  "path": "topics/system-design/database-design-management/scaling-and-high-availability/sharding.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Sharding\" interview hotspots resharding production",
+      "date": "2026-11-17",
+      "result": "success; interview-oriented themes located, but exact frequency/rank/company claims not verified; prompts are original production adaptations"
+    }
+  ],
+  "sources": [
+    {
+      "id": "shard",
+      "title": "MongoDB: sharding",
+      "url": "https://www.mongodb.com/docs/manual/sharding/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Routing, distributed data and cross-shard behavior."
+    },
+    {
+      "id": "shardkey",
+      "title": "MongoDB: choosing a shard key",
+      "url": "https://www.mongodb.com/docs/manual/core/sharding-choose-a-shard-key/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Distribution, cardinality and query-targeting trade-offs."
+    },
+    {
+      "id": "constraints",
+      "title": "PostgreSQL 18: constraints",
+      "url": "https://www.postgresql.org/docs/18/ddl-constraints.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Keys, referential integrity and constraint scope."
+    },
+    {
+      "id": "transactions",
+      "title": "PostgreSQL 18: transactions",
+      "url": "https://www.postgresql.org/docs/18/tutorial-transactions.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Explicit transaction boundaries and commit/rollback behavior."
+    },
+    {
+      "id": "atomic",
+      "title": "MongoDB: atomicity and transactions",
+      "url": "https://www.mongodb.com/docs/manual/core/write-operations-atomicity/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Conditional single-document writes and multi-document transaction scope."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-giant-tenant-hotspot",
+      "theme": "One tenant generates half the writes. Why did tenant-based sharding not balance the cluster?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "shardkey",
+        "shard"
+      ],
+      "technicalSources": [
+        "shardkey",
+        "shard"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A directory puts each tenant on one shard. One tenant now dominates writes while several shards are idle. Its operations mostly touch independent projects. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Sharding to giant tenant hotspot."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: One tenant generates half the writes. Why did tenant-based sharding not balance the cluster?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to shardkey, shard; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-monotonic-ingest-key",
+      "theme": "Every new insert targets the newest range. Hash the time key?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "shardkey",
+        "shard"
+      ],
+      "technicalSources": [
+        "shardkey",
+        "shard"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A time-range sharded event store directs all current writes to one owner. Most point reads know an event ID, while rare analytics scans time ranges. What will you choose?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Sharding to monotonic ingest key."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Every new insert targets the newest range. Hash the time key?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to shardkey, shard; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-cluster-email-uniqueness",
+      "theme": "Two shards accept the same email. Does adding local unique indexes fix it?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "shard",
+        "constraints"
+      ],
+      "technicalSources": [
+        "shard",
+        "constraints"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Users are distributed by user ID, but the business requires a globally unique normalized login name. Each shard independently enforces local uniqueness. How will you guarantee the business rule?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Sharding to cluster email uniqueness."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Two shards accept the same email. Does adding local unique indexes fix it?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to shard, constraints; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-cross-shard-transfer",
+      "theme": "A transfer updates accounts on two owners. Is a local transaction sufficient?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "shard",
+        "transactions",
+        "atomic"
+      ],
+      "technicalSources": [
+        "shard",
+        "transactions",
+        "atomic"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Account records were sharded independently. A transfer must not be silently treated as complete after only one side succeeds. What transaction/workflow boundary will you design?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Sharding to cross shard transfer."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A transfer updates accounts on two owners. Is a local transaction sufficient?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to shard, transactions, atomic; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-resharding-concurrent-writes",
+      "theme": "Data counts match after copying, but writes are still arriving. When can routing switch?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "shard",
+        "shardkey",
+        "atomic"
+      ],
+      "technicalSources": [
+        "shard",
+        "shardkey",
+        "atomic"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A tenant is being moved between shard owners during live traffic. A naive copy job reaches the same row count as the source. How will you decide cutover and handle in-flight retries?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Sharding to resharding concurrent writes."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Data counts match after copying, but writes are still arriving. When can routing switch?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to shard, shardkey, atomic; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-global-recent-orders",
+      "theme": "One shard is down during a global latest-orders query. Can the API return an exact list?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "shard"
+      ],
+      "technicalSources": [
+        "shard"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A report merges recent orders across all shards with a strict deadline. One owner is unreachable. Product asks the API to return the available results as if they were complete. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Sharding to global recent orders."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: One shard is down during a global latest-orders query. Can the API return an exact list?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to shard; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Engine-specific examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://www.mongodb.com/docs/manual/sharding/",
+    "https://www.mongodb.com/docs/manual/core/sharding-choose-a-shard-key/",
+    "https://www.postgresql.org/docs/18/ddl-constraints.html",
+    "https://www.postgresql.org/docs/18/tutorial-transactions.html",
+    "https://www.mongodb.com/docs/manual/core/write-operations-atomicity/"
+  ]
+}

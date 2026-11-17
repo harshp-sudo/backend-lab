@@ -1,0 +1,364 @@
+{
+  "topicId": "8000d56f-7190-4efa-a69d-8a20d46f458f",
+  "title": "GraphQL",
+  "path": "topics/system-design/api-design-and-communication/api-styles-and-protocols/graphql.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"GraphQL\" interview production N+1 query complexity authorization",
+      "date": "2026-11-17",
+      "result": "success; interview-oriented themes located, but exact frequency/rank/company claims not verified; prompts are original production adaptations"
+    }
+  ],
+  "sources": [
+    {
+      "id": "gexec",
+      "title": "GraphQL: execution",
+      "url": "https://graphql.org/learn/execution/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Resolver execution and selected field results."
+    },
+    {
+      "id": "gsecurity",
+      "title": "GraphQL: security and demand control",
+      "url": "https://graphql.org/learn/security/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Resource budgets, bounded operations and API protection."
+    },
+    {
+      "id": "loader",
+      "title": "GraphQL DataLoader: official implementation",
+      "url": "https://github.com/graphql/dataloader",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Request-scoped batching and cache-isolation responsibilities."
+    },
+    {
+      "id": "ghttp",
+      "title": "GraphQL: serving over HTTP",
+      "url": "https://graphql.org/learn/serving-over-http/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Transport/media type and error-layer distinctions."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-order-customer-n-plus-one",
+      "theme": "One order query creates 101 database calls. What do you change?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "gexec",
+        "loader"
+      ],
+      "technicalSources": [
+        "gexec",
+        "loader"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A query returns 100 orders and a customer name for each. It passes schema validation but p95 latency grows with list size. How will you diagnose and fix it?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies GraphQL to order customer n plus one."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: One order query creates 101 database calls. What do you change?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A query returns 100 orders and a customer name for each. It passes schema validation but p95 latency grows with list size. How will you diagnose and…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Trace calls by resolver path and confirm repeated customer fetches. Add bounded request-scoped batching with correct key/result alignment and ownership…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Batching adds scheduling and result-mapping complexity; a tailored joined read can be simpler for one stable view."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: A single query that still scans millions of rows needs indexing/workload changes beyond DataLoader."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to gexec, loader; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-global-loader-leak",
+      "theme": "A global customer loader returns another tenant’s data. What is the boundary?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "loader",
+        "gsecurity"
+      ],
+      "technicalSources": [
+        "loader",
+        "gsecurity"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A process-wide loader caches by customer ID. Two tenants can use overlapping external IDs and have different field permissions. What will you do first?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies GraphQL to global loader leak."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A global customer loader returns another tenant’s data. What is the boundary?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A process-wide loader caches by customer ID. Two tenants can use overlapping external IDs and have different field permissions. What will you do first?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Remove unsafe cross-request memoization, invalidate affected entries and establish a loader per trusted request context. Fetch through…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Per-request caching sacrifices cross-request hits but makes scope easier to reason about."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Even globally unique IDs do not authorize access, and permission changes can invalidate a previously valid cached view."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to loader, gsecurity; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-shallow-expensive-query",
+      "theme": "Depth is limited, but one query still overloads the backend. Why?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "gsecurity"
+      ],
+      "technicalSources": [
+        "gsecurity"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A client uses many aliases and large sibling lists without exceeding the allowed nesting depth. Backend work exceeds the request budget. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies GraphQL to shallow expensive query."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Depth is limited, but one query still overloads the backend. Why?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A client uses many aliases and large sibling lists without exceeding the allowed nesting depth. Backend work exceeds the request budget. What will you…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Measure field cardinality and backend cost, bound list arguments and operation size, and introduce breadth/complexity admission plus execution deadlines.…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Cost models require maintenance and may reject legitimate heavy reads; a dedicated asynchronous export may fit that workload better."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: If one allowed resolver has an unbounded query, fix its access contract as well."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to gsecurity; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-nested-auth-bypass",
+      "theme": "The root query checks ownership, but a nested path exposes a private field. Where does policy live?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "gexec",
+        "gsecurity"
+      ],
+      "technicalSources": [
+        "gexec",
+        "gsecurity"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A private invoice is inaccessible through invoice(id), yet reachable through customer.orders.invoice. Different resolvers were written by different teams. How will you prevent this?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies GraphQL to nested auth bypass."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The root query checks ownership, but a nested path exposes a private field. Where does policy live?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A private invoice is inaccessible through invoice(id), yet reachable through customer.orders.invoice. Different resolvers were written by different…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Centralize object/field permission checks in the owning access layer and ensure each resolver uses trusted request identity. Test alternate graph paths…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Central policy adds context plumbing and can require bulk permission checks for performance."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: If caching is added, verify it preserves the same policy scope."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to gexec, gsecurity; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-nonnull-failure",
+      "theme": "A customer lookup error nulls an order subtree. Should every field be non-null?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "gexec",
+        "ghttp"
+      ],
+      "technicalSources": [
+        "gexec",
+        "ghttp"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A screen could still show order identity and total during a customer-service outage, but a strict nested non-null chain makes the entire view disappear. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies GraphQL to nonnull failure."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A customer lookup error nulls an order subtree. Should every field be non-null?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A screen could still show order identity and total during a customer-service outage, but a strict nested non-null chain makes the entire view…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Model nullability around actual failure/absence guarantees and document error behavior. Make the optional customer-dependent boundary nullable where…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Nullable fields require explicit UI states; an independently owned denormalized display snapshot may be preferable for a historical receipt."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Changed guarantees can break clients even when a query still parses."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to gexec, ghttp; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-mutation-serialization",
+      "theme": "Two mutation fields are serial. Is checkout now transactional?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "gexec",
+        "gsecurity"
+      ],
+      "technicalSources": [
+        "gexec",
+        "gsecurity"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A mutation reserves stock and then charges payment. The second field fails after the first succeeded. A proposal relies on GraphQL’s serial execution to roll everything back. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies GraphQL to mutation serialization."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Two mutation fields are serial. Is checkout now transactional?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A mutation reserves stock and then charges payment. The second field fails after the first succeeded. A proposal relies on GraphQL’s serial execution…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Move checkout orchestration into a domain operation with explicit durable state, idempotency and compensation/reconciliation rules. Use a local…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: This costs workflow and recovery state; an atomic local operation is simpler when all invariants share one database."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: If a payment outcome is unknown, do not blindly compensate or charge again."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to gexec, gsecurity; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://graphql.org/learn/execution/",
+    "https://graphql.org/learn/security/",
+    "https://github.com/graphql/dataloader",
+    "https://graphql.org/learn/serving-over-http/"
+  ]
+}

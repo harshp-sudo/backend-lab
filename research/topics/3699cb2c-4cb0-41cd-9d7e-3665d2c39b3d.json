@@ -1,0 +1,381 @@
+{
+  "topicId": "3699cb2c-4cb0-41cd-9d7e-3665d2c39b3d",
+  "title": "Cache Consistency",
+  "path": "topics/system-design/caching-architecture/lifecycle-eviction-and-consistency/cache-consistency.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Cache Consistency\" interview stale fill read your writes",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "sessions",
+      "title": "Microsoft: consistency-level and session concepts",
+      "url": "https://learn.microsoft.com/en-us/azure/cosmos-db/consistency-levels",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Primary definitions of reader/session guarantees; database product guarantees are not attributed to an arbitrary cache."
+    },
+    {
+      "id": "tracking",
+      "title": "Redis: client-side caching",
+      "url": "https://redis.io/docs/latest/develop/clients/client-side-caching/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Local cache tracking/invalidation responsibilities and client scope."
+    },
+    {
+      "id": "replica",
+      "title": "Redis: replication",
+      "url": "https://redis.io/docs/latest/operate/oss_and_stack/management/replication/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Asynchronous replication and failover/data-loss considerations."
+    },
+    {
+      "id": "http",
+      "title": "RFC 9111: HTTP Caching",
+      "url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Shared/private storage, cache keys, validation and freshness semantics."
+    },
+    {
+      "id": "aside",
+      "title": "Microsoft Azure Architecture: cache-aside pattern",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Application-owned loading and invalidation order; example ordering does not eliminate every concurrent stale fill."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-read-own-change",
+      "theme": "A user saves version 2 and immediately sees cached version 1. What promise can you enforce?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "sessions",
+        "tracking"
+      ],
+      "technicalSources": [
+        "sessions",
+        "tracking"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The edit is committed but invalidation is asynchronous and requests can land on any worker. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache Consistency to read own change."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A user saves version 2 and immediately sees cached version 1. What promise can you enforce?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Return an authoritative version/receipt and enforce a minimum-version read for that workflow, falling back to an owner capable of satisfying it or returnin"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Version/fallback work costs capacity; a documented eventually refreshed display may suffice for other users"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Short TTL or sticky routing does not prove immediate read-your-write through failure."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to sessions, tracking; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-monotonic-session",
+      "theme": "A session sees version 5, then version 3 after routing changes. How do you stop regression?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "sessions",
+        "replica"
+      ],
+      "technicalSources": [
+        "sessions",
+        "replica"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Different replicas/cache tiers have different lag, but the user must not move backward through one object’s history. What will you implement?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache Consistency to monotonic session."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A session sees version 5, then version 3 after routing changes. How do you stop regression?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Track/enforce a meaningful minimum observed version for the relevant session/object and route or read accordingly"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Session state adds lifecycle and potentially more authoritative reads; unconstrained eventual reads are cheaper under a weaker contract"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Token data cannot be trusted as authorization."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to sessions, replica; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-strict-budget",
+      "theme": "A ten-second TTL is advertised as a ten-second authoritative-staleness guarantee. What must be true?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "sessions",
+        "http",
+        "replica"
+      ],
+      "technicalSources": [
+        "sessions",
+        "http",
+        "replica"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Fills come from a lagging replica and each tier can reset its own lifetime. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache Consistency to strict budget."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A ten-second TTL is advertised as a ten-second authoritative-staleness guarantee. What must be true?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Define the actual source-age/version bound, verify upstream freshness and all-tier behavior, and enforce a suitable version/authority check where the promi"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Tracking source age and strict reads costs work; a weaker stale display can be acceptable"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Resetting TTL at fill time does not erase source lag or a late old snapshot, and jitter must fit the full bound."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to sessions, http, replica; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-mixed-object-snapshot",
+      "theme": "Two individually fresh cached objects form an impossible account total. Is the cache strongly consistent enough?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "sessions",
+        "aside"
+      ],
+      "technicalSources": [
+        "sessions",
+        "aside"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A business decision combines balances that must belong to one atomic view. Separate reads race a transfer. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache Consistency to mixed object snapshot."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Two individually fresh cached objects form an impossible account total. Is the cache strongly consistent enough?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Obtain the decision from an authoritative transaction/snapshot boundary or an explicitly versioned consistent aggregate"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Snapshots/transactions or projection generation cost resources and coordination; approximate dashboards may accept a weaker view"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: An object-level read-your-write token does not automatically define a consistent cut across unrelated objects."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to sessions, aside; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-lost-version-marker",
+      "theme": "Failover loses the cache’s version guard. Can an old fill proceed?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "tracking",
+        "replica",
+        "aside"
+      ],
+      "technicalSources": [
+        "tracking",
+        "replica",
+        "aside"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The payload and metadata were treated as disposable, yet callers rely on the guard to reject obsolete results. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache Consistency to lost version marker."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Failover loses the cache’s version guard. Can an old fill proceed?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Treat missing guard state as uncertainty and recover a trustworthy owner/version boundary before accepting guarded publication, or bypass the cache"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Recovery reduces availability or adds origin work; a weaker stale policy may avoid strict coordination if honestly chosen"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A guard absent because of eviction must not mean every historical version is safe."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to tracking, replica, aside; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-tiered-private-view",
+      "theme": "The shared cache is current but a browser serves a revoked private response. Where is consistency enforced?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "http",
+        "tracking"
+      ],
+      "technicalSources": [
+        "http",
+        "tracking"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Only the server cache participates in invalidation; the product requires prompt permission changes at access. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache Consistency to tiered private view."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The shared cache is current but a browser serves a revoked private response. Where is consistency enforced?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Review the full HTTP/application-storage path, restrict unsafe reuse and enforce the required current authorization/freshness boundary"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Stricter access checks and limited offline storage reduce reuse; a documented bounded revocation window is another product promise"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Current database/cache values cannot retract an already uncontrolled offline copy, so scope the guarantee explicitly."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to http, tracking; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://learn.microsoft.com/en-us/azure/cosmos-db/consistency-levels",
+    "https://redis.io/docs/latest/develop/clients/client-side-caching/",
+    "https://redis.io/docs/latest/operate/oss_and_stack/management/replication/",
+    "https://www.rfc-editor.org/rfc/rfc9111.html",
+    "https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside"
+  ]
+}

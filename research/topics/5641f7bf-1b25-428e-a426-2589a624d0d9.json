@@ -1,0 +1,347 @@
+{
+  "topicId": "5641f7bf-1b25-428e-a426-2589a624d0d9",
+  "title": "Long Polling",
+  "path": "topics/system-design/api-design-and-communication/real-time-and-async-communication/long-polling.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Long Polling\" interview timeout cursor scaling",
+      "date": "2026-11-17",
+      "result": "success; interview-oriented themes located, but exact frequency/rank/company claims not verified; prompts are original production adaptations"
+    }
+  ],
+  "sources": [
+    {
+      "id": "long",
+      "title": "RFC 6202: HTTP long polling and streaming",
+      "url": "https://www.rfc-editor.org/rfc/rfc6202.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Held-request resource, timeout and intermediary constraints."
+    },
+    {
+      "id": "pages",
+      "title": "Google AIP-158: pagination",
+      "url": "https://google.aip.dev/158",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Opaque page tokens and request-context consistency; an example API policy rather than a universal protocol."
+    },
+    {
+      "id": "429",
+      "title": "RFC 6585: additional HTTP status codes",
+      "url": "https://www.rfc-editor.org/rfc/rfc6585.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "429 and optional Retry-After behavior; counting policy is application-specific."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-proxy-timeout",
+      "theme": "Every sixty-second poll receives a gateway timeout after thirty seconds. What changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "long"
+      ],
+      "technicalSources": [
+        "long"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The server holds requests for sixty seconds, but a production intermediary terminates them at thirty. Clients immediately reconnect and logs fill with errors. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Long Polling to proxy timeout."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Every sixty-second poll receives a gateway timeout after thirty seconds. What changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: The server holds requests for sixty seconds, but a production intermediary terminates them at thirty. Clients immediately reconnect and logs fill with…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Set an intentional server wait comfortably below the verified path timeout and client budget, then return a documented clean empty response. Retry…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Shorter waits increase request turnover; a streaming transport may suit frequent updates better."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: A lost response can still contain events, so never advance the cursor on timeout alone."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to long; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-lost-wakeup",
+      "theme": "An event arrives between checking data and registering a waiter. How do you prevent a stall?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "long"
+      ],
+      "technicalSources": [
+        "long"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The server checks an empty log, an event commits, then the server subscribes to notifications and sleeps. Delivery waits until another unrelated event. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Long Polling to lost wakeup."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An event arrives between checking data and registering a waiter. How do you prevent a stall?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: The server checks an empty log, an event commits, then the server subscribes to notifications and sleeps. Delivery waits until another unrelated…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Make interest registration and the data check race-safe, such as register then recheck the authoritative log before sleeping. On wake-up or timeout, read…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Rechecks add reads; a store-provided atomic blocking read may simplify the mechanism where available."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: If a wake-up is duplicated, it should cause at most redundant bounded checking, not duplicate business work."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to long; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-duplicate-polls",
+      "theme": "Two overlapping polls return overlapping events. Which cursor wins?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "long",
+        "pages"
+      ],
+      "technicalSources": [
+        "long",
+        "pages"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A slow request remains active when a client starts another one. Replies arrive out of order and the saved position moves backward. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Long Polling to duplicate polls."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Two overlapping polls return overlapping events. Which cursor wins?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A slow request remains active when a client starts another one. Replies arrive out of order and the saved position moves backward. What will you do?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Allow only one normal outstanding poll per logical subscription, cancel/track superseded requests and apply events through an ordered duplicate-aware…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Serial polling can reduce throughput; deliberate partitioned subscriptions or bounded pipelining require explicit ordering and deduplication."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Opaque tokens should not be sorted lexically by clients."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to long, pages; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-worker-exhaustion",
+      "theme": "Ten thousand idle clients consume every application worker. How do you redesign waiting?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "long"
+      ],
+      "technicalSources": [
+        "long"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Each held request blocks a dedicated worker thread. Requests do little CPU work, but ordinary API calls cannot obtain workers. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Long Polling to worker exhaustion."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Ten thousand idle clients consume every application worker. How do you redesign waiting?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: Each held request blocks a dedicated worker thread. Requests do little CPU work, but ordinary API calls cannot obtain workers. What will you do?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Use capacity-appropriate asynchronous waiting and bounded subscriptions, isolate wait resources from ordinary request work and clean up on…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Async waiting reduces blocked-thread cost but still consumes connection and memory capacity."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: A single popular event waking every subscriber also needs bounded fan-out/recovery."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to long; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-client-crash",
+      "theme": "A client saved nextCursor before showing a notification, then crashed. Can it recover?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "long"
+      ],
+      "technicalSources": [
+        "long"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The event is considered important to the user. On restart, the client resumes after it and never applies it. How will you change checkpoint handling?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Long Polling to client crash."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A client saved nextCursor before showing a notification, then crashed. Can it recover?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: The event is considered important to the user. On restart, the client resumes after it and never applies it. How will you change checkpoint handling?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Separate server traversal from client applied state and persist the checkpoint only according to the required processing guarantee. Design duplicate-safe…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: More durable client/inbox state costs complexity; replaceable current-state updates may only need a refresh."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Define what receipt, display and completed action each mean."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to long; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-reconnect-herd",
+      "theme": "A brief outage makes all clients reconnect in a tight loop. What protects the service?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "long",
+        "429"
+      ],
+      "technicalSources": [
+        "long",
+        "429"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Poll failures return instantly during recovery, turning thousands of waiting clients into a request storm. How will you keep useful traffic available?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Long Polling to reconnect herd."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A brief outage makes all clients reconnect in a tight loop. What protects the service?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: Poll failures return instantly during recovery, turning thousands of waiting clients into a request storm. How will you keep useful traffic available?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Use bounded randomized backoff after abnormal failures, per-identity subscription/admission budgets and server capacity limits. Keep normal long-wait…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Backoff adds recovery delay; staged admission or reduced update frequency may better protect critical operations."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: If traffic is continuously high, evaluate SSE/WebSockets on their actual interaction needs rather than keeping an overloaded retry loop."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to long, 429; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://www.rfc-editor.org/rfc/rfc6202.html",
+    "https://google.aip.dev/158",
+    "https://www.rfc-editor.org/rfc/rfc6585.html"
+  ]
+}

@@ -1,0 +1,397 @@
+{
+  "topicId": "c4c3eb6a-629a-495a-a619-77856040cb9a",
+  "title": "Client-Side vs Server-Side Caching",
+  "path": "topics/system-design/caching-architecture/caching-foundations-and-technologies/client-side-vs-server-side-caching.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Client-Side vs Server-Side Caching\" interview privacy invalidation",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "http",
+      "title": "RFC 9111: HTTP Caching",
+      "url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Shared/private storage, cache keys, validation and freshness semantics."
+    },
+    {
+      "id": "browser",
+      "title": "MDN: HTTP caching",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Browser/private versus shared HTTP caching and representation policy."
+    },
+    {
+      "id": "cacheapi",
+      "title": "MDN: Cache API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Cache",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Script-managed response storage has an explicit lifecycle distinct from HTTP freshness handling."
+    },
+    {
+      "id": "tracking",
+      "title": "Redis: client-side caching",
+      "url": "https://redis.io/docs/latest/develop/clients/client-side-caching/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Local cache tracking/invalidation responsibilities and client scope."
+    },
+    {
+      "id": "edgekey",
+      "title": "Cloudflare: cache keys",
+      "url": "https://developers.cloudflare.com/cache/how-to/cache-keys/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Provider-scoped cache-key customization and variation."
+    },
+    {
+      "id": "strategy",
+      "title": "AWS Builders Library: caching challenges and strategies",
+      "url": "https://aws.amazon.com/builders-library/caching-challenges-and-strategies/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Measured cache value, modal failure behavior and origin protection."
+    },
+    {
+      "id": "aside",
+      "title": "Microsoft Azure Architecture: cache-aside pattern",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Application-owned loading and invalidation order; example ordering does not eliminate every concurrent stale fill."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-shared-device",
+      "theme": "A second user sees the first user’s cached account screen. What changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "cacheapi",
+        "browser"
+      ],
+      "technicalSources": [
+        "cacheapi",
+        "browser"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A browser app stores account responses for offline use and reuses the same cache after logout/login. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Client-Side vs Server-Side Caching to shared device."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A second user sees the first user’s cached account screen. What changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Stop unsafe reuse, remove/partition sensitive application storage according to a session/user policy and fetch an authorized current view for the new user"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Removing offline copies reduces offline capability; a carefully scoped encrypted/offline data product needs a different explicit lifecycle"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A URL-only key or a cookie is not sufficient isolation."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to cacheapi, browser; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-worker-divergence",
+      "theme": "One worker shows a new price while another shows the old one. Where is the boundary?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "tracking",
+        "aside"
+      ],
+      "technicalSources": [
+        "tracking",
+        "aside"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Every application process has a local cache; only the process handling the edit updates its copy. Readers can land anywhere. What will you choose?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Client-Side vs Server-Side Caching to worker divergence."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: One worker shows a new price while another shows the old one. Where is the boundary?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Define a bounded local lifetime, reliable-enough invalidation/version check for the required promise, or remove that tier for sensitive reads"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A shared cache adds network/failure cost; local copies can be fine with accepted staleness"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If the product promises immediate read-your-write, carry/verify an appropriate version or route to authority rather than hoping routing stays sticky."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to tracking, aside; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-localized-cdn",
+      "theme": "A French catalog request receives cached English text. What did the key miss?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "http",
+        "edgekey"
+      ],
+      "technicalSources": [
+        "http",
+        "edgekey"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The public representation varies by language, but an edge reuses only by URL. What will you fix?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Client-Side vs Server-Side Caching to localized cdn."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A French catalog request receives cached English text. What did the key miss?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Include language selection in the reviewed HTTP/edge variation contract, use appropriate Vary/actual provider key configuration and purge incompatible entr"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: More variants reduce hit rate; explicit locale-specific URLs are an alternative"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Private fields must remain outside a public representation even when localization is correctly keyed."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to http, edgekey; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-offline-freshness",
+      "theme": "An offline app shows an outdated policy as current. How should it behave?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "cacheapi"
+      ],
+      "technicalSources": [
+        "cacheapi"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A public policy document is stored in the Cache API and never explicitly updated or expired. Users need to know when they are seeing old data. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Client-Side vs Server-Side Caching to offline freshness."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An offline app shows an outdated policy as current. How should it behave?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Define a script-managed version/lifetime and refresh strategy, display truthful freshness/offline status and remove/revalidate old entries as the product r"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Stricter freshness can make offline access unavailable; retaining a clearly labeled older copy may fit a different requirement"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Cache API storage is not automatically governed by an app-level TTL merely because a response once carried HTTP headers."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to cacheapi; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-too-many-tiers",
+      "theme": "Browser, edge, process and Redis each cache the same private object. Is this always faster?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "strategy",
+        "http"
+      ],
+      "technicalSources": [
+        "strategy",
+        "http"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Invalidation incidents grow and the measured latency gain is unclear. The team wants another layer. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Client-Side vs Server-Side Caching to too many tiers."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Browser, edge, process and Redis each cache the same private object. Is this always faster?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Map the work avoided and policy owner at each tier, measure end-to-end hit/miss paths and remove redundant or unsafe copies"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Fewer tiers can increase some origin work but simplify correctness; a public derived representation may be broadly cacheable"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If the bottleneck is serialization after a hit, another data lookup cache may not help."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to strategy, http; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-key-revocation",
+      "theme": "A permission is revoked but a valid-looking cache entry remains. Does its key authorize delivery?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "http",
+        "tracking"
+      ],
+      "technicalSources": [
+        "http",
+        "tracking"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A shared cache key includes tenant and user ID, yet the user no longer has access to the object. The TTL has not expired. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Client-Side vs Server-Side Caching to key revocation."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A permission is revoked but a valid-looking cache entry remains. Does its key authorize delivery?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Enforce the current permission contract at delivery or use a reviewed permission-version/invalidation strategy that meets its bounded revocation requiremen"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Current checks cost work and bounded revocation can permit a documented exposure interval; cache avoidance may be simpler for highly sensitive views"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Adding user ID to a key separates identities but does not freeze their permissions forever."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to http, tracking; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://www.rfc-editor.org/rfc/rfc9111.html",
+    "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching",
+    "https://developer.mozilla.org/en-US/docs/Web/API/Cache",
+    "https://redis.io/docs/latest/develop/clients/client-side-caching/",
+    "https://developers.cloudflare.com/cache/how-to/cache-keys/",
+    "https://aws.amazon.com/builders-library/caching-challenges-and-strategies/",
+    "https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside"
+  ]
+}

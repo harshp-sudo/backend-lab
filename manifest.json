@@ -136,6 +136,396 @@
               ]
             }
           ]
+        },
+        {
+          "id": "fc2bf3d0-f309-4007-86e1-8540b6df0880",
+          "kind": "hub",
+          "title": "Database Design & Management",
+          "slug": "database-design-management",
+          "children": [
+            {
+              "id": "87997824-62a9-4d55-8fa9-8c0d0205f407",
+              "kind": "hub",
+              "title": "Data Modeling & Schema Design",
+              "slug": "data-modeling-and-schema-design",
+              "children": [
+                {
+                  "id": "651ff4c7-44ee-4cec-bc4d-895730ec3cb3",
+                  "kind": "topic",
+                  "title": "SQL vs NoSQL",
+                  "slug": "sql-vs-nosql"
+                },
+                {
+                  "id": "3c35bc85-2f09-4a65-91a5-94bda1301b68",
+                  "kind": "topic",
+                  "title": "Relational Database Design",
+                  "slug": "relational-database-design"
+                },
+                {
+                  "id": "eaee23bf-dd70-41e1-bc5b-4b8a1e07b62d",
+                  "kind": "topic",
+                  "title": "Database Normalization",
+                  "slug": "database-normalization"
+                },
+                {
+                  "id": "f26e98b3-db3a-47a1-9492-460e31758354",
+                  "kind": "topic",
+                  "title": "Database Denormalization",
+                  "slug": "database-denormalization"
+                }
+              ]
+            },
+            {
+              "id": "9eddf55b-35e6-46a5-b8c7-fb5a2341cd4a",
+              "kind": "hub",
+              "title": "Query Performance & Indexing",
+              "slug": "query-performance-and-indexing",
+              "children": [
+                {
+                  "id": "f6aa87b1-65e6-48d8-81f9-52363a5eaaf3",
+                  "kind": "topic",
+                  "title": "Indexing Strategies",
+                  "slug": "indexing-strategies"
+                },
+                {
+                  "id": "9a9e2e97-75ff-47e4-8f80-3fd408917cb6",
+                  "kind": "topic",
+                  "title": "Composite Indexes",
+                  "slug": "composite-indexes"
+                },
+                {
+                  "id": "3e0d9e12-176f-4271-8c7b-ee1b5c37d411",
+                  "kind": "topic",
+                  "title": "Connection Pooling",
+                  "slug": "connection-pooling"
+                }
+              ]
+            },
+            {
+              "id": "4dc17940-2d8f-4f00-a02b-71939b3e660c",
+              "kind": "hub",
+              "title": "Scaling & High Availability",
+              "slug": "scaling-and-high-availability",
+              "children": [
+                {
+                  "id": "5733db2c-4b92-4f6c-9a3f-b09321227cc0",
+                  "kind": "topic",
+                  "title": "Database Partitioning",
+                  "slug": "database-partitioning"
+                },
+                {
+                  "id": "f94feea8-8c7e-41b3-a110-39e69714b0d4",
+                  "kind": "topic",
+                  "title": "Sharding",
+                  "slug": "sharding"
+                },
+                {
+                  "id": "2d228451-de51-44a1-9b17-06942413e9f8",
+                  "kind": "topic",
+                  "title": "Replication",
+                  "slug": "replication"
+                },
+                {
+                  "id": "dd9a8690-fac2-458d-8e05-a5aa4ab19577",
+                  "kind": "topic",
+                  "title": "Master-Slave Architecture",
+                  "slug": "master-slave-architecture"
+                }
+              ]
+            },
+            {
+              "id": "177830da-5dc2-4217-999b-74293a6c8048",
+              "kind": "hub",
+              "title": "Consistency, Transactions & Operations",
+              "slug": "consistency-transactions-and-operations",
+              "children": [
+                {
+                  "id": "e240299e-afaa-4545-a556-094f3e0a95d3",
+                  "kind": "topic",
+                  "title": "ACID Properties",
+                  "slug": "acid-properties"
+                },
+                {
+                  "id": "8e929724-b8ec-4b58-81ea-af34e571d414",
+                  "kind": "topic",
+                  "title": "CAP Theorem",
+                  "slug": "cap-theorem"
+                },
+                {
+                  "id": "fbf4ecdd-1825-4cf8-aa36-005ffc30b159",
+                  "kind": "topic",
+                  "title": "Database Transactions",
+                  "slug": "database-transactions"
+                },
+                {
+                  "id": "069e1478-6ed8-4647-b3a0-5c13fb5fcdfa",
+                  "kind": "topic",
+                  "title": "Database Migration Strategies",
+                  "slug": "database-migration-strategies"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "4cc92180-39d9-4181-8d8e-942be0958557",
+          "kind": "hub",
+          "title": "API Design & Communication",
+          "slug": "api-design-and-communication",
+          "children": [
+            {
+              "id": "2865f08f-8e33-480e-bcba-3a4a7a1b21f6",
+              "kind": "hub",
+              "title": "API Styles & Protocols",
+              "slug": "api-styles-and-protocols",
+              "children": [
+                {
+                  "id": "227c2d53-79a4-4aad-be44-3f66ff8f4a51",
+                  "kind": "topic",
+                  "title": "REST API Design",
+                  "slug": "rest-api-design"
+                },
+                {
+                  "id": "8000d56f-7190-4efa-a69d-8a20d46f458f",
+                  "kind": "topic",
+                  "title": "GraphQL",
+                  "slug": "graphql"
+                },
+                {
+                  "id": "d4401a5f-8f6f-4734-8476-396856cfd4c7",
+                  "kind": "topic",
+                  "title": "gRPC",
+                  "slug": "grpc"
+                },
+                {
+                  "id": "c4fb1005-27de-420c-a24f-cf090223fe1d",
+                  "kind": "topic",
+                  "title": "SOAP",
+                  "slug": "soap"
+                }
+              ]
+            },
+            {
+              "id": "757f0e44-c885-468f-b269-f3ef21170cd3",
+              "kind": "hub",
+              "title": "Real-Time & Async Communication",
+              "slug": "real-time-and-async-communication",
+              "children": [
+                {
+                  "id": "5065665a-6e3d-4fdd-a1ab-16c4b410685c",
+                  "kind": "topic",
+                  "title": "WebSockets",
+                  "slug": "websockets"
+                },
+                {
+                  "id": "a7cb0502-f4f4-4afd-9f24-369bcea1f618",
+                  "kind": "topic",
+                  "title": "Server-Sent Events (SSE)",
+                  "slug": "server-sent-events"
+                },
+                {
+                  "id": "5641f7bf-1b25-428e-a426-2589a624d0d9",
+                  "kind": "topic",
+                  "title": "Long Polling",
+                  "slug": "long-polling"
+                }
+              ]
+            },
+            {
+              "id": "6c6c54d7-f152-44cc-8415-346fedc13a6e",
+              "kind": "hub",
+              "title": "Reliability, Security & Traffic Control",
+              "slug": "reliability-security-and-traffic-control",
+              "children": [
+                {
+                  "id": "87a2e67c-dc5f-4a8e-944f-9bad681f9699",
+                  "kind": "topic",
+                  "title": "API Gateway",
+                  "slug": "api-gateway"
+                },
+                {
+                  "id": "374a5a99-6e3b-4f03-97ec-3f6853d5c14b",
+                  "kind": "topic",
+                  "title": "Rate Limiting",
+                  "slug": "rate-limiting"
+                },
+                {
+                  "id": "1c67ad11-919b-4fe7-980b-b82699e7b549",
+                  "kind": "topic",
+                  "title": "Idempotency",
+                  "slug": "idempotency"
+                },
+                {
+                  "id": "e0906628-551b-45db-8816-a6575c1604e9",
+                  "kind": "topic",
+                  "title": "Request Validation",
+                  "slug": "request-validation"
+                }
+              ]
+            },
+            {
+              "id": "55359b7c-f18c-4e09-8c7d-ce5712da5e00",
+              "kind": "hub",
+              "title": "API Lifecycle, Data & Developer Experience",
+              "slug": "api-lifecycle-data-and-developer-experience",
+              "children": [
+                {
+                  "id": "0352ff64-d857-454c-9bbe-55c27a9dab92",
+                  "kind": "topic",
+                  "title": "API Versioning",
+                  "slug": "api-versioning"
+                },
+                {
+                  "id": "149f04a9-cdda-494f-851c-e267fc118f03",
+                  "kind": "topic",
+                  "title": "Pagination Strategies",
+                  "slug": "pagination-strategies"
+                },
+                {
+                  "id": "b1e035b0-a98f-4b6f-b5e3-052286dded23",
+                  "kind": "topic",
+                  "title": "Error Handling & Status Codes",
+                  "slug": "error-handling-and-status-codes"
+                },
+                {
+                  "id": "ca2f9d41-dd62-4b59-89b2-bb8f946fb697",
+                  "kind": "topic",
+                  "title": "API Documentation (OpenAPI/Swagger)",
+                  "slug": "api-documentation"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "72989d8a-ae02-49d1-ad51-be4faab32028",
+          "kind": "hub",
+          "title": "Caching Architecture",
+          "slug": "caching-architecture",
+          "children": [
+            {
+              "id": "6f16ecff-efd6-4151-9d1a-9dec744489b7",
+              "kind": "hub",
+              "title": "Caching Foundations & Technologies",
+              "slug": "caching-foundations-and-technologies",
+              "children": [
+                {
+                  "id": "1d30f8cc-a5b4-4926-878a-544d77547108",
+                  "kind": "topic",
+                  "title": "Caching Fundamentals",
+                  "slug": "caching-fundamentals"
+                },
+                {
+                  "id": "c4c3eb6a-629a-495a-a619-77856040cb9a",
+                  "kind": "topic",
+                  "title": "Client-Side vs Server-Side Caching",
+                  "slug": "client-side-vs-server-side-caching"
+                },
+                {
+                  "id": "201c66d6-03d3-43dc-97e5-feae00f82029",
+                  "kind": "topic",
+                  "title": "In-Memory Caching",
+                  "slug": "in-memory-caching"
+                },
+                {
+                  "id": "c47ba2d8-cfc4-456f-ad35-ac623df43ab4",
+                  "kind": "topic",
+                  "title": "Redis",
+                  "slug": "redis"
+                },
+                {
+                  "id": "a8fba99e-22a9-4926-8e3e-7aec33d2d602",
+                  "kind": "topic",
+                  "title": "Memcached",
+                  "slug": "memcached"
+                }
+              ]
+            },
+            {
+              "id": "efab7047-c925-4c80-86a6-75ade575c743",
+              "kind": "hub",
+              "title": "Read & Write Caching Patterns",
+              "slug": "read-and-write-caching-patterns",
+              "children": [
+                {
+                  "id": "6dc74c43-8a26-4102-85ad-57cd75f22882",
+                  "kind": "topic",
+                  "title": "Cache-Aside Pattern",
+                  "slug": "cache-aside-pattern"
+                },
+                {
+                  "id": "4dfb44bc-6877-45a2-9d6c-3efadfd3e83d",
+                  "kind": "topic",
+                  "title": "Read-Through Cache",
+                  "slug": "read-through-cache"
+                },
+                {
+                  "id": "7b524700-f769-4cae-abba-35320830caa2",
+                  "kind": "topic",
+                  "title": "Write-Through Cache",
+                  "slug": "write-through-cache"
+                },
+                {
+                  "id": "061611a4-5cb5-424c-8f12-c712e942fe36",
+                  "kind": "topic",
+                  "title": "Write-Behind Cache",
+                  "slug": "write-behind-cache"
+                }
+              ]
+            },
+            {
+              "id": "60ab852a-4343-4a57-89cf-55a9031bc56d",
+              "kind": "hub",
+              "title": "Lifecycle, Eviction & Consistency",
+              "slug": "lifecycle-eviction-and-consistency",
+              "children": [
+                {
+                  "id": "919d1138-71dd-4c5e-a406-c42534617c8d",
+                  "kind": "topic",
+                  "title": "Cache Invalidation",
+                  "slug": "cache-invalidation"
+                },
+                {
+                  "id": "ef286990-a311-4249-947a-7af1a4238abc",
+                  "kind": "topic",
+                  "title": "TTL & Eviction Policies",
+                  "slug": "ttl-and-eviction-policies"
+                },
+                {
+                  "id": "3699cb2c-4cb0-41cd-9d7e-3665d2c39b3d",
+                  "kind": "topic",
+                  "title": "Cache Consistency",
+                  "slug": "cache-consistency"
+                }
+              ]
+            },
+            {
+              "id": "7e6c8966-aff2-4f74-88b8-0f59287b895a",
+              "kind": "hub",
+              "title": "Distributed Caching & Edge Scaling",
+              "slug": "distributed-caching-and-edge-scaling",
+              "children": [
+                {
+                  "id": "65e04270-0521-48e9-a9ac-163519e7ec1a",
+                  "kind": "topic",
+                  "title": "Distributed Caching",
+                  "slug": "distributed-caching"
+                },
+                {
+                  "id": "10d50ab8-3b59-4f67-ac05-f0c9d388dfca",
+                  "kind": "topic",
+                  "title": "CDN Caching",
+                  "slug": "cdn-caching"
+                },
+                {
+                  "id": "064e6c3c-d9a7-449c-ac5e-4c8afeffcf54",
+                  "kind": "topic",
+                  "title": "Cache Stampede",
+                  "slug": "cache-stampede"
+                }
+              ]
+            }
+          ]
         }
       ]
     }

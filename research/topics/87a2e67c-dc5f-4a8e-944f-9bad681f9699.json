@@ -1,0 +1,386 @@
+{
+  "topicId": "87a2e67c-dc5f-4a8e-944f-9bad681f9699",
+  "title": "API Gateway",
+  "path": "topics/system-design/api-design-and-communication/reliability-security-and-traffic-control/api-gateway.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"API Gateway\" interview routing authentication cache transformation",
+      "date": "2026-11-17",
+      "result": "success; interview-oriented themes located, but exact frequency/rank/company claims not verified; prompts are original production adaptations"
+    }
+  ],
+  "sources": [
+    {
+      "id": "gwcache",
+      "title": "Amazon API Gateway: REST API cache settings",
+      "url": "https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-caching.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Explicit REST API method caching and selected cache-key parameters."
+    },
+    {
+      "id": "gwmap",
+      "title": "Amazon API Gateway: REST API request/response overrides",
+      "url": "https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-override-request-response-parameters.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Product-scoped parameter, response status and transformation behavior."
+    },
+    {
+      "id": "gwusage",
+      "title": "Amazon API Gateway: REST API usage plans",
+      "url": "https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-api-usage-plans.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Usage keys are not authorization and quotas are best-effort rather than hard financial caps."
+    },
+    {
+      "id": "cache",
+      "title": "RFC 9111: HTTP Caching",
+      "url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Freshness, validation and private/shared cache distinctions."
+    },
+    {
+      "id": "idem",
+      "title": "AWS Builders Library: making retries safe with idempotent APIs",
+      "url": "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Caller-provided request identity, late requests and same-key/different-intent handling."
+    },
+    {
+      "id": "validation",
+      "title": "OWASP: input validation cheat sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Syntactic/semantic validation, allowlists and explicit resource boundaries."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-tenant-cache",
+      "theme": "A cache keyed by order ID returns another tenant’s fields. What comes first?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "gwcache",
+        "cache"
+      ],
+      "technicalSources": [
+        "gwcache",
+        "cache"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The gateway caches an authenticated order response using only the path. Different callers see different redacted fields. You must contain exposure and preserve access control. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies API Gateway to tenant cache."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A cache keyed by order ID returns another tenant’s fields. What comes first?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: The gateway caches an authenticated order response using only the path. Different callers see different redacted fields. You must contain exposure and…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Bypass unsafe caching, purge affected entries and verify owner authorization on every access. Then either keep caller-dependent responses out of shared…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Bypass increases origin load; a public summary or isolated authorized read model may retain useful caching."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: TTL limits duration but does not make an unauthorized cached response acceptable."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to gwcache, cache; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-forwarded-identity",
+      "theme": "A client sends X-User-Id and the service trusts it. Where do you close the gap?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "gwusage",
+        "validation"
+      ],
+      "technicalSources": [
+        "gwusage",
+        "validation"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The gateway verifies tokens but forwards caller-supplied identity headers unchanged. The backend is also reachable directly. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies API Gateway to forwarded identity."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A client sends X-User-Id and the service trusts it. Where do you close the gap?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: The gateway verifies tokens but forwards caller-supplied identity headers unchanged. The backend is also reachable directly. What will you change?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Strip/overwrite untrusted identity inputs, establish a controlled authenticated gateway-to-service context and block or equivalently authenticate bypass…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: A trusted internal identity channel needs key/network/service ownership; having the service verify original credentials is an alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: If several gateways exist, define which identities each may assert."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to gwusage, validation; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-route-shadow",
+      "theme": "A new catch-all route bypasses auth for an admin path. How do you prevent it?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "validation",
+        "gwmap"
+      ],
+      "technicalSources": [
+        "validation",
+        "gwmap"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A route update changes precedence so /orders/admin matches a public fallback instead of its protected handler. What policy and rollout changes will you make?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies API Gateway to route shadow."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A new catch-all route bypasses auth for an admin path. How do you prevent it?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A route update changes precedence so /orders/admin matches a public fallback instead of its protected handler. What policy and rollout changes will…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Define explicit route precedence and allowed methods, use deny-by-default unmatched handling and validate a route-policy matrix including…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: More explicit routes cost maintenance; a constrained generated route definition may reduce drift."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Cache entries from an older route/mapping may need invalidation when path meaning changes."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to validation, gwmap; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-money-transform",
+      "theme": "A gateway rename turns cents into dollars. Who owns the conversion?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "gwmap",
+        "validation"
+      ],
+      "technicalSources": [
+        "gwmap",
+        "validation"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A legacy client sends amountCents while the backend expects a decimal currency amount. A mapping simply copies the number. Financial correctness is mandatory. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies API Gateway to money transform."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A gateway rename turns cents into dollars. Who owns the conversion?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A legacy client sends amountCents while the backend expects a decimal currency amount. A mapping simply copies the number. Financial correctness is…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Stop the incorrect mapping, define the exact units/currency/precision contract and implement an explicitly tested conversion or versioned adapter with…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: An adapter preserves old clients but adds versioned code and fixtures; a coordinated client migration may be simpler."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: A syntactically valid mapped payload is not proof of semantic correctness."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to gwmap, validation; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-gateway-retry",
+      "theme": "The gateway retries a timed-out POST and creates a second order. What is the fix?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "idem",
+        "gwmap"
+      ],
+      "technicalSources": [
+        "idem",
+        "gwmap"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Downstream creation may commit before the gateway timeout. Gateway and client each retry with no common operation identity. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies API Gateway to gateway retry."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The gateway retries a timed-out POST and creates a second order. What is the fix?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: Downstream creation may commit before the gateway timeout. Gateway and client each retry with no common operation identity. What will you do?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Disable unsafe blind retries, establish a caller-scoped stable operation identity carried through the boundary and deduplicate at the authoritative effect…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Retained outcomes and recovery increase state; a naturally idempotent resource operation may fit some APIs."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: The gateway cannot infer rollback from a transport error or manufacture an exactly-once business guarantee."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to idem, gwmap; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-quotas-cost-cap",
+      "theme": "A usage plan is configured, but a customer exceeds its quota. Is the gateway broken?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "gwusage"
+      ],
+      "technicalSources": [
+        "gwusage"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The team treats a managed REST API usage plan as a hard financial spending cap and uses its API key as authorization. What changes?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies API Gateway to quotas cost cap."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A usage plan is configured, but a customer exceeds its quota. Is the gateway broken?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: The team treats a managed REST API usage plan as a hard financial spending cap and uses its API key as authorization. What changes?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Use the documented best-effort quota model honestly, add appropriate authoritative budgeting/admission controls where a hard cap is required, and…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Strict distributed caps add coordination and can reduce availability; bounded overshoot may be an acceptable cheaper policy if disclosed."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Do not generalize one product’s feature label into a universal guarantee."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to gwusage; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-caching.html",
+    "https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-override-request-response-parameters.html",
+    "https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-api-usage-plans.html",
+    "https://www.rfc-editor.org/rfc/rfc9111.html",
+    "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html"
+  ]
+}

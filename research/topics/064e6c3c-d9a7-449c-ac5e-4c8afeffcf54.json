@@ -1,0 +1,397 @@
+{
+  "topicId": "064e6c3c-d9a7-449c-ac5e-4c8afeffcf54",
+  "title": "Cache Stampede",
+  "path": "topics/system-design/caching-architecture/distributed-caching-and-edge-scaling/cache-stampede.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Cache Stampede\" interview request coalescing lock expiry",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "single",
+      "title": "Go x/sync: singleflight",
+      "url": "https://pkg.go.dev/golang.org/x/sync/singleflight",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Per-Group duplicate in-flight function suppression; not a distributed ownership primitive."
+    },
+    {
+      "id": "strategy",
+      "title": "AWS Builders Library: caching challenges and strategies",
+      "url": "https://aws.amazon.com/builders-library/caching-challenges-and-strategies/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Measured cache value, modal failure behavior and origin protection."
+    },
+    {
+      "id": "lock",
+      "title": "Redis: distributed locks",
+      "url": "https://redis.io/docs/latest/develop/clients/patterns/distributed-locks/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Lease ownership, safe release and failover limitations; a refresh lease is not a business correctness guarantee."
+    },
+    {
+      "id": "memscale",
+      "title": "Nishtala et al.: Scaling Memcache at Facebook, NSDI 2013",
+      "url": "https://www.usenix.org/system/files/conference/nsdi13/nsdi13-final170_update.pdf",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Original stale-set and lease-based load-control design, scoped to the engineered system described."
+    },
+    {
+      "id": "stale",
+      "title": "RFC 5861: HTTP cache-control extensions for stale content",
+      "url": "https://www.rfc-editor.org/rfc/rfc5861.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Bounded stale-while-revalidate/stale-if-error semantics, not indefinite permission to reuse data."
+    },
+    {
+      "id": "http",
+      "title": "RFC 9111: HTTP Caching",
+      "url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Shared/private storage, cache keys, validation and freshness semantics."
+    },
+    {
+      "id": "aside",
+      "title": "Microsoft Azure Architecture: cache-aside pattern",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Application-owned loading and invalidation order; example ordering does not eliminate every concurrent stale fill."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-hot-key-miss",
+      "theme": "A two-second fill at fifty requests/second creates roughly a hundred loads. What changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "single",
+        "strategy"
+      ],
+      "technicalSources": [
+        "single",
+        "strategy"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "All callers miss the same scoped view and the origin slows under duplicated work. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache Stampede to hot key miss."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A two-second fill at fifty requests/second creates roughly a hundred loads. What changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Coalesce overlapping work per safe key in the needed scope, bound waiters/refresh deadlines and protect aggregate origin capacity"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Waiters add latency/state; a permitted stale view can avoid waiting"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A local coalescer still permits work in other processes, and a unique-key flood needs a separate capacity policy."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to single, strategy; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-synchronized-keys",
+      "theme": "Thousands of keys expire together. Is one refresh lock enough?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "strategy",
+        "single"
+      ],
+      "technicalSources": [
+        "strategy",
+        "single"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A warm-up job gave every entry the same deadline; most arriving requests concern different keys. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache Stampede to synchronized keys."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Thousands of keys expire together. Is one refresh lock enough?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Spread allowed expiry/refresh times, warm high-value entries gradually and enforce aggregate origin admission"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Jitter/early expiry can increase ordinary refresh volume; origin headroom is another cost"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Keep jitter within the actual freshness ceiling."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to strategy, single; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-expired-owner",
+      "theme": "A slow refresh owner outlives its lease and overwrites a newer result. What prevents it?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "lock",
+        "memscale"
+      ],
+      "technicalSources": [
+        "lock",
+        "memscale"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A second worker acquires the expired lease and publishes version 2 before the first returns version 1. What will you implement?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache Stampede to expired owner."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A slow refresh owner outlives its lease and overwrites a newer result. What prevents it?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use a verified ownership/version publication guard in its actual atomic coherence boundary and retain/recover the metadata it needs"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Guards add coordination and can reduce availability on unknown state; simpler stale display may fit another requirement"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A cache refresh lease is not a payment idempotency guarantee."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to lock, memscale; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-stale-refresh-bound",
+      "theme": "Serving stale content keeps latency low during an outage. When must it stop?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "stale",
+        "http"
+      ],
+      "technicalSources": [
+        "stale",
+        "http"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The product allows a limited stale public catalog view, but the current fallback has no age cutoff and also serves private entitlements. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache Stampede to stale refresh bound."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Serving stale content keeps latency low during an outage. When must it stop?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Separate representation policies, enforce the allowed age/visibility boundary and refuse or use a capable authority once it cannot be met"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Stopping stale reuse reduces availability; longer explicitly accepted public staleness is another product decision"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: HTTP stale extensions apply under their real implementation/response contract and do not redefine current authorization."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to stale, http; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-random-missing-keys",
+      "theme": "Bots ask for millions of nonexistent keys. Will negative caching solve everything?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "aside",
+        "strategy"
+      ],
+      "technicalSources": [
+        "aside",
+        "strategy"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Each request uses a different ID and the cache fills with low-reuse negatives while origin traffic stays high. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache Stampede to random missing keys."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Bots ask for millions of nonexistent keys. Will negative caching solve everything?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Bound admission/key cardinality, cache only confirmed absence under a useful scoped short policy and enforce origin/resource limits"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Negative caching helps repeated absent keys, not arbitrary unbounded novelty"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Never store timeout-as-absence or allow the negative set to evict all valuable hot data unchecked."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to aside, strategy; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-cancelled-waiter",
+      "theme": "One caller times out and cancels a shared refresh needed by many others. Who owns cancellation?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "single"
+      ],
+      "technicalSources": [
+        "single"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A coalescer ties refresh lifetime to the first request’s context. Other active waiters now fail and immediately restart work. What will you choose?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Cache Stampede to cancelled waiter."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: One caller times out and cancels a shared refresh needed by many others. Who owns cancellation?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Give shared refresh work an explicit bounded lifetime/owner policy, allow departing waiters to stop waiting independently where appropriate and cap remaini"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Independent work can outlive one request and needs strict resource limits; tightly request-bound work may fit simpler cases"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Never turn cancellation into unbounded background jobs or assume a local coordination primitive supplies the desired lifecycle automatically."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to single; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://pkg.go.dev/golang.org/x/sync/singleflight",
+    "https://aws.amazon.com/builders-library/caching-challenges-and-strategies/",
+    "https://redis.io/docs/latest/develop/clients/patterns/distributed-locks/",
+    "https://www.usenix.org/system/files/conference/nsdi13/nsdi13-final170_update.pdf",
+    "https://www.rfc-editor.org/rfc/rfc5861.html",
+    "https://www.rfc-editor.org/rfc/rfc9111.html",
+    "https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside"
+  ]
+}

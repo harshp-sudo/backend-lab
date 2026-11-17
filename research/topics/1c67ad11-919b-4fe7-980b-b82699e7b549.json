@@ -1,0 +1,345 @@
+{
+  "topicId": "1c67ad11-919b-4fe7-980b-b82699e7b549",
+  "title": "Idempotency",
+  "path": "topics/system-design/api-design-and-communication/reliability-security-and-traffic-control/idempotency.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Idempotency\" interview concurrent requests payment timeout",
+      "date": "2026-11-17",
+      "result": "success; interview-oriented themes located, but exact frequency/rank/company claims not verified; prompts are original production adaptations"
+    }
+  ],
+  "sources": [
+    {
+      "id": "idem",
+      "title": "AWS Builders Library: making retries safe with idempotent APIs",
+      "url": "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Caller-provided request identity, late requests and same-key/different-intent handling."
+    },
+    {
+      "id": "http",
+      "title": "RFC 9110: HTTP Semantics",
+      "url": "https://www.rfc-editor.org/rfc/rfc9110.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "HTTP method, conditional request and response-status semantics; not a guarantee about business side effects."
+    },
+    {
+      "id": "validation",
+      "title": "OWASP: input validation cheat sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Syntactic/semantic validation, allowlists and explicit resource boundaries."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-parallel-duplicate",
+      "theme": "Two identical checkout requests arrive simultaneously. What prevents two orders?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "idem"
+      ],
+      "technicalSources": [
+        "idem"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The service checks a cache, sees no key in both requests and creates two orders. Both use the same caller key. How will you fix it?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Idempotency to parallel duplicate."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Two identical checkout requests arrive simultaneously. What prevents two orders?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: The service checks a cache, sees no key in both requests and creates two orders. Both use the same caller key. How will you fix it?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Move ownership to an atomic unique claim scoped to caller/operation and bind it to intent. For local order creation, commit identity, effect and result…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: This adds state contention and recovery handling; a caller-chosen stable resource identity may naturally fit some creates."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Test a crash between every durable state transition."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to idem; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-key-payload-conflict",
+      "theme": "The same key is reused for a different amount. Do you return the first result?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "idem"
+      ],
+      "technicalSources": [
+        "idem"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A buggy client retries a payment key with a changed cart/amount. It expects a new purchase, but the first attempt may already exist. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Idempotency to key payload conflict."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The same key is reused for a different amount. Do you return the first result?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A buggy client retries a payment key with a changed cart/amount. It expects a new purchase, but the first attempt may already exist. What will you do?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Compare a defined semantic intent fingerprint and reject conflicting reuse with a clear documented error. Return or expose the original authorized…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Fingerprinting needs stable normalization/default rules; storing a canonical intent reference can be another approach."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Equal amounts alone do not establish equal intent."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to idem; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-remote-charge-gap",
+      "theme": "A provider charged successfully, then your process crashed before saving success. What now?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "idem"
+      ],
+      "technicalSources": [
+        "idem"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Order state is local; payment is remote. A transaction wrapper rolls back local changes after the crash, but the remote charge remains. How will recovery work?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Idempotency to remote charge gap."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A provider charged successfully, then your process crashed before saving success. What now?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: Order state is local; payment is remote. A transaction wrapper rolls back local changes after the crash, but the remote charge remains. How will…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Persist a recoverable workflow and reuse the same provider-supported operation identity. Query/retry according to its outcome contract, then reconcile…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Workflow recovery costs operational state; placing all effects in one true transactional owner would be simpler if feasible."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Provider retention and lookup capabilities bound the guarantee."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to idem; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-late-retry",
+      "theme": "A client retries after your twenty-four-hour key retention expired. What can you promise?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "idem"
+      ],
+      "technicalSources": [
+        "idem"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A mobile device was offline for three days and resends its original creation intent. Old duplicate records were deleted. How will you handle this honestly?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Idempotency to late retry."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A client retries after your twenty-four-hour key retention expired. What can you promise?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A mobile device was offline for three days and resends its original creation intent. Old duplicate records were deleted. How will you handle this…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Define the public retry/retention window and an explicit late-request recovery policy. Where duplicate harm is high, retain durable business identity or a…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Long retention costs storage/privacy management; narrower supported retry windows can be acceptable if clients can reconcile."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: A client generating a new key is a new intent only after it has resolved the original outcome."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to idem; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-stuck-in-progress",
+      "theme": "A durable key remains in_progress forever after a worker crash. Can you delete it?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "idem"
+      ],
+      "technicalSources": [
+        "idem"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A duplicate caller repeatedly gets “still processing.” The worker is gone, but it may have reached an external side effect. What recovery will you implement?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Idempotency to stuck in progress."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A durable key remains in_progress forever after a worker crash. Can you delete it?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A duplicate caller repeatedly gets “still processing.” The worker is gone, but it may have reached an external side effect. What recovery will you…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Use a recovery owner with durable state transitions and inspect the authoritative local/provider outcome before resuming or finalizing. If re-execution is…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Recovery adds leases/fencing or other coordination appropriate to the owner; manual reconciliation may be necessary for rare ambiguous external…"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: A worker heartbeat timeout is suspicion, not proof of business failure."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to idem; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-cross-tenant-key",
+      "theme": "Two tenants choose the same idempotency key. Can they share a result?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "idem",
+        "validation"
+      ],
+      "technicalSources": [
+        "idem",
+        "validation"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Keys are user-generated strings. A global key-only lookup returns one tenant’s order receipt to another caller using the same value. What changes?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Idempotency to cross tenant key."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Two tenants choose the same idempotency key. Can they share a result?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: Keys are user-generated strings. A global key-only lookup returns one tenant’s order receipt to another caller using the same value. What changes?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Scope identity and lookup to authenticated caller/tenant and operation, verify intent within that scope and reauthorize access to returned…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: More scoped records increase storage but preserve isolation; globally unique random client values reduce collision risk without replacing…"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: A key is an operation identifier, not a bearer credential."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to idem, validation; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+    "https://www.rfc-editor.org/rfc/rfc9110.html",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html"
+  ]
+}

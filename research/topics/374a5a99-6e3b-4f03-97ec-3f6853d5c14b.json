@@ -1,0 +1,373 @@
+{
+  "topicId": "374a5a99-6e3b-4f03-97ec-3f6853d5c14b",
+  "title": "Rate Limiting",
+  "path": "topics/system-design/api-design-and-communication/reliability-security-and-traffic-control/rate-limiting.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Rate Limiting\" interview distributed token bucket failure",
+      "date": "2026-11-17",
+      "result": "success; interview-oriented themes located, but exact frequency/rank/company claims not verified; prompts are original production adaptations"
+    }
+  ],
+  "sources": [
+    {
+      "id": "limits",
+      "title": "Microsoft: ASP.NET Core 10 rate limiting",
+      "url": "https://learn.microsoft.com/en-us/aspnet/core/performance/rate-limit?view=aspnetcore-10.0",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Algorithm and concurrency/rate distinctions with implementation-specific partition behavior."
+    },
+    {
+      "id": "429",
+      "title": "RFC 6585: additional HTTP status codes",
+      "url": "https://www.rfc-editor.org/rfc/rfc6585.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "429 and optional Retry-After behavior; counting policy is application-specific."
+    },
+    {
+      "id": "gwusage",
+      "title": "Amazon API Gateway: REST API usage plans",
+      "url": "https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-api-usage-plans.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Usage keys are not authorization and quotas are best-effort rather than hard financial caps."
+    },
+    {
+      "id": "validation",
+      "title": "OWASP: input validation cheat sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Syntactic/semantic validation, allowlists and explicit resource boundaries."
+    },
+    {
+      "id": "idem",
+      "title": "AWS Builders Library: making retries safe with idempotent APIs",
+      "url": "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Caller-provided request identity, late requests and same-key/different-intent handling."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-per-pod-quota",
+      "theme": "A tenant gets four times its quota after scaling to four pods. What was mis-scoped?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "limits",
+        "gwusage"
+      ],
+      "technicalSources": [
+        "limits",
+        "gwusage"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The product promises one tenant-wide budget, but every instance initializes a full bucket. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Rate Limiting to per pod quota."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A tenant gets four times its quota after scaling to four pods. What was mis-scoped?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: The product promises one tenant-wide budget, but every instance initializes a full bucket. What will you change?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Move the decision to a coherent tenant policy owner or atomic shared store, or allocate explicit local sub-budgets with a documented total/overshoot…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Shared decisions add network and failure dependency; approximate local allocation can be faster if bounded overshoot is acceptable."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: State clearly whether the product needs fairness or an exact accounting invariant."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to limits, gwusage; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-window-boundary",
+      "theme": "A 100-per-minute limit admits 200 almost back to back. Is the counter necessarily wrong?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "limits"
+      ],
+      "technicalSources": [
+        "limits"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "One hundred requests arrive just before the fixed window ends and another hundred just after it starts. A dependency cannot absorb that burst. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Rate Limiting to window boundary."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A 100-per-minute limit admits 200 almost back to back. Is the counter necessarily wrong?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: One hundred requests arrive just before the fixed window ends and another hundred just after it starts. A dependency cannot absorb that burst. What…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Explain that the fixed-window policy permits this boundary behavior, then choose a burst-aware token bucket, sliding policy or explicit concurrency gate…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: More accurate sliding state costs storage/coordination; reducing a fixed limit is a coarse alternative but may unnecessarily penalize normal…"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: A token bucket also intentionally allows its configured burst, so choose capacity deliberately instead of assuming every algorithm…"
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to limits; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-limiter-store-down",
+      "theme": "The limiter’s shared store is unavailable. Fail open or fail closed?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "limits",
+        "gwusage"
+      ],
+      "technicalSources": [
+        "limits",
+        "gwusage"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Interactive catalog reads can tolerate bounded abuse, while an expensive export endpoint could exhaust capacity. The same unconditional failure policy serves both. What will you choose?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Rate Limiting to limiter store down."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The limiter’s shared store is unavailable. Fail open or fail closed?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: Interactive catalog reads can tolerate bounded abuse, while an expensive export endpoint could exhaust capacity. The same unconditional failure policy…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Define failure policy by endpoint risk: use a conservative bounded local fallback for acceptable reads if justified, and refuse or tightly gate expensive…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Failing closed reduces availability; failing open exposes capacity/cost risk."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Best-effort gateway quotas are not a hard financial cap, so strict spend limits need an authoritative business control."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to limits, gwusage; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-nat-identity",
+      "theme": "An office is blocked by an IP limit while one attacker rotates addresses. What changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "limits",
+        "validation"
+      ],
+      "technicalSources": [
+        "limits",
+        "validation"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Hundreds of legitimate users share one public IP. Authenticated API tenants have separate paid budgets. How will you choose keys?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Rate Limiting to nat identity."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An office is blocked by an IP limit while one attacker rotates addresses. What changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: Hundreds of legitimate users share one public IP. Authenticated API tenants have separate paid budgets. How will you choose keys?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Use trusted authenticated tenant/user dimensions for their policy, with appropriate additional network abuse controls. Separate anonymous admission from…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: More identities increase state/cardinality and may enable account-based abuse; layered coarse IP controls remain useful for other threats."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: A token valid for quota identity still does not authorize access to every object."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to limits, validation; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-slow-dependency",
+      "theme": "Requests meet their rate limit but still exhaust database connections. Why?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "limits"
+      ],
+      "technicalSources": [
+        "limits"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Arrival rate is unchanged, but a dependency slows from 50 ms to five seconds. In-flight work climbs. What will you add?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Rate Limiting to slow dependency."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Requests meet their rate limit but still exhaust database connections. Why?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: Arrival rate is unchanged, but a dependency slows from 50 ms to five seconds. In-flight work climbs. What will you add?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Bound concurrency and queue length for that dependency, enforce deadlines/cancellation and isolate workload classes. Inspect resource wait times and…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Concurrency caps can lower throughput and increase refusals; asynchronous jobs may fit delay-tolerant work."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: A queue without a bound only converts overload into latency and memory growth."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to limits; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-retry-herd",
+      "theme": "Every rejected client retries at the same second. How do you prevent another spike?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "429",
+        "idem"
+      ],
+      "technicalSources": [
+        "429",
+        "idem"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A 429 response causes thousands of clients to retry immediately or at the identical reset boundary. The service oscillates between overload and rejection. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Rate Limiting to retry herd."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Every rejected client retries at the same second. How do you prevent another spike?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A 429 response causes thousands of clients to retry immediately or at the identical reset boundary. The service oscillates between overload and…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Publish truthful retry guidance where known, use bounded client retry budgets with appropriate jitter, and avoid huge synchronized admission releases.…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Jitter increases some callers’ wait; paced server admission or a bounded queue may suit controlled jobs better."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Clients must still cap total attempts and not assume a timed-out earlier mutation was rejected."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to 429, idem; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://learn.microsoft.com/en-us/aspnet/core/performance/rate-limit?view=aspnetcore-10.0",
+    "https://www.rfc-editor.org/rfc/rfc6585.html",
+    "https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-api-usage-plans.html",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html",
+    "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/"
+  ]
+}

@@ -1,0 +1,383 @@
+{
+  "topicId": "227c2d53-79a4-4aad-be44-3f66ff8f4a51",
+  "title": "REST API Design",
+  "path": "topics/system-design/api-design-and-communication/api-styles-and-protocols/rest-api-design.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"REST API Design\" interview production scenario caching retries",
+      "date": "2026-11-17",
+      "result": "success; interview-oriented themes located, but exact frequency/rank/company claims not verified; prompts are original production adaptations"
+    },
+    {
+      "query": "Open https://ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm",
+      "date": "2026-11-17",
+      "result": "Direct page fetch timed out; subsequent primary-domain search returned the chapter and relevant uniform-interface/constraint excerpts."
+    },
+    {
+      "query": "Fielding dissertation REST architectural style uniform interface hypermedia site:ics.uci.edu",
+      "date": "2026-11-17",
+      "result": "success; original chapter located through its author university domain; used for style constraints, not interview frequency."
+    }
+  ],
+  "sources": [
+    {
+      "id": "http",
+      "title": "RFC 9110: HTTP Semantics",
+      "url": "https://www.rfc-editor.org/rfc/rfc9110.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "HTTP method, conditional request and response-status semantics; not a guarantee about business side effects."
+    },
+    {
+      "id": "cache",
+      "title": "RFC 9111: HTTP Caching",
+      "url": "https://www.rfc-editor.org/rfc/rfc9111.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Freshness, validation and private/shared cache distinctions."
+    },
+    {
+      "id": "idem",
+      "title": "AWS Builders Library: making retries safe with idempotent APIs",
+      "url": "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Caller-provided request identity, late requests and same-key/different-intent handling."
+    },
+    {
+      "id": "validation",
+      "title": "OWASP: input validation cheat sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Syntactic/semantic validation, allowlists and explicit resource boundaries."
+    },
+    {
+      "id": "rest-original",
+      "title": "Roy Fielding: REST architectural style, dissertation chapter 5",
+      "url": "https://ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Original REST constraints and uniform-interface/hypermedia definition, distinct from generic HTTP CRUD."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-lost-order-response",
+      "theme": "The order request timed out after the server committed. Will you POST again?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "http",
+        "idem"
+      ],
+      "technicalSources": [
+        "http",
+        "idem"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A mobile checkout sends POST /orders, loses connectivity, then retries. A second real purchase is possible later, but this attempt must not create two orders. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies REST API Design to lost order response."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The order request timed out after the server committed. Will you POST again?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A mobile checkout sends POST /orders, loses connectivity, then retries. A second real purchase is possible later, but this attempt must not create two…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Define caller-supplied operation identity scoped to the authenticated caller. Retry this intent with the same identity and equivalent payload; atomically…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Deduplication costs retained state and recovery work; a client-chosen PUT target can be an alternative when creation naturally has a stable…"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: Expired identity retention or external side effects require reconciliation; POST spelling alone neither guarantees nor forbids duplicate…"
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to http, idem; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-two-order-editors",
+      "theme": "Two agents overwrite each other’s delivery notes. Where is the fix?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "http"
+      ],
+      "technicalSources": [
+        "http"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Two support agents read the same order and submit full updates seconds apart. Both are authorized; silent lost updates are unacceptable. How will you change the API?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies REST API Design to two order editors."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Two agents overwrite each other’s delivery notes. Where is the fix?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: Two support agents read the same order and submit full updates seconds apart. Both are authorized; silent lost updates are unacceptable. How will you…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Return a strong representation version and require If-Match on the write. Perform the comparison in the same authoritative concurrency boundary as the…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Clients must handle conflicts and multiple representations require deliberate validator design."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: If the operation is a non-repeatable increment, conditional replacement and duplicate identity answer different questions and may both be…"
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to http; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-personalized-cdn",
+      "theme": "A CDN improves speed but returns someone else’s order. What changes first?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "cache"
+      ],
+      "technicalSources": [
+        "cache"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "GET /orders/o-42 is authenticated and personalized. A CDN caches only by URL while authorization changes the visible fields. You must contain the incident before optimizing performance. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies REST API Design to personalized cdn."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A CDN improves speed but returns someone else’s order. What changes first?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: GET /orders/o-42 is authenticated and personalized. A CDN caches only by URL while authorization changes the visible fields. You must contain the…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Stop unsafe shared reuse, purge affected entries, and apply a reviewed private/no-store policy for the sensitive response as appropriate. Ensure…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Disabling shared caching increases origin load, so bound and monitor that traffic."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: A Vary header is not a substitute for access control, and browser-private storage still requires its own privacy assessment."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to cache; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-long-report",
+      "theme": "A report takes two minutes but the gateway waits thirty seconds. What is the contract?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "http",
+        "idem"
+      ],
+      "technicalSources": [
+        "http",
+        "idem"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A report-generation request is legitimate but exceeds the synchronous timeout. Clients must know whether work exists and avoid duplicate jobs after retry. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies REST API Design to long report."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A report takes two minutes but the gateway waits thirty seconds. What is the contract?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A report-generation request is legitimate but exceeds the synchronous timeout. Clients must know whether work exists and avoid duplicate jobs after…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Create a durable operation resource, return 202 with a documented status link, and let clients poll or receive a notification that refers back to…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: This adds durable jobs, expiry and status handling; a synchronous response is simpler for reliably short work."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: A completed worker task with a lost notification must remain discoverable, and cancellation needs its own race-aware semantics."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to http, idem; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-get-cancel",
+      "theme": "A browser prefetch cancels an order. Is authentication enough?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "http",
+        "validation"
+      ],
+      "technicalSources": [
+        "http",
+        "validation"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "GET /orders/o-42/cancel changes state. Authenticated browsers or link scanners may fetch it without an explicit user action. How will you redesign it?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies REST API Design to get cancel."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A browser prefetch cancels an order. Is authentication enough?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: GET /orders/o-42/cancel changes state. Authenticated browsers or link scanners may fetch it without an explicit user action. How will you redesign it?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Move cancellation behind a documented unsafe operation, such as creating a cancellation request, and validate the caller, object ownership and allowed…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: A dedicated cancellation resource supports asynchronous approval but adds lifecycle detail; a simple operation can be enough for immediate…"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: If fulfillment already occurred, return the actual domain conflict instead of claiming an earlier cancellation succeeded."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to http, validation; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-patch-counter",
+      "theme": "A retried PATCH increments quantity twice. Was PATCH supposed to prevent that?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "http",
+        "idem"
+      ],
+      "technicalSources": [
+        "http",
+        "idem"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A cart endpoint accepts a partial update meaning “add one.” A client retries after a timeout and quantity rises twice. The user intended only one addition. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies REST API Design to patch counter."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A retried PATCH increments quantity twice. Was PATCH supposed to prevent that?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Constraint reviewed: A cart endpoint accepts a partial update meaning “add one.” A client retries after a timeout and quantity rises twice. The user intended only one…"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Action reviewed: Distinguish a set-to-value update from an increment command. For repeated intent, use an operation identity and duplicate-safe execution, or replace an…"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost/alternative reviewed: Versioned replacement can conflict with another device’s edit, while operation identity needs retained outcomes."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Changed-constraint trap reviewed: A transport retry must not invent a new identity or blindly reset another client’s quantity."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to http, idem; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://www.rfc-editor.org/rfc/rfc9110.html",
+    "https://www.rfc-editor.org/rfc/rfc9111.html",
+    "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html",
+    "https://ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm"
+  ]
+}

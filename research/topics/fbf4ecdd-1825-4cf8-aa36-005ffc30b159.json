@@ -1,0 +1,411 @@
+{
+  "topicId": "fbf4ecdd-1825-4cf8-aa36-005ffc30b159",
+  "title": "Database Transactions",
+  "path": "topics/system-design/database-design-management/consistency-transactions-and-operations/database-transactions.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Database Transactions\" interview deadlocks retry isolation",
+      "date": "2026-11-17",
+      "result": "success; interview-oriented themes located, but exact frequency/rank/company claims not verified; prompts are original production adaptations"
+    }
+  ],
+  "sources": [
+    {
+      "id": "transactions",
+      "title": "PostgreSQL 18: transactions",
+      "url": "https://www.postgresql.org/docs/18/tutorial-transactions.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Explicit transaction boundaries and commit/rollback behavior."
+    },
+    {
+      "id": "isolation",
+      "title": "PostgreSQL 18: transaction isolation",
+      "url": "https://www.postgresql.org/docs/18/transaction-iso.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Snapshot, concurrency anomalies and serializable behavior."
+    },
+    {
+      "id": "locks",
+      "title": "PostgreSQL 18: explicit locking",
+      "url": "https://www.postgresql.org/docs/18/explicit-locking.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Row locks, lock lifetimes and deadlock prevention."
+    },
+    {
+      "id": "constraints",
+      "title": "PostgreSQL 18: constraints",
+      "url": "https://www.postgresql.org/docs/18/ddl-constraints.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Keys, referential integrity and constraint scope."
+    },
+    {
+      "id": "retry",
+      "title": "PostgreSQL 18: serialization failure handling",
+      "url": "https://www.postgresql.org/docs/18/mvcc-serialization-failure-handling.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Retry the complete transaction with a new decision snapshot."
+    },
+    {
+      "id": "idempotency",
+      "title": "AWS Builders Library: making retries safe with idempotent APIs",
+      "url": "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Stable request identity and semantic duplicate handling for uncertain outcomes."
+    },
+    {
+      "id": "vacuum",
+      "title": "PostgreSQL 18: routine vacuuming",
+      "url": "https://www.postgresql.org/docs/18/routine-vacuuming.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "MVCC cleanup, obsolete row versions and maintenance implications."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-last-stock-conditional-update",
+      "theme": "Two buyers read quantity one. What must the database operation decide atomically?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "isolation",
+        "constraints",
+        "transactions"
+      ],
+      "technicalSources": [
+        "isolation",
+        "constraints",
+        "transactions"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A service reads stock, decides it is sufficient, then assigns a reduced quantity in a later statement. Two requests confirm purchases for one unit. How will you fix the race?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Database Transactions to last stock conditional update."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Two buyers read quantity one. What must the database operation decide atomically?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to isolation, constraints, transactions; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-absent-booking-phantom",
+      "theme": "Both transactions find no overlapping booking. Why did locking the query result not help?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "constraints",
+        "locks",
+        "isolation"
+      ],
+      "technicalSources": [
+        "constraints",
+        "locks",
+        "isolation"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Two PostgreSQL transactions query an empty overlapping-booking set with FOR UPDATE, then each inserts a conflicting reservation. The room must never be double-booked. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Database Transactions to absent booking phantom."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Both transactions find no overlapping booking. Why did locking the query result not help?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to constraints, locks, isolation; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-reverse-order-deadlock",
+      "theme": "Two valid transfers repeatedly deadlock. What should change besides increasing timeout?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "locks",
+        "retry",
+        "idempotency"
+      ],
+      "technicalSources": [
+        "locks",
+        "retry",
+        "idempotency"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "One transaction locks item A then B; another locks B then A. Both wait for the other. What will you change and how will the application recover?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Database Transactions to reverse order deadlock."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Two valid transfers repeatedly deadlock. What should change besides increasing timeout?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to locks, retry, idempotency; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-serialization-retry-snapshot",
+      "theme": "The ORM retries only the failed UPDATE after SQLSTATE 40001. Is that sufficient?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "retry",
+        "isolation",
+        "idempotency"
+      ],
+      "technicalSources": [
+        "retry",
+        "isolation",
+        "idempotency"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A transaction computes a new allocation using several reads, then PostgreSQL rejects it for a serialization failure. The retry reuses the old allocation decision. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Database Transactions to serialization retry snapshot."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The ORM retries only the failed UPDATE after SQLSTATE 40001. Is that sufficient?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to retry, isolation, idempotency; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-commit-unknown-reconcile",
+      "theme": "COMMIT was sent but the socket closed. Should the server-side operation be repeated?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "transactions",
+        "idempotency",
+        "isolation"
+      ],
+      "technicalSources": [
+        "transactions",
+        "idempotency",
+        "isolation"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "An API cannot tell whether its transaction committed. A new connection is available, but blindly repeating would risk a duplicate order. What is the recovery contract?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Database Transactions to commit unknown reconcile."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: COMMIT was sent but the socket closed. Should the server-side operation be repeated?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to transactions, idempotency, isolation; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-long-snapshot-export",
+      "theme": "A consistent export holds a transaction for hours. What costs must be controlled?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "vacuum",
+        "isolation",
+        "transactions"
+      ],
+      "technicalSources": [
+        "vacuum",
+        "isolation",
+        "transactions"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A report needs a stable dataset and keeps a PostgreSQL snapshot open while slowly sending rows to a remote client. Cleanup falls behind and storage grows. What will you redesign?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Database Transactions to long snapshot export."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A consistent export holds a transaction for hours. What costs must be controlled?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to vacuum, isolation, transactions; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Engine-specific examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://www.postgresql.org/docs/18/tutorial-transactions.html",
+    "https://www.postgresql.org/docs/18/transaction-iso.html",
+    "https://www.postgresql.org/docs/18/explicit-locking.html",
+    "https://www.postgresql.org/docs/18/ddl-constraints.html",
+    "https://www.postgresql.org/docs/18/mvcc-serialization-failure-handling.html",
+    "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+    "https://www.postgresql.org/docs/18/routine-vacuuming.html"
+  ]
+}

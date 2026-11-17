@@ -1,0 +1,409 @@
+{
+  "topicId": "dd9a8690-fac2-458d-8e05-a5aa4ab19577",
+  "title": "Master-Slave Architecture",
+  "path": "topics/system-design/database-design-management/scaling-and-high-availability/master-slave-architecture.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Master-Slave Architecture\" database interview failover split brain",
+      "date": "2026-11-17",
+      "result": "success; interview-oriented themes located, but exact frequency/rank/company claims not verified; prompts are original production adaptations"
+    }
+  ],
+  "sources": [
+    {
+      "id": "failover",
+      "title": "PostgreSQL 18: failover",
+      "url": "https://www.postgresql.org/docs/18/warm-standby-failover.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Promotion, failure detection and avoiding conflicting primaries."
+    },
+    {
+      "id": "repl",
+      "title": "PostgreSQL 18: standby replication",
+      "url": "https://www.postgresql.org/docs/18/warm-standby.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Standby acknowledgment modes, lag and recovery considerations."
+    },
+    {
+      "id": "cap",
+      "title": "Gilbert and Lynch: Perspectives on the CAP Theorem",
+      "url": "https://groups.csail.mit.edu/tds/papers/Gilbert/Brewer2.pdf",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Formal consistency/availability assumptions and partition-time trade-offs."
+    },
+    {
+      "id": "transactions",
+      "title": "PostgreSQL 18: transactions",
+      "url": "https://www.postgresql.org/docs/18/tutorial-transactions.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Explicit transaction boundaries and commit/rollback behavior."
+    },
+    {
+      "id": "idempotency",
+      "title": "AWS Builders Library: making retries safe with idempotent APIs",
+      "url": "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Stable request identity and semantic duplicate handling for uncertain outcomes."
+    },
+    {
+      "id": "poolconfig",
+      "title": "PgBouncer: configuration",
+      "url": "https://www.pgbouncer.org/config.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Client/server pool limits, per-user/database scope and timeouts."
+    },
+    {
+      "id": "backup",
+      "title": "PostgreSQL 18: continuous archiving and recovery",
+      "url": "https://www.postgresql.org/docs/18/continuous-archiving.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Independent base backups, WAL archives and point-in-time recovery."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-heartbeat-network-split",
+      "theme": "Both sides of a partition believe the primary failed. Who may accept writes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "failover",
+        "cap"
+      ],
+      "technicalSources": [
+        "failover",
+        "cap"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A primary and standby lose contact but each remains reachable by some clients. The standby’s watchdog wants to promote immediately. Conflicting order histories are unacceptable. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Master-Slave Architecture to heartbeat network split."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Both sides of a partition believe the primary failed. Who may accept writes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to failover, cap; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-cached-pool-old-writer",
+      "theme": "The new writer is healthy but half the app still uses old connections. How will recovery finish?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "failover",
+        "poolconfig",
+        "idempotency"
+      ],
+      "technicalSources": [
+        "failover",
+        "poolconfig",
+        "idempotency"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A database endpoint changes after promotion. Long-lived connection pools retain sockets to the retired writer, and users see inconsistent failures. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Master-Slave Architecture to cached pool old writer."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The new writer is healthy but half the app still uses old connections. How will recovery finish?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to failover, poolconfig, idempotency; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-divergent-old-primary",
+      "theme": "The original host returns with writes absent from the new primary. Can it be reattached directly?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "failover",
+        "repl",
+        "idempotency"
+      ],
+      "technicalSources": [
+        "failover",
+        "repl",
+        "idempotency"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "An asynchronous failover promoted a standby while the old host was unreachable. The original host later restarts and contains a different history. What recovery path will you follow?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Master-Slave Architecture to divergent old primary."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The original host returns with writes absent from the new primary. Can it be reattached directly?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to failover, repl, idempotency; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-read-write-transaction-routing",
+      "theme": "A transaction starts on a replica and later needs to write. Can a router move it mid-transaction?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "transactions",
+        "repl"
+      ],
+      "technicalSources": [
+        "transactions",
+        "repl"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "An ORM lazily begins a transaction on a read endpoint, then attempts an update. The design assumes the update can simply be forwarded to the current primary. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Master-Slave Architecture to read write transaction routing."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A transaction starts on a replica and later needs to write. Can a router move it mid-transaction?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to transactions, repl; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-commit-response-lost",
+      "theme": "The connection fails just after COMMIT. Should checkout create a new order on retry?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "idempotency",
+        "transactions",
+        "repl"
+      ],
+      "technicalSources": [
+        "idempotency",
+        "transactions",
+        "repl"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The primary may have committed an order before failover, but the client received no response. Retrying with a new order/request identifier could create a second purchase. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Master-Slave Architecture to commit response lost."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The connection fails just after COMMIT. Should checkout create a new order on retry?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to idempotency, transactions, repl; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-planned-switchover-readiness",
+      "theme": "A maintenance switchover promotes quickly but service takes minutes to recover. What was not tested?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "failover",
+        "repl",
+        "backup",
+        "poolconfig"
+      ],
+      "technicalSources": [
+        "failover",
+        "repl",
+        "backup",
+        "poolconfig"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A team measures only the promotion command. During planned maintenance, stale routes, cold caches and pool retries extend the customer outage. How will you improve the procedure?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Master-Slave Architecture to planned switchover readiness."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A maintenance switchover promotes quickly but service takes minutes to recover. What was not tested?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Decision specifies an owning mechanism and actionable sequence."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Cost analysis compares the chosen action with an explicit alternative."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Answer changes under the follow-up constraint or failure assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to failover, repl, backup, poolconfig; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Engine-specific examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://www.postgresql.org/docs/18/warm-standby-failover.html",
+    "https://www.postgresql.org/docs/18/warm-standby.html",
+    "https://groups.csail.mit.edu/tds/papers/Gilbert/Brewer2.pdf",
+    "https://www.postgresql.org/docs/18/tutorial-transactions.html",
+    "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+    "https://www.pgbouncer.org/config.html",
+    "https://www.postgresql.org/docs/18/continuous-archiving.html"
+  ]
+}
