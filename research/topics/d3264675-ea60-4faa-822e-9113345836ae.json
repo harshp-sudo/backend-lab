@@ -1,0 +1,362 @@
+{
+  "topicId": "d3264675-ea60-4faa-822e-9113345836ae",
+  "title": "Eventual Consistency",
+  "path": "topics/system-design/distributed-systems-scalability/consistency-models-and-trade-offs/eventual-consistency.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Eventual Consistency\" system design interview conflicts read your writes",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "eventual",
+      "title": "Werner Vogels: Eventually Consistent — Revisited",
+      "url": "https://www.allthingsdistributed.com/2008/12/eventually_consistent.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Eventual convergence and reader/session variants as distinct promises; historical product examples are not current product guarantees."
+    },
+    {
+      "id": "dynamo",
+      "title": "DeCandia et al.: Dynamo (SOSP 2007)",
+      "url": "https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Historical Dynamo placement, versioning and repair mechanisms; not a claim about current DynamoDB defaults."
+    },
+    {
+      "id": "etcd",
+      "title": "etcd v3.6: API guarantees",
+      "url": "https://etcd.io/docs/v3.6/learning/api_guarantees/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Explicit v3.6 KV consistency, weaker serializable read option, watch limitations and lease behavior."
+    },
+    {
+      "id": "cap",
+      "title": "Gilbert and Lynch: Brewer’s Conjecture (2002)",
+      "url": "https://www.comp.nus.edu.sg/~gilbert/pubs/BrewersConjecture-SigAct.pdf",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Original asynchronous-model impossibility result and precise atomic consistency/availability definitions; an inaccessible MIT URL was replaced by the author's copy."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-own-save",
+      "theme": "A writer cannot see their own successful profile change. What do you do?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "eventual",
+        "etcd"
+      ],
+      "technicalSources": [
+        "eventual",
+        "etcd"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Other users may see delayed updates, but the editor must not be shown an older saved state. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Eventual Consistency to own save."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A writer cannot see their own successful profile change. What do you do?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Carry the acknowledged version and read from a source able to meet that session requirement, or wait/present pending within a deadline"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Version tracking adds state and can reduce availability when no eligible source is reachable"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A local optimistic preview improves UX but cannot certify that the saved record is durable."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to eventual, etcd; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-concurrent-fields",
+      "theme": "Two regions edit different fields and one change disappears. What changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "dynamo",
+        "eventual"
+      ],
+      "technicalSources": [
+        "dynamo",
+        "eventual"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Whole-profile last-writer replacement resolves every conflict to a single payload. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Eventual Consistency to concurrent fields."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Two regions edit different fields and one change disappears. What changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Model independent updates at an appropriate field/operation boundary and use supported merge/conflict semantics; retain unresolved versions when automatic "
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: More granular metadata and rules increase complexity"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A single authoritative editor is an alternative when write contention is low; edits to the same field still need a deliberate conflict policy."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to dynamo, eventual; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-delete-return",
+      "theme": "A long-offline replica resurrects a deleted record. How do you recover?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "dynamo"
+      ],
+      "technicalSources": [
+        "dynamo"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Deletion markers were retained less time than this replica was absent. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Eventual Consistency to delete return."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A long-offline replica resurrects a deleted record. How do you recover?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Stop treating the obsolete replica as an ordinary source, rebuild or resynchronize it from valid authority, and redesign deletion retention/rejoin rules to"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Long retention costs metadata space; removing old members can simplify bounds"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Merely increasing a random TTL is insufficient if disconnection has no supported maximum."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to dynamo; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-causal-view",
+      "theme": "A reply arrives before its parent post. Is convergence enough?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "eventual"
+      ],
+      "technicalSources": [
+        "eventual"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The feed eventually becomes correct but the product forbids showing a reply without its referenced context. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Eventual Consistency to causal view."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A reply arrives before its parent post. Is convergence enough?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Require a causal/dependency-aware visibility rule or delay the reply view until its parent version is available"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Dependency tracking and waiting cost state and availability"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Hiding the reply temporarily is a presentation option, but arbitrary replica reads do not automatically satisfy the stronger contract."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to eventual; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-unique-handle",
+      "theme": "Can both regions immediately grant the same unique handle?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "cap",
+        "eventual"
+      ],
+      "technicalSources": [
+        "cap",
+        "eventual"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The product forbids conflicting successful ownership, even while the regions are isolated. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Eventual Consistency to unique handle."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Can both regions immediately grant the same unique handle?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use a supported authoritative reservation boundary or a safely partitioned rights model, and return unavailable/pending when necessary"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: This restricts local success or naming flexibility"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Provisional handles with later resolution are a different product contract and may be acceptable only if explicitly chosen."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to cap, eventual; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-lag-slo",
+      "theme": "Median replication lag is tiny, but a customer sees hours-old data. What do you inspect?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "dynamo",
+        "eventual"
+      ],
+      "technicalSources": [
+        "dynamo",
+        "eventual"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A repair backlog followed an outage and the service had advertised eventual consistency without a staleness limit. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Eventual Consistency to lag slo."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Median replication lag is tiny, but a customer sees hours-old data. What do you inspect?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Inspect version progress, missing deliveries, repair capacity and reader routing; distinguish a broken convergence mechanism from an unbounded base guarant"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Freshness enforcement can reject or wait during repair"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: More replicas may improve read capacity but also add repair traffic; changing the promise requires testing its failure behavior."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to dynamo, eventual; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://www.allthingsdistributed.com/2008/12/eventually_consistent.html",
+    "https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf",
+    "https://etcd.io/docs/v3.6/learning/api_guarantees/",
+    "https://www.comp.nus.edu.sg/~gilbert/pubs/BrewersConjecture-SigAct.pdf"
+  ]
+}

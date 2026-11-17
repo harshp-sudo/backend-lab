@@ -1,0 +1,360 @@
+{
+  "topicId": "7696fe07-3043-4f12-b9fb-e0fba472934d",
+  "title": "Consistent Hashing",
+  "path": "topics/system-design/distributed-systems-scalability/scaling-and-traffic-distribution/consistent-hashing.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Consistent Hashing\" system design interview hot keys virtual nodes",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "dynamo",
+      "title": "DeCandia et al.: Dynamo (SOSP 2007)",
+      "url": "https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Historical Dynamo placement, versioning and repair mechanisms; not a claim about current DynamoDB defaults."
+    },
+    {
+      "id": "overload",
+      "title": "Google SRE: Handling overload",
+      "url": "https://sre.google/sre-book/handling-overload/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Capacity, bounded queues, load shedding and retry-aware overload reasoning."
+    },
+    {
+      "id": "etcd",
+      "title": "etcd v3.6: API guarantees",
+      "url": "https://etcd.io/docs/v3.6/learning/api_guarantees/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Explicit v3.6 KV consistency, weaker serializable read option, watch limitations and lease behavior."
+    },
+    {
+      "id": "dr",
+      "title": "Azure Well-Architected: Disaster recovery",
+      "url": "https://learn.microsoft.com/en-us/azure/well-architected/reliability/disaster-recovery",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Explicit recovery objectives, failure-domain planning and tested recovery; examples are illustrative rather than provider promises."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-new-node-cold",
+      "theme": "Adding a cache node overloads the database. What do you change?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "dynamo",
+        "overload"
+      ],
+      "technicalSources": [
+        "dynamo",
+        "overload"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The new owner begins empty and hot requests refill moved keys simultaneously. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Consistent Hashing to new node cold."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Adding a cache node overloads the database. What do you change?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Measure moved hot-key demand, pace ownership rollout or prewarm safe data, coalesce concurrent fills and bound origin admission"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Prewarming consumes bandwidth and can copy soon-obsolete values"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Lazy refill is simpler for cold keys; neither choice is safe without an origin budget under a cold fleet."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to dynamo, overload; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-single-hot",
+      "theme": "One key receives half the requests. Add more virtual nodes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "dynamo"
+      ],
+      "technicalSources": [
+        "dynamo"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "All reads target the key’s primary owner even though aggregate capacity is spare. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Consistent Hashing to single hot."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: One key receives half the requests. Add more virtual nodes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Treat it as a hot-object problem: use permitted read replicas/local copies or split the application aggregate where semantics allow, and bound refresh/writ"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Virtual tokens move ownership pieces but do not divide one key’s request stream"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If strong writes dominate, replicas cannot independently accept arbitrary conflicting updates without another contract."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to dynamo; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-weighted",
+      "theme": "A small server and a large server receive similar bytes. What changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "dynamo"
+      ],
+      "technicalSources": [
+        "dynamo"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The small server repeatedly evicts useful data and its capacity is one quarter of the larger server. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Consistent Hashing to weighted."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A small server and a large server receive similar bytes. What changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use supported capacity-aware token ownership/weights, plan a throttled rebalance and verify byte as well as key distribution against the working set."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: More tokens add metadata and do not guarantee byte balance for giant values"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A controller-managed fixed partition table is an alternative if explicit ownership adjustment is easier to operate."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to dynamo; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-old-map",
+      "theme": "Two routers disagree about an owner during migration. What is safe?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "dynamo",
+        "etcd"
+      ],
+      "technicalSources": [
+        "dynamo",
+        "etcd"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Writes are authoritative and one client has not received the new membership epoch. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Consistent Hashing to old map."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Two routers disagree about an owner during migration. What is safe?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use an ownership-epoch/handoff protocol that rejects or safely forwards obsolete-owner writes, copies concurrent changes and bounds rerouting"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Extra coordination adds latency and temporary duplicate storage"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: For a rebuildable cache a weaker dual-lookup/refill plan may suffice; authoritative writes require a stronger migration contract."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to dynamo, etcd; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-replica-domains",
+      "theme": "Three replica tokens reside on one host. Is replication complete?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "dynamo",
+        "dr"
+      ],
+      "technicalSources": [
+        "dynamo",
+        "dr"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A host failure removes all copies selected by consecutive ring tokens. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Consistent Hashing to replica domains."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Three replica tokens reside on one host. Is replication complete?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Select replicas on distinct physical hosts and required racks/zones, accounting for virtual-token ownership, and verify available targets before acknowledg"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Topology constraints can reduce balancing flexibility"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If too few independent domains exist, report the reduced guarantee rather than counting virtual positions as separate failures."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to dynamo, dr; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-range-query",
+      "theme": "A workload needs ordered key ranges. Is a ring the right default?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "dynamo"
+      ],
+      "technicalSources": [
+        "dynamo"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Queries scan adjacent customer IDs while the proposed hash destroys that locality. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Consistent Hashing to range query."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A workload needs ordered key ranges. Is a ring the right default?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Compare range partitioning or a suitable ordered secondary access path against point-lookup hashing, including hot ranges, split/merge operations and cross"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Ranges preserve locality but may concentrate sequential inserts or busy tenants"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If point access becomes dominant, hash placement can regain its advantage; choose from query behavior, not a universal algorithm ranking."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to dynamo; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf",
+    "https://sre.google/sre-book/handling-overload/",
+    "https://etcd.io/docs/v3.6/learning/api_guarantees/",
+    "https://learn.microsoft.com/en-us/azure/well-architected/reliability/disaster-recovery"
+  ]
+}

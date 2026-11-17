@@ -1,0 +1,377 @@
+{
+  "topicId": "0e405867-9057-4501-a031-82a7294baf04",
+  "title": "Bulkhead Pattern",
+  "path": "topics/system-design/distributed-systems-scalability/resilience-and-fault-tolerance-patterns/bulkhead-pattern.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Bulkhead Pattern\" interview thread pool failure isolation",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "bulkhead",
+      "title": "Microsoft Azure: Bulkhead pattern",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/bulkhead",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Resource partitioning to contain dependency/consumer failure propagation."
+    },
+    {
+      "id": "r4jbulkhead",
+      "title": "Resilience4j: Bulkhead guide",
+      "url": "https://resilience4j.readme.io/docs/bulkhead",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Semaphore and thread-pool isolation are different resource controls; verify version before translating illustrative choices into library settings."
+    },
+    {
+      "id": "overload",
+      "title": "Google SRE: Handling overload",
+      "url": "https://sre.google/sre-book/handling-overload/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Capacity, bounded queues, load shedding and retry-aware overload reasoning."
+    },
+    {
+      "id": "retry",
+      "title": "Amazon Builders’ Library: Timeouts, retries and backoff with jitter",
+      "url": "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Timeout uncertainty, safe repeated effects, retry amplification, bounded retries and jitter; URL redirects to the author's AWS Builder Center article."
+    },
+    {
+      "id": "scale",
+      "title": "Microsoft Azure: Autoscaling guidance",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/best-practices/auto-scaling",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Capacity direction, scaling delay, state and downstream constraints; guidance checked on 2026-11-17."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-report-stall",
+      "theme": "A report outage breaks healthy account reads. What do you isolate?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "bulkhead",
+        "r4jbulkhead"
+      ],
+      "technicalSources": [
+        "bulkhead",
+        "r4jbulkhead"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Both call paths share one executor and all its workers wait on reports. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Bulkhead Pattern to report stall."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A report outage breaks healthy account reads. What do you isolate?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Give report work a bounded dependency budget and, if needed, a separate supported executor/queue, preserving account capacity"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Reserved workers cost memory and may idle"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A semaphore can suffice if it protects the actual resource; a separate queue alone cannot free the already blocked shared executor."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to bulkhead, r4jbulkhead; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-million-queue",
+      "theme": "Only ten jobs run, yet memory is exhausted. Why?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "overload",
+        "bulkhead"
+      ],
+      "technicalSources": [
+        "overload",
+        "bulkhead"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The executor accepts unlimited queued report requests and callers often time out before execution. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Bulkhead Pattern to million queue."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Only ten jobs run, yet memory is exhausted. Why?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Bound queue length and admission wait, remove/expire abandoned queued work and provide explicit rejection or durable asynchronous acceptance semantics"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Rejections are visible and durable queues add operations"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Increasing heap postpones the same failure if arrival rate remains above useful completion capacity."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to overload, bulkhead; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-async-block",
+      "theme": "An async report function freezes the event loop. What changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "r4jbulkhead",
+        "bulkhead"
+      ],
+      "technicalSources": [
+        "r4jbulkhead",
+        "bulkhead"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Its internals perform blocking CPU work despite being declared async. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Bulkhead Pattern to async block."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An async report function freezes the event loop. What changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Profile the actual blocking section and move it to a supported bounded execution boundary suited to the workload, keeping account processing responsive and"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Extra processes/threads add communication and memory costs; thread execution may not parallelize every runtime’s CPU work"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: An async semaphore alone does not make blocking code cooperative."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to r4jbulkhead, bulkhead; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-timeout-permit",
+      "theme": "Clients time out but workers keep running. Release every permit?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "bulkhead",
+        "retry"
+      ],
+      "technicalSources": [
+        "bulkhead",
+        "retry"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The external library cannot cancel an in-flight request reliably. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Bulkhead Pattern to timeout permit."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Clients time out but workers keep running. Release every permit?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Keep actual resource occupancy accounted for until it ends, bound admission based on that occupancy and choose a client/deadline design that supports the r"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Conservative accounting can temporarily reject more work"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Releasing early makes the advertised cap false; killing an execution context can still leave an external effect completed."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to bulkhead, retry; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-tenant-skew",
+      "theme": "One tenant consumes every slot. Create unlimited tenant pools?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "bulkhead",
+        "overload"
+      ],
+      "technicalSources": [
+        "bulkhead",
+        "overload"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The service has many possible tenant identities and a finite process memory/connection budget. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Bulkhead Pattern to tenant skew."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: One tenant consumes every slot. Create unlimited tenant pools?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use bounded tenant/work-class accounting with a global ceiling, fair admission and protected critical capacity; define eviction/unknown-tenant behavior wit"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: More isolation reduces utilization and adds state"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Unbounded per-identity pools can become a memory attack; a shared quota alone may not reserve capacity for important classes."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to bulkhead, overload; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-fleet-budget",
+      "theme": "Each replica is below its pool cap, but the database is overloaded. Why?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "overload",
+        "scale"
+      ],
+      "technicalSources": [
+        "overload",
+        "scale"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The application fleet scaled from two to twenty instances without changing its per-instance limit. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Bulkhead Pattern to fleet budget."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Each replica is below its pool cap, but the database is overloaded. Why?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Allocate the downstream budget across the maximum active fleet or use a supported aggregate admission mechanism; include other clients, failover and retrie"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Smaller local limits can increase waiting and shared coordination adds a dependency"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Independently safe local counters do not establish a safe fleet-wide total."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to overload, scale; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://learn.microsoft.com/en-us/azure/architecture/patterns/bulkhead",
+    "https://resilience4j.readme.io/docs/bulkhead",
+    "https://sre.google/sre-book/handling-overload/",
+    "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/",
+    "https://learn.microsoft.com/en-us/azure/architecture/best-practices/auto-scaling"
+  ]
+}

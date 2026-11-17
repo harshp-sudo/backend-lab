@@ -1,0 +1,362 @@
+{
+  "topicId": "7018d866-3bba-4b0d-9eda-b2f9dccee551",
+  "title": "Horizontal vs Vertical Scaling",
+  "path": "topics/system-design/distributed-systems-scalability/scaling-and-traffic-distribution/horizontal-vs-vertical-scaling.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Horizontal vs Vertical Scaling\" system design interview bottleneck",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "scale",
+      "title": "Microsoft Azure: Autoscaling guidance",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/best-practices/auto-scaling",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Capacity direction, scaling delay, state and downstream constraints; guidance checked on 2026-11-17."
+    },
+    {
+      "id": "overload",
+      "title": "Google SRE: Handling overload",
+      "url": "https://sre.google/sre-book/handling-overload/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Capacity, bounded queues, load shedding and retry-aware overload reasoning."
+    },
+    {
+      "id": "nginx",
+      "title": "NGINX: HTTP load balancing",
+      "url": "https://nginx.org/en/docs/http/load_balancing.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Round-robin, least connections, weights, affinity and passive health behavior; do not infer commercial features from the generic example."
+    },
+    {
+      "id": "dr",
+      "title": "Azure Well-Architected: Disaster recovery",
+      "url": "https://learn.microsoft.com/en-us/azure/well-architected/reliability/disaster-recovery",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Explicit recovery objectives, failure-domain planning and tested recovery; examples are illustrative rather than provider promises."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-db-ceiling",
+      "theme": "CPU is low but database waits dominate. Add ten instances?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "scale"
+      ],
+      "technicalSources": [
+        "scale"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The API misses its latency objective and lock-wait time is rising. Database rows are shared across callers. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Horizontal vs Vertical Scaling to db ceiling."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: CPU is low but database waits dominate. Add ten instances?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Inspect the blocked transactions and ownership/access pattern first, bound admitted concurrency, and reduce the specific contention or expensive access pat"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Admission may reject or defer work, but uncontrolled extra callers worsen the same bottleneck"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A larger database can help resource pressure; it does not remove a logically serialized hot-row invariant."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to scale; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-memory-bound",
+      "theme": "One renderer exceeds the instance memory limit. Scale out?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "scale"
+      ],
+      "technicalSources": [
+        "scale"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A single legitimate job needs more memory than one worker has; splitting it is not currently supported. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Horizontal vs Vertical Scaling to memory bound."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: One renderer exceeds the instance memory limit. Scale out?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Choose an instance size that safely fits the measured peak working set, limit simultaneous large jobs and profile opportunities to stream the input"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Larger units cost more and still have finite limits; more small workers cannot jointly hold one unsplittable job"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If streaming becomes feasible, reevaluate smaller independent workers."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to scale; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-session-loss",
+      "theme": "A second application instance breaks signed-in sessions. What changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "scale",
+        "nginx"
+      ],
+      "technicalSources": [
+        "scale",
+        "nginx"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Sessions and temporary uploads exist only on the first process disk. Requests now alternate between instances. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Horizontal vs Vertical Scaling to session loss."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A second application instance breaks signed-in sessions. What changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Give sessions and required uploads an explicitly shared/durable home with access and expiry rules, then make requests independent of a particular process"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Shared storage adds latency and another dependency"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If sessions are reconstructible tokens, the state contract may be simpler."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to scale, nginx; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-burst-startup",
+      "theme": "Demand triples in seconds but workers take minutes to start. What now?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "scale",
+        "overload"
+      ],
+      "technicalSources": [
+        "scale",
+        "overload"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The response deadline cannot tolerate the full startup delay and traffic bursts recur predictably. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Horizontal vs Vertical Scaling to burst startup."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Demand triples in seconds but workers take minutes to start. What now?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Keep measured headroom or pre-scale before the known burst, use bounded admission/queues for permissible delay, and shed optional work when capacity is exh"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Idle reserve costs money; a queue trades response time for absorption and must have a deadline"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If demand becomes sustained, add permanent capacity rather than repeatedly extending the queue."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to scale, overload; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-pool-multiplication",
+      "theme": "Autoscaling exhausts the database connection limit. What will you change?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "scale",
+        "overload"
+      ],
+      "technicalSources": [
+        "scale",
+        "overload"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Every replica opens a fifty-connection pool and the fleet can grow to twenty replicas. Existing database clients also need slots. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Horizontal vs Vertical Scaling to pool multiplication."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Autoscaling exhausts the database connection limit. What will you change?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Allocate a dependency concurrency/connection budget across the maximum fleet, use smaller bounded pools and admission, and verify whether a supported poole"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Small pools can increase local waiting"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Revise the budget when other clients or failover topology change."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to scale, overload; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-cost-proof",
+      "theme": "A larger machine halves latency. Is it the best scaling choice?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "scale",
+        "dr"
+      ],
+      "technicalSources": [
+        "scale",
+        "dr"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The workload meets its objective on either two smaller instances or one larger instance. Current measured cost differs and one-instance loss must be tolerated. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Horizontal vs Vertical Scaling to cost proof."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A larger machine halves latency. Is it the best scaling choice?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Compare equal failure capacity, tail latency, operational complexity and current prices under the real request mix"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A single large machine may win steady-state cost but fail the outage requirement without redundancy"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If that requirement is relaxed or work is restartable batch processing, the preferred option may change."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to scale, dr; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://learn.microsoft.com/en-us/azure/architecture/best-practices/auto-scaling",
+    "https://sre.google/sre-book/handling-overload/",
+    "https://nginx.org/en/docs/http/load_balancing.html",
+    "https://learn.microsoft.com/en-us/azure/well-architected/reliability/disaster-recovery"
+  ]
+}

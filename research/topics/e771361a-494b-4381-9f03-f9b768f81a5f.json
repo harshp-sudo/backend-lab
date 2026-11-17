@@ -1,0 +1,386 @@
+{
+  "topicId": "e771361a-494b-4381-9f03-f9b768f81a5f",
+  "title": "Distributed Transactions",
+  "path": "topics/system-design/distributed-systems-scalability/distributed-transactions-and-coordination/distributed-transactions.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Distributed Transactions\" system design interview failures atomicity",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "commit",
+      "title": "Gray and Lamport: Consensus on Transaction Commit",
+      "url": "https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr-2003-96.pdf",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Atomic commit problem, classic 2PC blocking and distinction from fault-tolerant consensus-based commit."
+    },
+    {
+      "id": "pg",
+      "title": "PostgreSQL 18: Two-phase transactions",
+      "url": "https://www.postgresql.org/docs/18/two-phase.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Prepared participant state, durable storage and intended external transaction-manager integration."
+    },
+    {
+      "id": "outbox",
+      "title": "AWS Prescriptive Guidance: Transactional outbox",
+      "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Local state/event atomic publication intent and duplicate-consumer considerations."
+    },
+    {
+      "id": "saga",
+      "title": "Microsoft Azure: Saga distributed transactions pattern",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/saga",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Modern orchestration/choreography and workflow recovery choices; no inference of automatic isolation or guaranteed compensation success."
+    },
+    {
+      "id": "linear",
+      "title": "Herlihy and Wing: Linearizability",
+      "url": "https://cs.brown.edu/~mph/HerlihyW90/p463-herlihy.pdf",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Original operation-history correctness condition and comparison with other conditions."
+    },
+    {
+      "id": "retry",
+      "title": "Amazon Builders’ Library: Timeouts, retries and backoff with jitter",
+      "url": "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Timeout uncertainty, safe repeated effects, retry amplification, bounded retries and jitter; URL redirects to the author's AWS Builder Center article."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-two-local",
+      "theme": "Debit commits but credit fails. What do you change?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "commit",
+        "pg"
+      ],
+      "technicalSources": [
+        "commit",
+        "pg"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The API promised a final atomic transfer, but services independently commit their own databases. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Distributed Transactions to two local."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Debit commits but credit fails. What do you change?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Revisit ownership and use one supported atomic boundary or distributed transaction meeting the required visibility/failure contract"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Distributed commit adds coupling and can retain resources during failure"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Compensation is an alternative only if the business accepts the intermediate and recovered outcomes."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to commit, pg; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-publish-gap",
+      "theme": "A committed order has no event. How do you prevent recurrence?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "outbox"
+      ],
+      "technicalSources": [
+        "outbox"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The process crashes after local commit and before broker publication. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Distributed Transactions to publish gap."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A committed order has no event. How do you prevent recurrence?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Atomically store the state change and outbox entry locally, relay it durably, and make consumer effects duplicate-safe using stable identity"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: The relay adds lag and operational backlog"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A broker transaction does not automatically include an unrelated database; the outbox also does not make all downstream effects atomic."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to outbox; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-outside-api",
+      "theme": "Can your transaction include a provider that only offers HTTP charge?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "saga",
+        "commit"
+      ],
+      "technicalSources": [
+        "saga",
+        "commit"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The provider cannot prepare or join your commit protocol. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Distributed Transactions to outside api."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Can your transaction include a provider that only offers HTTP charge?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Model the external action as a recoverable workflow with the provider’s documented idempotency/status/refund semantics, or change the product promise"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Refunding is not erasing a charge, and some effects are irreversible"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If no safe reconciliation exists, escalation or a different provider/operation order may be required."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to saga, commit; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-timeout-status",
+      "theme": "The coordinator times out after deciding commit. Should clients start over?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "commit",
+        "retry"
+      ],
+      "technicalSources": [
+        "commit",
+        "retry"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A durable transfer ID exists, but its final response was lost. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Distributed Transactions to timeout status."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The coordinator times out after deciding commit. Should clients start over?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Look up or retry the same operation through supported status/identity semantics, allowing recovery to disseminate the existing decision"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Status retention and reconciliation add storage/latency"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A definite pre-acceptance rejection permits a new attempt, but a communication timeout alone does not establish that condition."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to commit, retry; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-isolation-gap",
+      "theme": "All participants commit, yet readers see an invalid combination. Why?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "commit",
+        "linear"
+      ],
+      "technicalSources": [
+        "commit",
+        "linear"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Atomic outcome was implemented, but readers use independent snapshots and no joint isolation contract. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Distributed Transactions to isolation gap."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: All participants commit, yet readers see an invalid combination. Why?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Specify and implement the required cross-object visibility/concurrency-control guarantee, or expose a versioned/pending view that honestly reflects the wor"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Stronger isolation can add waiting and distributed coordination"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If the application only needs eventual reporting, a weaker explicitly stated view may suffice; atomic commit alone cannot answer the read requirement."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to commit, linear; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-recovery-owner",
+      "theme": "A pending transfer is stuck for hours. Who fixes it?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "saga",
+        "outbox"
+      ],
+      "technicalSources": [
+        "saga",
+        "outbox"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Every service retries locally, but none owns reconciliation across the workflow. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Distributed Transactions to recovery owner."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A pending transfer is stuck for hours. Who fixes it?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Assign a durable workflow/recovery owner with an explicit state machine, deadlines, idempotent steps, reconciliation checks and manual escalation"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Central recovery ownership adds an operational component; choreography still needs equivalent responsibility and observability"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Blindly replaying all actions can duplicate external effects or contradict completed steps."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to saga, outbox; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr-2003-96.pdf",
+    "https://www.postgresql.org/docs/18/two-phase.html",
+    "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html",
+    "https://learn.microsoft.com/en-us/azure/architecture/patterns/saga",
+    "https://cs.brown.edu/~mph/HerlihyW90/p463-herlihy.pdf",
+    "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/"
+  ]
+}
