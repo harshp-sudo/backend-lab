@@ -1,3 +1,17 @@
+<!--
+Sync Impact Report
+Version change: 1.2.0 -> 1.3.0 (MINOR: incremental content-publishing workflow)
+Rationale: routine lesson requests inherit stable contracts; repeated platform planning,
+migration-specific validation and redundant evidence must not block catalog growth.
+Modified principles: II and VI clarify purposeful visual coverage without per-card quotas.
+Added section: Incremental Topic Publishing and Verification, preserving all learning gates.
+Aligned: root AGENTS.md, topic-publish skill, four Spec Kit content-profile entrypoints,
+spec/plan/tasks templates, docs/topic-publishing.md, generic validator profile and scoped runner.
+Existing content: no rewrite required; all six modules, recall/scenario counts, source
+honesty, immutable identities, mobile and print requirements remain in force.
+Historical backfill snapshots/evidence remain frozen and explicitly scoped.
+Deferred placeholders: None.
+-->
 # Personal Learning Knowledge Base Constitution
 
 ## Core Principles
@@ -24,7 +38,10 @@ Lessons MUST combine narrative with diagrams, flowcharts, comparison tables, or 
 visual aids wherever the concept benefits from them. Walls of text MUST NOT be the sole
 teaching mechanism. Explanations of a process, hierarchy, timeline, or system MUST include
 valid Mermaid syntax using an appropriate supported diagram type, such as `graph TD`,
-`sequenceDiagram`, `mindmap`, or `pie`.
+`sequenceDiagram`, `mindmap`, or `pie`. A relevant, explained diagram MAY cover multiple
+scenarios when their relationship to it is clear. There is no per-scenario diagram quota.
+New diagrams MUST teach a distinct relationship, sequence, constraint or failure path;
+repeated generic diagrams MUST NOT substitute for meaningful visual explanation.
 
 The interface MUST use a clean, modern documentation-dashboard layout with a recursive
 left sidebar, top-bar learning controls, and a main reading canvas. Navigation MUST support
@@ -57,9 +74,15 @@ incomplete if any module is missing or contains an unexplained placeholder.
    and failure modes using Symptom → Root Cause → Fix/Prevention. Explain consequences
    in practical or real-world terms.
 6. **🧠 Active Recall & Mastery Check (Learning Engine):** Include the Feynman prompt
-   "Summarize this in your own words" and three to five active-recall flashcards or
-   what-if interview questions with hidden or collapsible answers. End by connecting the
-   lesson to real-world impact and useful takeaways.
+   "Summarize this in your own words" and three to five foundational active-recall
+   flashcards or what-if questions with hidden or collapsible answers. In addition,
+   include a dedicated subsection titled **Tricky & Most-Asked Interview Scenarios**
+   containing five to seven distinct, real-world scenario-based interview questions.
+   Each MUST ask what the learner would do and why under explicit production
+   constraints, and MUST use the structured interactive answer format defined in the
+   research standard below. This subsection belongs inside module six; it MUST NOT
+   replace the foundational recall cards or introduce a seventh top-level story module.
+   End by connecting the lesson to real-world impact and useful takeaways.
 
 Rationale: a consistent story structure lets learners focus on the subject while combining
 intuition, mechanics, decisions, failure analysis, and retrieval practice.
@@ -83,6 +106,12 @@ engine MUST retain sufficient review state to determine the next due review cons
 Self-testing MUST let learners flip or reveal Q&A cards and rate their confidence as
 **Hard**, **Good**, or **Easy**. Confidence ratings MUST be persisted as learning state
 so they can support continued review.
+
+The interview scenarios required by Principle III MUST be independently collapsible
+`<details>` cards with descriptive `<summary>` prompts and stable recall identities.
+They MUST participate in the shared self-testing and confidence model without changing
+existing topic IDs or recall keys. Revealing an interview answer or rating confidence
+MUST NOT imply mastery or complete a topic review.
 
 Rationale: explicit progress, retrieval practice, and scheduled revisits turn a reference
 collection into a durable personal learning system.
@@ -133,7 +162,9 @@ JavaScript, and CSS MUST contain the working behavior required by that scope.
 
 AI authors MUST automatically supply valid Mermaid diagrams whenever explaining processes,
 hierarchies, timelines, or systems, and MUST follow the six-module story blueprint for every
-new topic. Diagram source alone MUST NOT replace the surrounding explanation.
+new topic. Diagram source alone MUST NOT replace the surrounding explanation. Shared
+visual coverage follows Principle II; authors MUST NOT generate redundant per-card diagrams
+merely to inflate diagram counts.
 
 Strict taxonomy hygiene is mandatory: AI authors MUST reuse and extend conceptually aligned
 parent nodes and MUST NOT create duplicate categories with slightly different names, such
@@ -219,9 +250,122 @@ four steps in order:
      needed to keep child links accurate. The bundle MUST NOT leave implied hub work
      unfinished.
 
+### Incremental Topic Publishing and Verification
+
+Routine additions or revisions of lessons, taxonomy entries and hubs that preserve the
+existing application contract MUST use the compact topic-publishing workflow documented
+in `docs/topic-publishing.md` and selected through root `AGENTS.md`. A normal request MUST
+be carried through research, full authorship, integration and verification without requiring
+four separate user commands. Explicit planning-only, stage-specific or full-cycle requests
+MUST retain their requested scope.
+
+The workflow MUST inherit the constitution and supported partial contract. It MUST NOT
+create new feature specifications, data models, contracts or migration evidence ledgers
+by default for an unchanged shell. Batches MUST retain one complete authoring item per
+lesson, with shared setup, catalog integration and verification grouped once. Research
+and editorial findings MUST remain traceable but concise; copying complete answers into
+multiple review records is not a quality requirement.
+
+Before editing the catalog, authors MUST capture the prior manifest and inspect existing
+taxonomy and representative partials. Validation MUST check the whole current catalog's
+intrinsic contracts, links, complete hubs and research mappings. Browser, keyboard, theme,
+mobile and full-answer print checks MUST cover changed lessons and affected hubs. Shared
+renderer/style/library changes require catalog-wide rendering and print regression;
+routing/state/backup changes require full relevant application regression. A schema or
+learning-standard change requires full Spec Kit assessment and explicit migration scope.
+
+Verification MUST derive inventory and progress expectations from the current manifest.
+Frozen migration counts, hashes, and evidence MUST apply only to that named migration;
+they MUST NOT become default publishing prerequisites. Baselines MUST NOT be regenerated
+to conceal intentional catalog growth. Change discovery MUST include untracked files or
+use explicit paths and a pre-edit manifest when no usable Git baseline exists.
+
+The verification runner SHOULD own server startup/readiness/cleanup and isolated browser
+contexts. It MAY reuse successful rendering/print results only when relevant content,
+manifest identity/path/context, research, shared runtime, contract, tooling and browser
+inputs remain unchanged and output artifacts are intact. Cheap catalog validation MUST
+always rerun. Interrupted or unexecuted gates MUST remain pending. Source correctness and
+substantive editorial review MUST NOT be inferred from a structural validator pass.
+
+All existing learning and delivery standards remain mandatory, including ELI5-first depth,
+the six modules, three to five foundational cards, five to seven complete researched
+production scenarios, meaningful visuals, immutable IDs/recall keys and usable mobile/print
+output. Reduced planning overhead MUST NOT reduce content quality or completeness.
+
+### Interview Scenario Research and Answer Standard
+
+For every new or substantively revised topic lesson, the AI MUST research and author
+five to seven distinct questions for its **Tricky & Most-Asked Interview Scenarios**
+subsection. Each question MUST concern the exact concept being taught and present a
+real production situation, an explicit constraint or failure, and a decision prompt:
+"What will you do and why?" Definition-only questions, vocabulary checks, and superficial
+rewrites of the same scenario MUST NOT count toward these five to seven questions.
+
+**Web-grounded selection:** When web search is available, the AI MUST use it before
+selecting the scenario set. Searches MUST target the exact concept and its commonly
+asked system-design, debugging, and architectural trade-off interview situations.
+Select scenarios using recurring patterns in credible interview reports, interview
+preparation sources, or published interview guidance. Verify technical answers against
+primary technical documentation or original architecture references where applicable.
+The AI MUST NOT present generic textbook definitions as evidence of interview frequency.
+
+The lesson MUST include source links supporting the scenario selection, either alongside
+the relevant cards or in a clearly associated source note. The research record MUST
+identify which questions reflect reported recurring patterns and which are adapted
+production variants. Claims about frequency, rankings, or named companies' interviews
+MUST be supported by the cited evidence; the subsection title alone is not evidence.
+When sources do not establish frequency, describe a scenario as an informed adaptation
+rather than claiming it is verified as frequently asked.
+
+If web search is unavailable or fails, the AI MUST state that limitation and identify
+the scenario set as based on existing knowledge rather than verified current interview
+research. If search returns insufficient evidence, it MUST disclose that narrower gap
+and label the inferred or adapted questions. These limitations MUST NOT silently remove
+the required five to seven complete scenario cards or justify invented sources.
+
+**Structured interactive answers:** Every scenario MUST use its own native `<details>`
+card. Its `<summary>` MUST identify the production problem and decision being tested;
+the expanded card MUST contain these three clearly labeled parts:
+
+1. **The Scenario & Constraint:** State the real-world situation, relevant assumptions,
+   and concrete constraints such as scale, latency, consistency, reliability, ownership,
+   compatibility, or budget. Ask what the learner would do and why.
+2. **The Direct Answer & Architectural Decision:** Give an explicit recommended action,
+   explain why it fits those constraints, and describe the critical implementation or
+   debugging steps needed to act on it. State any assumptions that change the answer;
+   "it depends" without a decision and reasoning is incomplete.
+3. **Key Trade-Offs & Follow-Up Traps:** Explain the gains and costs, at least one viable
+   alternative, and the follow-up constraints or misconceptions an interviewer could
+   probe. Include how the decision changes when a relevant assumption or failure mode
+   changes. Do not replace this analysis with a generic advantages/disadvantages list.
+
+Questions MUST test applied reasoning rather than memorized definitions. The set MUST
+cover materially different production constraints and include debugging/failure analysis
+and architectural trade-offs where applicable to the concept. Native disclosure controls,
+shared card styles, hidden answers, keyboard operation, confidence persistence, and full
+printed answers MUST follow the host's supported content contract. All explanations MUST
+remain self-contained even when source links are unavailable to the reader.
+
+**Automatic consistency:** Routine content requests inherit these requirements through
+the compact publishing checklist; separate specs and plans are not mandatory. When a
+specification or plan is produced, every future topic specification MUST include acceptance
+criteria for the dedicated subsection, five-to-seven count, production constraints,
+research/source disclosure, and all three answer parts. Every future topic plan MUST
+include concept-specific question research, source verification, authoring, and affected
+content-contract/validation alignment. Task breakdowns and implementations MUST deliver
+the complete scenario set and verify independent disclosure behavior, stable identities,
+confidence integration, accessibility, and print completeness. These rules apply without
+requiring the user to repeat this amendment.
+
+Rationale: realistic decisions under constraints test whether learners can apply a mental
+model, defend its costs, and respond to changing assumptions in an interview or production.
+
 Before accepting a new or revised lesson, review MUST verify all six modules, ELI5 before
 jargon for each concept, narrative continuity, valid rendered diagrams, complete trade-off
-and failure analysis, and three to five recall questions with working hidden answers.
+and failure analysis, three to five foundational recall questions, and the separate five
+to seven complete interview scenarios. Review MUST verify the dedicated subsection,
+concept-specific production constraints, research links or explicit research limitation,
+and all three structured answer parts in every independently collapsible scenario card.
 Opening a topic through its manifest entry MUST load the intended lesson without a page
 reload. Topic additions MUST preserve existing navigation and learning state.
 
@@ -260,9 +404,23 @@ removals or redefinitions; MINOR for new principles, sections, or materially exp
 guidance; PATCH for clarifications and other non-semantic wording changes. Version 1.0.0
 records initial adoption of the project-specific constitution.
 
+Version 1.2.0 expands mastery practice with researched, structured production-interview
+scenarios while retaining the six-module blueprint and foundational recall. The new rules
+govern all future topic specifications, plans, tasks, and implementations immediately.
+Existing unchanged lessons retain their recorded acceptance baseline; they MUST NOT be
+represented as satisfying the new scenario standard until explicitly migrated and checked.
+New or substantively revised lessons MUST meet the new standard, and their work MUST
+align any affected content contracts, validators, and inventory/browser expectations.
+Migration MUST preserve existing topic IDs, recall keys, and saved learning state. Updating
+this constitution alone does not perform or claim that migration.
+
+Version 1.3.0 adds proportional, persistent topic-publishing governance and clarifies
+purposeful diagram reuse. It requires workflow/tool alignment, not a new lesson backfill.
+It does not relax the v1.2.0 learning content or source-evidence requirements.
+
 Every relevant specification and change review MUST check compliance with these rules.
 Conflicts MUST be resolved by revising the proposed work or adopting an explicit amendment;
 silent exceptions are not permitted. A material amendment MUST identify affected lessons,
 implementation behavior, and planning artifacts that require follow-up alignment.
 
-**Version**: 1.1.0 | **Ratified**: 2026-11-17 | **Last Amended**: 2026-11-17
+**Version**: 1.3.0 | **Ratified**: 2026-11-17 | **Last Amended**: 2026-11-17
