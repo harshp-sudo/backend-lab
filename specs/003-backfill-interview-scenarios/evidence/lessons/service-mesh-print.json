@@ -1,0 +1,103 @@
+{
+  "status": "pass",
+  "topicId": "84458963-012b-4a80-828a-2da27d8b509d",
+  "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh.html",
+  "sourceSha256": "c8a730fa8338f586b148744f88995e70879f562de141da3a1eb38aae0909a284",
+  "outputs": [
+    {
+      "nodeId": "84458963-012b-4a80-828a-2da27d8b509d",
+      "topicId": "84458963-012b-4a80-828a-2da27d8b509d",
+      "sourceSha256": "c8a730fa8338f586b148744f88995e70879f562de141da3a1eb38aae0909a284",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-service-mesh.pdf",
+      "completeTextBlocks": 152,
+      "diagramLabels": 30,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "84458963-012b-4a80-828a-2da27d8b509d",
+      "topicId": "84458963-012b-4a80-828a-2da27d8b509d",
+      "sourceSha256": "c8a730fa8338f586b148744f88995e70879f562de141da3a1eb38aae0909a284",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-service-mesh.pdf",
+      "completeTextBlocks": 152,
+      "diagramLabels": 30,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    }
+  ],
+  "visualReview": {
+    "topicId": "84458963-012b-4a80-828a-2da27d8b509d",
+    "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh.html",
+    "comparisonSheet": "/tmp/backend-interview-print-review/service-mesh-comparison.jpg",
+    "outputs": [
+      {
+        "theme": "light",
+        "pdf": "/tmp/backend-interview-pdfs/light-service-mesh.pdf",
+        "pages": 20,
+        "selectedPages": [
+          5,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/light-service-mesh-table.png",
+          "/tmp/backend-interview-print-review/light-service-mesh-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/light-service-mesh-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "2e7afb902cd8fb76d129964446ec5406a0dae07980b0a07b29b2571b0bc157cc",
+        "reviewPanelSha256": [
+          "aa1bbe9f849d3fa82f8ef007982824aa7fb655912a60c2ba3c46b1cb4b7b3e9b",
+          "c78c70c235f80e456b734667c36b9a23c3bec3b25d199567ed5444552f9acc3a",
+          "56bdd445627bbb9e21e447bb48ab348f3a1070170172aeea0d9d32641b087029"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      },
+      {
+        "theme": "dark",
+        "pdf": "/tmp/backend-interview-pdfs/dark-service-mesh.pdf",
+        "pages": 20,
+        "selectedPages": [
+          5,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/dark-service-mesh-table.png",
+          "/tmp/backend-interview-print-review/dark-service-mesh-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/dark-service-mesh-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "08d6d314126015ed62ffdb110ff3a62af70f76151ad368aed27b068fbbf9222d",
+        "reviewPanelSha256": [
+          "aa1bbe9f849d3fa82f8ef007982824aa7fb655912a60c2ba3c46b1cb4b7b3e9b",
+          "c78c70c235f80e456b734667c36b9a23c3bec3b25d199567ed5444552f9acc3a",
+          "56bdd445627bbb9e21e447bb48ab348f3a1070170172aeea0d9d32641b087029"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      }
+    ],
+    "reviewStatus": "pass",
+    "reviewedOn": "2026-11-17",
+    "reviewFindings": [
+      "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+      "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+      "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+      "Rechecked the page containing actual table header and cells rather than the preceding section heading.",
+      "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+    ]
+  },
+  "findings": [
+    "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+    "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+    "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+  ]
+}

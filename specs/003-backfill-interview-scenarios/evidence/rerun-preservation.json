@@ -1,0 +1,126 @@
+{
+  "status": "pass",
+  "lessons": [
+    {
+      "topicId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals.html",
+      "sourceSha256": "6c76a52a1524bd3bf53e20f7d03a70a89deffdf839dd007fa01b4afd78156acb",
+      "replacementByteIdentical": true,
+      "oneMarkerPair": true,
+      "stableKeysRetained": true
+    },
+    {
+      "topicId": "1901acc7-9225-428a-9397-072cff3d36d0",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/monolithic-architecture.html",
+      "sourceSha256": "8b193bfe38ac6ca56ae67ec11ee25a72bf34cf54a1c4a83690bd8648766179e2",
+      "replacementByteIdentical": true,
+      "oneMarkerPair": true,
+      "stableKeysRetained": true
+    },
+    {
+      "topicId": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/modular-monolith.html",
+      "sourceSha256": "f7d71910f6a616c24f6f3692fd4588eea4df4ee08e0b5350e8beb6b055fbc06c",
+      "replacementByteIdentical": true,
+      "oneMarkerPair": true,
+      "stableKeysRetained": true
+    },
+    {
+      "topicId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/service-oriented-architecture.html",
+      "sourceSha256": "870cfd5f446eaa43b2630ae1054795b3e43953072cb65f70bec82e50f53033e3",
+      "replacementByteIdentical": true,
+      "oneMarkerPair": true,
+      "stableKeysRetained": true
+    },
+    {
+      "topicId": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/microservices-architecture.html",
+      "sourceSha256": "30cf45daf87d29229699d48f5764c921e3e755b584330049fd85a7e07477687a",
+      "replacementByteIdentical": true,
+      "oneMarkerPair": true,
+      "stableKeysRetained": true
+    },
+    {
+      "topicId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+      "path": "topics/system-design/backend-architecture/code-and-domain-organization/layered-architecture.html",
+      "sourceSha256": "5815f427794062a094795a79b6b7dcf367a6cf84f4aeb65f6210a60987eff0de",
+      "replacementByteIdentical": true,
+      "oneMarkerPair": true,
+      "stableKeysRetained": true
+    },
+    {
+      "topicId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+      "path": "topics/system-design/backend-architecture/code-and-domain-organization/clean-architecture.html",
+      "sourceSha256": "e1ab624ca2a9d5845b2d307cc63b3fb33b45f0833411ee08a9e901f23ef9b04d",
+      "replacementByteIdentical": true,
+      "oneMarkerPair": true,
+      "stableKeysRetained": true
+    },
+    {
+      "topicId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+      "path": "topics/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture.html",
+      "sourceSha256": "57d34d9889e6ba85f48db13365fc3abd0fe77be4990b9ec315b49adbf4bc1ea1",
+      "replacementByteIdentical": true,
+      "oneMarkerPair": true,
+      "stableKeysRetained": true
+    },
+    {
+      "topicId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+      "path": "topics/system-design/backend-architecture/code-and-domain-organization/domain-driven-design.html",
+      "sourceSha256": "477c3f30a93c8be0715c1c076a2af53d2750a72da3680abe8e31e1fddf58594d",
+      "replacementByteIdentical": true,
+      "oneMarkerPair": true,
+      "stableKeysRetained": true
+    },
+    {
+      "topicId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+      "path": "topics/system-design/backend-architecture/communication-and-routing/event-driven-architecture.html",
+      "sourceSha256": "3ad2ffb26dce35ad4e0e72015b2323da19e022f7ab34eefef30f93e2b2ac873a",
+      "replacementByteIdentical": true,
+      "oneMarkerPair": true,
+      "stableKeysRetained": true
+    },
+    {
+      "topicId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+      "path": "topics/system-design/backend-architecture/communication-and-routing/api-gateway-pattern.html",
+      "sourceSha256": "9d00059b8eaaa28c200bf119ff9682fab320c0141c6603194de26aaf8e6db561",
+      "replacementByteIdentical": true,
+      "oneMarkerPair": true,
+      "stableKeysRetained": true
+    },
+    {
+      "topicId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+      "path": "topics/system-design/backend-architecture/communication-and-routing/backend-for-frontend.html",
+      "sourceSha256": "b6d0dec45c5de51f3ec10f041bb4dcb26cae9d38e1568aed06e660c926a7ede4",
+      "replacementByteIdentical": true,
+      "oneMarkerPair": true,
+      "stableKeysRetained": true
+    },
+    {
+      "topicId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+      "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery.html",
+      "sourceSha256": "36e23c0a254c8545580386e986007ce8d76aadee09b7bce135366d91cd011fd7",
+      "replacementByteIdentical": true,
+      "oneMarkerPair": true,
+      "stableKeysRetained": true
+    },
+    {
+      "topicId": "84458963-012b-4a80-828a-2da27d8b509d",
+      "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh.html",
+      "sourceSha256": "c8a730fa8338f586b148744f88995e70879f562de141da3a1eb38aae0909a284",
+      "replacementByteIdentical": true,
+      "oneMarkerPair": true,
+      "stableKeysRetained": true
+    },
+    {
+      "topicId": "689dd587-de37-4e22-9412-bd42b118da79",
+      "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/multi-tenant-architecture.html",
+      "sourceSha256": "1338b170aae459c923ceb05e9c0a203ed24ef6f1a6fc00db7ecd2ff77a512fb6",
+      "replacementByteIdentical": true,
+      "oneMarkerPair": true,
+      "stableKeysRetained": true
+    }
+  ],
+  "method": "Replace the existing complete marker span with the same allocated block; exact source and stable keys remain identical. Duplicate marker spans and changed allocated keys are separately rejected by unit/CLI validation."
+}

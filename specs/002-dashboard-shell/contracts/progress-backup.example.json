@@ -1,0 +1,63 @@
+{
+  "format": "backend-lab.progress-backup",
+  "version": 1,
+  "exportedAt": "2026-11-17T06:00:00.000Z",
+  "state": {
+    "format": "backend-lab.learning",
+    "version": 1,
+    "updatedAt": "2026-11-17T06:00:00.000Z",
+    "preferences": {
+      "theme": "dark"
+    },
+    "topics": {
+      "d257fdd8-8532-4138-839b-7295ae2e2994": {
+        "status": "mastered",
+        "lastVisitedAt": "2026-11-17T06:00:00.000Z",
+        "confidence": {
+          "dependency-direction": {
+            "rating": "good",
+            "ratedAt": "2026-11-17T05:59:00.000Z"
+          }
+        },
+        "review": {
+          "cycle": 1,
+          "lastReviewed": "2026-11-04T09:05:00.000Z",
+          "intervalIndex": 1,
+          "history": [
+            {
+              "cycle": 1,
+              "kind": "mastered",
+              "sessionId": null,
+              "reviewedAt": "2026-11-01T09:00:00.000Z",
+              "intervalIndex": 0
+            },
+            {
+              "cycle": 1,
+              "kind": "review",
+              "sessionId": "0204bfa6-56bb-4d52-8b9a-d879b6fab409",
+              "reviewedAt": "2026-11-04T09:05:00.000Z",
+              "intervalIndex": 1
+            }
+          ],
+          "session": {
+            "id": "0204bfa6-56bb-4d52-8b9a-d879b6fab409",
+            "cycle": 1,
+            "startedAt": "2026-11-04T09:00:00.000Z",
+            "completedAt": "2026-11-04T09:05:00.000Z"
+          }
+        }
+      },
+      "archived-topic": {
+        "status": "in-progress",
+        "lastVisitedAt": null,
+        "confidence": {
+          "remember-boundary": {
+            "rating": "hard",
+            "ratedAt": "2026-11-17T05:00:00.000Z"
+          }
+        },
+        "review": null
+      }
+    }
+  }
+}

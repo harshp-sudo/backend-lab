@@ -1,0 +1,102 @@
+{
+  "status": "pass",
+  "topicId": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+  "path": "topics/system-design/backend-architecture/core-system-topologies/modular-monolith.html",
+  "sourceSha256": "f7d71910f6a616c24f6f3692fd4588eea4df4ee08e0b5350e8beb6b055fbc06c",
+  "outputs": [
+    {
+      "nodeId": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+      "topicId": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+      "sourceSha256": "f7d71910f6a616c24f6f3692fd4588eea4df4ee08e0b5350e8beb6b055fbc06c",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-modular-monolith.pdf",
+      "completeTextBlocks": 150,
+      "diagramLabels": 33,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+      "topicId": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+      "sourceSha256": "f7d71910f6a616c24f6f3692fd4588eea4df4ee08e0b5350e8beb6b055fbc06c",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-modular-monolith.pdf",
+      "completeTextBlocks": 150,
+      "diagramLabels": 33,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    }
+  ],
+  "visualReview": {
+    "topicId": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+    "path": "topics/system-design/backend-architecture/core-system-topologies/modular-monolith.html",
+    "comparisonSheet": "/tmp/backend-interview-print-review/modular-monolith-comparison.jpg",
+    "outputs": [
+      {
+        "theme": "light",
+        "pdf": "/tmp/backend-interview-pdfs/light-modular-monolith.pdf",
+        "pages": 19,
+        "selectedPages": [
+          5,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/light-modular-monolith-table.png",
+          "/tmp/backend-interview-print-review/light-modular-monolith-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/light-modular-monolith-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "72b4ff3362e753525a43576520a206f7834a2cd8b5035efb6cae98871aac6cb1",
+        "reviewPanelSha256": [
+          "53efed38d4c229c2b41cefb6732618e8a1fae265953283f2b9726099fe3534ef",
+          "1e2780a408fc8cf154cab7f1f6887d5e2a85c79677054289d25f8a7e0be103e5",
+          "c32fa222e822251cb794872ab87ab126fd59879f25ff86e739028a844e6a74c1"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      },
+      {
+        "theme": "dark",
+        "pdf": "/tmp/backend-interview-pdfs/dark-modular-monolith.pdf",
+        "pages": 19,
+        "selectedPages": [
+          5,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/dark-modular-monolith-table.png",
+          "/tmp/backend-interview-print-review/dark-modular-monolith-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/dark-modular-monolith-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "58b19d0f28fbbeb0db96350897129fd768a7c234c635cdf8f155178d12e0cd2d",
+        "reviewPanelSha256": [
+          "53efed38d4c229c2b41cefb6732618e8a1fae265953283f2b9726099fe3534ef",
+          "1e2780a408fc8cf154cab7f1f6887d5e2a85c79677054289d25f8a7e0be103e5",
+          "c32fa222e822251cb794872ab87ab126fd59879f25ff86e739028a844e6a74c1"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      }
+    ],
+    "reviewStatus": "pass",
+    "reviewedOn": "2026-11-17",
+    "reviewFindings": [
+      "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+      "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+      "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+      "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+    ]
+  },
+  "findings": [
+    "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+    "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+    "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+  ]
+}

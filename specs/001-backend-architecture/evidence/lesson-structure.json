@@ -1,0 +1,127 @@
+{
+  "phase": "intrinsic-lesson-structure",
+  "topics": [
+    {
+      "route": "/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals",
+      "title": "Distributed System Fundamentals",
+      "words": 1801,
+      "questions": 4,
+      "mechanics": 6,
+      "diagrams": 1
+    },
+    {
+      "route": "/system-design/backend-architecture/core-system-topologies/monolithic-architecture",
+      "title": "Monolithic Architecture",
+      "words": 1778,
+      "questions": 4,
+      "mechanics": 6,
+      "diagrams": 1
+    },
+    {
+      "route": "/system-design/backend-architecture/core-system-topologies/modular-monolith",
+      "title": "Modular Monolith",
+      "words": 1731,
+      "questions": 4,
+      "mechanics": 6,
+      "diagrams": 1
+    },
+    {
+      "route": "/system-design/backend-architecture/core-system-topologies/service-oriented-architecture",
+      "title": "Service-Oriented Architecture (SOA)",
+      "words": 1755,
+      "questions": 4,
+      "mechanics": 6,
+      "diagrams": 1
+    },
+    {
+      "route": "/system-design/backend-architecture/core-system-topologies/microservices-architecture",
+      "title": "Microservices Architecture",
+      "words": 1753,
+      "questions": 4,
+      "mechanics": 6,
+      "diagrams": 1
+    },
+    {
+      "route": "/system-design/backend-architecture/code-and-domain-organization/layered-architecture",
+      "title": "Layered Architecture",
+      "words": 1744,
+      "questions": 4,
+      "mechanics": 6,
+      "diagrams": 1
+    },
+    {
+      "route": "/system-design/backend-architecture/code-and-domain-organization/clean-architecture",
+      "title": "Clean Architecture",
+      "words": 1831,
+      "questions": 4,
+      "mechanics": 6,
+      "diagrams": 2
+    },
+    {
+      "route": "/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture",
+      "title": "Hexagonal Architecture",
+      "words": 1728,
+      "questions": 4,
+      "mechanics": 6,
+      "diagrams": 1
+    },
+    {
+      "route": "/system-design/backend-architecture/code-and-domain-organization/domain-driven-design",
+      "title": "Domain-Driven Design (DDD)",
+      "words": 2035,
+      "questions": 5,
+      "mechanics": 7,
+      "diagrams": 1
+    },
+    {
+      "route": "/system-design/backend-architecture/communication-and-routing/event-driven-architecture",
+      "title": "Event-Driven Architecture",
+      "words": 1802,
+      "questions": 4,
+      "mechanics": 6,
+      "diagrams": 1
+    },
+    {
+      "route": "/system-design/backend-architecture/communication-and-routing/api-gateway-pattern",
+      "title": "API Gateway Pattern",
+      "words": 1770,
+      "questions": 4,
+      "mechanics": 6,
+      "diagrams": 1
+    },
+    {
+      "route": "/system-design/backend-architecture/communication-and-routing/backend-for-frontend",
+      "title": "Backend for Frontend (BFF)",
+      "words": 1733,
+      "questions": 4,
+      "mechanics": 6,
+      "diagrams": 1
+    },
+    {
+      "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery",
+      "title": "Service Discovery",
+      "words": 1727,
+      "questions": 4,
+      "mechanics": 6,
+      "diagrams": 1
+    },
+    {
+      "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh",
+      "title": "Service Mesh",
+      "words": 1697,
+      "questions": 4,
+      "mechanics": 6,
+      "diagrams": 1
+    },
+    {
+      "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy/multi-tenant-architecture",
+      "title": "Multi-Tenant Architecture",
+      "words": 1951,
+      "questions": 4,
+      "mechanics": 7,
+      "diagrams": 1
+    }
+  ],
+  "totalRecall": 61,
+  "notes": "Author/editorial structural evidence, not novice comprehension or actual-host acceptance."
+}

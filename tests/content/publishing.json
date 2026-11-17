@@ -1,0 +1,22 @@
+{
+  "profile": "topic-publishing",
+  "recallProfile": "constitution-1.2",
+  "researchDirectory": "research/topics",
+  "researchRecords": {
+    "a1cef6f2-5f76-4376-980d-64af99310ec8": "specs/003-backfill-interview-scenarios/research/distributed-system-fundamentals.md",
+    "1901acc7-9225-428a-9397-072cff3d36d0": "specs/003-backfill-interview-scenarios/research/monolithic-architecture.md",
+    "ab88a9ad-48ea-4968-becb-b0641aa6321d": "specs/003-backfill-interview-scenarios/research/modular-monolith.md",
+    "11d759b2-bda9-45ba-a34d-0a0326cabd56": "specs/003-backfill-interview-scenarios/research/service-oriented-architecture.md",
+    "04eae1bf-07bc-4646-8ce4-db2871fcfada": "specs/003-backfill-interview-scenarios/research/microservices-architecture.md",
+    "012a24bf-b2d7-4824-9a52-016ed4399c5e": "specs/003-backfill-interview-scenarios/research/layered-architecture.md",
+    "d257fdd8-8532-4138-839b-7295ae2e2994": "specs/003-backfill-interview-scenarios/research/clean-architecture.md",
+    "7db3e3c3-10aa-4709-bf33-63848952d81f": "specs/003-backfill-interview-scenarios/research/hexagonal-architecture.md",
+    "a612a2d8-260a-4e97-82e7-b2851459e0c7": "specs/003-backfill-interview-scenarios/research/domain-driven-design.md",
+    "0b36c2d3-9c94-47df-adce-d80bf6c3f720": "specs/003-backfill-interview-scenarios/research/event-driven-architecture.md",
+    "a5b7beee-bdbd-4987-9a41-8e16471b0a32": "specs/003-backfill-interview-scenarios/research/api-gateway-pattern.md",
+    "1be329da-9367-4c1c-a4c8-0eff6ec862e1": "specs/003-backfill-interview-scenarios/research/backend-for-frontend.md",
+    "5522e024-f6dd-471e-a3e4-41d0a60a5d2f": "specs/003-backfill-interview-scenarios/research/service-discovery.md",
+    "84458963-012b-4a80-828a-2da27d8b509d": "specs/003-backfill-interview-scenarios/research/service-mesh.md",
+    "689dd587-de37-4e22-9412-bd42b118da79": "specs/003-backfill-interview-scenarios/research/multi-tenant-architecture.md"
+  }
+}

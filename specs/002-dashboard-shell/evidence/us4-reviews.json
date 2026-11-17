@@ -1,0 +1,30 @@
+{
+  "result": "pass",
+  "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "referenceDevice": "WSL2 local headless Chromium, 1440px desktop / 360px mobile",
+  "dependencies": {
+    "mermaid": "12.3.0",
+    "highlight": "11.11.1",
+    "tailwind": "3.4.17",
+    "playwright": "1.56.0"
+  },
+  "bases": [
+    "http://127.0.0.1:8000/",
+    "http://127.0.0.1:8001/backend-lab/"
+  ],
+  "browser": "141.0.7390.37",
+  "checks": [
+    {
+      "story": "US4",
+      "scenario": "reviews",
+      "result": "pass",
+      "seconds": 1.73,
+      "details": {
+        "explicitCompletion": "pass",
+        "persistedIndex": 2,
+        "completedSessionRetained": true,
+        "queueRefresh": "pass"
+      }
+    }
+  ]
+}

@@ -1,0 +1,219 @@
+<article class="kb-topic" data-node-id="5522e024-f6dd-471e-a3e4-41d0a60a5d2f">
+<h1>Service Discovery</h1>
+<section data-section="hook-eli5" id="node-5522e024-f6dd-471e-a3e4-41d0a60a5d2f-hook-eli5">
+<h2>🎯 The Hook & ELI5</h2>
+<div class="kb-callout--insight"><p><strong>ELI5 mental model.</strong> You call a company’s help line instead of memorizing the personal phone number of whichever employee is on duty. A directory keeps track of current contacts, and someone chooses an available person. Service discovery gives software a similar way to find a changing set of service locations without baking temporary machine addresses into every caller.</p></div><p>Backend instances start, stop, scale, and move. A hard-coded address can become stale even though the logical service still exists elsewhere. Service discovery maps a stable service identity to usable locations under a defined scope and update policy. Selecting a particular instance and routing traffic to it are related responsibilities, but resolving a name alone does not prove that an instance will successfully handle the next request.</p><div class="kb-callout--insight"><p>WHY it matters: an order service must reach currently usable stock-service instances during scaling and deployments. Discovery should reduce topology coupling without turning its directory into an unexamined single dependency. Health signals, caches, connection reuse, and graceful shutdown determine how quickly callers stop using an obsolete location.</p></div>
+</section>
+<section data-section="big-picture" id="node-5522e024-f6dd-471e-a3e4-41d0a60a5d2f-big-picture">
+<h2>🗺️ High-Level Big Picture</h2>
+<p>A Stock instance becomes ready and is reflected in a registry or platform endpoint directory. In a client-side pattern, Orders obtains an endpoint set and a client policy selects a target. In a server-side pattern, Orders calls a stable routing address and a proxy/load-balancing component consults the endpoint set. DNS can participate in either arrangement depending on what the name resolves to.</p><figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Discovery and instance selection are distinct responsibilities
+    accDescr: Instances update a directory; either a client or server-side router uses its endpoint information to choose a target.
+    S[&quot;Stock instances become ready or drain&quot;] --&gt; D[&quot;Service directory and health state&quot;]
+    D --&gt; C[&quot;Client-side endpoint cache&quot;]
+    O[&quot;Orders caller&quot;] --&gt; C
+    C --&gt; I[&quot;Chosen Stock instance&quot;]
+    O --&gt; V[&quot;Stable routing address&quot;]
+    D --&gt; V
+    V --&gt; J[&quot;Chosen Stock instance through router&quot;]</pre><figcaption>Read the arrows as responsibilities and hand-offs, not as a promise that every step succeeds.</figcaption></figure>
+</section>
+<section data-section="mechanics" id="node-5522e024-f6dd-471e-a3e4-41d0a60a5d2f-mechanics">
+<h2>🔍 Step-by-Step Mechanics</h2>
+<p>Follow the example one boundary at a time. Open each step to connect the familiar mental model to the internal mechanics.</p><details><summary>1. Name the capability separately from its location</summary><p>A help-line name remains meaningful when staff phone numbers change. Use a logical service identity scoped to the correct environment, tenant context where relevant, namespace, or region. A location is the current address/port/protocol combination that can serve it; that location is not the service’s permanent business identity.</p>
+<p>A deployment platform may maintain the mapping, or instances/agents may register with a dedicated registry. Ensure the caller looks in the intended scope: an unqualified name that resolves differently in staging and production can be useful when intentional and dangerous when ambiguous. Discovery does not define the API contract at that address; the caller still needs a compatible protocol, identity/trust context, and operation semantics.</p></details>
+<details><summary>2. Register only endpoints that are actually ready</summary><p>An employee should not appear as available before they can answer the phone. An instance may need configuration, credentials, caches, or dependent resources before serving real traffic. Separate process existence from readiness to perform its advertised capability.</p>
+<p>Registrations can use explicit lifecycle updates, heartbeats/leases, or platform-managed endpoint state. Each mechanism has a detection delay and failure assumptions. A health check may pass while a particular customer request fails, and a temporary missed heartbeat can make a healthy instance look absent. Define useful signals and observe churn. Avoid treating a directory entry as a guarantee of future success; it is current routing information with a known freshness model.</p></details>
+<details><summary>3. Choose where endpoint selection lives</summary><p>A caller can ask for a staff list and dial a chosen employee, or call reception and let it choose. In <strong>client-side discovery</strong>, the client receives/caches endpoints and applies a selection policy. This can avoid a separate proxy hop but distributes discovery and load-balancing behavior across client runtimes.</p>
+<p>In <strong>server-side discovery</strong>, the client uses a stable routing address while a router/proxy resolves and selects backend instances. This simplifies clients but introduces a routing subsystem whose capacity and failure behavior matter. In either case, distinguish discovering candidates from selecting one and maintaining a connection. A list of ten addresses does not by itself provide fair load distribution or respect every request’s routing needs.</p></details>
+<details><summary>4. Understand DNS and caches instead of assuming instant updates</summary><p>A saved phone list is convenient until a number changes. Discovery caches reduce lookup load and permit short interruptions, but they also retain stale endpoints. DNS time-to-live, client resolver behavior, registry watches, application caches, and long-lived connection pools can each influence when a change is observed.</p>
+<p>On Kubernetes, ordinary Service DNS can resolve a stable service address, while suitable headless-Service configurations expose endpoint addresses. Those are platform-specific mechanisms, not requirements for service discovery generally. Read the platform’s actual readiness and resolution semantics. Refreshing DNS does not necessarily replace an existing pooled connection, and setting a short TTL is not a universal cure for all stale traffic.</p></details>
+<details><summary>5. Drain old instances and handle lookup/routing failure</summary><p>An employee ending a shift should stop accepting new calls while finishing the current one. A graceful deployment removes or marks an endpoint as draining, allows updates to propagate, stops new work, and gives in-flight work an appropriate completion window. Abruptly killing an instance while every cache still lists it predictably causes failures.</p>
+<p>If discovery is unavailable, a deliberate last-known-good cache can support some traffic, but its staleness and failure implications must be accepted. Do not retry every candidate without a deadline or create a lookup storm on every failed call. Bound retries, refresh appropriately, and distinguish resolution failure, connection refusal, authentication failure, and an application-level rejection. These symptoms point to different owners.</p></details>
+<details><summary>6. Test topology change, not just the first lookup</summary><p>A directory looks reliable on its quietest day. Validate scale-up, scale-down, rolling deployment, slow health checks, registry partitions, and connection reuse. Measure discovery/update lag, endpoint churn, failed connections, and whether a few stale targets receive disproportionate traffic.</p>
+<p>Keep capability meaning and service identity stable while locations evolve. A gateway or mesh may provide discovery integration, but it does not remove the need to understand the resulting data path and cache behavior. Start with the platform mechanism that fits the environment; a separate custom registry is not automatically necessary just because the application uses several services.</p></details>
+</section>
+<section data-section="trade-offs" id="node-5522e024-f6dd-471e-a3e4-41d0a60a5d2f-trade-offs">
+<h2>⚖️ Comparisons & Trade-Offs</h2>
+<p>Choose using the constraints of the system and its team. The table compares relevant choices; compatible ideas can be combined rather than ranked as universally better.</p><div class="kb-table-wrap"><table><caption>Choices, benefits, costs, and decision conditions</caption><thead><tr><th scope="col">Approach or condition</th><th scope="col">What you gain</th><th scope="col">What you give up</th><th scope="col">Choose when</th></tr></thead><tbody><tr><td>Configured static addresses</td><td>Simple lookup-free operation</td><td>Manual updates and poor fit for moving/ephemeral instances</td><td>Endpoints are genuinely stable and the update process is explicit.</td></tr><tr><td>Client-side discovery and selection</td><td>Direct routing and client-specific policy</td><td>Client-library/runtime consistency and stale-cache handling</td><td>Clients can reliably own discovery, selection and refresh behavior.</td></tr><tr><td>Server-side discovery/routing</td><td>Stable client entry and centralized routing behavior</td><td>An additional routing subsystem/hop and its operation</td><td>Simpler clients and platform routing justify the shared layer.</td></tr><tr><td>Platform DNS/service mechanisms</td><td>Reuse of existing naming and endpoint management</td><td>Platform-specific freshness, selection and connection semantics</td><td>The platform already supplies the needed behavior; avoid redundant registries.</td></tr></tbody></table></div>
+</section>
+<section data-section="pitfalls" id="node-5522e024-f6dd-471e-a3e4-41d0a60a5d2f-pitfalls">
+<h2>⚠️ Common Pitfalls, Bugs & What-If Scenarios</h2>
+<p>Treat a failure as a story: start with what a user observes, trace the boundary that failed, and choose a prevention that addresses the cause.</p><div class="kb-callout--pitfall"><h3>Traffic keeps reaching retired instances</h3><p><strong>Symptom:</strong> A rolling deployment produces connection failures after an instance is removed.</p><p><strong>Root Cause:</strong> Cached endpoints or pooled connections outlive the shutdown transition.</p><p><strong>Fix/Prevention:</strong> Coordinate draining, endpoint updates, refresh and connection lifetimes; test the real propagation delay before killing instances.</p></div><div class="kb-callout--pitfall"><h3>Healthy process, unusable capability</h3><p><strong>Symptom:</strong> The directory routes work to an instance that cannot serve requests.</p><p><strong>Root Cause:</strong> Registration or liveness was confused with readiness for the advertised operation.</p><p><strong>Fix/Prevention:</strong> Use meaningful readiness signals, remove/drain unusable endpoints, and still handle per-request failures with bounded recovery.</p></div><div class="kb-callout--pitfall"><h3>A discovery outage becomes a traffic storm</h3><p><strong>Symptom:</strong> A small registry failure causes repeated lookups and calls to every endpoint.</p><p><strong>Root Cause:</strong> Clients refresh and retry aggressively without budgets or an accepted stale-cache policy.</p><p><strong>Fix/Prevention:</strong> Bound attempts, add backoff/jitter, define last-known-good behavior where appropriate, and monitor update/lookup pressure.</p></div>
+</section>
+<section data-section="mastery" id="node-5522e024-f6dd-471e-a3e4-41d0a60a5d2f-mastery">
+<h2>🧠 Active Recall & Mastery Check</h2>
+<div class="kb-callout--insight"><p><strong>Summarize this in your own words</strong></p><p>Explain the opening analogy, trace the worked example, and name one condition that would change your architectural decision. Try answering before opening the cards.</p></div><details class="kb-question" data-recall-id="discovery-selection"><summary>How does discovery differ from load balancing?</summary><p>Discovery supplies candidate locations for a service under a scope/freshness contract. Load balancing or routing chooses among candidates for a request/connection. One component can perform both, but knowing several addresses does not by itself specify the selection policy.</p></details><details class="kb-question" data-recall-id="dns-ttl"><summary>Why might traffic still use an old instance after a DNS record changes?</summary><p>Resolver/application caches may not have refreshed, and an existing pooled connection may remain open independently of DNS. Inspect the full client/platform behavior and drain plan rather than assuming the authoritative DNS update instantly moves all traffic.</p></details><details class="kb-question" data-recall-id="client-server"><summary>Who selects the backend in client-side versus server-side discovery?</summary><p>In a client-side pattern, client code obtains candidates and chooses a target. In a server-side pattern, a router/proxy behind a stable address performs backend selection. Both need current endpoint information and explicit failure behavior.</p></details><details class="kb-question" data-recall-id="readiness"><summary>Does a successful health lookup guarantee the next request succeeds?</summary><p>No. Health information is sampled and can be stale or incomplete for a particular operation. The target can fail immediately afterward. Good discovery improves candidate selection; callers still need deadlines, bounded retries where safe, and correct interpretation of failure.</p></details><!-- kb-interview-scenarios:start -->
+<section data-interview-scenarios aria-labelledby="node-5522e024-f6dd-471e-a3e4-41d0a60a5d2f-interview-scenarios">
+<h3 id="node-5522e024-f6dd-471e-a3e4-41d0a60a5d2f-interview-scenarios">Tricky &amp; Most-Asked Interview Scenarios</h3>
+<p>Practice making a decision under a concrete production constraint. Open each answer, explain your reasoning aloud, then rate your confidence. The budgets and organizations below are author-created assumptions.</p>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-terminating-endpoints-drain" data-scenario-basis="adapted-production">
+<summary>Deployments still send requests to terminating instances. What does service discovery need besides registration?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Removing a shop from the directory does not stop a customer already walking through its door. During rolling deployment, requests hit terminating instances and fail. Endpoint updates and existing connections do not disappear instantly. What shutdown and readiness sequence will you verify?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Inspect the actual endpoint conditions, readiness changes, load-balancer propagation and open connection behavior. Stop accepting new work through the platform&#x27;s supported readiness/drain mechanism, allow in-flight requests to finish within a bounded grace period, and ensure the process handles termination signals correctly. Tune the sequence from measured propagation rather than assuming deregistration is instantaneous.</p>
+<p>For Kubernetes, verify the deployed version&#x27;s EndpointSlice terminating/ready/serving behavior and the data plane&#x27;s interpretation. Test long-lived connections, keep-alive clients and termination under load. Make retries safe where they are allowed, because a lost reply during shutdown can still hide a completed effect.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Deployments still send requests to terminating instances. What does service discovery need besides registration?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Mark instance draining"]
+    N1["Propagate endpoint readiness"]
+    N2["Finish bounded in-flight work"]
+    N3["Terminate after grace policy"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Mark instance draining → Propagate endpoint readiness → Finish bounded in-flight work → Terminate after grace policy.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>Graceful draining reduces rollout errors but takes time and temporarily retains old capacity. Immediate termination is a viable alternative for disposable idempotent work whose interruption/retry semantics are acceptable; it is not a default for every request.</p>
+<p>Follow-up trap: passing a liveness check does not mean an instance should receive new traffic. If a hard node failure prevents draining, rely on bounded deadlines, safe retries and recovery rather than claiming the graceful path covers every outage. Registration, readiness and active-connection lifecycle are separate concerns.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-negative-dns-cache-new-service" data-scenario-basis="adapted-production">
+<summary>A new service is registered, yet clients keep receiving name-not-found. Where will you look?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A visitor keeps using yesterday&#x27;s note saying the shop does not exist. The registry contains a newly deployed service, but some clients still fail DNS resolution. A direct registry query succeeds. What will you inspect before restarting every client?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Trace the complete resolution path: client/runtime cache, local resolver, forwarding DNS cache and registry answer. Check negative caching as well as positive TTLs, and compare fully qualified queries from the failing environment. A registry update cannot invalidate every downstream cache automatically.</p>
+<p>Use the platform&#x27;s documented DNS behavior and configure suitable cache lifetimes and retry/backoff for transient discovery misses. Observe actual answers and TTLs at each layer. Ensure the service is healthy and in the expected namespace/domain before blaming caching; an answer can be correctly negative for a wrongly qualified name.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A new service is registered, yet clients keep receiving name-not-found. Where will you look?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Compare registry and client answers"]
+    N1["Trace resolver cache layers"]
+    N2["Inspect negative TTL and name scope"]
+    N3["Retry with bounded freshness policy"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Compare registry and client answers → Trace resolver cache layers → Inspect negative TTL and name scope → Retry with bounded freshness policy.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You avoid unnecessary restarts and make rollout discovery predictable, but manage a trade-off between freshness and DNS load. A controlled readiness gate that waits for expected resolution is a viable alternative for deployment sequencing; it does not replace ongoing failure handling.</p>
+<p>Follow-up trap: setting every TTL to zero does not force all client libraries to behave identically and can overload resolvers. If the application maintains long-lived resolved connections, refreshing DNS alone may not rotate them. Verify the client&#x27;s connection lifecycle as well as the DNS cache.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-stale-registry-during-outage" data-scenario-basis="adapted-production">
+<summary>The discovery control plane is unavailable. May clients keep using cached endpoints?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>An old address book may be more useful than none, but some shops may have closed. A registry disruption prevents fresh reads while existing service instances still run. Read traffic can tolerate some stale endpoint information; a sensitive writer endpoint cannot be guessed safely. What policy will you choose?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Separate discovery availability from endpoint authority. Permit bounded last-known-good endpoint use for operations whose risk allows it, with connection deadlines, health observations and a maximum staleness policy. Retain an explicit failure path when no usable target remains. Do not infer that a cached endpoint still holds exclusive write authority.</p>
+<p>Check the discovery product&#x27;s consistency/stale-read settings and caching chain, including how quickly unhealthy or removed instances disappear. Exercise a control-plane outage while data-plane traffic continues. Report degraded freshness so operators can distinguish resilient cached operation from a healthy registry.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: The discovery control plane is unavailable. May clients keep using cached endpoints?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Detect discovery freshness failure"]
+    N1["Apply operation-specific stale policy"]
+    N2["Try bounded last-known-good target"]
+    N3["Fail when authority or freshness requires"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Detect discovery freshness failure → Apply operation-specific stale policy → Try bounded last-known-good target → Fail when authority or freshness requires.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You keep some traffic working during a control-plane incident but may contact stale or unhealthy targets. Failing closed on fresh discovery is a viable alternative where stale routing threatens correctness or security.</p>
+<p>Follow-up trap: successful TCP connection is not proof that the server is the current leader. If an endpoint performs exclusive writes, enforce authority with the service&#x27;s real leadership/fencing protocol or an authoritative proxy. Service discovery locates candidates; it does not supply the business consistency guarantee.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-headless-service-client-balancing" data-scenario-basis="adapted-production">
+<summary>A headless service returns several addresses. Who chooses one and handles failure?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A directory gives you several shop addresses instead of one receptionist. A Kubernetes headless Service resolves to multiple endpoints, and the application repeatedly chooses the first address. Traffic is uneven and a failed endpoint causes repeated errors. What responsibilities moved to the client?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Treat the returned addresses as candidates rather than a complete load-balancing policy. Use a client or proxy that refreshes discovery, selects endpoints appropriately, bounds connection attempts and handles target failure without unsafe retrying of effects. Verify how the actual protocol/client consumes multiple DNS records and reuses connections.</p>
+<p>Choose headless discovery deliberately when direct endpoint identity is needed, such as a stateful protocol. If ordinary service-level balancing is sufficient, a normal virtual service address may provide a simpler abstraction. Check endpoint readiness and topology rather than assuming every returned address is equally suitable.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A headless service returns several addresses. Who chooses one and handles failure?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Resolve candidate instance addresses"]
+    N1["Select by client protocol policy"]
+    N2["Bound connection and retry work"]
+    N3["Refresh membership and health"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Resolve candidate instance addresses → Select by client protocol policy → Bound connection and retry work → Refresh membership and health.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain direct instance visibility and protocol-specific control but take on balancing, caching and failure behavior. A standard ClusterIP Service or supported proxy is a viable alternative when clients should not manage individual instances.</p>
+<p>Follow-up trap: DNS round-robin is not per-request fair balancing, especially with connection pools. If the protocol requires a specific shard or leader, random selection is wrong; route using that protocol&#x27;s authoritative membership/role information rather than treating every discovered instance as interchangeable.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-namespace-name-resolution" data-scenario-basis="adapted-production">
+<summary>The same short service name reaches different backends in two environments. How will you debug it?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Two towns can each have a Main Street. A client calling inventory works in one namespace but reaches a different service or fails in another. The application config uses only the short name. What will you inspect and make explicit?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Inspect the client&#x27;s namespace, resolver search domains, cluster/domain configuration and the actual fully qualified answer. Compare the intended target with the resolved endpoint set from inside each workload&#x27;s network context. Use the correct qualified service name for cross-namespace communication instead of assuming a short name has global meaning.</p>
+<p>Keep environment-specific names in controlled configuration and validate them during deployment. Verify network policy, ports and service selectors after name resolution succeeds; a correct DNS answer does not prove connectivity or authorization. Add a diagnostic that reports the resolved target safely without leaking credentials.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: The same short service name reaches different backends in two environments. How will you debug it?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Inspect workload resolution context"]
+    N1["Resolve intended qualified service"]
+    N2["Verify selectors ports and policies"]
+    N3["Validate environment configuration"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Inspect workload resolution context → Resolve intended qualified service → Verify selectors ports and policies → Validate environment configuration.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain predictable routing and clearer diagnostics, but maintain explicit environment configuration. Short names remain a viable convenient alternative for intentionally local same-namespace dependencies when that scope is documented.</p>
+<p>Follow-up trap: hard-coding instance IPs bypasses discovery and breaks when instances change. If the intended boundary is cross-cluster rather than cross-namespace, a local service FQDN is insufficient; use the platform&#x27;s supported cross-cluster discovery/routing design and its security model.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-vm-without-discovery-sdk" data-scenario-basis="adapted-production">
+<summary>A VM client needs changing service endpoints without a discovery SDK. Which integration fits?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A visitor can use an ordinary phone directory without learning the registry&#x27;s private filing system. A legacy VM application must call changing service instances, but its release process cannot adopt a discovery SDK. It can use standard DNS and a configured proxy. What will you choose?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Use a supported discovery-facing DNS interface or a local/server-side proxy that resolves membership for the legacy client. Choose based on the client&#x27;s DNS refresh, connection reuse and protocol behavior. Keep service identity stable while the discovery/proxy layer tracks changing endpoints, and verify authentication and network access from the VM.</p>
+<p>Test endpoint removal, DNS failure and a proxy restart under real connection pooling. Document health filtering and cache staleness rather than assuming a DNS answer is a live-health guarantee. An SDK is one integration option, not the definition of service discovery.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A VM client needs changing service endpoints without a discovery SDK. Which integration fits?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Choose supported DNS or proxy interface"]
+    N1["Resolve stable service identity"]
+    N2["Manage endpoint and connection freshness"]
+    N3["Verify removal and failure behavior"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Choose supported DNS or proxy interface → Resolve stable service identity → Manage endpoint and connection freshness → Verify removal and failure behavior.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You avoid invasive legacy code changes and centralize discovery mechanics, but rely on DNS caching behavior or an additional proxy hop/failure domain. An SDK is a viable alternative when fine-grained metadata, watch semantics or protocol-specific routing justify the client change.</p>
+<p>Follow-up trap: a very long-lived connection can keep using a removed instance after a DNS refresh. If the application needs immediate revocation or strict per-instance authorization, use a suitable enforced proxy/security boundary and explicit connection draining rather than relying on TTL alone.</p>
+</div>
+</details>
+<aside class="kb-callout--insight" data-interview-research>
+<p>Researched 2026-11-17. These scenarios adapt documented production problems and architectural guidance. Interview frequency, rankings and company provenance for these exact prompts were not independently verified. Numeric budgets and organization details are author-created assumptions. Web search was available and used for this concept; primary sources support the technical reasoning, not a claim that these prompts recur in interviews.</p>
+<ul><li><a href="https://kubernetes.io/docs/concepts/services-networking/service/">Kubernetes: Service</a></li><li><a href="https://kubernetes.io/docs/tutorials/services/pods-and-endpoint-termination-flow/">Kubernetes: Pod and endpoint termination flow</a></li><li><a href="https://developer.hashicorp.com/consul/docs/discover/dns/configure">HashiCorp: Configure Consul DNS behavior</a></li><li><a href="https://docs.hazelcast.com/hazelcast/5.7/data-structures/fencedlock">Hazelcast: Fencing tokens and uncertain lock ownership</a></li></ul>
+</aside>
+</section>
+<!-- kb-interview-scenarios:end --><div class="kb-callout--impact"><h3>Real-world impact</h3><p>For an order backend, discovery earns its place by making scaling and replacement routine while preserving a stable capability identity. The hard parts are freshness, readiness, draining, and connection behavior—not merely turning a name into an IP address. Use the platform’s real semantics and test the transitions that deployments create.</p></div>
+</section>
+<footer class="kb-references"><h2>Sources and further reading</h2><p>Original explanations and worked examples above; consult these primary references for the underlying ideas and implementation-specific details.</p><ul><li><a href="https://microservices.io/patterns/client-side-discovery.html">Chris Richardson: Client-side service discovery</a></li><li><a href="https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/">Kubernetes: DNS for Services and Pods</a></li><li><a href="https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/">AWS Builders’ Library: Timeouts, retries, and backoff with jitter</a></li></ul><p>Connect this lesson to: <a href="#/system-design/backend-architecture/core-system-topologies/microservices-architecture">Microservices Architecture</a>, <a href="#/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh">Service Mesh</a>, <a href="#/system-design/backend-architecture/communication-and-routing/api-gateway-pattern">API Gateway Pattern</a>.</p></footer>
+</article>

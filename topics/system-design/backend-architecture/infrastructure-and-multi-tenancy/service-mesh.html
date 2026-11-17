@@ -1,0 +1,219 @@
+<article class="kb-topic" data-node-id="84458963-012b-4a80-828a-2da27d8b509d">
+<h1>Service Mesh</h1>
+<section data-section="hook-eli5" id="node-84458963-012b-4a80-828a-2da27d8b509d-hook-eli5">
+<h2>🎯 The Hook & ELI5</h2>
+<div class="kb-callout--insight"><p><strong>ELI5 mental model.</strong> In a campus, each department should focus on its work rather than build its own roads, security gates, and traffic counters. Shared communication infrastructure can handle those jobs consistently. A service mesh applies that idea to communication between software workloads, while the applications still own their business decisions.</p></div><p>A growing service system repeatedly needs secure connections, routing policy, telemetry, and other communication behavior. Implementing every concern differently inside each application library can create inconsistency. A service mesh provides infrastructure for service-to-service communication with a managed policy/configuration layer. It adds a real distributed subsystem, not a free reliability switch.</p><div class="kb-callout--insight"><p>WHY it matters: an order workload calling Stock may need authenticated workload identity, encrypted transport, consistent telemetry, and controlled rollout routing. A mesh can provide selected capabilities across participating workloads. It does not decide whether a customer may buy an item, repair a bad API contract, or make an unsafe payment retry safe.</p></div>
+</section>
+<section data-section="big-picture" id="node-84458963-012b-4a80-828a-2da27d8b509d-big-picture">
+<h2>🗺️ High-Level Big Picture</h2>
+<p>The application’s request travels through the data plane to the destination application. A control plane distributes the configuration, discovery/security material, and policies needed by that data plane according to the implementation. The diagram is a logical view: interception and proxy placement differ between sidecar, node-level, ambient, and other mesh designs.</p><figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Control plane configures service-to-service data-plane behavior
+    accDescr: Request traffic uses the data plane while configuration and identity material come from a separate control plane.
+    CP[&quot;Control plane: policy, configuration, identity material&quot;] -.-&gt; A
+    CP -.-&gt; B
+    O[&quot;Orders application&quot;] --&gt; A[&quot;Source data-plane handling&quot;]
+    A --&gt; B[&quot;Destination data-plane handling&quot;]
+    B --&gt; S[&quot;Stock application&quot;]
+    A --&gt; T[&quot;Communication metrics and traces&quot;]
+    B --&gt; T</pre><figcaption>Read the arrows as responsibilities and hand-offs, not as a promise that every step succeeds.</figcaption></figure>
+</section>
+<section data-section="mechanics" id="node-84458963-012b-4a80-828a-2da27d8b509d-mechanics">
+<h2>🔍 Step-by-Step Mechanics</h2>
+<p>Follow the example one boundary at a time. Open each step to connect the familiar mental model to the internal mechanics.</p><details><summary>1. Separate moving traffic from deciding communication policy</summary><p>Road signs can be planned centrally while cars still travel on roads locally. The <strong>data plane</strong> is the communication path that handles workload traffic. The <strong>control plane</strong> supplies relevant configuration and policy, rather than necessarily carrying every application request itself.</p>
+<p>For Orders calling Stock, the data plane may establish a protected connection, apply routing and timeout rules, and produce telemetry. The control plane helps keep those behaviors configured across the participating system. Identify both paths when diagnosing an incident: the application can be healthy while its communication path is misconfigured, or existing traffic can work while new configuration/identity updates are failing.</p></details>
+<details><summary>2. Understand how traffic reaches the data plane</summary><p>A campus can place gates at each building or share checkpoints along the roads. A mesh can likewise place communication infrastructure differently. A sidecar model commonly associates a proxy with an application workload. Other models can use node-level infrastructure and optional additional processing points for particular capabilities.</p>
+<p>Do not define service mesh as a synonym for one sidecar per service. Istio documents sidecar and ambient data-plane modes, whose components and feature behavior differ. Those are examples of implementation choices, not a universal architecture requirement. Understand which traffic is actually enrolled/intercepted, what protocols are recognized, and which paths bypass the mesh before assuming a policy or metric covers the whole system.</p></details>
+<details><summary>3. Use workload identity and transport protection deliberately</summary><p>A campus gate can verify that a delivery vehicle belongs to an approved company; that does not authorize it to open every room. <strong>Mutual TLS</strong>, when configured/enforced for the relevant communication, authenticates both connection participants and protects transport. A mesh can manage parts of identity distribution and certificate rotation for enrolled workloads.</p>
+<p>The application still needs end-user, resource, and tenant authorization. A verified Stock workload identity is not proof that a particular request is allowed to reveal another customer’s inventory allocation. Check trust boundaries, policy scope, certificate lifetime, and bypass paths. Merely installing a mesh or observing encrypted connections is not evidence that every required security policy is enforced.</p></details>
+<details><summary>4. Apply routing and resilience policies with application semantics</summary><p>Road authorities can redirect traffic around a closed street, but sending a van twice may still deliver the same parcel twice. Mesh traffic policies can support timeouts, route selection, load balancing, and other mechanisms, depending on the product/protocol. These controls must fit the application’s meaning and its end-to-end budget.</p>
+<p>A retry of a read can have different implications from repeating a business command with an external effect. Coordinate retries across client libraries, gateway, mesh, and service code; independent layers can multiply attempts. A canary route that sends some traffic to a new Stock version also needs contract compatibility, correct identity/data handling, and a clear rollback signal. Communication infrastructure does not make those business and release decisions automatically.</p></details>
+<details><summary>5. Read communication telemetry without confusing it with business success</summary><p>A road counter can say how many cars crossed a gate without knowing whether the customers received the correct goods. A mesh can provide useful request counts, latency, error observations, and trace-related data. It may not understand the business outcome inside an otherwise successful protocol response.</p>
+<p>Correlate infrastructure observations with application logs, traces, and durable business operation state. A response classified as successful transport can still contain a rejected order, and a timeout can hide a committed operation. Watch telemetry cost and cardinality as well as usefulness. Avoid propagating or logging secret/customer data merely to make a trace look more detailed; use deliberate identifiers and retention policies.</p></details>
+<details><summary>6. Operate the added subsystem and justify its cost</summary><p>Shared roads require maintenance, and a mesh requires capacity, upgrades, configuration review, incident skills, and failure testing. Proxying can consume CPU/memory and add latency; central policy mistakes can affect many workloads. Measure overhead and outcomes under realistic traffic instead of assuming uniform benefit.</p>
+<p>During control-plane disruption, some designs keep established data-plane behavior working from prior configuration, but updates, new workloads, discovery freshness, or certificate renewal can still be affected. Test the actual implementation’s behavior rather than generalizing. A few services with well-maintained client libraries may not need a mesh. Adopt one for specific operational needs the team can support, and keep an understandable way to diagnose both application and communication layers.</p></details>
+</section>
+<section data-section="trade-offs" id="node-84458963-012b-4a80-828a-2da27d8b509d-trade-offs">
+<h2>⚖️ Comparisons & Trade-Offs</h2>
+<p>Choose using the constraints of the system and its team. The table compares relevant choices; compatible ideas can be combined rather than ranked as universally better.</p><div class="kb-table-wrap"><table><caption>Choices, benefits, costs, and decision conditions</caption><thead><tr><th scope="col">Approach or condition</th><th scope="col">What you gain</th><th scope="col">What you give up</th><th scope="col">Choose when</th></tr></thead><tbody><tr><td>Application/client libraries</td><td>Fewer infrastructure components and application-aware behavior</td><td>Cross-language consistency, upgrades and duplicated communication code</td><td>The system is small or library ownership is already effective.</td></tr><tr><td>Sidecar-based mesh</td><td>Per-workload communication processing and policy capabilities</td><td>Per-workload resource/upgrade cost and interception complexity</td><td>That implementation mode fits required capabilities and operations.</td></tr><tr><td>Node-level/ambient-style mesh design</td><td>Different placement/cost trade-offs for shared communication processing</td><td>Feature/path differences and shared-component failure considerations</td><td>The selected implementation mode meets verified protocol/security needs.</td></tr><tr><td>Gateway without a mesh</td><td>A focused boundary for external entry traffic</td><td>Internal service-to-service concerns remain elsewhere</td><td>The principal problem is north-south entry, not pervasive internal communication policy.</td></tr></tbody></table></div>
+</section>
+<section data-section="pitfalls" id="node-84458963-012b-4a80-828a-2da27d8b509d-pitfalls">
+<h2>⚠️ Common Pitfalls, Bugs & What-If Scenarios</h2>
+<p>Treat a failure as a story: start with what a user observes, trace the boundary that failed, and choose a prevention that addresses the cause.</p><div class="kb-callout--pitfall"><h3>Encryption is mistaken for full authorization</h3><p><strong>Symptom:</strong> A correctly authenticated workload can still request another tenant’s data.</p><p><strong>Root Cause:</strong> Transport identity was confused with end-user/resource permission.</p><p><strong>Fix/Prevention:</strong> Keep application-level authorization and tenant checks at the owning capability, and verify policy enrollment and enforcement scope.</p></div><div class="kb-callout--pitfall"><h3>Retries repeat an unsafe effect</h3><p><strong>Symptom:</strong> A timed-out command is retried by several layers and creates duplicate work.</p><p><strong>Root Cause:</strong> A generic transport policy ignored operation semantics and existing retry owners.</p><p><strong>Fix/Prevention:</strong> Coordinate bounded retries and end-to-end deadlines; use application-level idempotency and explicit uncertainty handling.</p></div><div class="kb-callout--pitfall"><h3>One configuration change breaks many services</h3><p><strong>Symptom:</strong> Applications are unchanged but cross-service traffic fails broadly.</p><p><strong>Root Cause:</strong> A shared policy/routing change altered the data plane without adequate rollout validation.</p><p><strong>Fix/Prevention:</strong> Use scoped rollouts, visible policy/configuration ownership, monitored rollback signals, and failure tests covering the added subsystem.</p></div>
+</section>
+<section data-section="mastery" id="node-84458963-012b-4a80-828a-2da27d8b509d-mastery">
+<h2>🧠 Active Recall & Mastery Check</h2>
+<div class="kb-callout--insight"><p><strong>Summarize this in your own words</strong></p><p>Explain the opening analogy, trace the worked example, and name one condition that would change your architectural decision. Try answering before opening the cards.</p></div><details class="kb-question" data-recall-id="planes"><summary>What is the difference between the control plane and the data plane?</summary><p>The data plane handles the communication path for application traffic. The control plane distributes relevant configuration, policies, and identity/discovery material according to the implementation. Diagnosing or sizing one does not automatically explain the other.</p></details><details class="kb-question" data-recall-id="sidecars"><summary>Does every service mesh require a sidecar per service?</summary><p>No. Sidecars are one placement model. Other designs use node-level/shared processing and possibly additional components for selected capabilities. Verify the chosen product and mode’s actual traffic path and feature behavior rather than defining the concept by one topology.</p></details><details class="kb-question" data-recall-id="identity-permission"><summary>Why does mutual TLS not replace application authorization?</summary><p>It can authenticate workloads and protect the connection within its enforced scope. It does not by itself decide whether the end user may perform an action on a particular resource or tenant’s data. Those business/access decisions still need an authoritative owner.</p></details><details class="kb-question" data-recall-id="control-outage"><summary>Why is saying the control plane is down therefore all requests stop too simplistic?</summary><p>Some data planes can continue with previously received configuration, but discovery updates, new workloads, or certificate renewal may fail over time. The effects depend on the implementation and duration. Test established traffic and lifecycle/update behavior separately.</p></details><!-- kb-interview-scenarios:start -->
+<section data-interview-scenarios aria-labelledby="node-84458963-012b-4a80-828a-2da27d8b509d-interview-scenarios">
+<h3 id="node-84458963-012b-4a80-828a-2da27d8b509d-interview-scenarios">Tricky &amp; Most-Asked Interview Scenarios</h3>
+<p>Practice making a decision under a concrete production constraint. Open each answer, explain your reasoning aloud, then rate your confidence. The budgets and organizations below are author-created assumptions.</p>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-mesh-app-retry-multiplication" data-scenario-basis="adapted-production">
+<summary>Application and proxy retries multiply downstream load. Which layer should own the policy?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Two assistants independently repeating the same phone call can overwhelm the recipient. An application retries payment requests and the mesh proxy also retries them, causing duplicate attempts and overload. The overall request has a strict deadline. What will you configure and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Inventory the effective retry policies at the application, SDK, gateway and mesh. Choose deliberate ownership per operation and bound the total attempts, elapsed time and concurrency. Put business-aware recovery where operation identity and uncertain outcomes are understood; keep proxy retries limited to explicitly safe failure/operation combinations.</p>
+<p>Propagate an end-to-end deadline, add jitter/backoff where supported and observe actual attempts rather than only top-level requests. Require idempotency for repeatable effects. Test a slow dependency and a lost response after commit; the mesh cannot infer whether a business effect happened merely from a transport error.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Application and proxy retries multiply downstream load. Which layer should own the policy?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Inspect effective layered retries"]
+    N1["Assign one bounded policy owner"]
+    N2["Protect operation identity and deadline"]
+    N3["Measure downstream attempt volume"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Inspect effective layered retries → Assign one bounded policy owner → Protect operation identity and deadline → Measure downstream attempt volume.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain predictable load and recovery behavior but may return failures sooner instead of spending extra attempts. Mesh-level handling is a viable alternative for suitable transport failures when it remains within the application&#x27;s safety and deadline contract.</p>
+<p>Follow-up trap: enabling automatic retries globally does not make mutating requests safe. If the workload changes to asynchronous idempotent jobs with a longer completion window, move retry scheduling into controlled durable workers rather than reusing an interactive proxy policy unchanged. Do not let two independent retry budgets silently multiply.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-strict-mtls-legacy-migration" data-scenario-basis="adapted-production">
+<summary>Strict mutual TLS breaks legacy callers. How do you migrate without leaving a permanent insecure hole?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Changing a building to badge-only entry can lock out legitimate visitors who have not received badges. Strict mesh mTLS is enabled before all callers participate, and legacy clients fail. You need a staged migration with a clear security endpoint. What will you do?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Inventory legitimate callers and supported data-plane paths, then migrate workload identity and certificate trust before enforcing strict mode on the affected traffic. Use a narrowly scoped transitional policy only where needed, observe remaining plaintext/legacy paths and set an owner and expiry for each exception. Validate actual policy precedence and port/protocol behavior in the deployed mesh.</p>
+<p>Roll out enforcement by workload or namespace with canaries and connectivity tests. Keep authorization policies aligned with authenticated identities, and provide a secure gateway/adapter for legacy callers that cannot join directly. Do not describe transitional plaintext acceptance as the final security guarantee.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Strict mutual TLS breaks legacy callers. How do you migrate without leaving a permanent insecure hole?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Inventory caller identity readiness"]
+    N1["Migrate trusted secure paths"]
+    N2["Observe scoped transition exceptions"]
+    N3["Enforce strict policy incrementally"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Inventory caller identity readiness → Migrate trusted secure paths → Observe scoped transition exceptions → Enforce strict policy incrementally.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You preserve availability while reaching enforced identity protection, but carry temporary policy complexity and risk. A coordinated cutover is a viable alternative for a small fully controlled caller set with an acceptable maintenance window.</p>
+<p>Follow-up trap: permissive mode does not mean every connection is encrypted, and encryption does not prove permission. If a workload handles data that cannot tolerate a plaintext transition, isolate it and require a secure compatible entry path before allowing access, even if some legacy calls must stop.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-mtls-not-object-permission" data-scenario-basis="adapted-production">
+<summary>All traffic uses mTLS, yet one service reads another tenant&#x27;s orders. What protection is missing?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A verified employee badge does not authorize opening every customer&#x27;s folder. Mesh mTLS authenticates workloads and encrypts traffic, but a service can still request an arbitrary tenant&#x27;s order. What authorization checks belong in the mesh and application?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Use mesh authorization for explicit service-to-service policy at the supported protocol level, and enforce tenant/object/action permissions in the owning application using trusted identity/context. Distinguish workload identity from the end user&#x27;s delegated rights. Reject forged tenant headers and prevent untrusted callers from bypassing the intended entry path.</p>
+<p>Test allowed and denied workload paths plus cross-tenant object access. Propagate only scoped identity/context and maintain auditable correlation. Verify which policy layer sees which information; a network proxy may not possess the domain state needed to decide ownership of an individual order.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: All traffic uses mTLS, yet one service reads another tenant&#x27;s orders. What protection is missing?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Authenticate workload securely"]
+    N1["Apply service-level access policy"]
+    N2["Check tenant and object authority"]
+    N3["Return scoped authorized result"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Authenticate workload securely → Apply service-level access policy → Check tenant and object authority → Return scoped authorized result.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You combine consistent transport identity with domain-aware access control, but manage policy at more than one boundary. Centralized policy evaluation is a viable alternative for reusable rules when the application supplies trustworthy context and still enforces the decision.</p>
+<p>Follow-up trap: a valid certificate proves an identity under the trust model, not permission for every action. If background processing legitimately needs cross-tenant access, grant an explicit narrow capability rather than disabling tenant checks for all mesh-authenticated traffic.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-sidecar-ambient-measured-choice" data-scenario-basis="adapted-production">
+<summary>Proxy memory and tail latency exceed budget. Is ambient mode automatically the answer?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Changing the delivery arrangement can reduce per-room equipment without making transport free. A sidecar deployment consumes too much memory on small nodes and adds latency. The team proposes ambient mode without checking required traffic features or isolation. What evaluation will you run?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Measure the current data path under representative traffic, including connection patterns, policy, telemetry and failure. Compare supported sidecar and ambient designs for the exact deployed versions and required L4/L7 capabilities, including whether waypoint proxies or other components are needed. Budget total resource use and shared failure domains, not only per-pod sidecar memory.</p>
+<p>Pilot a limited workload, verify identity/authorization and rollout/rollback behavior, and measure p95/p99 latency plus operational burden. Choose the simplest mode that meets the actual requirements. Avoid promising universal performance improvement from an architecture label.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Proxy memory and tail latency exceed budget. Is ambient mode automatically the answer?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Measure equivalent required features"]
+    N1["Compare supported data-plane paths"]
+    N2["Pilot policy and failure behavior"]
+    N3["Choose by total measured cost"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Measure equivalent required features → Compare supported data-plane paths → Pilot policy and failure behavior → Choose by total measured cost.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>A different data plane may reduce some per-workload overhead but introduce shared components, feature constraints and migration work. Tuning existing sidecars or removing an unnecessary mesh is a viable alternative when it meets security/operations needs more cheaply.</p>
+<p>Follow-up trap: comparing a bare L4 path with a fully featured L7 sidecar is not an equivalent benchmark. If mandatory application-layer authorization requires additional proxies, include their cost and behavior. If strict workload isolation outweighs memory savings, retain the design that actually meets that constraint.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-canary-traffic-unexpected-share" data-scenario-basis="adapted-production">
+<summary>A 5% canary receives unexpected traffic. Which routing assumptions will you inspect?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A sign saying five percent does not prove every entrance follows the same sign. A mesh canary unexpectedly serves much more traffic or the wrong clients. Some calls target a different host, and versions use long-lived connections. What will you investigate first?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Inspect the effective route configuration, host matching, subset labels, gateway/sidecar path and policy precedence from the actual clients. Verify that requests traverse the configured rule and that canary endpoints are labeled as intended. Separate weighted request distribution from session affinity, long-lived streams and low-sample randomness.</p>
+<p>Compare route metrics with application version metrics and use a controlled request set to validate behavior. Roll back the faulty rule if user impact is rising. Test the stable and canary paths independently, including any headers or identity conditions used for targeted rollout.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A 5% canary receives unexpected traffic. Which routing assumptions will you inspect?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Trace actual client routing path"]
+    N1["Inspect effective host and subset policy"]
+    N2["Compare route and version metrics"]
+    N3["Canary or roll back verified rule"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Trace actual client routing path → Inspect effective host and subset policy → Compare route and version metrics → Canary or roll back verified rule.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain evidence about the real traffic path but need end-to-end visibility across configuration and clients. Header- or identity-targeted canaries are a viable alternative when deterministic cohorts matter more than approximate percentage distribution.</p>
+<p>Follow-up trap: a 5% weight is not a promise that every group of twenty requests contains exactly one canary call. If the protocol is a long-lived connection or stream, confirm the actual routing unit before interpreting request counts. Do not compensate for a misapplied rule by guessing another percentage.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-mesh-business-fallback-limit" data-scenario-basis="adapted-production">
+<summary>The mesh times out a payment call. Can it return a successful business fallback?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A courier may report delivery failure but cannot decide that a purchase was paid. A team wants the mesh to replace a payment timeout with a success-shaped response so checkout remains green. The payment outcome may be unknown. What belongs in infrastructure versus application recovery?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Let the mesh provide configured transport controls and telemetry, while the application owns business outcomes. Persist the payment operation identity, return pending or a permitted error on uncertainty, and reconcile with the authority before confirming the order. A proxy-generated HTTP success cannot establish that money moved.</p>
+<p>Use fallback only where the business permits a truthful alternative, such as cached recommendations with explicit staleness. Test transport timeout, committed-but-unacknowledged effects and dependency recovery. Make dashboards distinguish transport availability from completed business operations rather than optimizing a green status code.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: The mesh times out a payment call. Can it return a successful business fallback?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Observe bounded transport failure"]
+    N1["Keep business outcome unknown"]
+    N2["Reconcile authoritative payment state"]
+    N3["Confirm only supported outcome"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Observe bounded transport failure → Keep business outcome unknown → Reconcile authoritative payment state → Confirm only supported outcome.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You preserve correctness and honest user state at the cost of visible pending outcomes and reconciliation. Failing closed is a viable alternative for an operation that cannot safely proceed without confirmation; it still needs to discover whether a timed-out effect committed.</p>
+<p>Follow-up trap: resilience features cannot infer domain intent or compensate an external effect automatically. If the operation changes to a noncritical read with an approved cache, a mesh/application fallback may become appropriate. Reevaluate semantics per operation instead of applying one global success fallback.</p>
+</div>
+</details>
+<aside class="kb-callout--insight" data-interview-research>
+<p>Researched 2026-11-17. These scenarios adapt documented production problems and architectural guidance. Interview frequency, rankings and company provenance for these exact prompts were not independently verified. Numeric budgets and organization details are author-created assumptions. Web search was available and used for this concept; primary sources support the technical reasoning, not a claim that these prompts recur in interviews.</p>
+<ul><li><a href="https://istio.io/latest/docs/concepts/traffic-management/">Istio: Traffic management</a></li><li><a href="https://istio.io/latest/docs/concepts/security/">Istio: Security</a></li><li><a href="https://istio.io/latest/docs/overview/dataplane-modes/">Istio: Sidecar or ambient?</a></li><li><a href="https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/">AWS: Timeouts, retries, and backoff with jitter</a></li><li><a href="https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/">AWS: Making retries safe with idempotent APIs</a></li><li><a href="https://owasp.org/API-Security/editions/2023/en/0xa1-broken-object-level-authorization/">OWASP: Broken Object Level Authorization</a></li></ul>
+</aside>
+</section>
+<!-- kb-interview-scenarios:end --><div class="kb-callout--impact"><h3>Real-world impact</h3><p>For an order platform, a mesh is useful when consistent communication capabilities justify another subsystem the team can operate well. Keep the data path visible, verify enrollment and policy scope, and preserve application authority over business outcomes. Better communication infrastructure should support clear services, not hide unclear contracts.</p></div>
+</section>
+<footer class="kb-references"><h2>Sources and further reading</h2><p>Original explanations and worked examples above; consult these primary references for the underlying ideas and implementation-specific details.</p><ul><li><a href="https://istio.io/latest/docs/overview/what-is-istio/">Istio: What is Istio?</a></li><li><a href="https://istio.io/latest/docs/overview/dataplane-modes/">Istio: Sidecar or ambient?</a></li><li><a href="https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/">AWS Builders’ Library: Timeouts, retries, and backoff with jitter</a></li></ul><p>Connect this lesson to: <a href="#/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery">Service Discovery</a>, <a href="#/system-design/backend-architecture/communication-and-routing/api-gateway-pattern">API Gateway Pattern</a>, <a href="#/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals">Distributed System Fundamentals</a>.</p></footer>
+</article>

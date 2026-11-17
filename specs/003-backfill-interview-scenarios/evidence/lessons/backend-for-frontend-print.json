@@ -1,0 +1,102 @@
+{
+  "status": "pass",
+  "topicId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+  "path": "topics/system-design/backend-architecture/communication-and-routing/backend-for-frontend.html",
+  "sourceSha256": "b6d0dec45c5de51f3ec10f041bb4dcb26cae9d38e1568aed06e660c926a7ede4",
+  "outputs": [
+    {
+      "nodeId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+      "topicId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+      "sourceSha256": "b6d0dec45c5de51f3ec10f041bb4dcb26cae9d38e1568aed06e660c926a7ede4",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-backend-for-frontend.pdf",
+      "completeTextBlocks": 147,
+      "diagramLabels": 32,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+      "topicId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+      "sourceSha256": "b6d0dec45c5de51f3ec10f041bb4dcb26cae9d38e1568aed06e660c926a7ede4",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-backend-for-frontend.pdf",
+      "completeTextBlocks": 147,
+      "diagramLabels": 32,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    }
+  ],
+  "visualReview": {
+    "topicId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+    "path": "topics/system-design/backend-architecture/communication-and-routing/backend-for-frontend.html",
+    "comparisonSheet": "/tmp/backend-interview-print-review/backend-for-frontend-comparison.jpg",
+    "outputs": [
+      {
+        "theme": "light",
+        "pdf": "/tmp/backend-interview-pdfs/light-backend-for-frontend.pdf",
+        "pages": 19,
+        "selectedPages": [
+          4,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/light-backend-for-frontend-table.png",
+          "/tmp/backend-interview-print-review/light-backend-for-frontend-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/light-backend-for-frontend-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "d7e9743d2cf0faf405823337962aad67523d2febe6ed858b71c3b08eb03e5d00",
+        "reviewPanelSha256": [
+          "eeb5f089ada5aa7a40a9e95a94be753920e5e105a92cf07088dae7919fd65af8",
+          "e4a0b311a0ccca6dd14e061d6c8f4aa6739e9da4e8741cf33b3ab734a68172f3",
+          "c8ba3b8e3da51bde60935882b446c1731f5fc8f4046f627b8f78ff4f431d3e55"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      },
+      {
+        "theme": "dark",
+        "pdf": "/tmp/backend-interview-pdfs/dark-backend-for-frontend.pdf",
+        "pages": 19,
+        "selectedPages": [
+          4,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/dark-backend-for-frontend-table.png",
+          "/tmp/backend-interview-print-review/dark-backend-for-frontend-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/dark-backend-for-frontend-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "5716e3b648e0cd6d131a0c9f3ff83266d74b22fd11255480d316188f9cc4a4b4",
+        "reviewPanelSha256": [
+          "eeb5f089ada5aa7a40a9e95a94be753920e5e105a92cf07088dae7919fd65af8",
+          "e4a0b311a0ccca6dd14e061d6c8f4aa6739e9da4e8741cf33b3ab734a68172f3",
+          "c8ba3b8e3da51bde60935882b446c1731f5fc8f4046f627b8f78ff4f431d3e55"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      }
+    ],
+    "reviewStatus": "pass",
+    "reviewedOn": "2026-11-17",
+    "reviewFindings": [
+      "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+      "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+      "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+      "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+    ]
+  },
+  "findings": [
+    "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+    "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+    "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+  ]
+}

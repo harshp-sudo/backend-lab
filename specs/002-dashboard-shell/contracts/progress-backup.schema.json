@@ -1,0 +1,321 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:backend-lab:progress-backup:v1",
+  "title": "Backend Lab Progress Backup v1",
+  "description": "Portable workspace shape. Review sequencing and timestamp/identity consistency additionally require the semantic rules in progress-state.md.",
+  "type": "object",
+  "required": [
+    "format",
+    "version",
+    "exportedAt",
+    "state"
+  ],
+  "properties": {
+    "format": {
+      "const": "backend-lab.progress-backup"
+    },
+    "version": {
+      "const": 1
+    },
+    "exportedAt": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "state": {
+      "$ref": "#/$defs/state"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$"
+    },
+    "token": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "confidence": {
+      "type": "object",
+      "required": [
+        "rating",
+        "ratedAt"
+      ],
+      "properties": {
+        "rating": {
+          "enum": [
+            "hard",
+            "good",
+            "easy"
+          ]
+        },
+        "ratedAt": {
+          "$ref": "#/$defs/timestamp"
+        }
+      },
+      "additionalProperties": false
+    },
+    "reviewEvent": {
+      "type": "object",
+      "required": [
+        "cycle",
+        "kind",
+        "sessionId",
+        "reviewedAt",
+        "intervalIndex"
+      ],
+      "properties": {
+        "cycle": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "kind": {
+          "enum": [
+            "mastered",
+            "review"
+          ]
+        },
+        "sessionId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/token"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reviewedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "intervalIndex": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "mastered"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "sessionId": {
+                "type": "null"
+              },
+              "intervalIndex": {
+                "const": 0
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "sessionId": {
+                "$ref": "#/$defs/token"
+              },
+              "intervalIndex": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 3
+              }
+            }
+          }
+        }
+      ]
+    },
+    "reviewSession": {
+      "type": "object",
+      "required": [
+        "id",
+        "cycle",
+        "startedAt",
+        "completedAt"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/token"
+        },
+        "cycle": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "startedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "completedAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "review": {
+      "type": "object",
+      "required": [
+        "cycle",
+        "lastReviewed",
+        "intervalIndex",
+        "history",
+        "session"
+      ],
+      "properties": {
+        "cycle": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "lastReviewed": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "intervalIndex": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "history": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/reviewEvent"
+          }
+        },
+        "session": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/reviewSession"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "topic": {
+      "type": "object",
+      "required": [
+        "status",
+        "lastVisitedAt",
+        "confidence",
+        "review"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "not-started",
+            "in-progress",
+            "mastered"
+          ]
+        },
+        "lastVisitedAt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "confidence": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/confidence"
+          }
+        },
+        "review": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/review"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "mastered"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "review": {
+                "$ref": "#/$defs/review"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "state": {
+      "type": "object",
+      "required": [
+        "format",
+        "version",
+        "updatedAt",
+        "preferences",
+        "topics"
+      ],
+      "properties": {
+        "format": {
+          "const": "backend-lab.learning"
+        },
+        "version": {
+          "const": 1
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "preferences": {
+          "type": "object",
+          "required": [
+            "theme"
+          ],
+          "properties": {
+            "theme": {
+              "enum": [
+                null,
+                "light",
+                "dark"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "topics": {
+          "type": "object",
+          "propertyNames": {
+            "minLength": 1,
+            "pattern": "^\\S+$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/topic"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

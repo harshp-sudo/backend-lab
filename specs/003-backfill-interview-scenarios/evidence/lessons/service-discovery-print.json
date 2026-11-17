@@ -1,0 +1,102 @@
+{
+  "status": "pass",
+  "topicId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+  "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery.html",
+  "sourceSha256": "36e23c0a254c8545580386e986007ce8d76aadee09b7bce135366d91cd011fd7",
+  "outputs": [
+    {
+      "nodeId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+      "topicId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+      "sourceSha256": "36e23c0a254c8545580386e986007ce8d76aadee09b7bce135366d91cd011fd7",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-service-discovery.pdf",
+      "completeTextBlocks": 150,
+      "diagramLabels": 31,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+      "topicId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+      "sourceSha256": "36e23c0a254c8545580386e986007ce8d76aadee09b7bce135366d91cd011fd7",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-service-discovery.pdf",
+      "completeTextBlocks": 150,
+      "diagramLabels": 31,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    }
+  ],
+  "visualReview": {
+    "topicId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+    "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery.html",
+    "comparisonSheet": "/tmp/backend-interview-print-review/service-discovery-comparison.jpg",
+    "outputs": [
+      {
+        "theme": "light",
+        "pdf": "/tmp/backend-interview-pdfs/light-service-discovery.pdf",
+        "pages": 19,
+        "selectedPages": [
+          5,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/light-service-discovery-table.png",
+          "/tmp/backend-interview-print-review/light-service-discovery-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/light-service-discovery-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "46baaa269232efdc08d963e8facb09133312b0f20c1e15ccd64a0d9c4e548c13",
+        "reviewPanelSha256": [
+          "018febce780554957ba49d78d9a73b31752419ddb3938ed1ef77dd0f56af0a12",
+          "85611f3c77e0fd1f45154b6620925635114b6530521d48bd4757f87ef89ff7aa",
+          "a214e4208903c4190511fb9a6a3ef3477c703ffde2cde70603b4df5667ce1688"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      },
+      {
+        "theme": "dark",
+        "pdf": "/tmp/backend-interview-pdfs/dark-service-discovery.pdf",
+        "pages": 19,
+        "selectedPages": [
+          5,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/dark-service-discovery-table.png",
+          "/tmp/backend-interview-print-review/dark-service-discovery-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/dark-service-discovery-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "43adb84e382c4435c893db3100753c2bb1d56d697fb323df085715fb3ee72edf",
+        "reviewPanelSha256": [
+          "018febce780554957ba49d78d9a73b31752419ddb3938ed1ef77dd0f56af0a12",
+          "85611f3c77e0fd1f45154b6620925635114b6530521d48bd4757f87ef89ff7aa",
+          "a214e4208903c4190511fb9a6a3ef3477c703ffde2cde70603b4df5667ce1688"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      }
+    ],
+    "reviewStatus": "pass",
+    "reviewedOn": "2026-11-17",
+    "reviewFindings": [
+      "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+      "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+      "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+      "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+    ]
+  },
+  "findings": [
+    "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+    "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+    "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+  ]
+}

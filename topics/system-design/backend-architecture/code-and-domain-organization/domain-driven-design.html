@@ -1,0 +1,226 @@
+<article class="kb-topic" data-node-id="a612a2d8-260a-4e97-82e7-b2851459e0c7">
+<h1>Domain-Driven Design (DDD)</h1>
+<section data-section="hook-eli5" id="node-a612a2d8-260a-4e97-82e7-b2851459e0c7-hook-eli5">
+<h2>🎯 The Hook & ELI5</h2>
+<div class="kb-callout--insight"><p><strong>ELI5 mental model.</strong> In a shop, the sales desk calls someone a customer because they buy things; the delivery team cares about a recipient and an address. The same person appears in both conversations, but each team needs different facts and rules. Domain-Driven Design starts by learning those meanings with the people doing the work, then makes the software express them clearly.</p></div><p>Complex business behavior becomes fragile when code uses vague terms, mixes incompatible meanings, or treats every database row as the whole domain model. Domain-Driven Design, or DDD, is an approach to building a useful model of a business domain in collaboration with domain experts. Strategic design clarifies language and model boundaries; tactical patterns help implement behavior within those boundaries.</p><div class="kb-callout--insight"><p>WHY it matters: a retailer needs an order to mean something precise when it is drafted, submitted, canceled, or handed to fulfillment. Getting the model right can prevent business mistakes that no choice of framework fixes. DDD does not require microservices, a universal enterprise model, or every tactical pattern in every small CRUD application.</p></div>
+</section>
+<section data-section="big-picture" id="node-a612a2d8-260a-4e97-82e7-b2851459e0c7-big-picture">
+<h2>🗺️ High-Level Big Picture</h2>
+<p>The retailer has Sales and Fulfillment contexts. Sales owns the commercial order and its submission rules; Fulfillment owns picking, packing, and delivery preparation. Sales publishes an agreed submission fact, and Fulfillment translates that information into its own model. Inside Sales, the Order root protects related order-line rules. The context boundary and the aggregate consistency boundary answer different questions.</p><figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Models and invariants in a retailer
+    accDescr: Sales and Fulfillment use distinct models; an Order aggregate protects its own line-item invariants inside Sales.
+    X[&quot;Business experts and developers&quot;] --&gt; L[&quot;Shared language and examples&quot;]
+    L --&gt; S
+    subgraph S[&quot;Sales bounded context&quot;]
+        O[&quot;Order aggregate root&quot;] --&gt; OL[&quot;Order lines and submission rules&quot;]
+        O --&gt; A[&quot;Delivery address value&quot;]
+    end
+    O --&gt; E[&quot;Agreed OrderSubmitted fact&quot;]
+    E --&gt; T[&quot;Translation boundary&quot;]
+    subgraph F[&quot;Fulfillment bounded context&quot;]
+        T --&gt; W[&quot;Shipment preparation model&quot;]
+    end</pre><figcaption>Read the arrows as responsibilities and hand-offs, not as a promise that every step succeeds.</figcaption></figure>
+</section>
+<section data-section="mechanics" id="node-a612a2d8-260a-4e97-82e7-b2851459e0c7-mechanics">
+<h2>🔍 Step-by-Step Mechanics</h2>
+<p>Follow the example one boundary at a time. Open each step to connect the familiar mental model to the internal mechanics.</p><details><summary>1. Learn the language before designing the classes</summary><p>A shopkeeper distinguishes a basket someone is editing from an order the business has accepted. The software should preserve distinctions that matter to decisions. A <strong>ubiquitous language</strong> is the evolving shared language used by developers and domain experts in conversation, examples, code, and tests within a model boundary.</p>
+<p>Ask concrete questions: Can a submitted order change its address? What does cancellation mean after packing begins? Is a displayed price a quote or a commitment? Capture examples and counterexamples rather than only nouns. If two people use submitted differently, a class diagram will not resolve the disagreement. Refining the words can expose a missing business state or rule before implementation makes the ambiguity expensive.</p></details>
+<details><summary>2. Bound the model where its meanings remain consistent</summary><p>A sales ledger and a warehouse picking board can describe the same purchase without being the same document. A <strong>bounded context</strong> marks where a particular model and language apply. Sales Order and Fulfillment Shipment serve different decisions; forcing both into one giant shared object can make each side harder to change.</p>
+<p>Context boundaries can align with teams, business capabilities, legacy systems, or distinct meanings. They are not automatically network boundaries. Two contexts can run in a modular monolith, and a context may need more than one technical component. Be explicit about ownership and which system is authoritative for a particular fact. A context map records the relationships rather than treating each box as isolated from the rest of the organization.</p></details>
+<details><summary>3. Design the relationship between models</summary><p>A warehouse needs to translate a sales instruction into a packing task without adopting every term on the sales screen. At an <strong>integration boundary</strong>, decide what information crosses, who owns its meaning, and how changes are coordinated. A translation or anti-corruption layer can protect an internal model from a legacy/external model that uses different concepts.</p>
+<p>For OrderSubmitted, specify the event’s business meaning, identifier, line information, and interpretation of price/address snapshots. Fulfillment creates its own preparation model from the agreed contract; it should not reach into Sales’ private tables to reconstruct hidden assumptions. Upstream/downstream relationships and organizational influence matter: some consumers can negotiate a contract, while others must adapt to a provider they cannot change.</p></details>
+<details><summary>4. Separate identity from descriptive values</summary><p>A shop order remains the same order when its status changes, while two addresses can be equivalent because their relevant values match. An <strong>entity</strong> has continuity through identity; a <strong>value object</strong> represents a meaningful value and compares according to that value’s defined attributes.</p>
+<p>Order is an entity identified by OrderId. A delivery address can be modeled as a value object when identity independent of its contents is unnecessary. Model choices depend on the domain: a managed address record in an address-book context may have its own identity. Values often work well as immutable objects that enforce validity at creation. Do not turn every set of fields into an entity merely because an ORM can assign it a primary key.</p></details>
+<details><summary>5. Put a real invariant behind an aggregate root</summary><p>The sales desk accepts an order as one meaningful unit, rather than allowing anyone to secretly edit its lines afterward. An <strong>aggregate</strong> is a consistency boundary around related state whose invariants are protected through a root. For example, an Order root can require at least one valid line before submission and disallow line edits after submission.</p>
+<p>Call behavior such as <code>addLine</code> and <code>submit</code> on the root instead of exposing freely mutable line collections. The aggregate boundary is not a rule to load the whole enterprise object graph. Keep it as small as the required invariant permits. References to other aggregates commonly use identity, and cross-aggregate workflows need explicit coordination. Concurrency control must ensure two versions cannot both bypass the same state transition; a clean method name alone does not enforce that at persistence time.</p></details>
+<details><summary>6. Distinguish domain behavior from orchestration and published facts</summary><p>A shop’s pricing rule is a business decision; arranging the steps to load an order, apply that rule, and save it is workflow coordination. A <strong>domain service</strong> can express business behavior that does not naturally belong to one entity/value, while an <strong>application service</strong> coordinates a use case with infrastructure and transactions.</p>
+<p>A <strong>domain event</strong> describes something meaningful that has happened, such as OrderSubmitted. Raising an in-memory event and reliably publishing an external integration event are different guarantees. If a downstream context must learn about the change despite crashes, persist the relevant publication intent with the local change and handle retries/duplicates. Do not publish a completed fact before its authoritative transaction commits.</p>
+<p>The words should tell the truth: RequestOrderSubmission is a request for action; OrderSubmitted claims an outcome. Choosing names carefully makes ownership and failure handling easier to understand.</p></details>
+<details><summary>7. Keep the model useful as the business changes</summary><p>A model is a map for decisions, not a photograph of every detail in the store. Use repositories or other deliberate persistence boundaries where they help preserve aggregate behavior, but do not let database convenience alone dictate the model. Test important business examples with domain experts’ language and validate persistence/concurrency semantics separately.</p>
+<p>DDD has a cost: sustained discovery, boundary conversations, model refactoring, and sometimes more explicit types. Apply that investment where rules and ambiguity make it valuable. A simple administrative list may need straightforward CRUD rather than an elaborate aggregate hierarchy. Revisit contexts and terms when repeated translation pain or coordinated changes show that the current map no longer fits. The purpose is better business decisions in code, not collecting pattern names.</p></details>
+</section>
+<section data-section="trade-offs" id="node-a612a2d8-260a-4e97-82e7-b2851459e0c7-trade-offs">
+<h2>⚖️ Comparisons & Trade-Offs</h2>
+<p>Choose using the constraints of the system and its team. The table compares relevant choices; compatible ideas can be combined rather than ranked as universally better.</p><div class="kb-table-wrap"><table><caption>Choices, benefits, costs, and decision conditions</caption><thead><tr><th scope="col">Approach or condition</th><th scope="col">What you gain</th><th scope="col">What you give up</th><th scope="col">Choose when</th></tr></thead><tbody><tr><td>Straightforward CRUD/data model</td><td>Fast implementation for simple record maintenance</td><td>Complex behavior can become scattered if requirements grow</td><td>The problem is genuinely simple data entry and retrieval.</td></tr><tr><td>Strategic DDD first</td><td>Clearer language, ownership and integration boundaries</td><td>Requires access to domain knowledge and continued collaboration</td><td>Business meanings conflict or several teams/models interact.</td></tr><tr><td>Rich domain model with tactical patterns</td><td>Explicit invariants and behavior close to meaningful state</td><td>More modeling and persistence design work</td><td>Rules, lifecycle and ambiguity justify that investment.</td></tr><tr><td>One universal shared enterprise model</td><td>A common representation in selected stable areas</td><td>Negotiation and change coupling across distinct contexts</td><td>Only where meanings genuinely align and joint ownership is intentional.</td></tr></tbody></table></div>
+</section>
+<section data-section="pitfalls" id="node-a612a2d8-260a-4e97-82e7-b2851459e0c7-pitfalls">
+<h2>⚠️ Common Pitfalls, Bugs & What-If Scenarios</h2>
+<p>Treat a failure as a story: start with what a user observes, trace the boundary that failed, and choose a prevention that addresses the cause.</p><div class="kb-callout--pitfall"><h3>The same status causes different actions</h3><p><strong>Symptom:</strong> Sales says submitted while Fulfillment assumes paid and ready to ship.</p><p><strong>Root Cause:</strong> Teams shared a field name without agreeing on the fact and its context.</p><p><strong>Fix/Prevention:</strong> Define context-specific meanings, an explicit integration contract, and translated outcomes with concrete examples.</p></div><div class="kb-callout--pitfall"><h3>The aggregate contains the entire business</h3><p><strong>Symptom:</strong> Saving one order locks or loads customers, stock, payments, and every shipment.</p><p><strong>Root Cause:</strong> An aggregate was treated as an object-navigation graph rather than a necessary consistency boundary.</p><p><strong>Fix/Prevention:</strong> Identify the actual invariant, keep the boundary small, reference other owners by identity, and coordinate cross-boundary work explicitly.</p></div><div class="kb-callout--pitfall"><h3>Pattern names replace domain discovery</h3><p><strong>Symptom:</strong> The code has repositories and factories but still permits invalid order transitions.</p><p><strong>Root Cause:</strong> Tactical structures were adopted before learning the business language and rules.</p><p><strong>Fix/Prevention:</strong> Work through real examples with domain experts, encode invariants in behavior, and verify concurrency and integration semantics.</p></div>
+</section>
+<section data-section="mastery" id="node-a612a2d8-260a-4e97-82e7-b2851459e0c7-mastery">
+<h2>🧠 Active Recall & Mastery Check</h2>
+<div class="kb-callout--insight"><p><strong>Summarize this in your own words</strong></p><p>Explain the opening analogy, trace the worked example, and name one condition that would change your architectural decision. Try answering before opening the cards.</p></div><details class="kb-question" data-recall-id="context-service"><summary>Is a bounded context the same thing as a microservice?</summary><p>No. A bounded context defines where a model and language are consistent. A microservice is an independently operated/deployed capability boundary. They can align, but contexts can also exist within one application and the mapping requires an explicit design decision.</p></details><details class="kb-question" data-recall-id="entity-value"><summary>When might an address be a value object in one context and an entity in another?</summary><p>A submitted order may need an address snapshot whose meaning is its contents. An address-book system may manage an address record with identity and history across edits. The model follows the decisions of its context rather than a universal classification of the noun.</p></details><details class="kb-question" data-recall-id="aggregate-invariant"><summary>Why should callers use an Order root instead of editing order lines directly?</summary><p>The root can protect rules spanning its related state, such as preventing edits after submission and rejecting an empty order. Freely mutable internals let callers bypass those rules. Persistence/concurrency must still preserve the same invariant across simultaneous requests.</p></details><details class="kb-question" data-recall-id="event-guarantee"><summary>Does raising OrderSubmitted prove Fulfillment received it?</summary><p>No. A local domain event is not automatically durable cross-context delivery. Commit the authoritative state, persist publication intent when required, and define retry, deduplication, and reconciliation. The event name claims a fact, not a transport guarantee.</p></details><details class="kb-question" data-recall-id="model-cost"><summary>When would you avoid a rich tactical model?</summary><p>For a simple record-maintenance capability whose rules do not justify the indirection. Strategic clarity about meaning and ownership can still help. Add tactical structures to protect concrete invariants and change patterns, not to satisfy a pattern checklist.</p></details><!-- kb-interview-scenarios:start -->
+<section data-interview-scenarios aria-labelledby="node-a612a2d8-260a-4e97-82e7-b2851459e0c7-interview-scenarios">
+<h3 id="node-a612a2d8-260a-4e97-82e7-b2851459e0c7-interview-scenarios">Tricky &amp; Most-Asked Interview Scenarios</h3>
+<p>Practice making a decision under a concrete production constraint. Open each answer, explain your reasoning aloud, then rate your confidence. The budgets and organizations below are author-created assumptions.</p>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-customer-bounded-context-language" data-scenario-basis="adapted-production">
+<summary>Billing and Support disagree on what Customer means. Should you force one shared entity?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>One person can be a payer at one desk and an account contact at another. Billing needs tax and credit rules, while Support needs case history and contact preferences. A shared Customer entity keeps growing and changes force coordinated releases. What model boundary will you choose?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Define a bounded context for each distinct business meaning and give each an internally consistent vocabulary. Billing&#x27;s payer and Support&#x27;s contact can reference the same opaque external identity without sharing every field or lifecycle. Agree on explicit integration mappings and ownership of facts that cross contexts.</p>
+<p>Work through concrete business examples with domain experts before splitting code. Document when two identifiers refer to the same real-world party and how changes propagate. A bounded context is a model/language boundary, not automatically one database or one microservice per noun.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Billing and Support disagree on what Customer means. Should you force one shared entity?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Compare concrete business meanings"]
+    N1["Define coherent contexts"]
+    N2["Map shared identity and facts"]
+    N3["Integrate through explicit contracts"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Compare concrete business meanings → Define coherent contexts → Map shared identity and facts → Integrate through explicit contracts.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain clearer rules and independent evolution, but maintain translation and potentially duplicated representations. A deliberately small shared kernel is an alternative for genuinely identical stable concepts with joint governance.</p>
+<p>Follow-up trap: separate classes with the same confusing semantics do not solve the modeling problem. If both teams truly share one invariant and lifecycle, a unified model may be appropriate. Let evidence about meaning and change drive the boundary rather than assuming every department needs a separate service.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-aggregate-last-unit-concurrency" data-scenario-basis="adapted-production">
+<summary>Two purchases read the final unit as available. How does an aggregate actually prevent overselling?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A rule saying only one child gets the last ticket is useless if two clerks decide separately. Two concurrent purchase commands both read stock=1 and succeed through an aggregate method. The business forbids overselling. What implementation will enforce the invariant?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Place the invariant under one authoritative consistency boundary and combine the domain check with persistence concurrency control. Use a conditional atomic update, a version check with retry/rejection, or suitable locking/transaction isolation so only one competing reservation commits. A method that checks an in-memory field alone is insufficient.</p>
+<p>Load and modify through the aggregate&#x27;s public behavior, persist with the chosen concurrency token, and handle conflicts as explicit application outcomes. Test simultaneous requests against the actual store. Keep unrelated reporting and remote effects outside the short transaction that protects stock allocation.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Two purchases read the final unit as available. How does an aggregate actually prevent overselling?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Load authoritative aggregate version"]
+    N1["Apply reservation rule"]
+    N2["Commit with concurrency guard"]
+    N3["Resolve competing command conflict"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Load authoritative aggregate version → Apply reservation rule → Commit with concurrency guard → Resolve competing command conflict.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You preserve the invariant but may reject/retry contenders and serialize access to the hot resource. Preallocating disjoint stock rights is a viable alternative for distributed allocation, at the cost of stranded capacity and rebalancing complexity.</p>
+<p>Follow-up trap: naming a class AggregateRoot does not create database isolation. If backorders become acceptable, the business can change the invariant and allow provisional demand; that does not mean the strict final-unit guarantee was preserved by eventual reconciliation. State the revised promise clearly.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-oversized-aggregate-contention" data-scenario-basis="adapted-production">
+<summary>One giant aggregate locks an entire customer account for unrelated edits. How do you shrink it safely?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Locking a whole library to change one book title creates an unnecessary queue. A Customer aggregate includes every order, invoice and support case. Updates conflict even when the business operations are unrelated, and loading one account is expensive. What boundary will you redraw?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>List the invariants that truly require immediate consistency and keep only the state needed to enforce each within its aggregate boundary. Reference other aggregates by identity, and move large independent histories or read views into separate aggregates/projections. Avoid splitting a rule that genuinely must commit atomically just to reduce object size.</p>
+<p>Measure conflict rates and transaction work before and after the change. Add tests for the preserved invariants and explicitly model cross-aggregate workflows using events or application coordination where delayed consistency is acceptable. Design read models for screens instead of loading a giant write aggregate to display a dashboard.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: One giant aggregate locks an entire customer account for unrelated edits. How do you shrink it safely?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Enumerate immediate invariants"]
+    N1["Separate independent state histories"]
+    N2["Reference other aggregates by ID"]
+    N3["Model delayed coordination explicitly"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Enumerate immediate invariants → Separate independent state histories → Reference other aggregates by ID → Model delayed coordination explicitly.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You reduce contention and memory/transaction cost, but introduce explicit cross-aggregate consistency decisions and possibly stale projections. Keeping a larger aggregate is a viable alternative when its immediate invariant outweighs the measured contention cost.</p>
+<p>Follow-up trap: one entity per aggregate can scatter a single invariant across independent commits. If a regulation requires simultaneous changes to several fields, keep that consistency boundary or choose a supported mechanism that actually provides it. Aggregate boundaries follow guarantees, not a fixed maximum class size.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-cross-context-order-workflow" data-scenario-basis="adapted-production">
+<summary>Order acceptance spans Inventory and Payments contexts. Where does the workflow belong?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Separate departments may use different ledgers while still cooperating on one purchase. Orders, Inventory and Payments have distinct models and commit independently. Product asks for a single completed checkout, including recovery after a partial failure. What coordination will you introduce?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Create an explicit application/process workflow that coordinates context-owned operations using stable identities and durable progress. Let Inventory own reservation validity and Payments own financial outcomes; do not pull their internal entities into one artificial cross-service aggregate. Return pending while required outcomes are unresolved.</p>
+<p>Define timeouts, expiry, retries and business compensations, and translate each context&#x27;s outcomes into the workflow&#x27;s states. Reconcile uncertain commits before retrying a new effect. Use integration events for committed facts with reliable publication, and test crashes between every participant&#x27;s local commit and its acknowledgment.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Order acceptance spans Inventory and Payments contexts. Where does the workflow belong?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Start durable purchase process"]
+    N1["Invoke context-owned operations"]
+    N2["Record confirmed or pending outcomes"]
+    N3["Reconcile and compensate failures"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Start durable purchase process → Invoke context-owned operations → Record confirmed or pending outcomes → Reconcile and compensate failures.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You preserve model autonomy and recover interrupted work, but manage intermediate states, coordination and compensation. If the strongest invariant and data can naturally belong to one context, one local transaction is a viable simpler alternative.</p>
+<p>Follow-up trap: a domain event in memory is not guaranteed delivery across a crash, and compensation is not an atomic rewind. If the business requires no externally visible partial outcome at all, reconsider boundaries or transaction support rather than claiming a saga automatically satisfies that stronger condition.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-legacy-erp-anti-corruption" data-scenario-basis="adapted-production">
+<summary>Legacy ERP codes are spreading into the new domain model. Where should translation happen?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A translator should explain an old dialect rather than make everyone speak it forever. A new fulfillment domain now uses ERP status codes and overloaded fields directly. Domain experts cannot understand its rules without the vendor manual. What boundary will protect the new model?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Introduce an anti-corruption layer at the ERP integration boundary. Translate its protocols, identifiers and meanings into application/domain concepts, including explicit handling for ambiguous or unsupported states. Keep the authoritative source of each fact clear so translation does not invent a second owner.</p>
+<p>Use example-based tests with domain experts for mappings such as shipped, cancelled and backordered. Isolate vendor errors and version changes in the adapter, and preserve correlation for reconciliation. Migrate one interaction at a time; the legacy system can remain unchanged while the new model becomes coherent.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Legacy ERP codes are spreading into the new domain model. Where should translation happen?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Receive legacy ERP representation"]
+    N1["Translate meaning at integration boundary"]
+    N2["Apply coherent domain rules"]
+    N3["Map explicit result back outward"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Receive legacy ERP representation → Translate meaning at integration boundary → Apply coherent domain rules → Map explicit result back outward.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You protect vocabulary and isolate vendor churn, but maintain translation, tests and another failure boundary. Direct integration is a viable cheaper alternative for a small disposable feature with no valuable independent model.</p>
+<p>Follow-up trap: renaming fields without translating meaning leaves semantic corruption intact. If the new system must expose the exact ERP schema to an external partner, adapt to that contract at its edge rather than allowing it to dictate every internal aggregate and business rule.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-simple-crud-tactical-ddd-cost" data-scenario-basis="adapted-production">
+<summary>A reference-data editor has no complex rules. Does it need rich aggregates and domain events?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A notebook does not always need the filing rules of a national archive. A small internal editor maintains country labels and display order. The team proposes elaborate aggregates, factories and events for every field despite minimal business behavior. What level of DDD will you use?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Use domain analysis to confirm the actual responsibility, language and invariants, then keep implementation proportionate. Straightforward application/data operations with explicit validation and authorization may be sufficient. Strategic boundaries can still clarify ownership without requiring every tactical pattern in a simple CRUD area.</p>
+<p>Add rich domain behavior when meaningful invariants, lifecycle rules or competing interpretations appear. Keep a clean migration path by separating transport concerns from the core operation and testing important behavior. Complexity should protect a business guarantee, not merely satisfy a pattern checklist.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A reference-data editor has no complex rules. Does it need rich aggregates and domain events?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Understand actual domain rules"]
+    N1["Choose proportionate implementation"]
+    N2["Protect validation and ownership"]
+    N3["Enrich model when rules require it"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Understand actual domain rules → Choose proportionate implementation → Protect validation and ownership → Enrich model when rules require it.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You reduce ceremony and delivery cost but may refactor as the domain becomes richer. A rich model is a viable alternative where hidden approval, audit or lifecycle rules already exist and would otherwise be duplicated in procedural code.</p>
+<p>Follow-up trap: calling something CRUD can conceal consequential policy such as who may change an official currency or when a historic value becomes immutable. If those rules emerge, model them explicitly and strengthen tests. DDD asks for attention to business meaning; it does not mandate maximum object machinery everywhere.</p>
+</div>
+</details>
+<aside class="kb-callout--insight" data-interview-research>
+<p>Researched 2026-11-17. These scenarios adapt documented production problems and architectural guidance. Interview frequency, rankings and company provenance for these exact prompts were not independently verified. Numeric budgets and organization details are author-created assumptions. Web search was available and used for this concept; primary sources support the technical reasoning, not a claim that these prompts recur in interviews.</p>
+<ul><li><a href="https://martinfowler.com/bliki/BoundedContext.html">Martin Fowler: Bounded Context</a></li><li><a href="https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/microservice-domain-model">Microsoft: Design a microservice domain model</a></li><li><a href="https://learn.microsoft.com/en-us/azure/architecture/microservices/model/domain-analysis">Microsoft: Domain analysis</a></li><li><a href="https://learn.microsoft.com/en-us/azure/architecture/patterns/anti-corruption-layer">Microsoft: Anti-Corruption Layer</a></li><li><a href="https://learn.microsoft.com/en-us/ef/core/saving/concurrency">Microsoft: Handling optimistic concurrency conflicts</a></li><li><a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/saga-orchestration.html">AWS: Saga orchestration pattern</a></li></ul>
+</aside>
+</section>
+<!-- kb-interview-scenarios:end --><div class="kb-callout--impact"><h3>Real-world impact</h3><p>For the retailer, DDD pays off when Sales and Fulfillment agree what happened while retaining models suited to their own work. Within Sales, an Order can enforce a precise lifecycle instead of being a mutable bag of fields. Better shared understanding and explicit invariants matter more than whether the code is deployed as one process or many services.</p></div>
+</section>
+<footer class="kb-references"><h2>Sources and further reading</h2><p>Original explanations and worked examples above; consult these primary references for the underlying ideas and implementation-specific details.</p><ul><li><a href="https://learn.microsoft.com/en-us/azure/architecture/microservices/model/domain-analysis">Microsoft Architecture Center: Domain analysis</a></li><li><a href="https://www.domainlanguage.com/ddd/reference/">Eric Evans: Domain-Driven Design Reference</a></li><li><a href="https://martinfowler.com/articles/microservices.html">Lewis and Fowler: Microservices</a></li></ul><p>Connect this lesson to: <a href="#/system-design/backend-architecture/core-system-topologies/modular-monolith">Modular Monolith</a>, <a href="#/system-design/backend-architecture/code-and-domain-organization/clean-architecture">Clean Architecture</a>, <a href="#/system-design/backend-architecture/core-system-topologies/microservices-architecture">Microservices Architecture</a>, <a href="#/system-design/backend-architecture/communication-and-routing/event-driven-architecture">Event-Driven Architecture</a>.</p></footer>
+</article>

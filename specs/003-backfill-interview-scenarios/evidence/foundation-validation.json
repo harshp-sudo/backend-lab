@@ -1,0 +1,11 @@
+{
+  "status": "pass",
+  "unitTests": 51,
+  "testLog": "/tmp/backend-interview-foundation-tests.log",
+  "preMigrationCurrentProfile": "expected fail",
+  "unmigratedLessonsRejected": 15,
+  "currentProfile": "constitution-1.2",
+  "scopedPathAbuse": "rejected",
+  "legacyProductionWaiver": "rejected",
+  "evidenceGates": "pending until implemented"
+}

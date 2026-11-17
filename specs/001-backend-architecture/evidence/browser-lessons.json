@@ -1,0 +1,249 @@
+{
+  "phase": "browser-fixture-lessons",
+  "result": "pass",
+  "browser": "141.0.7390.37",
+  "topics": [
+    {
+      "route": "/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals",
+      "nodeId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+      "kind": "topic",
+      "diagrams": 1,
+      "status": "pass",
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "mobileWidth": 360,
+      "pageOverflow": false,
+      "pdf": "/tmp/backend-architecture-pdfs/distributed-system-fundamentals.pdf",
+      "hiddenDetailsInPdf": 10,
+      "printStateRestored": true
+    },
+    {
+      "route": "/system-design/backend-architecture/core-system-topologies/monolithic-architecture",
+      "nodeId": "1901acc7-9225-428a-9397-072cff3d36d0",
+      "kind": "topic",
+      "diagrams": 1,
+      "status": "pass",
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "mobileWidth": 360,
+      "pageOverflow": false,
+      "pdf": "/tmp/backend-architecture-pdfs/monolithic-architecture.pdf",
+      "hiddenDetailsInPdf": 10,
+      "printStateRestored": true
+    },
+    {
+      "route": "/system-design/backend-architecture/core-system-topologies/modular-monolith",
+      "nodeId": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+      "kind": "topic",
+      "diagrams": 1,
+      "status": "pass",
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "mobileWidth": 360,
+      "pageOverflow": false,
+      "pdf": "/tmp/backend-architecture-pdfs/modular-monolith.pdf",
+      "hiddenDetailsInPdf": 10,
+      "printStateRestored": true
+    },
+    {
+      "route": "/system-design/backend-architecture/core-system-topologies/service-oriented-architecture",
+      "nodeId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+      "kind": "topic",
+      "diagrams": 1,
+      "status": "pass",
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "mobileWidth": 360,
+      "pageOverflow": false,
+      "pdf": "/tmp/backend-architecture-pdfs/service-oriented-architecture.pdf",
+      "hiddenDetailsInPdf": 10,
+      "printStateRestored": true
+    },
+    {
+      "route": "/system-design/backend-architecture/core-system-topologies/microservices-architecture",
+      "nodeId": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+      "kind": "topic",
+      "diagrams": 1,
+      "status": "pass",
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "mobileWidth": 360,
+      "pageOverflow": false,
+      "pdf": "/tmp/backend-architecture-pdfs/microservices-architecture.pdf",
+      "hiddenDetailsInPdf": 10,
+      "printStateRestored": true
+    },
+    {
+      "route": "/system-design/backend-architecture/code-and-domain-organization/layered-architecture",
+      "nodeId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+      "kind": "topic",
+      "diagrams": 1,
+      "status": "pass",
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "mobileWidth": 360,
+      "pageOverflow": false,
+      "pdf": "/tmp/backend-architecture-pdfs/layered-architecture.pdf",
+      "hiddenDetailsInPdf": 10,
+      "printStateRestored": true
+    },
+    {
+      "route": "/system-design/backend-architecture/code-and-domain-organization/clean-architecture",
+      "nodeId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+      "kind": "topic",
+      "diagrams": 2,
+      "status": "pass",
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "mobileWidth": 360,
+      "pageOverflow": false,
+      "pdf": "/tmp/backend-architecture-pdfs/clean-architecture.pdf",
+      "hiddenDetailsInPdf": 10,
+      "printStateRestored": true
+    },
+    {
+      "route": "/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture",
+      "nodeId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+      "kind": "topic",
+      "diagrams": 1,
+      "status": "pass",
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "mobileWidth": 360,
+      "pageOverflow": false,
+      "pdf": "/tmp/backend-architecture-pdfs/hexagonal-architecture.pdf",
+      "hiddenDetailsInPdf": 10,
+      "printStateRestored": true
+    },
+    {
+      "route": "/system-design/backend-architecture/code-and-domain-organization/domain-driven-design",
+      "nodeId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+      "kind": "topic",
+      "diagrams": 1,
+      "status": "pass",
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "mobileWidth": 360,
+      "pageOverflow": false,
+      "pdf": "/tmp/backend-architecture-pdfs/domain-driven-design.pdf",
+      "hiddenDetailsInPdf": 12,
+      "printStateRestored": true
+    },
+    {
+      "route": "/system-design/backend-architecture/communication-and-routing/event-driven-architecture",
+      "nodeId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+      "kind": "topic",
+      "diagrams": 1,
+      "status": "pass",
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "mobileWidth": 360,
+      "pageOverflow": false,
+      "pdf": "/tmp/backend-architecture-pdfs/event-driven-architecture.pdf",
+      "hiddenDetailsInPdf": 10,
+      "printStateRestored": true
+    },
+    {
+      "route": "/system-design/backend-architecture/communication-and-routing/api-gateway-pattern",
+      "nodeId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+      "kind": "topic",
+      "diagrams": 1,
+      "status": "pass",
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "mobileWidth": 360,
+      "pageOverflow": false,
+      "pdf": "/tmp/backend-architecture-pdfs/api-gateway-pattern.pdf",
+      "hiddenDetailsInPdf": 10,
+      "printStateRestored": true
+    },
+    {
+      "route": "/system-design/backend-architecture/communication-and-routing/backend-for-frontend",
+      "nodeId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+      "kind": "topic",
+      "diagrams": 1,
+      "status": "pass",
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "mobileWidth": 360,
+      "pageOverflow": false,
+      "pdf": "/tmp/backend-architecture-pdfs/backend-for-frontend.pdf",
+      "hiddenDetailsInPdf": 10,
+      "printStateRestored": true
+    },
+    {
+      "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery",
+      "nodeId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+      "kind": "topic",
+      "diagrams": 1,
+      "status": "pass",
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "mobileWidth": 360,
+      "pageOverflow": false,
+      "pdf": "/tmp/backend-architecture-pdfs/service-discovery.pdf",
+      "hiddenDetailsInPdf": 10,
+      "printStateRestored": true
+    },
+    {
+      "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh",
+      "nodeId": "84458963-012b-4a80-828a-2da27d8b509d",
+      "kind": "topic",
+      "diagrams": 1,
+      "status": "pass",
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "mobileWidth": 360,
+      "pageOverflow": false,
+      "pdf": "/tmp/backend-architecture-pdfs/service-mesh.pdf",
+      "hiddenDetailsInPdf": 10,
+      "printStateRestored": true
+    },
+    {
+      "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy/multi-tenant-architecture",
+      "nodeId": "689dd587-de37-4e22-9412-bd42b118da79",
+      "kind": "topic",
+      "diagrams": 1,
+      "status": "pass",
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "mobileWidth": 360,
+      "pageOverflow": false,
+      "pdf": "/tmp/backend-architecture-pdfs/multi-tenant-architecture.pdf",
+      "hiddenDetailsInPdf": 11,
+      "printStateRestored": true
+    }
+  ],
+  "integrationStatus": "pending",
+  "learnerTrials": "pending human review"
+}

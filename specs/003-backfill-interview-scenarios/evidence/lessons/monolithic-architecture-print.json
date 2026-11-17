@@ -1,0 +1,102 @@
+{
+  "status": "pass",
+  "topicId": "1901acc7-9225-428a-9397-072cff3d36d0",
+  "path": "topics/system-design/backend-architecture/core-system-topologies/monolithic-architecture.html",
+  "sourceSha256": "8b193bfe38ac6ca56ae67ec11ee25a72bf34cf54a1c4a83690bd8648766179e2",
+  "outputs": [
+    {
+      "nodeId": "1901acc7-9225-428a-9397-072cff3d36d0",
+      "topicId": "1901acc7-9225-428a-9397-072cff3d36d0",
+      "sourceSha256": "8b193bfe38ac6ca56ae67ec11ee25a72bf34cf54a1c4a83690bd8648766179e2",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-monolithic-architecture.pdf",
+      "completeTextBlocks": 149,
+      "diagramLabels": 33,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "1901acc7-9225-428a-9397-072cff3d36d0",
+      "topicId": "1901acc7-9225-428a-9397-072cff3d36d0",
+      "sourceSha256": "8b193bfe38ac6ca56ae67ec11ee25a72bf34cf54a1c4a83690bd8648766179e2",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-monolithic-architecture.pdf",
+      "completeTextBlocks": 149,
+      "diagramLabels": 33,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    }
+  ],
+  "visualReview": {
+    "topicId": "1901acc7-9225-428a-9397-072cff3d36d0",
+    "path": "topics/system-design/backend-architecture/core-system-topologies/monolithic-architecture.html",
+    "comparisonSheet": "/tmp/backend-interview-print-review/monolithic-architecture-comparison.jpg",
+    "outputs": [
+      {
+        "theme": "light",
+        "pdf": "/tmp/backend-interview-pdfs/light-monolithic-architecture.pdf",
+        "pages": 19,
+        "selectedPages": [
+          5,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/light-monolithic-architecture-table.png",
+          "/tmp/backend-interview-print-review/light-monolithic-architecture-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/light-monolithic-architecture-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "8711607d80a594aa2bd977c3942118ab5918083250357bbe1b9d427433076452",
+        "reviewPanelSha256": [
+          "6135ec4704a4f42dae3e9c2e597cb7a3a4ccc6720c7db59739fce62d87741407",
+          "73e6257baaba04d08f83e295f3a2e6bce15cc4d472efbcdaf0278a8ebb43d744",
+          "869fa74ee4c1aa2daf4b2338788fd7fc149665d6bc8ba3d3f894097443b6827a"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      },
+      {
+        "theme": "dark",
+        "pdf": "/tmp/backend-interview-pdfs/dark-monolithic-architecture.pdf",
+        "pages": 19,
+        "selectedPages": [
+          5,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/dark-monolithic-architecture-table.png",
+          "/tmp/backend-interview-print-review/dark-monolithic-architecture-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/dark-monolithic-architecture-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "639cae25adceca5cfa36ebc346b5fb32eb67fd164da9897fd636c17439a4df58",
+        "reviewPanelSha256": [
+          "6135ec4704a4f42dae3e9c2e597cb7a3a4ccc6720c7db59739fce62d87741407",
+          "73e6257baaba04d08f83e295f3a2e6bce15cc4d472efbcdaf0278a8ebb43d744",
+          "869fa74ee4c1aa2daf4b2338788fd7fc149665d6bc8ba3d3f894097443b6827a"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      }
+    ],
+    "reviewStatus": "pass",
+    "reviewedOn": "2026-11-17",
+    "reviewFindings": [
+      "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+      "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+      "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+      "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+    ]
+  },
+  "findings": [
+    "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+    "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+    "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+  ]
+}

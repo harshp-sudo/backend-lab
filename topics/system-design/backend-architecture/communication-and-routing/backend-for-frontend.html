@@ -1,0 +1,221 @@
+<article class="kb-topic" data-node-id="1be329da-9367-4c1c-a4c8-0eff6ec862e1">
+<h1>Backend for Frontend (BFF)</h1>
+<section data-section="hook-eli5" id="node-1be329da-9367-4c1c-a4c8-0eff6ec862e1-hook-eli5">
+<h2>🎯 The Hook & ELI5</h2>
+<div class="kb-callout--insight"><p><strong>ELI5 mental model.</strong> A museum offers one guide for young children and another for researchers. Both use the same exhibits, but they choose different detail, order, and pace. A Backend for Frontend gives a particular frontend experience a similarly tailored guide to backend capabilities, without making that guide the owner of every underlying fact.</p></div><p>A generic API can become awkward when mobile, desktop, and other experiences need substantially different data shapes or interaction flows. A Backend for Frontend, or BFF, is a backend boundary tailored to a frontend experience and often owned with that experience. It composes and translates domain capabilities so clients need less backend coordination.</p><div class="kb-callout--insight"><p>WHY it matters: a delivery product’s courier app needs a compact next-stop view under variable connectivity, while its dispatcher console needs a wide operational overview. One response stuffed with every field can waste bandwidth and create shared release queues. Separate BFFs also have costs: additional code, runtime components, and the risk of duplicating business rules.</p></div>
+</section>
+<section data-section="big-picture" id="node-1be329da-9367-4c1c-a4c8-0eff6ec862e1-big-picture">
+<h2>🗺️ High-Level Big Picture</h2>
+<p>Courier and dispatcher clients reach their respective experience backends. Both BFFs rely on Delivery, Customer, and Routing capabilities that remain authoritative for their own rules. A shared gateway can handle common entry concerns before routing to a BFF. The drawing shows two experiences because their needs differ; it is not a rule that every screen or device requires a separate backend.</p><figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Two experience backends over shared delivery capabilities
+    accDescr: Courier and dispatcher experiences use tailored BFFs while domain services retain business ownership.
+    M[&quot;Courier app&quot;] --&gt; G[&quot;Shared entry gateway&quot;]
+    W[&quot;Dispatcher console&quot;] --&gt; G
+    G --&gt; MB[&quot;Courier BFF&quot;]
+    G --&gt; WB[&quot;Dispatcher BFF&quot;]
+    MB --&gt; D[&quot;Delivery capability&quot;]
+    MB --&gt; R[&quot;Routing capability&quot;]
+    WB --&gt; D
+    WB --&gt; C[&quot;Customer capability&quot;]
+    WB --&gt; R</pre><figcaption>Read the arrows as responsibilities and hand-offs, not as a promise that every step succeeds.</figcaption></figure>
+</section>
+<section data-section="mechanics" id="node-1be329da-9367-4c1c-a4c8-0eff6ec862e1-mechanics">
+<h2>🔍 Step-by-Step Mechanics</h2>
+<p>Follow the example one boundary at a time. Open each step to connect the familiar mental model to the internal mechanics.</p><details><summary>1. Identify an experience with a real difference in needs</summary><p>A children’s museum tour is different from a researcher’s visit because the questions and context differ, not merely because they use different shoes. Define the frontend experience: users’ goals, interaction flow, data volume, responsiveness, network conditions, and release ownership.</p>
+<p>The courier app may need one upcoming delivery, minimal contact information, and a route summary. Dispatchers may need a filtered fleet overview and several operational actions. These are plausible reasons for tailored composition. Two clients that need nearly identical interactions may be served well by one shared API. Do not create one BFF per screen or per operating system by habit; choose a boundary whose ownership and behavior make sense over time.</p></details>
+<details><summary>2. Compose backend data into the experience contract</summary><p>A guide selects relevant exhibits rather than making visitors find every curator themselves. The BFF calls the required capability contracts, combines their results, and returns a frontend-appropriate representation. That may reduce round trips, over-fetching, or client-side orchestration under constrained conditions.</p>
+<p>For the courier’s next stop, Delivery owns the assignment and its state; Routing supplies an appropriate route result. The BFF decides how to present those facts for the courier flow. It should not silently redefine delivery completion or create a competing source of truth. Pagination, optional sections, image variants, and response size are experience decisions, while the underlying business invariants stay with their owners.</p></details>
+<details><summary>3. Keep workflow tailoring separate from domain rules</summary><p>A guide chooses a route through the museum but cannot declare an artwork safe to touch against the curator’s rules. A BFF may coordinate the steps needed by a client interaction, but domain decisions such as whether a delivery can be reassigned must still be enforced by the authoritative capability.</p>
+<p>If both courier and dispatcher BFFs independently implement assignment eligibility, the rules can diverge. Move shared business behavior into an owned domain capability rather than copying it or hiding it in an oversized shared frontend library. Some duplicate presentation mapping can be cheaper than forced coupling between experience teams. Distinguish duplication of harmless formatting from duplication of business authority.</p></details>
+<details><summary>4. Bound fan-out, latency, and partial failure</summary><p>A tour guide must decide whether a closed optional exhibit should delay the entire visit. The BFF’s composite response similarly needs an explicit dependency policy. A missing decorative map preview may be tolerable; an unknown delivery assignment cannot be invented from an unrelated cached record.</p>
+<p>Carry an overall request budget, use bounded concurrent calls where appropriate, and define optional fields/statuses honestly. Avoid retry multiplication between client, gateway, BFF, and services. Cache only with a clear key and freshness/authorization contract: a next-stop view for one courier or tenant must never become another caller’s response. A tailored backend can improve client latency while still overwhelming upstream services if its fan-out grows unchecked.</p></details>
+<details><summary>5. Align ownership and delivery with the experience</summary><p>A guide cannot tailor the tour quickly if every sentence requires approval from a distant committee. A common reason for a BFF is to let a frontend-oriented team evolve its supporting contract without waiting for a universal API team’s backlog. The team needs ownership of deployment, monitoring, compatibility, and on-call responsibility as well as code.</p>
+<p>Decide how supported client versions interact with BFF releases. Mobile clients may remain in the field for a long time, so backend changes must preserve supported contracts or provide a deliberate migration/version policy. Independent ownership does not mean the team can ignore domain service changes. Contract checks and cross-team communication are still required at those boundaries.</p></details>
+<details><summary>6. Keep the topology as simple as the experience allows</summary><p>A museum does not need a separate guide for every doorway. Reassess whether each BFF earns its operational cost. A gateway plus two BFFs plus many services creates more hops and release artifacts than a shared application endpoint; that cost may or may not be justified.</p>
+<p>A BFF need not mandate a microservices architecture. A tailored backend can compose capabilities within an existing application or consume a few coarse APIs. GraphQL can support flexible queries, but a query language alone does not settle ownership, authorization, domain authority, or client-specific workflows. Choose the smallest structure that supports the actual experience, and measure client request counts, payload size, user latency, and delivery coordination rather than celebrating a new backend component.</p></details>
+</section>
+<section data-section="trade-offs" id="node-1be329da-9367-4c1c-a4c8-0eff6ec862e1-trade-offs">
+<h2>⚖️ Comparisons & Trade-Offs</h2>
+<p>Choose using the constraints of the system and its team. The table compares relevant choices; compatible ideas can be combined rather than ranked as universally better.</p><div class="kb-table-wrap"><table><caption>Choices, benefits, costs, and decision conditions</caption><thead><tr><th scope="col">Approach or condition</th><th scope="col">What you gain</th><th scope="col">What you give up</th><th scope="col">Choose when</th></tr></thead><tbody><tr><td>Shared general-purpose API</td><td>Fewer components and shared behavior in one place</td><td>Different clients can compete for contract changes or over-fetch</td><td>Experiences have similar needs and coordinated delivery is acceptable.</td></tr><tr><td>Experience-specific BFFs</td><td>Tailored composition and frontend-aligned ownership</td><td>Extra runtime/code and potential duplicated presentation mapping</td><td>Interaction, payload or release needs differ materially.</td></tr><tr><td>Client-side composition</td><td>No additional experience-backend hop</td><td>More client round trips, orchestration and backend coupling</td><td>The client can manage the complexity and network environment permits it.</td></tr><tr><td>Flexible query API with deliberate ownership</td><td>Consumers choose useful data shapes</td><td>Query cost, authorization and workflow responsibilities still need design</td><td>Query variability is the main need, with appropriate domain and operational controls.</td></tr></tbody></table></div>
+</section>
+<section data-section="pitfalls" id="node-1be329da-9367-4c1c-a4c8-0eff6ec862e1-pitfalls">
+<h2>⚠️ Common Pitfalls, Bugs & What-If Scenarios</h2>
+<p>Treat a failure as a story: start with what a user observes, trace the boundary that failed, and choose a prevention that addresses the cause.</p><div class="kb-callout--pitfall"><h3>Two guides invent different business rules</h3><p><strong>Symptom:</strong> Courier and dispatcher actions disagree about whether reassignment is allowed.</p><p><strong>Root Cause:</strong> Domain policy was duplicated inside experience-specific backends.</p><p><strong>Fix/Prevention:</strong> Enforce the shared invariant at its domain owner; BFFs translate outcomes and tailor interactions rather than becoming competing authorities.</p></div><div class="kb-callout--pitfall"><h3>A faster client causes a slower system</h3><p><strong>Symptom:</strong> One next-stop page triggers dozens of backend calls and saturated services.</p><p><strong>Root Cause:</strong> Reduced client round trips hid unbounded backend fan-out and retries.</p><p><strong>Fix/Prevention:</strong> Measure complete call graphs, bound concurrency/deadlines, remove unnecessary dependencies, and design capability APIs suited to real usage.</p></div><div class="kb-callout--pitfall"><h3>Tailoring becomes a backend per screen</h3><p><strong>Symptom:</strong> Small interface changes require maintaining a growing collection of nearly identical servers.</p><p><strong>Root Cause:</strong> The team used UI screen count instead of meaningful experience/ownership boundaries.</p><p><strong>Fix/Prevention:</strong> Group coherent experience needs, keep shared capabilities authoritative, and retire boundaries whose cost exceeds their benefit.</p></div>
+</section>
+<section data-section="mastery" id="node-1be329da-9367-4c1c-a4c8-0eff6ec862e1-mastery">
+<h2>🧠 Active Recall & Mastery Check</h2>
+<div class="kb-callout--insight"><p><strong>Summarize this in your own words</strong></p><p>Explain the opening analogy, trace the worked example, and name one condition that would change your architectural decision. Try answering before opening the cards.</p></div><details class="kb-question" data-recall-id="boundary-choice"><summary>Does a separate mobile application always require its own BFF?</summary><p>No. The decision depends on meaningful differences in interaction, payload, network constraints, ownership, and release cadence. If clients need essentially the same contract, a shared backend may be simpler. Device type alone is not a sufficient reason.</p></details><details class="kb-question" data-recall-id="rule-duplication"><summary>What should happen when two BFFs need the same delivery-eligibility decision?</summary><p>The authoritative domain capability should enforce that rule so outcomes remain consistent. BFFs can tailor requests and presentation, but duplicating authority risks divergence. Shared presentation mapping and shared business invariants have different ownership trade-offs.</p></details><details class="kb-question" data-recall-id="gateway-comparison"><summary>How is a BFF different from a thin shared gateway?</summary><p>A thin gateway provides common entry routing and policies across clients. A BFF owns composition and interaction tailored to an experience. They can be combined, but adding both requires clear responsibilities so transformations, authentication, retries, and business decisions are not duplicated accidentally.</p></details><details class="kb-question" data-recall-id="query-language"><summary>Does adopting GraphQL eliminate the architectural need to think about BFFs?</summary><p>No. Flexible field selection may address some over-fetching, but experience ownership, workflow composition, authorization, query cost, failure policy, and domain authority still need decisions. A query API can be part of a BFF or a different design; the technology name does not settle the boundary.</p></details><!-- kb-interview-scenarios:start -->
+<section data-interview-scenarios aria-labelledby="node-1be329da-9367-4c1c-a4c8-0eff6ec862e1-interview-scenarios">
+<h3 id="node-1be329da-9367-4c1c-a4c8-0eff6ec862e1-interview-scenarios">Tricky &amp; Most-Asked Interview Scenarios</h3>
+<p>Practice making a decision under a concrete production constraint. Open each answer, explain your reasoning aloud, then rate your confidence. The budgets and organizations below are author-created assumptions.</p>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-mobile-web-conflicting-payloads" data-scenario-basis="adapted-production">
+<summary>Mobile needs a tiny payload while desktop needs a rich dashboard. Should both keep one general API?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A takeaway counter and a banquet hall need different serving arrangements from the same kitchen. Desktop requests rich reports, while mobile has limited bandwidth and needs a small combined summary. One general endpoint has growing conditionals and conflicting release demands. What boundary will you choose?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Introduce experience-specific backends when the difference is sustained enough to justify ownership: a mobile BFF can aggregate and shape a small response while the web BFF serves its richer composition. Keep authoritative pricing, permissions and inventory decisions in shared domain services, not copied into each experience backend.</p>
+<p>Measure payload, round trips and team release friction before splitting. Give each BFF an owner, bounded downstream deadlines and contract tests with its frontend. It may sit behind a shared gateway that handles common edge concerns. Tailoring presentation does not require creating a new business-data authority.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Mobile needs a tiny payload while desktop needs a rich dashboard. Should both keep one general API?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Compare experience constraints"]
+    N1["Choose frontend-owned composition"]
+    N2["Call shared domain authorities"]
+    N3["Return tailored client contract"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Compare experience constraints → Choose frontend-owned composition → Call shared domain authorities → Return tailored client contract.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain client-focused contracts and more independent UI delivery, but maintain additional deployables, composition and compatibility checks. A single API with explicit projections is a viable alternative when differences are small and team coordination remains easy.</p>
+<p>Follow-up trap: copying all backend logic into each BFF creates divergent business rules. If mobile and web converge on the same experience and ownership, reconsider whether two BFFs still pay their cost rather than retaining the split solely because the device labels differ.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-ios-android-ownership-boundary" data-scenario-basis="adapted-production">
+<summary>iOS and Android need nearly identical data but have separate teams. One mobile BFF or two?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Two counters serving the same meal may share a kitchen, unless independent menus keep colliding. iOS and Android currently need the same composition, but release separately and have different team ownership. A blanket one-BFF-per-device rule would create immediate duplication. What will you choose and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Start by evaluating experience and ownership coupling rather than counting device types. Use one mobile BFF if contracts and changes remain genuinely aligned with a clear ownership agreement. Split when incompatible release needs, composition or accountability repeatedly block one another, not merely because both platforms exist.</p>
+<p>Track which changes require coordination and agree on compatibility support for old app versions. Shared business services remain common regardless of the BFF count. If teams choose separate BFFs, let each own its experience contract and avoid a shared runtime dependency that forces their releases back together.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: iOS and Android need nearly identical data but have separate teams. One mobile BFF or two?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Compare contracts and change patterns"]
+    N1["Agree ownership and compatibility"]
+    N2["Share or split by experience needs"]
+    N3["Reevaluate observed coordination cost"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Compare contracts and change patterns → Agree ownership and compatibility → Share or split by experience needs → Reevaluate observed coordination cost.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>A shared BFF reduces duplicate operations and composition but requires coordinated governance. Separate BFFs provide autonomy at the cost of repeated presentation code and additional operations; both are legitimate under different change patterns.</p>
+<p>Follow-up trap: two repositories backed by one mandatory shared-release library may retain lockstep coupling. If Android introduces an offline-specific synchronization model that iOS does not need, reevaluate the boundary. If only branding differs, separate deployments may offer little benefit.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-shared-library-release-coupling" data-scenario-basis="adapted-production">
+<summary>Two BFFs duplicate aggregation code. Should you force both onto one shared library?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Sharing a recipe helps until every restaurant must change its menu whenever the recipe changes. Web and mobile BFFs duplicate a little aggregation, and a proposed common library would require coordinated upgrades for every screen change. What will you share?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Separate stable technical helpers from experience-specific composition and authoritative business rules. Share low-volatility utilities only when their versioning and ownership do not erase independent releases. Keep changing screen orchestration local, accepting modest duplication where its meanings may diverge.</p>
+<p>Move genuine business policy to its domain owner behind a contract rather than copying it into a common BFF library. Track dependency upgrades and compare the cost of duplication with the cost of coordination. Extract a library after stable common behavior emerges, not just because two code blocks initially look similar.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Two BFFs duplicate aggregation code. Should you force both onto one shared library?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Classify duplicated responsibility"]
+    N1["Share stable technical helpers selectively"]
+    N2["Keep experience composition local"]
+    N3["Centralize authoritative domain policy"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Classify duplicated responsibility → Share stable technical helpers selectively → Keep experience composition local → Centralize authoritative domain policy.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You preserve frontend autonomy but may maintain some duplicated presentation code. A versioned shared library is a viable alternative for truly stable common functionality with independent adoption, and a shared service can fit a cohesive runtime capability with a clear availability budget.</p>
+<p>Follow-up trap: a shared service for every helper adds network coupling without creating useful ownership. If duplicated code controls financial eligibility, it is not harmless presentation duplication; centralize the authoritative rule and keep both BFFs as consumers.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-business-rule-drift-between-bffs" data-scenario-basis="adapted-production">
+<summary>Web and mobile calculate different discounts. Which backend is authoritative?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Two waiters should not invent different prices for the same order. Web and mobile BFFs independently calculate customer discounts, and releases have diverged. The business needs one auditable decision while screens remain different. What will you change?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Move discount eligibility and calculation to the pricing/order domain owner, with explicit inputs and an authoritative result. Both BFFs request that decision and shape its presentation without reimplementing the rule. Reconcile existing divergent behavior using agreed business examples and preserve quote/version identity where a later purchase must match an earlier price.</p>
+<p>Add contract/integration checks for both BFFs and ensure object/tenant authorization remains enforced. Display-only formatting can stay local; rounding that changes the payable amount belongs in the authoritative financial decision, not in a device-specific formatter.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Web and mobile calculate different discounts. Which backend is authoritative?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Identify authoritative pricing owner"]
+    N1["Request versioned business decision"]
+    N2["Shape result per experience"]
+    N3["Verify both BFF contracts agree"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Identify authoritative pricing owner → Request versioned business decision → Shape result per experience → Verify both BFF contracts agree.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain consistent policy and auditability, but depend on a shared domain capability and must budget its latency/availability. A locally cached quote can be a viable alternative when its version, expiry and acceptance semantics are explicitly supported.</p>
+<p>Follow-up trap: returning a raw discount percentage and letting each BFF reconstruct the final amount may retain divergence. If regional rules genuinely differ, pass the relevant jurisdiction/context to the authority and model that difference explicitly rather than treating one BFF&#x27;s divergent implementation as accidental customization.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-old-mobile-client-compatibility" data-scenario-basis="adapted-production">
+<summary>A mobile app version must keep working for six months. How will the BFF evolve safely?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A printed menu cannot update as quickly as the kitchen software. An installed mobile app may remain active for six months, while backend services change weekly. The BFF must support the old app contract without freezing the whole backend. What will you implement?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Treat the BFF as a compatibility boundary: evolve its public contract additively where safe and translate changing domain-service contracts behind it. Keep meaningful old behavior during a documented support window, with versioned endpoints or negotiated capabilities when semantics cannot remain compatible. Test representative supported app contracts against current composition.</p>
+<p>Measure active versions and infrequent usage before retirement. Keep authorization and critical business rules current at the domain owner; old client support does not justify accepting an insecure operation. Communicate minimum-version and sunset policy explicitly, including what a user sees when support ends.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A mobile app version must keep working for six months. How will the BFF evolve safely?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Inventory supported client contracts"]
+    N1["Translate to evolving domain APIs"]
+    N2["Test old and new behaviors"]
+    N3["Retire by measured support policy"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Inventory supported client contracts → Translate to evolving domain APIs → Test old and new behaviors → Retire by measured support policy.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You decouple domain releases from installed-client timing, but maintain adapters, old contract tests and support windows. A forced client upgrade is a viable alternative for a tightly managed internal app where availability and deployment policy permit it.</p>
+<p>Follow-up trap: schema compatibility does not preserve behavior if a default or unit changes. If an urgent security issue makes an old operation unsafe, revoke or narrow that capability and provide a controlled upgrade/error path rather than promising unlimited backward compatibility at the expense of security.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-single-frontend-extra-hop" data-scenario-basis="adapted-production">
+<summary>One simple frontend already has a suitable API. Does adding a BFF solve a real problem?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A small shop may not need a receptionist between the customer and the only counter. A single frontend uses two stable backend operations with acceptable latency and payload. A proposed BFF would forward both unchanged and introduce another deployment. What will you recommend?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Keep the simpler path until there is a concrete experience or ownership problem for a BFF to solve. Measure round trips, payload mismatch, security responsibilities and release friction. A reverse proxy or shared gateway may already handle the required edge behavior without another application composition service.</p>
+<p>Keep frontend/backend contracts clear and tests representative so later evolution remains possible. If future screens require substantial composition or a second experience creates conflicting demands, introduce the BFF at that evidence-backed boundary. Avoid turning the absence of a BFF into permission for frontend code to own business invariants.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: One simple frontend already has a suitable API. Does adding a BFF solve a real problem?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Measure actual experience problem"]
+    N1["Check existing API and edge fit"]
+    N2["Keep direct path when adequate"]
+    N3["Introduce BFF for demonstrated need"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Measure actual experience problem → Check existing API and edge fit → Keep direct path when adequate → Introduce BFF for demonstrated need.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You avoid an extra network hop and operational owner, while accepting that the client may coordinate the current small set of calls. A BFF is a viable alternative when server-side token handling, significant aggregation or frontend-team autonomy provides a concrete benefit.</p>
+<p>Follow-up trap: a new security requirement may justify a server-side boundary even with one UI. If credentials or trust policy now require that component, reevaluate the decision and design its responsibilities explicitly. The right answer follows actual constraints, not a mandatory count of architectural boxes.</p>
+</div>
+</details>
+<aside class="kb-callout--insight" data-interview-research>
+<p>Researched 2026-11-17. These scenarios adapt documented production problems and architectural guidance. Interview frequency, rankings and company provenance for these exact prompts were not independently verified. Numeric budgets and organization details are author-created assumptions. Web search was available and used for this concept; primary sources support the technical reasoning, not a claim that these prompts recur in interviews.</p>
+<ul><li><a href="https://samnewman.io/patterns/architectural/bff/">Sam Newman: Backends For Frontends</a></li><li><a href="https://learn.microsoft.com/en-us/azure/architecture/patterns/backends-for-frontends">Microsoft: Backends for Frontends</a></li></ul>
+</aside>
+</section>
+<!-- kb-interview-scenarios:end --><div class="kb-callout--impact"><h3>Real-world impact</h3><p>For courier and dispatcher experiences, a BFF can make backend interaction fit the actual task and support independent frontend delivery. The benefit is a simpler experience contract with an accountable owner. Keep domain rules authoritative, control fan-out, and avoid creating a separate backend merely because another screen exists.</p></div>
+</section>
+<footer class="kb-references"><h2>Sources and further reading</h2><p>Original explanations and worked examples above; consult these primary references for the underlying ideas and implementation-specific details.</p><ul><li><a href="https://samnewman.io/patterns/architectural/bff/">Sam Newman: Backends For Frontends</a></li><li><a href="https://microservices.io/patterns/apigateway.html">Chris Richardson: API Gateway / Backends for Frontends</a></li></ul><p>Connect this lesson to: <a href="#/system-design/backend-architecture/communication-and-routing/api-gateway-pattern">API Gateway Pattern</a>, <a href="#/system-design/backend-architecture/core-system-topologies/microservices-architecture">Microservices Architecture</a>, <a href="#/system-design/backend-architecture/infrastructure-and-multi-tenancy/multi-tenant-architecture">Multi-Tenant Architecture</a>.</p></footer>
+</article>

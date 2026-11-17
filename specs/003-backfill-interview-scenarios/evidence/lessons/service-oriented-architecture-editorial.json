@@ -1,0 +1,278 @@
+{
+  "status": "pass",
+  "topicId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+  "path": "topics/system-design/backend-architecture/core-system-topologies/service-oriented-architecture.html",
+  "sourceSha256": "870cfd5f446eaa43b2630ae1054795b3e43953072cb65f70bec82e50f53033e3",
+  "reviewedOn": "2026-11-17",
+  "researchRecord": "specs/003-backfill-interview-scenarios/research/service-oriented-architecture.md",
+  "method": "Separate later editorial pass over all full answers and mapped primary references; structural checks are supporting evidence, not semantic approval.",
+  "scenarios": [
+    {
+      "key": "interview-legacy-contract-mediation",
+      "status": "pass",
+      "criteria": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Service-Oriented Architecture (SOA): ERP, CRM and Shipping expose incompatible models. Where should translation and business authority live?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: ERP, CRM and Shipping expose incompatible models. Where should translation and business authority live? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Three departments speak different dialects for the same shipment. ERP exposes a legacy batch interface, CRM uses customer-facing records, and Shipping expects a modern service contract. Replacing them together is impossible. What integration boundary will you introduce and why?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Define the business capability and its explicit service contract, then put protocol and model adapters around the legacy systems. Translate at known boundaries rather than making every consumer understand every vendor format. Identify the authoritative owner of each fact, such as shipment status, so mediation does not create competing sources of truth.\n\nAn integration layer or bus can handle routing, transformation and correlation, but business policy remains in a named service owner. Version contracts, validate messages at entry and preserve durable identifiers across asynchronous handoffs. Test semantic mappings, such as whether dispatched means label-created or physically handed over."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You reduce pairwise protocol coupling and can replace systems incrementally, but operate translators and a potentially central dependency. Direct point-to-point adapters are a viable simpler alternative for a very small, stable set of integrations.\n\nFollow-up trap: a syntactically valid canonical field may mean different things to different systems. If a new integration has distinct business semantics, retain an explicit local model and translation rather than forcing an ambiguous universal schema. SOA describes service capabilities and interaction contracts; it does not require a particular bus product."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You reduce pairwise protocol coupling and can replace systems incrementally, but operate translators and a potentially central dependency. Direct point-to-point adapters are a viable simpler alternative for a very small, stable set of integrations.\n\nFollow-up trap: a syntactically valid canonical field may mean different things to different systems. If a new integration has distinct business semantics, retain an explicit local model and translation rather than forcing an ambiguous universal schema. SOA describes service capabilities and interaction contracts; it does not require a particular bus product."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S1, S2, S3 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      },
+      "technicalSources": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "basis": "adapted-production"
+    },
+    {
+      "key": "interview-integration-bus-outage",
+      "status": "pass",
+      "criteria": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Service-Oriented Architecture (SOA): The integration bus becomes the bottleneck and fails several business capabilities. What changes first?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: The integration bus becomes the bottleneck and fails several business capabilities. What changes first? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "A central post office is convenient until every parcel shares one blocked conveyor. CPU-heavy transformations on the enterprise bus delay all messages, including urgent order updates. Several business services are healthy but appear unavailable. You need containment before a larger redesign. What will you do and why?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Measure queue age, transformation cost and route-specific throughput. Isolate high-priority routes with bounded queues and concurrency, stop unbounded retries, and remove expensive domain computation from the mediation path. Scale only after identifying whether the constraint is processing, shared persistence or a serialized transformation.\n\nMake the integration layer redundant where its product supports it, and test broker/node failure plus backlog recovery. Gradually move unrelated workloads or translations to separately owned integration paths. Preserve ordering and deduplication requirements for each route instead of assuming a larger cluster alone makes every workflow safe."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You reduce shared blast radius and protect critical traffic, but lose some centralized operational simplicity and add route-level ownership. Keeping one highly available bus is an alternative when capacity and isolation satisfy the actual workload.\n\nFollow-up trap: adding bus replicas does not parallelize an intentionally ordered queue or a locked database. If the dominant workflow requires strict per-customer ordering, partition by an appropriate customer key and scale across independent keys. A global order requirement may cap throughput and should be challenged explicitly."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You reduce shared blast radius and protect critical traffic, but lose some centralized operational simplicity and add route-level ownership. Keeping one highly available bus is an alternative when capacity and isolation satisfy the actual workload.\n\nFollow-up trap: adding bus replicas does not parallelize an intentionally ordered queue or a locked database. If the dominant workflow requires strict per-customer ordering, partition by an appropriate customer key and scale across independent keys. A global order requirement may cap throughput and should be challenged explicitly."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S3 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      },
+      "technicalSources": [
+        "S3"
+      ],
+      "basis": "adapted-production"
+    },
+    {
+      "key": "interview-service-contract-versioning",
+      "status": "pass",
+      "criteria": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Service-Oriented Architecture (SOA): Forty consumers cannot upgrade together. How do you change a shared service contract safely?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: Forty consumers cannot upgrade together. How do you change a shared service contract safely? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Changing a shared form breaks offices that still use yesterday's instructions. A pricing service has forty consumers owned by different teams, some deployed quarterly. A new rule needs additional information, but a synchronized release is prohibited. What compatibility strategy will you use and why?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Introduce the change additively where semantics allow, preserving old required fields and behavior during a measured transition. Document defaults explicitly and test representative old consumers against the new provider. If the meaning or required data cannot remain compatible, expose a clearly versioned contract alongside the old one with an owner and migration window.\n\nObserve real consumer usage before retirement, including batch integrations that run infrequently. Keep data validation and error behavior contractually stable, not only field names. Publish deprecation dates and verify that the old path has actually stopped receiving legitimate traffic before removing it."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You preserve team autonomy and reduce coordinated downtime, but maintain multiple behaviors and compatibility tests temporarily. A coordinated upgrade is a viable alternative in a small controlled estate when its downtime and ownership costs are acceptable.\n\nFollow-up trap: making a new field optional syntactically can still break semantics if an old client receives the wrong price. If the new legal rule must apply immediately to all orders, centralize its authoritative decision and supply safe missing-input handling; do not hide an unavoidable business transition behind schema compatibility."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You preserve team autonomy and reduce coordinated downtime, but maintain multiple behaviors and compatibility tests temporarily. A coordinated upgrade is a viable alternative in a small controlled estate when its downtime and ownership costs are acceptable.\n\nFollow-up trap: making a new field optional syntactically can still break semantics if an old client receives the wrong price. If the new legal rule must apply immediately to all orders, centralize its authoritative decision and supply safe missing-input handling; do not hide an unavoidable business transition behind schema compatibility."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S1, S2 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      },
+      "technicalSources": [
+        "S1",
+        "S2"
+      ],
+      "basis": "adapted-production"
+    },
+    {
+      "key": "interview-long-running-approval-workflow",
+      "status": "pass",
+      "criteria": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Service-Oriented Architecture (SOA): An enterprise workflow waits days for human approval. Can one transaction remain open?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: An enterprise workflow waits days for human approval. Can one transaction remain open? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "A purchase folder may sit on a manager's desk for days. Procurement reserves funds, waits for approval and then requests shipping across independently owned services. Locks cannot be held while a person decides. What workflow and recovery model will you choose and why?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Use a durable orchestrated workflow with explicit states such as awaiting-approval, approved, dispatch-requested and cancelled. Commit each participant's local change separately, correlate messages with one workflow identity, and make repeated commands safe. Persist progress before acknowledging each transition so a restarted coordinator can resume.\n\nDefine reservation expiry, approval deadlines and compensation as business operations. A rejected request might release reserved funds; it cannot erase an email or a shipped parcel. Add manual-resolution states for irreversible or repeatedly failing steps and test delayed, duplicated and out-of-order replies."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You gain restartable long-running work without holding a distributed transaction open, but expose intermediate states and own timeout/compensation operations. Choreographed events are a viable alternative for a small flow with clear event ownership, though end-to-end visibility can become harder.\n\nFollow-up trap: compensation is not database rollback. If a requirement becomes a truly immediate all-or-nothing invariant, consider moving that invariant under one owner or a supported coordinated transaction rather than stretching a days-long saga into an atomicity claim. Human waiting and durable recovery need explicit semantics."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You gain restartable long-running work without holding a distributed transaction open, but expose intermediate states and own timeout/compensation operations. Choreographed events are a viable alternative for a small flow with clear event ownership, though end-to-end visibility can become harder.\n\nFollow-up trap: compensation is not database rollback. If a requirement becomes a truly immediate all-or-nothing invariant, consider moving that invariant under one owner or a supported coordinated transaction rather than stretching a days-long saga into an atomicity claim. Human waiting and durable recovery need explicit semantics."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S4 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      },
+      "technicalSources": [
+        "S4"
+      ],
+      "basis": "adapted-production"
+    },
+    {
+      "key": "interview-business-policy-inside-middleware",
+      "status": "pass",
+      "criteria": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Service-Oriented Architecture (SOA): Tax and eligibility rules have accumulated in bus transformations. Who should own them?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: Tax and eligibility rules have accumulated in bus transformations. Who should own them? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "A translator starts making decisions that belong to the departments it connects. Tax rules, customer eligibility and shipping discounts now live in bus scripts edited by the integration team. Business owners cannot test or release their policies independently. What will you move and why?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Separate mechanical mediation from authoritative domain decisions. Keep protocol conversion, validation and routing in the integration boundary, but move tax and eligibility policies to their owning business services behind explicit contracts. Inventory existing rules and use characterization examples so extraction preserves behavior.\n\nMake workflow orchestration call those capabilities rather than reproducing their policy. Version policy outputs where needed for audit, and retain traceable correlation from the initiating request through each decision. Move one rule at a time with comparison and rollback rather than rewriting the whole bus in one release."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You restore accountable ownership and focused tests, but introduce explicit service calls and need to manage their latency/failure. Keeping simple format mappings in the bus is a valid alternative for purely structural transformations; not every conditional is domain policy.\n\nFollow-up trap: relocating every script into one generic Rules service merely renames the central dependency. If a policy is genuinely shared and has one accountable owner, expose that cohesive capability deliberately. If a transformation determines whether money may move, treat it as a business decision even when it is only a few lines of code."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You restore accountable ownership and focused tests, but introduce explicit service calls and need to manage their latency/failure. Keeping simple format mappings in the bus is a valid alternative for purely structural transformations; not every conditional is domain policy.\n\nFollow-up trap: relocating every script into one generic Rules service merely renames the central dependency. If a policy is genuinely shared and has one accountable owner, expose that cohesive capability deliberately. If a transformation determines whether money may move, treat it as a business decision even when it is only a few lines of code."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S1, S3 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      },
+      "technicalSources": [
+        "S1",
+        "S3"
+      ],
+      "basis": "adapted-production"
+    },
+    {
+      "key": "interview-canonical-model-change-coupling",
+      "status": "pass",
+      "criteria": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Service-Oriented Architecture (SOA): One enterprise-wide Customer schema makes every team coordinate changes. Should you standardize harder?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: One enterprise-wide Customer schema makes every team coordinate changes. Should you standardize harder? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "A single giant dictionary becomes harder to use as each department adds its own meanings. Billing, Marketing and Support all exchange one canonical Customer object with hundreds of fields. Adding a billing-specific status forces unrelated consumers to upgrade. What modeling boundary will you choose and why?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Define smaller service contracts around specific business interactions and translate between local models at the boundary. Share only meanings that participants actually agree on, such as an opaque customer reference, instead of exporting an entire internal object. Clarify who owns each state transition and whether similarly named fields truly mean the same thing.\n\nKeep a canonical message where it adds stable integration value, but constrain its scope and version independently. Migrate consumers to purpose-specific contracts and measure release coupling. Semantic examples and consumer tests are more useful than requiring every team to adopt a larger common schema."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You reduce accidental coordination and preserve local evolution, at the cost of translation and some intentional duplication. A limited canonical model is a viable alternative in a tightly governed, stable business area with genuinely shared semantics.\n\nFollow-up trap: eliminating all common identifiers makes reconciliation harder, while sharing every internal field makes autonomy illusory. If a regulatory reporting interface mandates one schema, adapt each domain to that external contract without forcing the reporting representation to become every service's internal model."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You reduce accidental coordination and preserve local evolution, at the cost of translation and some intentional duplication. A limited canonical model is a viable alternative in a tightly governed, stable business area with genuinely shared semantics.\n\nFollow-up trap: eliminating all common identifiers makes reconciliation harder, while sharing every internal field makes autonomy illusory. If a regulatory reporting interface mandates one schema, adapt each domain to that external contract without forcing the reporting representation to become every service's internal model."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S1, S2 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      },
+      "technicalSources": [
+        "S1",
+        "S2"
+      ],
+      "basis": "adapted-production"
+    }
+  ],
+  "findings": [
+    "All six concrete production decisions are distinct within this lesson.",
+    "Each answer recommends an action, gives implementation/debugging steps, costs and a viable alternative.",
+    "Each includes a meaningful trap and a changed-assumption response.",
+    "All original bytes reconstruct exactly; newly added source links remain within the marker span.",
+    "No verified exact-prompt interview-frequency, ranking or company claim."
+  ],
+  "corrections": [
+    "No substantive answer correction required after the separate pass."
+  ]
+}

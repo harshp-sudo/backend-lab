@@ -1,0 +1,102 @@
+{
+  "status": "pass",
+  "topicId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+  "path": "topics/system-design/backend-architecture/communication-and-routing/event-driven-architecture.html",
+  "sourceSha256": "3ad2ffb26dce35ad4e0e72015b2323da19e022f7ab34eefef30f93e2b2ac873a",
+  "outputs": [
+    {
+      "nodeId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+      "topicId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+      "sourceSha256": "3ad2ffb26dce35ad4e0e72015b2323da19e022f7ab34eefef30f93e2b2ac873a",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-event-driven-architecture.pdf",
+      "completeTextBlocks": 150,
+      "diagramLabels": 33,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+      "topicId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+      "sourceSha256": "3ad2ffb26dce35ad4e0e72015b2323da19e022f7ab34eefef30f93e2b2ac873a",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-event-driven-architecture.pdf",
+      "completeTextBlocks": 150,
+      "diagramLabels": 33,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    }
+  ],
+  "visualReview": {
+    "topicId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+    "path": "topics/system-design/backend-architecture/communication-and-routing/event-driven-architecture.html",
+    "comparisonSheet": "/tmp/backend-interview-print-review/event-driven-architecture-comparison.jpg",
+    "outputs": [
+      {
+        "theme": "light",
+        "pdf": "/tmp/backend-interview-pdfs/light-event-driven-architecture.pdf",
+        "pages": 19,
+        "selectedPages": [
+          5,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/light-event-driven-architecture-table.png",
+          "/tmp/backend-interview-print-review/light-event-driven-architecture-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/light-event-driven-architecture-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "100c94b9da19056b3a07007b2f39ba1185507a38bf61a594614fdb6b537e405a",
+        "reviewPanelSha256": [
+          "da533ccd2b94502fb9c84b15b1da865b83ed6148b63b6375bc6276ee5250e607",
+          "9cfecec2049769a01701cd714c8ba618708e66f2fd19bbdf3bfbe63fc96b6994",
+          "038ca3fd99876671b6a1f096ea4efee614e8915a368cbbf60c3e4a4c9eeee48a"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      },
+      {
+        "theme": "dark",
+        "pdf": "/tmp/backend-interview-pdfs/dark-event-driven-architecture.pdf",
+        "pages": 19,
+        "selectedPages": [
+          5,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/dark-event-driven-architecture-table.png",
+          "/tmp/backend-interview-print-review/dark-event-driven-architecture-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/dark-event-driven-architecture-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "83db87a89daabb4ccb2bc9d2c3e1766be4b77fa6d5569b83a9e649c7e1a78653",
+        "reviewPanelSha256": [
+          "da533ccd2b94502fb9c84b15b1da865b83ed6148b63b6375bc6276ee5250e607",
+          "9cfecec2049769a01701cd714c8ba618708e66f2fd19bbdf3bfbe63fc96b6994",
+          "038ca3fd99876671b6a1f096ea4efee614e8915a368cbbf60c3e4a4c9eeee48a"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      }
+    ],
+    "reviewStatus": "pass",
+    "reviewedOn": "2026-11-17",
+    "reviewFindings": [
+      "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+      "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+      "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+      "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+    ]
+  },
+  "findings": [
+    "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+    "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+    "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+  ]
+}

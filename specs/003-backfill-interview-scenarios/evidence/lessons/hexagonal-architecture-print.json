@@ -1,0 +1,102 @@
+{
+  "status": "pass",
+  "topicId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+  "path": "topics/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture.html",
+  "sourceSha256": "57d34d9889e6ba85f48db13365fc3abd0fe77be4990b9ec315b49adbf4bc1ea1",
+  "outputs": [
+    {
+      "nodeId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+      "topicId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+      "sourceSha256": "57d34d9889e6ba85f48db13365fc3abd0fe77be4990b9ec315b49adbf4bc1ea1",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-hexagonal-architecture.pdf",
+      "completeTextBlocks": 149,
+      "diagramLabels": 35,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+      "topicId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+      "sourceSha256": "57d34d9889e6ba85f48db13365fc3abd0fe77be4990b9ec315b49adbf4bc1ea1",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-hexagonal-architecture.pdf",
+      "completeTextBlocks": 149,
+      "diagramLabels": 35,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    }
+  ],
+  "visualReview": {
+    "topicId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+    "path": "topics/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture.html",
+    "comparisonSheet": "/tmp/backend-interview-print-review/hexagonal-architecture-comparison.jpg",
+    "outputs": [
+      {
+        "theme": "light",
+        "pdf": "/tmp/backend-interview-pdfs/light-hexagonal-architecture.pdf",
+        "pages": 18,
+        "selectedPages": [
+          4,
+          7,
+          17
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/light-hexagonal-architecture-table.png",
+          "/tmp/backend-interview-print-review/light-hexagonal-architecture-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/light-hexagonal-architecture-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "fc6f3f0bc32a8853ed18607db89391c11695dc657ce12b60486feb2a11d1c095",
+        "reviewPanelSha256": [
+          "8280abe8e5bfce83546efc6bb9ced8b0d5ea1bbbceb28cf561a7d9c864d59d9e",
+          "c657ab91ae997151a79ac242a9db0f2f0ea93851cca2f5458bbfadd900ac5827",
+          "66cb76fe90133e091ed1a68e60caec328560c2a1d3e9c22dc6e97c81def90d6e"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      },
+      {
+        "theme": "dark",
+        "pdf": "/tmp/backend-interview-pdfs/dark-hexagonal-architecture.pdf",
+        "pages": 18,
+        "selectedPages": [
+          4,
+          7,
+          17
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/dark-hexagonal-architecture-table.png",
+          "/tmp/backend-interview-print-review/dark-hexagonal-architecture-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/dark-hexagonal-architecture-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "0116a041791012758fa3f2e175b0aca957b7c45c3c398f43d92df634357346f5",
+        "reviewPanelSha256": [
+          "8280abe8e5bfce83546efc6bb9ced8b0d5ea1bbbceb28cf561a7d9c864d59d9e",
+          "c657ab91ae997151a79ac242a9db0f2f0ea93851cca2f5458bbfadd900ac5827",
+          "66cb76fe90133e091ed1a68e60caec328560c2a1d3e9c22dc6e97c81def90d6e"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      }
+    ],
+    "reviewStatus": "pass",
+    "reviewedOn": "2026-11-17",
+    "reviewFindings": [
+      "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+      "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+      "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+      "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+    ]
+  },
+  "findings": [
+    "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+    "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+    "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+  ]
+}

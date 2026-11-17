@@ -1,0 +1,51 @@
+{
+  "status": "pass",
+  "checkedOn": "2026-11-17",
+  "baselineSha256": "dd31a3f4d8d595cbe5463c87231b10cce293bf11d38caa1fdf624ada928f3e11",
+  "counts": {
+    "topics": 15,
+    "hubs": 6,
+    "foundationalRecall": 61,
+    "diagrams": 22
+  },
+  "protectedFiles": 29,
+  "rollbackDirectory": "/tmp/backend-interview-rollback-20261117",
+  "checks": [
+    "full UTF-8 byte hashes",
+    "manifest IDs/ordered hierarchy",
+    "15 lesson identities",
+    "61 foundational keys",
+    "22 original diagrams"
+  ],
+  "files": [
+    "manifest.json",
+    "topics/system-design/_overview.html",
+    "topics/system-design/backend-architecture/_overview.html",
+    "topics/system-design/backend-architecture/core-system-topologies/_overview.html",
+    "topics/system-design/backend-architecture/code-and-domain-organization/_overview.html",
+    "topics/system-design/backend-architecture/communication-and-routing/_overview.html",
+    "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/_overview.html",
+    "topics/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals.html",
+    "topics/system-design/backend-architecture/core-system-topologies/monolithic-architecture.html",
+    "topics/system-design/backend-architecture/core-system-topologies/modular-monolith.html",
+    "topics/system-design/backend-architecture/core-system-topologies/service-oriented-architecture.html",
+    "topics/system-design/backend-architecture/core-system-topologies/microservices-architecture.html",
+    "topics/system-design/backend-architecture/code-and-domain-organization/layered-architecture.html",
+    "topics/system-design/backend-architecture/code-and-domain-organization/clean-architecture.html",
+    "topics/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture.html",
+    "topics/system-design/backend-architecture/code-and-domain-organization/domain-driven-design.html",
+    "topics/system-design/backend-architecture/communication-and-routing/event-driven-architecture.html",
+    "topics/system-design/backend-architecture/communication-and-routing/api-gateway-pattern.html",
+    "topics/system-design/backend-architecture/communication-and-routing/backend-for-frontend.html",
+    "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery.html",
+    "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh.html",
+    "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/multi-tenant-architecture.html",
+    "index.html",
+    "app.js",
+    "styles.css",
+    ".nojekyll",
+    "assets/js/catalog.js",
+    "assets/js/learning-state.js",
+    "assets/js/content-renderer.js"
+  ]
+}

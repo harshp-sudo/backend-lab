@@ -1,0 +1,169 @@
+{
+  "status": "pass",
+  "topicId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+  "path": "topics/system-design/backend-architecture/code-and-domain-organization/domain-driven-design.html",
+  "sourceSha256": "477c3f30a93c8be0715c1c076a2af53d2750a72da3680abe8e31e1fddf58594d",
+  "browser": "141.0.7390.37",
+  "navigation": [
+    {
+      "base": "http://127.0.0.1:8020/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    },
+    {
+      "base": "http://127.0.0.1:8021/backend-lab/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    }
+  ],
+  "learning": {
+    "topicId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+    "path": "topics/system-design/backend-architecture/code-and-domain-organization/domain-driven-design.html",
+    "sourceSha256": "477c3f30a93c8be0715c1c076a2af53d2750a72da3680abe8e31e1fddf58594d",
+    "status": "pass",
+    "bases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "newKeys": [
+          "interview-customer-bounded-context-language",
+          "interview-aggregate-last-unit-concurrency",
+          "interview-oversized-aggregate-contention",
+          "interview-cross-context-order-workflow",
+          "interview-legacy-erp-anti-corruption",
+          "interview-simple-crud-tactical-ddd-cost"
+        ],
+        "ratings": {
+          "interview-customer-bounded-context-language": "hard",
+          "interview-aggregate-last-unit-concurrency": "good",
+          "interview-oversized-aggregate-contention": "easy",
+          "interview-cross-context-order-workflow": "hard",
+          "interview-legacy-erp-anti-corruption": "good",
+          "interview-simple-crud-tactical-ddd-cost": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "newKeys": [
+          "interview-customer-bounded-context-language",
+          "interview-aggregate-last-unit-concurrency",
+          "interview-oversized-aggregate-contention",
+          "interview-cross-context-order-workflow",
+          "interview-legacy-erp-anti-corruption",
+          "interview-simple-crud-tactical-ddd-cost"
+        ],
+        "ratings": {
+          "interview-customer-bounded-context-language": "hard",
+          "interview-aggregate-last-unit-concurrency": "good",
+          "interview-oversized-aggregate-contention": "easy",
+          "interview-cross-context-order-workflow": "hard",
+          "interview-legacy-erp-anti-corruption": "good",
+          "interview-simple-crud-tactical-ddd-cost": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      }
+    ]
+  },
+  "mobileThemes": {
+    "topicId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+    "path": "topics/system-design/backend-architecture/code-and-domain-organization/domain-driven-design.html",
+    "sourceSha256": "477c3f30a93c8be0715c1c076a2af53d2750a72da3680abe8e31e1fddf58594d",
+    "status": "pass",
+    "cases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-customer-bounded-context-language",
+          "interview-aggregate-last-unit-concurrency",
+          "interview-oversized-aggregate-contention",
+          "interview-cross-context-order-workflow",
+          "interview-legacy-erp-anti-corruption",
+          "interview-simple-crud-tactical-ddd-cost"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-customer-bounded-context-language",
+          "interview-aggregate-last-unit-concurrency",
+          "interview-oversized-aggregate-contention",
+          "interview-cross-context-order-workflow",
+          "interview-legacy-erp-anti-corruption",
+          "interview-simple-crud-tactical-ddd-cost"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-customer-bounded-context-language",
+          "interview-aggregate-last-unit-concurrency",
+          "interview-oversized-aggregate-contention",
+          "interview-cross-context-order-workflow",
+          "interview-legacy-erp-anti-corruption",
+          "interview-simple-crud-tactical-ddd-cost"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-customer-bounded-context-language",
+          "interview-aggregate-last-unit-concurrency",
+          "interview-oversized-aggregate-contention",
+          "interview-cross-context-order-workflow",
+          "interview-legacy-erp-anti-corruption",
+          "interview-simple-crud-tactical-ddd-cost"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      }
+    ]
+  },
+  "errors": [],
+  "supportingFixture": "reading_fixture passed all 21 actual partials without learning writes."
+}

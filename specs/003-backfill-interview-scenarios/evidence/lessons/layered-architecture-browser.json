@@ -1,0 +1,169 @@
+{
+  "status": "pass",
+  "topicId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+  "path": "topics/system-design/backend-architecture/code-and-domain-organization/layered-architecture.html",
+  "sourceSha256": "5815f427794062a094795a79b6b7dcf367a6cf84f4aeb65f6210a60987eff0de",
+  "browser": "141.0.7390.37",
+  "navigation": [
+    {
+      "base": "http://127.0.0.1:8020/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    },
+    {
+      "base": "http://127.0.0.1:8021/backend-lab/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    }
+  ],
+  "learning": {
+    "topicId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+    "path": "topics/system-design/backend-architecture/code-and-domain-organization/layered-architecture.html",
+    "sourceSha256": "5815f427794062a094795a79b6b7dcf367a6cf84f4aeb65f6210a60987eff0de",
+    "status": "pass",
+    "bases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "newKeys": [
+          "interview-pass-through-network-layers",
+          "interview-bypassed-pricing-policy",
+          "interview-logical-layers-versus-tiers",
+          "interview-query-builder-leaks-upward",
+          "interview-use-case-transaction-owner",
+          "interview-fake-repository-hides-provider-bug"
+        ],
+        "ratings": {
+          "interview-pass-through-network-layers": "hard",
+          "interview-bypassed-pricing-policy": "good",
+          "interview-logical-layers-versus-tiers": "easy",
+          "interview-query-builder-leaks-upward": "hard",
+          "interview-use-case-transaction-owner": "good",
+          "interview-fake-repository-hides-provider-bug": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "newKeys": [
+          "interview-pass-through-network-layers",
+          "interview-bypassed-pricing-policy",
+          "interview-logical-layers-versus-tiers",
+          "interview-query-builder-leaks-upward",
+          "interview-use-case-transaction-owner",
+          "interview-fake-repository-hides-provider-bug"
+        ],
+        "ratings": {
+          "interview-pass-through-network-layers": "hard",
+          "interview-bypassed-pricing-policy": "good",
+          "interview-logical-layers-versus-tiers": "easy",
+          "interview-query-builder-leaks-upward": "hard",
+          "interview-use-case-transaction-owner": "good",
+          "interview-fake-repository-hides-provider-bug": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      }
+    ]
+  },
+  "mobileThemes": {
+    "topicId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+    "path": "topics/system-design/backend-architecture/code-and-domain-organization/layered-architecture.html",
+    "sourceSha256": "5815f427794062a094795a79b6b7dcf367a6cf84f4aeb65f6210a60987eff0de",
+    "status": "pass",
+    "cases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-pass-through-network-layers",
+          "interview-bypassed-pricing-policy",
+          "interview-logical-layers-versus-tiers",
+          "interview-query-builder-leaks-upward",
+          "interview-use-case-transaction-owner",
+          "interview-fake-repository-hides-provider-bug"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-pass-through-network-layers",
+          "interview-bypassed-pricing-policy",
+          "interview-logical-layers-versus-tiers",
+          "interview-query-builder-leaks-upward",
+          "interview-use-case-transaction-owner",
+          "interview-fake-repository-hides-provider-bug"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-pass-through-network-layers",
+          "interview-bypassed-pricing-policy",
+          "interview-logical-layers-versus-tiers",
+          "interview-query-builder-leaks-upward",
+          "interview-use-case-transaction-owner",
+          "interview-fake-repository-hides-provider-bug"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-pass-through-network-layers",
+          "interview-bypassed-pricing-policy",
+          "interview-logical-layers-versus-tiers",
+          "interview-query-builder-leaks-upward",
+          "interview-use-case-transaction-owner",
+          "interview-fake-repository-hides-provider-bug"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      }
+    ]
+  },
+  "errors": [],
+  "supportingFixture": "reading_fixture passed all 21 actual partials without learning writes."
+}

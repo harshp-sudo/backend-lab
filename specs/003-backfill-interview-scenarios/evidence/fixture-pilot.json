@@ -1,0 +1,59 @@
+{
+  "status": "pass",
+  "checks": [
+    {
+      "base": "http://127.0.0.1:8000/",
+      "status": "pass",
+      "recall": {
+        "questions": 10,
+        "foundational": 4,
+        "interviews": 6,
+        "initiallyClosed": true,
+        "independent": true,
+        "topicId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+        "recallKeys": [
+          "timeout-meaning",
+          "idempotency-race",
+          "consistency-boundary",
+          "retry-budget",
+          "interview-payment-timeout-unknown-outcome",
+          "interview-retry-storm-overload",
+          "interview-partition-cart-versus-stock",
+          "interview-read-after-profile-update",
+          "interview-offline-conflict-business-meaning",
+          "interview-slow-replica-failure-suspicion"
+        ]
+      },
+      "diagrams": 7,
+      "learningWrites": 0,
+      "consoleErrors": []
+    },
+    {
+      "base": "http://127.0.0.1:8001/backend-lab/",
+      "status": "pass",
+      "recall": {
+        "questions": 10,
+        "foundational": 4,
+        "interviews": 6,
+        "initiallyClosed": true,
+        "independent": true,
+        "topicId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+        "recallKeys": [
+          "timeout-meaning",
+          "idempotency-race",
+          "consistency-boundary",
+          "retry-budget",
+          "interview-payment-timeout-unknown-outcome",
+          "interview-retry-storm-overload",
+          "interview-partition-cart-versus-stock",
+          "interview-read-after-profile-update",
+          "interview-offline-conflict-business-meaning",
+          "interview-slow-replica-failure-suspicion"
+        ]
+      },
+      "diagrams": 7,
+      "learningWrites": 0,
+      "consoleErrors": []
+    }
+  ]
+}

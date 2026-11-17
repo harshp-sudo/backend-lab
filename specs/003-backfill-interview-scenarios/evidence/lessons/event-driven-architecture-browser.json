@@ -1,0 +1,169 @@
+{
+  "status": "pass",
+  "topicId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+  "path": "topics/system-design/backend-architecture/communication-and-routing/event-driven-architecture.html",
+  "sourceSha256": "3ad2ffb26dce35ad4e0e72015b2323da19e022f7ab34eefef30f93e2b2ac873a",
+  "browser": "141.0.7390.37",
+  "navigation": [
+    {
+      "base": "http://127.0.0.1:8020/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    },
+    {
+      "base": "http://127.0.0.1:8021/backend-lab/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    }
+  ],
+  "learning": {
+    "topicId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+    "path": "topics/system-design/backend-architecture/communication-and-routing/event-driven-architecture.html",
+    "sourceSha256": "3ad2ffb26dce35ad4e0e72015b2323da19e022f7ab34eefef30f93e2b2ac873a",
+    "status": "pass",
+    "bases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "newKeys": [
+          "interview-database-commit-event-gap",
+          "interview-duplicate-delivery-external-effect",
+          "interview-entity-events-out-of-order",
+          "interview-consumer-lag-user-feedback",
+          "interview-notification-versus-state-transfer",
+          "interview-event-disguises-command"
+        ],
+        "ratings": {
+          "interview-database-commit-event-gap": "hard",
+          "interview-duplicate-delivery-external-effect": "good",
+          "interview-entity-events-out-of-order": "easy",
+          "interview-consumer-lag-user-feedback": "hard",
+          "interview-notification-versus-state-transfer": "good",
+          "interview-event-disguises-command": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "newKeys": [
+          "interview-database-commit-event-gap",
+          "interview-duplicate-delivery-external-effect",
+          "interview-entity-events-out-of-order",
+          "interview-consumer-lag-user-feedback",
+          "interview-notification-versus-state-transfer",
+          "interview-event-disguises-command"
+        ],
+        "ratings": {
+          "interview-database-commit-event-gap": "hard",
+          "interview-duplicate-delivery-external-effect": "good",
+          "interview-entity-events-out-of-order": "easy",
+          "interview-consumer-lag-user-feedback": "hard",
+          "interview-notification-versus-state-transfer": "good",
+          "interview-event-disguises-command": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      }
+    ]
+  },
+  "mobileThemes": {
+    "topicId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+    "path": "topics/system-design/backend-architecture/communication-and-routing/event-driven-architecture.html",
+    "sourceSha256": "3ad2ffb26dce35ad4e0e72015b2323da19e022f7ab34eefef30f93e2b2ac873a",
+    "status": "pass",
+    "cases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-database-commit-event-gap",
+          "interview-duplicate-delivery-external-effect",
+          "interview-entity-events-out-of-order",
+          "interview-consumer-lag-user-feedback",
+          "interview-notification-versus-state-transfer",
+          "interview-event-disguises-command"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-database-commit-event-gap",
+          "interview-duplicate-delivery-external-effect",
+          "interview-entity-events-out-of-order",
+          "interview-consumer-lag-user-feedback",
+          "interview-notification-versus-state-transfer",
+          "interview-event-disguises-command"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-database-commit-event-gap",
+          "interview-duplicate-delivery-external-effect",
+          "interview-entity-events-out-of-order",
+          "interview-consumer-lag-user-feedback",
+          "interview-notification-versus-state-transfer",
+          "interview-event-disguises-command"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-database-commit-event-gap",
+          "interview-duplicate-delivery-external-effect",
+          "interview-entity-events-out-of-order",
+          "interview-consumer-lag-user-feedback",
+          "interview-notification-versus-state-transfer",
+          "interview-event-disguises-command"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      }
+    ]
+  },
+  "errors": [],
+  "supportingFixture": "reading_fixture passed all 21 actual partials without learning writes."
+}

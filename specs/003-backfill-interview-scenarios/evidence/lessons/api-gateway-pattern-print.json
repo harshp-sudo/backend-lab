@@ -1,0 +1,103 @@
+{
+  "status": "pass",
+  "topicId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+  "path": "topics/system-design/backend-architecture/communication-and-routing/api-gateway-pattern.html",
+  "sourceSha256": "9d00059b8eaaa28c200bf119ff9682fab320c0141c6603194de26aaf8e6db561",
+  "outputs": [
+    {
+      "nodeId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+      "topicId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+      "sourceSha256": "9d00059b8eaaa28c200bf119ff9682fab320c0141c6603194de26aaf8e6db561",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-api-gateway-pattern.pdf",
+      "completeTextBlocks": 151,
+      "diagramLabels": 30,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+      "topicId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+      "sourceSha256": "9d00059b8eaaa28c200bf119ff9682fab320c0141c6603194de26aaf8e6db561",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-api-gateway-pattern.pdf",
+      "completeTextBlocks": 151,
+      "diagramLabels": 30,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    }
+  ],
+  "visualReview": {
+    "topicId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+    "path": "topics/system-design/backend-architecture/communication-and-routing/api-gateway-pattern.html",
+    "comparisonSheet": "/tmp/backend-interview-print-review/api-gateway-pattern-comparison.jpg",
+    "outputs": [
+      {
+        "theme": "light",
+        "pdf": "/tmp/backend-interview-pdfs/light-api-gateway-pattern.pdf",
+        "pages": 19,
+        "selectedPages": [
+          5,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/light-api-gateway-pattern-table.png",
+          "/tmp/backend-interview-print-review/light-api-gateway-pattern-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/light-api-gateway-pattern-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "e0fb37dfbb739b56421579e3281199e0cff8894bdee2d0487aceaeef1f96fee6",
+        "reviewPanelSha256": [
+          "d24fda32aa8d69ae8b0645a0bd66da3a40f696ae5bd4f235cba3b3f52b920134",
+          "852267ee5fb0f871df4e566b8f29c7951e1ad1d1edd469e50b076f50a8149638",
+          "b204b6d9692417e0b6dc963b5ba608e19d13b791ea570e53b31ad4ddc829b993"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      },
+      {
+        "theme": "dark",
+        "pdf": "/tmp/backend-interview-pdfs/dark-api-gateway-pattern.pdf",
+        "pages": 19,
+        "selectedPages": [
+          5,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/dark-api-gateway-pattern-table.png",
+          "/tmp/backend-interview-print-review/dark-api-gateway-pattern-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/dark-api-gateway-pattern-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "035fe254c708a6870fa57892fb19ea70b1c0d229ad2221abe123ef22a01b9981",
+        "reviewPanelSha256": [
+          "d24fda32aa8d69ae8b0645a0bd66da3a40f696ae5bd4f235cba3b3f52b920134",
+          "852267ee5fb0f871df4e566b8f29c7951e1ad1d1edd469e50b076f50a8149638",
+          "b204b6d9692417e0b6dc963b5ba608e19d13b791ea570e53b31ad4ddc829b993"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      }
+    ],
+    "reviewStatus": "pass",
+    "reviewedOn": "2026-11-17",
+    "reviewFindings": [
+      "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+      "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+      "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+      "Rechecked the page containing actual table header and cells rather than the preceding section heading.",
+      "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+    ]
+  },
+  "findings": [
+    "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+    "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+    "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+  ]
+}

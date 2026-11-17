@@ -1,0 +1,229 @@
+<article class="kb-topic" data-node-id="d257fdd8-8532-4138-839b-7295ae2e2994">
+<h1>Clean Architecture</h1>
+<section data-section="hook-eli5" id="node-d257fdd8-8532-4138-839b-7295ae2e2994-hook-eli5">
+<h2>🎯 The Hook & ELI5</h2>
+<div class="kb-callout--insight"><p><strong>ELI5 mental model.</strong> A board game’s rules should not change when you replace the table, score sheet, or person announcing each turn. Clean Architecture treats business rules like that rulebook. Screens, databases, and frameworks are ways to interact with the rules, not the owners of the rules. The important boundary is which code must understand which other code.</p></div><p>Applications become expensive to change when business decisions depend directly on web frameworks, database mappings, or external SDKs. Clean Architecture separates policies from delivery and infrastructure details and directs source-code dependencies inward toward more stable business/application rules. It is a dependency rule, not a requirement for four folders or one class per operation.</p><div class="kb-callout--insight"><p>WHY it matters: a parcel company should be able to test pickup eligibility without booting a web server or a database. It may also need to expose the same use case through an HTTP API and a scheduled import. Independence is valuable where it protects meaningful rules; unnecessary interfaces around trivial operations can add cost without that benefit.</p></div>
+</section>
+<section data-section="big-picture" id="node-d257fdd8-8532-4138-839b-7295ae2e2994-big-picture">
+<h2>🗺️ High-Level Big Picture</h2>
+<p>For a pickup request, an HTTP controller translates the request into a SchedulePickup use case. The use case applies pickup policy and talks to a storage interface defined on the inner side. A database adapter implements that interface. The solid/dotted arrows below are source dependencies: the SQL adapter knows the inner contract, while the inner use case does not import the SQL framework. Runtime execution can still travel outward to the adapter.</p><figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Source dependencies point toward pickup policy
+    accDescr: Controllers and persistence adapters depend on inner application contracts; inner rules do not import framework details.
+    C[&quot;HTTP controller&quot;] --&gt; U[&quot;SchedulePickup use case&quot;]
+    U --&gt; E[&quot;Pickup eligibility policy&quot;]
+    U --&gt; P[&quot;PickupStore interface owned inside&quot;]
+    A[&quot;SQL persistence adapter&quot;] -. implements .-&gt; P
+    A --&gt; F[&quot;Database framework&quot;]</pre><figcaption>Read the arrows as responsibilities and hand-offs, not as a promise that every step succeeds.</figcaption></figure>
+</section>
+<section data-section="mechanics" id="node-d257fdd8-8532-4138-839b-7295ae2e2994-mechanics">
+<h2>🔍 Step-by-Step Mechanics</h2>
+<p>Follow the example one boundary at a time. Open each step to connect the familiar mental model to the internal mechanics.</p><details><summary>1. Separate the game rule from the way a turn arrives</summary><p>A pickup rule might say that hazardous parcels require an approved collection plan. That rule should still make sense if a request comes from a web page, a mobile application, or a batch job. The innermost domain behavior models those business concepts and invariants without needing an HTTP request object or a database connection.</p>
+<p>Around those rules, an application use case coordinates a particular goal such as scheduling a pickup. It decides which information to load, which policy to invoke, and which result to return. The distinction is between business meaning and application orchestration, not between important and unimportant files. A small application can combine some implementation units while still respecting the dependency boundary.</p></details>
+<details><summary>2. Define an inner contract for a required outside capability</summary><p>The game rule can ask for the current score without specifying a particular brand of score sheet. A use case can similarly require persistence through a <strong>port or interface</strong> expressed in its own vocabulary. The inner code defines what it needs; an outer adapter supplies how that need is fulfilled. This is <strong>dependency inversion</strong> at a meaningful boundary.</p>
+<p>For pickup scheduling, the interface may load a pickup plan and persist a new booking under a concurrency condition. Avoid exposing a framework-specific query object or database session through that interface, because callers would then need to understand the implementation again. Include the behavior the use case relies on: absence, conflicts, retry/transaction expectations, and error meaning should not be left as accidental SDK behavior.</p></details>
+<details><summary>3. Distinguish runtime calls from source imports</summary><p>A player can ask a scorekeeper for a number even though the rulebook never names that person. At runtime, SchedulePickup calls an object implementing PickupStore, and execution reaches the SQL adapter. In the source code, the adapter depends on the inner interface, not the other way around. These two directions answer different questions.</p>
+<p>A composition root, outside the policy boundary, chooses concrete adapters and connects them to the use case. It can use a framework’s dependency injection, direct constructors, or another simple mechanism. The important property is that wiring stays outside the business rules. A service locator called from deep domain logic can hide the same outward dependencies that constructor injection was intended to make visible.</p>
+<figure class="kb-diagram"><pre class="mermaid">sequenceDiagram
+    accTitle: Runtime execution can call an outer adapter
+    accDescr: The use case invokes its inner storage contract, which dispatches to an injected database adapter.
+    participant C as Controller
+    participant U as Use case
+    participant A as Injected storage adapter
+    C-&gt;&gt;U: SchedulePickup input
+    U-&gt;&gt;A: Load through inner contract
+    A--&gt;&gt;U: Domain-relevant data
+    U-&gt;&gt;U: Apply policy
+    U-&gt;&gt;A: Persist according to contract
+    U--&gt;&gt;C: Use-case result</pre><figcaption>A closer look at the mechanics.</figcaption></figure></details>
+<details><summary>4. Translate data at the boundary that owns the translation</summary><p>A referee can read a number from a score sheet without carrying the entire sheet into every rule. Likewise, the controller maps transport input into a use-case request and maps its result back to an HTTP response. A persistence adapter maps stored rows to the representation promised by the inner contract.</p>
+<p>Keep business meaning explicit while avoiding pointless copying. A simple immutable value can cross a boundary directly when it belongs to the agreed inner vocabulary. A lazily loaded ORM entity, framework validation object, or external provider exception carries implementation behavior and may leak outward concerns inward. Mapping is useful when it protects ownership and change; it is not a ritual that requires three identical objects for every field.</p></details>
+<details><summary>5. Preserve transaction and concurrency semantics</summary><p>A cleanly printed rulebook still cannot stop two referees awarding the same final slot without an agreement. Clean dependencies do not automatically solve consistency. If pickup capacity must not be exceeded, the use case and persistence contract must express how that invariant survives concurrent requests.</p>
+<p>One design returns a conflict when an expected version changed; another executes the relevant local changes in a transaction. Make those semantics testable and do not replace them with a generic save method whose behavior is undefined. Network calls to a carrier remain distributed operations even behind an interface. The adapter boundary can make uncertainty explicit, but it cannot turn a remote timeout into proof that no pickup was created.</p></details>
+<details><summary>6. Test policy independently, then test the adapter honestly</summary><p>A rulebook test should not require building the stadium. Test domain decisions directly and use-case coordination with deliberate contract-compatible collaborators. Those focused tests help reveal whether policy depends on infrastructure details.</p>
+<p>Then verify real adapters against the database/provider behavior they represent. An in-memory store may not reproduce uniqueness constraints, transaction isolation, or provider timeouts. Add contract/integration coverage for those differences and a representative end-to-end user journey. Changing the database adapter may require substantial mapping and operational work even when inner policy remains unchanged; architectural independence reduces the surface of change rather than promising zero migration cost.</p></details>
+</section>
+<section data-section="trade-offs" id="node-d257fdd8-8532-4138-839b-7295ae2e2994-trade-offs">
+<h2>⚖️ Comparisons & Trade-Offs</h2>
+<p>Choose using the constraints of the system and its team. The table compares relevant choices; compatible ideas can be combined rather than ranked as universally better.</p><div class="kb-table-wrap"><table><caption>Choices, benefits, costs, and decision conditions</caption><thead><tr><th scope="col">Approach or condition</th><th scope="col">What you gain</th><th scope="col">What you give up</th><th scope="col">Choose when</th></tr></thead><tbody><tr><td>Direct framework-centered implementation</td><td>Low ceremony and fast progress for simple CRUD</td><td>Business logic can become tied to framework/storage behavior</td><td>Rules are simple and the cost of change remains acceptable.</td></tr><tr><td>Clean dependency boundaries</td><td>Policy/use-case testing and controlled infrastructure coupling</td><td>Interfaces, mapping and deliberate composition</td><td>Important business rules need to survive delivery/storage changes.</td></tr><tr><td>Hexagonal framing</td><td>A clear inside/outside view of ports and adapters</td><td>Teams must still choose ownership and abstraction granularity</td><td>The main design conversation is interaction with external actors/resources.</td></tr><tr><td>A separate service for every use case</td><td>Potentially independent runtime boundaries</td><td>Distributed failures and operations unrelated to dependency cleanliness</td><td>An actual operational boundary is needed; cleanliness alone is insufficient.</td></tr></tbody></table></div>
+</section>
+<section data-section="pitfalls" id="node-d257fdd8-8532-4138-839b-7295ae2e2994-pitfalls">
+<h2>⚠️ Common Pitfalls, Bugs & What-If Scenarios</h2>
+<p>Treat a failure as a story: start with what a user observes, trace the boundary that failed, and choose a prevention that addresses the cause.</p><div class="kb-callout--pitfall"><h3>An inner entity imports the web request</h3><p><strong>Symptom:</strong> A rule test requires constructing an entire framework context.</p><p><strong>Root Cause:</strong> Transport objects became the business vocabulary.</p><p><strong>Fix/Prevention:</strong> Translate at the edge and express inner input/results using domain/application concepts that do not require the framework.</p></div><div class="kb-callout--pitfall"><h3>The repository interface leaks its implementation</h3><p><strong>Symptom:</strong> A storage replacement still forces every use case to change.</p><p><strong>Root Cause:</strong> The interface returned query builders, sessions, or provider-specific exceptions.</p><p><strong>Fix/Prevention:</strong> Define the capability and semantics needed by the use case; map infrastructure data/errors at the adapter boundary.</p></div><div class="kb-callout--pitfall"><h3>The diagram is clean but the invariant is not</h3><p><strong>Symptom:</strong> Two concurrent pickup requests exceed capacity.</p><p><strong>Root Cause:</strong> Dependency direction was mistaken for a concurrency guarantee.</p><p><strong>Fix/Prevention:</strong> Specify atomicity/version semantics in the inner contract and validate real persistence behavior, not only in-memory doubles.</p></div>
+</section>
+<section data-section="mastery" id="node-d257fdd8-8532-4138-839b-7295ae2e2994-mastery">
+<h2>🧠 Active Recall & Mastery Check</h2>
+<div class="kb-callout--insight"><p><strong>Summarize this in your own words</strong></p><p>Explain the opening analogy, trace the worked example, and name one condition that would change your architectural decision. Try answering before opening the cards.</p></div><details class="kb-question" data-recall-id="dependency-direction"><summary>How can inner code call a database adapter without importing it?</summary><p>The inner side defines an interface for the needed capability. The outer adapter implements it and is supplied during composition. Runtime dispatch reaches the adapter, while source dependencies still point from the adapter toward the inner contract.</p></details><details class="kb-question" data-recall-id="four-circles"><summary>Must a Clean Architecture application have exactly four packages?</summary><p>No. The familiar circles illustrate policy/detail boundaries. The dependency rule and ownership of concepts matter more than the number of folders or classes. Use boundaries that protect actual rules instead of creating identical pass-through layers.</p></details><details class="kb-question" data-recall-id="adapter-tests"><summary>Why are successful use-case tests with an in-memory store insufficient?</summary><p>The fake may not reproduce real transaction isolation, uniqueness, mapping, provider errors, or timing. Test the adapter’s promised semantics against its actual infrastructure and keep representative integration coverage. Policy isolation and adapter correctness are different claims.</p></details><details class="kb-question" data-recall-id="error-semantics"><summary>Can an interface make a remote timeout behave like an atomic local failure?</summary><p>No. It can translate and document the uncertainty, offer correlation/status lookup, and support retry-safe behavior. It cannot prove an external effect did not commit merely because the response was not received. Distribution remains part of the application’s recovery design.</p></details><!-- kb-interview-scenarios:start -->
+<section data-interview-scenarios aria-labelledby="node-d257fdd8-8532-4138-839b-7295ae2e2994-interview-scenarios">
+<h3 id="node-d257fdd8-8532-4138-839b-7295ae2e2994-interview-scenarios">Tricky &amp; Most-Asked Interview Scenarios</h3>
+<p>Practice making a decision under a concrete production constraint. Open each answer, explain your reasoning aloud, then rate your confidence. The budgets and organizations below are author-created assumptions.</p>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-framework-context-in-domain-tests" data-scenario-basis="adapted-production">
+<summary>Domain tests need a live HTTP request. How will you remove the framework dependency?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A recipe should be testable without opening the restaurant. Discount policy reads the current HTTP user and request headers directly, so unit tests must boot the web framework. A scheduled job now needs the same policy. What boundary will you change and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Pass application-owned values such as actor identity and requested operation into the use case, rather than letting inner policy read a framework context. Let the HTTP adapter authenticate the request and translate trusted claims into that input. Put business authorization checks in the responsible use case/domain policy so a job cannot bypass them accidentally.</p>
+<p>Use dependency tests or module rules to keep framework imports out of the inner policy. Add fast tests that construct ordinary inputs and exercise both allowed and denied cases. Test the HTTP adapter separately for trustworthy translation; removing a dependency must not mean trusting arbitrary client-supplied identities.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Domain tests need a live HTTP request. How will you remove the framework dependency?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Authenticate at HTTP boundary"]
+    N1["Translate to application input"]
+    N2["Execute framework-free policy"]
+    N3["Test adapters separately"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Authenticate at HTTP boundary → Translate to application input → Execute framework-free policy → Test adapters separately.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain framework-independent policy and reusable entry points, but maintain explicit input and adapter mapping. Keeping framework-aware logic is a simpler alternative for transport-only behavior such as header parsing; it should remain outside the business core.</p>
+<p>Follow-up trap: replacing HttpRequest with a giant RequestContext that exposes everything retains the same coupling. If the new job acts under a service identity, define its permissions explicitly rather than impersonating an end user or disabling authorization to make reuse convenient.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-orm-types-in-inner-port" data-scenario-basis="adapted-production">
+<summary>An inner repository interface returns ORM queries and provider errors. Is dependency inversion working?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A plug is not universal if it still exposes one machine&#x27;s wiring. The application defines a repository interface, but its methods return provider query objects and throw database-specific exceptions. A provider upgrade breaks the core. What will you change?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Redesign the inner contract around the use case&#x27;s required behavior, returning application-owned results or explicitly shaped read projections. Keep query translation, transaction objects and provider exceptions inside the outer adapter. Map infrastructure failures to meaningful outcomes without erasing useful distinctions such as conflict versus unavailable.</p>
+<p>Place the interface where policy defines its needs and implement it in infrastructure. Add adapter contract tests and compile-time dependency checks so the inner project cannot import the ORM. Do not promise arbitrary provider interchangeability: query capabilities and consistency requirements still need real integration verification.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: An inner repository interface returns ORM queries and provider errors. Is dependency inversion working?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Identify leaked provider types"]
+    N1["Define policy-owned results"]
+    N2["Translate in outer adapter"]
+    N3["Verify dependency and behavior"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Identify leaked provider types → Define policy-owned results → Translate in outer adapter → Verify dependency and behavior.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You localize provider coupling and simplify policy tests, but write translation and purpose-specific query methods. A dedicated read-model adapter is an alternative for complex reporting; a generic repository need not conceal every query language feature.</p>
+<p>Follow-up trap: returning a provider object as object or dynamic only hides the dependency from the compiler. If a use case fundamentally needs a vendor-specific capability, isolate and name that capability explicitly, or accept a documented infrastructure dependency rather than advertise a portability guarantee you cannot support.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-atomic-use-case-without-orm-import" data-scenario-basis="adapted-production">
+<summary>A use case needs two atomic writes but cannot import the ORM. How do you express the transaction?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A manager can demand one completed sale without choosing the ledger&#x27;s locking syntax. A use case must save an order and local reservation atomically, yet clean dependency rules keep ORM APIs outside the core. Both writes use one database. What contract will you use and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Express the required atomic operation through an application-owned unit-of-work boundary or a coarse repository operation whose contract states all-or-nothing behavior. Let the infrastructure adapter implement that boundary with the actual database transaction and enlist all required writes. The use case chooses the business boundary; infrastructure supplies the mechanism.</p>
+<p>Test rollback after the first write, commit failure and concurrent attempts against the real provider. Keep remote effects outside a claimed local transaction, and map conflicts to explicit application outcomes. Dependency inversion moves source dependencies; it does not create atomicity by itself.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A use case needs two atomic writes but cannot import the ORM. How do you express the transaction?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Define atomic business operation"]
+    N1["Invoke application-owned boundary"]
+    N2["Enlist real local writes"]
+    N3["Commit or expose explicit failure"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Define atomic business operation → Invoke application-owned boundary → Enlist real local writes → Commit or expose explicit failure.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You preserve policy independence and an explicit commit guarantee, but design and test a transaction abstraction carefully. Putting the whole invariant in one aggregate/repository operation is a viable simpler alternative when it fits the domain.</p>
+<p>Follow-up trap: an interface named Transaction cannot make independent remote stores atomic. If a write moves into another service, use a supported distributed coordination mechanism or an explicit durable workflow with changed consistency semantics. Do not keep the old contract while silently weakening its guarantee.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-outward-execution-inward-source-dependency" data-scenario-basis="adapted-production">
+<summary>The use case calls a database adapter at runtime. Does that violate the inward dependency rule?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A wall switch can operate a replaceable lamp without the switch being designed around that lamp model. A reviewer sees a use case invoking a repository implementation at runtime and claims all execution must flow inward. The interface is owned by the application. What will you inspect and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Distinguish control flow from source dependency. The use case may invoke an application-owned interface; an outer adapter implements it and a composition root wires the instance. Inspect imports and data types: the core should depend on its abstraction, while infrastructure depends on that contract, even when runtime execution reaches the database.</p>
+<p>Keep wiring at the edge and avoid a service locator that lets policy look up arbitrary infrastructure. Verify that the application can run with a test adapter without importing the production framework. Draw both the runtime call and source dependency explicitly when explaining the design.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: The use case calls a database adapter at runtime. Does that violate the inward dependency rule?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Core calls its own interface"]
+    N1["Outer adapter implements contract"]
+    N2["Composition root supplies instance"]
+    N3["Verify source imports point inward"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Core calls its own interface → Outer adapter implements contract → Composition root supplies instance → Verify source imports point inward.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You allow replaceable mechanisms without forbidding useful I/O, at the cost of explicit composition and abstraction boundaries. Direct infrastructure calls are an alternative in a deliberately simpler application, but then accept that dependency rather than claiming the same isolation.</p>
+<p>Follow-up trap: moving an interface into infrastructure while the core imports it still points the source dependency outward. If a stable external standard genuinely belongs in a public contract, decide that explicitly and keep provider-specific details from leaking through it; folder names alone do not establish the dependency rule.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-crud-abstraction-ceremony" data-scenario-basis="adapted-production">
+<summary>A one-screen CRUD feature now requires ten projects and an interface per class. Should you keep adding boundaries?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A small cupboard does not need the logistics system of a warehouse. A one-screen internal editor with little policy takes days because every change requires duplicate models, pass-through services and interfaces. The team has a short deadline and no predicted provider change. What will you simplify?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Keep the stable boundary that protects actual policy and remove pass-through abstractions with no independent responsibility. A use case can be a small function/module; clean architecture does not require a fixed number of projects or one interface per class. Prefer a direct, clear implementation behind an adapter boundary over speculative layers.</p>
+<p>Measure change effort and test whether the simplified feature still keeps business rules independent of transport and persistence details that matter. Preserve authorization, validation and useful integration tests. Record the trigger for adding a new abstraction when real variation or policy complexity appears.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A one-screen CRUD feature now requires ten projects and an interface per class. Should you keep adding boundaries?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Find responsibility-free layers"]
+    N1["Retain meaningful policy boundary"]
+    N2["Simplify composition and models"]
+    N3["Add boundaries when evidence appears"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Find responsibility-free layers → Retain meaningful policy boundary → Simplify composition and models → Add boundaries when evidence appears.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain delivery speed and clearer code while accepting some local coupling and possible later refactoring. A more elaborate boundary is a viable alternative when multiple implementations or a complex domain already require it.</p>
+<p>Follow-up trap: simplicity is not permission to move pricing or security policy into controllers. If the feature evolves into a regulated approval workflow, introduce explicit policy/use-case boundaries and audit requirements then. Design for the demonstrated responsibility rather than treating either maximum ceremony or zero abstraction as universally correct.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-http-and-job-shared-policy" data-scenario-basis="adapted-production">
+<summary>A nightly job and HTTP endpoint implement different eligibility rules. How should they share a use case?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Two doors into the same building should not lead to different admission rules. An endpoint and a nightly job both renew subscriptions but duplicate eligibility checks and error handling. They now disagree on expired accounts. What shared boundary will you establish?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Create one policy-bearing application use case with application-owned inputs and explicit outcomes. Each entry adapter handles its transport concerns: HTTP status mapping for the endpoint, scheduling and batch progress for the job. Both invoke the same eligibility policy with an authorized actor and stable operation identity where retries can repeat effects.</p>
+<p>Test the policy independently and add one adapter integration test for each entry path. Keep batch-specific chunking and recovery outside the domain rule, while ensuring a restarted job does not renew the same subscription twice. Shared reuse should preserve semantics, not just eliminate similar-looking lines.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A nightly job and HTTP endpoint implement different eligibility rules. How should they share a use case?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Adapt HTTP or scheduled input"]
+    N1["Invoke shared application policy"]
+    N2["Return explicit business outcome"]
+    N3["Map transport-specific response"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Adapt HTTP or scheduled input → Invoke shared application policy → Return explicit business outcome → Map transport-specific response.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain consistent decisions and reusable tests, but require a clear result contract and careful batch retry handling. Separate use cases that share a smaller domain policy are an alternative when interactive and bulk workflows have genuinely different guarantees.</p>
+<p>Follow-up trap: reusing an HTTP controller from the scheduler drags framework behavior inward. If a bulk operation is intentionally allowed to bypass a user-facing limit, model that authorized difference explicitly instead of adding hidden transport checks inside the shared policy.</p>
+</div>
+</details>
+<aside class="kb-callout--insight" data-interview-research>
+<p>Researched 2026-11-17. These scenarios adapt documented production problems and architectural guidance. Interview frequency, rankings and company provenance for these exact prompts were not independently verified. Numeric budgets and organization details are author-created assumptions. Web search was available and used for this concept; primary sources support the technical reasoning, not a claim that these prompts recur in interviews.</p>
+<ul><li><a href="https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html">Robert C. Martin: The Clean Architecture</a></li><li><a href="https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures">Microsoft: Common web application architectures</a></li><li><a href="https://learn.microsoft.com/en-us/ef/core/saving/transactions">Microsoft: EF Core transactions (implementation-specific example)</a></li><li><a href="https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/">AWS: Making retries safe with idempotent APIs</a></li></ul>
+</aside>
+</section>
+<!-- kb-interview-scenarios:end --><div class="kb-callout--impact"><h3>Real-world impact</h3><p>For parcel scheduling, the benefit is a policy that remains understandable and testable while delivery adapters evolve. Protect the vocabulary, direction of dependencies, and semantic promises at each boundary. The result should make a business change easier to locate, not simply create more abstractions.</p></div>
+</section>
+<footer class="kb-references"><h2>Sources and further reading</h2><p>Original explanations and worked examples above; consult these primary references for the underlying ideas and implementation-specific details.</p><ul><li><a href="https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html">Robert C. Martin: The Clean Architecture</a></li><li><a href="https://alistair.cockburn.us/hexagonal-architecture">Alistair Cockburn: Hexagonal Architecture</a></li><li><a href="https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/n-tier">Microsoft Architecture Center: N-tier architecture style</a></li></ul><p>Connect this lesson to: <a href="#/system-design/backend-architecture/code-and-domain-organization/layered-architecture">Layered Architecture</a>, <a href="#/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture">Hexagonal Architecture</a>, <a href="#/system-design/backend-architecture/code-and-domain-organization/domain-driven-design">Domain-Driven Design (DDD)</a>.</p></footer>
+</article>

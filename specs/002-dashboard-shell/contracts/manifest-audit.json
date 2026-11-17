@@ -1,0 +1,488 @@
+{
+  "auditedOn": "2026-11-17",
+  "manifest": "manifest.json",
+  "manifestSha256": "e78bb55441e16e450fc19c602cc689cec102793bd2798ae974832d64281d89aa",
+  "canonicalSchema": "specs/001-backend-architecture/contracts/manifest.schema.json",
+  "canonicalSchemaSha256": "2ed5b43dd9c796d24de42becb4a5268739a0c68b461aa46b70f91abc13f1e4db",
+  "manifestSchemaVersion": 1,
+  "observedNodeFields": [
+    "children",
+    "id",
+    "kind",
+    "slug",
+    "title"
+  ],
+  "counts": {
+    "nodes": 21,
+    "hub": 6,
+    "topic": 15,
+    "diagrams": 22,
+    "recallQuestions": 61,
+    "details": 153
+  },
+  "allPartialClasses": [
+    "kb-callout--impact",
+    "kb-callout--insight",
+    "kb-callout--pitfall",
+    "kb-callout--structure",
+    "kb-diagram",
+    "kb-hub",
+    "kb-question",
+    "kb-references",
+    "kb-table-wrap",
+    "kb-topic",
+    "language-json",
+    "language-sql",
+    "mermaid"
+  ],
+  "codeLanguages": [
+    "json",
+    "sql"
+  ],
+  "sample": {
+    "path": "topics/system-design/backend-architecture/code-and-domain-organization/clean-architecture.html",
+    "sha256": "77b92e8eb2168f286d2ef36e1dd114a2d31fefca827843553de319d0275b472b",
+    "nodeId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+    "sectionKeys": [
+      "hook-eli5",
+      "big-picture",
+      "mechanics",
+      "trade-offs",
+      "pitfalls",
+      "mastery"
+    ],
+    "classes": [
+      "kb-callout--impact",
+      "kb-callout--insight",
+      "kb-callout--pitfall",
+      "kb-diagram",
+      "kb-question",
+      "kb-references",
+      "kb-table-wrap",
+      "kb-topic",
+      "mermaid"
+    ],
+    "details": 10,
+    "recallKeys": [
+      "dependency-direction",
+      "four-circles",
+      "adapter-tests",
+      "error-semantics"
+    ],
+    "diagramCount": 2
+  },
+  "nodes": [
+    {
+      "id": "d3825659-12c2-4fc8-b6fe-bdd050762da3",
+      "kind": "hub",
+      "title": "System Design",
+      "slug": "system-design",
+      "route": "/system-design",
+      "partial": "./topics/system-design/_overview.html",
+      "sectionKeys": [],
+      "recallKeys": [],
+      "diagramCount": 1
+    },
+    {
+      "id": "401502d7-77c1-438c-a663-053fc5d18ada",
+      "kind": "hub",
+      "title": "Backend Architecture",
+      "slug": "backend-architecture",
+      "route": "/system-design/backend-architecture",
+      "partial": "./topics/system-design/backend-architecture/_overview.html",
+      "sectionKeys": [],
+      "recallKeys": [],
+      "diagramCount": 1
+    },
+    {
+      "id": "782e772f-8c50-46aa-a26a-d37ff94599a2",
+      "kind": "hub",
+      "title": "Core System Topologies",
+      "slug": "core-system-topologies",
+      "route": "/system-design/backend-architecture/core-system-topologies",
+      "partial": "./topics/system-design/backend-architecture/core-system-topologies/_overview.html",
+      "sectionKeys": [],
+      "recallKeys": [],
+      "diagramCount": 1
+    },
+    {
+      "id": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+      "kind": "topic",
+      "title": "Distributed System Fundamentals",
+      "slug": "distributed-system-fundamentals",
+      "route": "/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals",
+      "partial": "./topics/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals.html",
+      "sectionKeys": [
+        "hook-eli5",
+        "big-picture",
+        "mechanics",
+        "trade-offs",
+        "pitfalls",
+        "mastery"
+      ],
+      "recallKeys": [
+        "timeout-meaning",
+        "idempotency-race",
+        "consistency-boundary",
+        "retry-budget"
+      ],
+      "diagramCount": 1
+    },
+    {
+      "id": "1901acc7-9225-428a-9397-072cff3d36d0",
+      "kind": "topic",
+      "title": "Monolithic Architecture",
+      "slug": "monolithic-architecture",
+      "route": "/system-design/backend-architecture/core-system-topologies/monolithic-architecture",
+      "partial": "./topics/system-design/backend-architecture/core-system-topologies/monolithic-architecture.html",
+      "sectionKeys": [
+        "hook-eli5",
+        "big-picture",
+        "mechanics",
+        "trade-offs",
+        "pitfalls",
+        "mastery"
+      ],
+      "recallKeys": [
+        "server-count",
+        "local-transaction",
+        "modularity",
+        "extraction-test"
+      ],
+      "diagramCount": 1
+    },
+    {
+      "id": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+      "kind": "topic",
+      "title": "Modular Monolith",
+      "slug": "modular-monolith",
+      "route": "/system-design/backend-architecture/core-system-topologies/modular-monolith",
+      "partial": "./topics/system-design/backend-architecture/core-system-topologies/modular-monolith.html",
+      "sectionKeys": [
+        "hook-eli5",
+        "big-picture",
+        "mechanics",
+        "trade-offs",
+        "pitfalls",
+        "mastery"
+      ],
+      "recallKeys": [
+        "module-proof",
+        "transaction-boundary",
+        "durable-events",
+        "extraction-cost"
+      ],
+      "diagramCount": 1
+    },
+    {
+      "id": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+      "kind": "topic",
+      "title": "Service-Oriented Architecture (SOA)",
+      "slug": "service-oriented-architecture",
+      "route": "/system-design/backend-architecture/core-system-topologies/service-oriented-architecture",
+      "partial": "./topics/system-design/backend-architecture/core-system-topologies/service-oriented-architecture.html",
+      "sectionKeys": [
+        "hook-eli5",
+        "big-picture",
+        "mechanics",
+        "trade-offs",
+        "pitfalls",
+        "mastery"
+      ],
+      "recallKeys": [
+        "protocol-definition",
+        "accepted-versus-done",
+        "compensation",
+        "soa-versus-microservices"
+      ],
+      "diagramCount": 1
+    },
+    {
+      "id": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+      "kind": "topic",
+      "title": "Microservices Architecture",
+      "slug": "microservices-architecture",
+      "route": "/system-design/backend-architecture/core-system-topologies/microservices-architecture",
+      "partial": "./topics/system-design/backend-architecture/core-system-topologies/microservices-architecture.html",
+      "sectionKeys": [
+        "hook-eli5",
+        "big-picture",
+        "mechanics",
+        "trade-offs",
+        "pitfalls",
+        "mastery"
+      ],
+      "recallKeys": [
+        "independence-test",
+        "data-ownership",
+        "saga-failure",
+        "monolith-extraction"
+      ],
+      "diagramCount": 1
+    },
+    {
+      "id": "1dce8024-d12a-4295-ae55-afa135170fb5",
+      "kind": "hub",
+      "title": "Code & Domain Organization",
+      "slug": "code-and-domain-organization",
+      "route": "/system-design/backend-architecture/code-and-domain-organization",
+      "partial": "./topics/system-design/backend-architecture/code-and-domain-organization/_overview.html",
+      "sectionKeys": [],
+      "recallKeys": [],
+      "diagramCount": 1
+    },
+    {
+      "id": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+      "kind": "topic",
+      "title": "Layered Architecture",
+      "slug": "layered-architecture",
+      "route": "/system-design/backend-architecture/code-and-domain-organization/layered-architecture",
+      "partial": "./topics/system-design/backend-architecture/code-and-domain-organization/layered-architecture.html",
+      "sectionKeys": [
+        "hook-eli5",
+        "big-picture",
+        "mechanics",
+        "trade-offs",
+        "pitfalls",
+        "mastery"
+      ],
+      "recallKeys": [
+        "layer-tier",
+        "rule-location",
+        "dependency-rule",
+        "concurrent-loans"
+      ],
+      "diagramCount": 1
+    },
+    {
+      "id": "d257fdd8-8532-4138-839b-7295ae2e2994",
+      "kind": "topic",
+      "title": "Clean Architecture",
+      "slug": "clean-architecture",
+      "route": "/system-design/backend-architecture/code-and-domain-organization/clean-architecture",
+      "partial": "./topics/system-design/backend-architecture/code-and-domain-organization/clean-architecture.html",
+      "sectionKeys": [
+        "hook-eli5",
+        "big-picture",
+        "mechanics",
+        "trade-offs",
+        "pitfalls",
+        "mastery"
+      ],
+      "recallKeys": [
+        "dependency-direction",
+        "four-circles",
+        "adapter-tests",
+        "error-semantics"
+      ],
+      "diagramCount": 2
+    },
+    {
+      "id": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+      "kind": "topic",
+      "title": "Hexagonal Architecture",
+      "slug": "hexagonal-architecture",
+      "route": "/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture",
+      "partial": "./topics/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture.html",
+      "sectionKeys": [
+        "hook-eli5",
+        "big-picture",
+        "mechanics",
+        "trade-offs",
+        "pitfalls",
+        "mastery"
+      ],
+      "recallKeys": [
+        "driving-driven",
+        "six-ports",
+        "port-semantics",
+        "test-boundaries"
+      ],
+      "diagramCount": 1
+    },
+    {
+      "id": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+      "kind": "topic",
+      "title": "Domain-Driven Design (DDD)",
+      "slug": "domain-driven-design",
+      "route": "/system-design/backend-architecture/code-and-domain-organization/domain-driven-design",
+      "partial": "./topics/system-design/backend-architecture/code-and-domain-organization/domain-driven-design.html",
+      "sectionKeys": [
+        "hook-eli5",
+        "big-picture",
+        "mechanics",
+        "trade-offs",
+        "pitfalls",
+        "mastery"
+      ],
+      "recallKeys": [
+        "context-service",
+        "entity-value",
+        "aggregate-invariant",
+        "event-guarantee",
+        "model-cost"
+      ],
+      "diagramCount": 1
+    },
+    {
+      "id": "a83461a8-4d18-4132-908e-dac2eab5638d",
+      "kind": "hub",
+      "title": "Communication & Routing",
+      "slug": "communication-and-routing",
+      "route": "/system-design/backend-architecture/communication-and-routing",
+      "partial": "./topics/system-design/backend-architecture/communication-and-routing/_overview.html",
+      "sectionKeys": [],
+      "recallKeys": [],
+      "diagramCount": 1
+    },
+    {
+      "id": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+      "kind": "topic",
+      "title": "Event-Driven Architecture",
+      "slug": "event-driven-architecture",
+      "route": "/system-design/backend-architecture/communication-and-routing/event-driven-architecture",
+      "partial": "./topics/system-design/backend-architecture/communication-and-routing/event-driven-architecture.html",
+      "sectionKeys": [
+        "hook-eli5",
+        "big-picture",
+        "mechanics",
+        "trade-offs",
+        "pitfalls",
+        "mastery"
+      ],
+      "recallKeys": [
+        "command-event",
+        "outbox-duplicate",
+        "ack-timing",
+        "replay-side-effects"
+      ],
+      "diagramCount": 1
+    },
+    {
+      "id": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+      "kind": "topic",
+      "title": "API Gateway Pattern",
+      "slug": "api-gateway-pattern",
+      "route": "/system-design/backend-architecture/communication-and-routing/api-gateway-pattern",
+      "partial": "./topics/system-design/backend-architecture/communication-and-routing/api-gateway-pattern.html",
+      "sectionKeys": [
+        "hook-eli5",
+        "big-picture",
+        "mechanics",
+        "trade-offs",
+        "pitfalls",
+        "mastery"
+      ],
+      "recallKeys": [
+        "single-point",
+        "partial-result",
+        "authorization-owner",
+        "gateway-bff"
+      ],
+      "diagramCount": 1
+    },
+    {
+      "id": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+      "kind": "topic",
+      "title": "Backend for Frontend (BFF)",
+      "slug": "backend-for-frontend",
+      "route": "/system-design/backend-architecture/communication-and-routing/backend-for-frontend",
+      "partial": "./topics/system-design/backend-architecture/communication-and-routing/backend-for-frontend.html",
+      "sectionKeys": [
+        "hook-eli5",
+        "big-picture",
+        "mechanics",
+        "trade-offs",
+        "pitfalls",
+        "mastery"
+      ],
+      "recallKeys": [
+        "boundary-choice",
+        "rule-duplication",
+        "gateway-comparison",
+        "query-language"
+      ],
+      "diagramCount": 1
+    },
+    {
+      "id": "e4b099e0-3f6c-480e-bb61-76e763a8e5e5",
+      "kind": "hub",
+      "title": "Infrastructure & Multi-Tenancy",
+      "slug": "infrastructure-and-multi-tenancy",
+      "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy",
+      "partial": "./topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/_overview.html",
+      "sectionKeys": [],
+      "recallKeys": [],
+      "diagramCount": 1
+    },
+    {
+      "id": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+      "kind": "topic",
+      "title": "Service Discovery",
+      "slug": "service-discovery",
+      "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery",
+      "partial": "./topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery.html",
+      "sectionKeys": [
+        "hook-eli5",
+        "big-picture",
+        "mechanics",
+        "trade-offs",
+        "pitfalls",
+        "mastery"
+      ],
+      "recallKeys": [
+        "discovery-selection",
+        "dns-ttl",
+        "client-server",
+        "readiness"
+      ],
+      "diagramCount": 1
+    },
+    {
+      "id": "84458963-012b-4a80-828a-2da27d8b509d",
+      "kind": "topic",
+      "title": "Service Mesh",
+      "slug": "service-mesh",
+      "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh",
+      "partial": "./topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh.html",
+      "sectionKeys": [
+        "hook-eli5",
+        "big-picture",
+        "mechanics",
+        "trade-offs",
+        "pitfalls",
+        "mastery"
+      ],
+      "recallKeys": [
+        "planes",
+        "sidecars",
+        "identity-permission",
+        "control-outage"
+      ],
+      "diagramCount": 1
+    },
+    {
+      "id": "689dd587-de37-4e22-9412-bd42b118da79",
+      "kind": "topic",
+      "title": "Multi-Tenant Architecture",
+      "slug": "multi-tenant-architecture",
+      "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy/multi-tenant-architecture",
+      "partial": "./topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/multi-tenant-architecture.html",
+      "sectionKeys": [
+        "hook-eli5",
+        "big-picture",
+        "mechanics",
+        "trade-offs",
+        "pitfalls",
+        "mastery"
+      ],
+      "recallKeys": [
+        "tenant-user",
+        "shared-store",
+        "async-context",
+        "isolation-test"
+      ],
+      "diagramCount": 1
+    }
+  ]
+}

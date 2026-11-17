@@ -1,0 +1,102 @@
+{
+  "status": "pass",
+  "topicId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+  "path": "topics/system-design/backend-architecture/code-and-domain-organization/layered-architecture.html",
+  "sourceSha256": "5815f427794062a094795a79b6b7dcf367a6cf84f4aeb65f6210a60987eff0de",
+  "outputs": [
+    {
+      "nodeId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+      "topicId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+      "sourceSha256": "5815f427794062a094795a79b6b7dcf367a6cf84f4aeb65f6210a60987eff0de",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-layered-architecture.pdf",
+      "completeTextBlocks": 150,
+      "diagramLabels": 31,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+      "topicId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+      "sourceSha256": "5815f427794062a094795a79b6b7dcf367a6cf84f4aeb65f6210a60987eff0de",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-layered-architecture.pdf",
+      "completeTextBlocks": 150,
+      "diagramLabels": 31,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    }
+  ],
+  "visualReview": {
+    "topicId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+    "path": "topics/system-design/backend-architecture/code-and-domain-organization/layered-architecture.html",
+    "comparisonSheet": "/tmp/backend-interview-print-review/layered-architecture-comparison.jpg",
+    "outputs": [
+      {
+        "theme": "light",
+        "pdf": "/tmp/backend-interview-pdfs/light-layered-architecture.pdf",
+        "pages": 19,
+        "selectedPages": [
+          5,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/light-layered-architecture-table.png",
+          "/tmp/backend-interview-print-review/light-layered-architecture-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/light-layered-architecture-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "deaa9ee7dd8daff7955d2ab2cebc36caa29a60b2a96694b0e328f16c8960ac75",
+        "reviewPanelSha256": [
+          "ec25e9f686ee8d74fb12b96b790e2fd0b69776c6ffb841f89f2fc057fabf32be",
+          "728a6436704c56b76df283d26c3f9b2018178847389240a69d0611bf477a8fd2",
+          "9ba7471ce25d5aedd41bff4847783597a64d1f59a6458e91da7ff100ad6da4a7"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      },
+      {
+        "theme": "dark",
+        "pdf": "/tmp/backend-interview-pdfs/dark-layered-architecture.pdf",
+        "pages": 19,
+        "selectedPages": [
+          5,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/dark-layered-architecture-table.png",
+          "/tmp/backend-interview-print-review/dark-layered-architecture-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/dark-layered-architecture-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "9d15110cb71fd6309a7bd437c1c8ddcbb91003618928088fe7761181767886d4",
+        "reviewPanelSha256": [
+          "ec25e9f686ee8d74fb12b96b790e2fd0b69776c6ffb841f89f2fc057fabf32be",
+          "728a6436704c56b76df283d26c3f9b2018178847389240a69d0611bf477a8fd2",
+          "9ba7471ce25d5aedd41bff4847783597a64d1f59a6458e91da7ff100ad6da4a7"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      }
+    ],
+    "reviewStatus": "pass",
+    "reviewedOn": "2026-11-17",
+    "reviewFindings": [
+      "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+      "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+      "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+      "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+    ]
+  },
+  "findings": [
+    "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+    "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+    "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+  ]
+}

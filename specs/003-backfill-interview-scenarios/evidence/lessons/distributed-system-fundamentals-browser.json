@@ -1,0 +1,169 @@
+{
+  "status": "pass",
+  "topicId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+  "path": "topics/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals.html",
+  "sourceSha256": "6c76a52a1524bd3bf53e20f7d03a70a89deffdf839dd007fa01b4afd78156acb",
+  "browser": "141.0.7390.37",
+  "navigation": [
+    {
+      "base": "http://127.0.0.1:8020/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    },
+    {
+      "base": "http://127.0.0.1:8021/backend-lab/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    }
+  ],
+  "learning": {
+    "topicId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+    "path": "topics/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals.html",
+    "sourceSha256": "6c76a52a1524bd3bf53e20f7d03a70a89deffdf839dd007fa01b4afd78156acb",
+    "status": "pass",
+    "bases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "newKeys": [
+          "interview-payment-timeout-unknown-outcome",
+          "interview-retry-storm-overload",
+          "interview-partition-cart-versus-stock",
+          "interview-read-after-profile-update",
+          "interview-offline-conflict-business-meaning",
+          "interview-slow-replica-failure-suspicion"
+        ],
+        "ratings": {
+          "interview-payment-timeout-unknown-outcome": "hard",
+          "interview-retry-storm-overload": "good",
+          "interview-partition-cart-versus-stock": "easy",
+          "interview-read-after-profile-update": "hard",
+          "interview-offline-conflict-business-meaning": "good",
+          "interview-slow-replica-failure-suspicion": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "newKeys": [
+          "interview-payment-timeout-unknown-outcome",
+          "interview-retry-storm-overload",
+          "interview-partition-cart-versus-stock",
+          "interview-read-after-profile-update",
+          "interview-offline-conflict-business-meaning",
+          "interview-slow-replica-failure-suspicion"
+        ],
+        "ratings": {
+          "interview-payment-timeout-unknown-outcome": "hard",
+          "interview-retry-storm-overload": "good",
+          "interview-partition-cart-versus-stock": "easy",
+          "interview-read-after-profile-update": "hard",
+          "interview-offline-conflict-business-meaning": "good",
+          "interview-slow-replica-failure-suspicion": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      }
+    ]
+  },
+  "mobileThemes": {
+    "topicId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+    "path": "topics/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals.html",
+    "sourceSha256": "6c76a52a1524bd3bf53e20f7d03a70a89deffdf839dd007fa01b4afd78156acb",
+    "status": "pass",
+    "cases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-payment-timeout-unknown-outcome",
+          "interview-retry-storm-overload",
+          "interview-partition-cart-versus-stock",
+          "interview-read-after-profile-update",
+          "interview-offline-conflict-business-meaning",
+          "interview-slow-replica-failure-suspicion"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-payment-timeout-unknown-outcome",
+          "interview-retry-storm-overload",
+          "interview-partition-cart-versus-stock",
+          "interview-read-after-profile-update",
+          "interview-offline-conflict-business-meaning",
+          "interview-slow-replica-failure-suspicion"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-payment-timeout-unknown-outcome",
+          "interview-retry-storm-overload",
+          "interview-partition-cart-versus-stock",
+          "interview-read-after-profile-update",
+          "interview-offline-conflict-business-meaning",
+          "interview-slow-replica-failure-suspicion"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-payment-timeout-unknown-outcome",
+          "interview-retry-storm-overload",
+          "interview-partition-cart-versus-stock",
+          "interview-read-after-profile-update",
+          "interview-offline-conflict-business-meaning",
+          "interview-slow-replica-failure-suspicion"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      }
+    ]
+  },
+  "errors": [],
+  "supportingFixture": "reading_fixture passed all 21 actual partials without learning writes."
+}

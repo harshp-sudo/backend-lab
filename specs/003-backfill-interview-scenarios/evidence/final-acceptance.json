@@ -1,0 +1,259 @@
+{
+  "status": "pass",
+  "checkedOn": "2026-11-17",
+  "lessons": 15,
+  "foundational": 61,
+  "interviews": 90,
+  "questions": 151,
+  "diagrams": 112,
+  "requirements": {
+    "FR-001": {
+      "status": "pass",
+      "evidence": [
+        "evidence/lesson-completion.json",
+        "evidence/final-structure.json",
+        "evidence/rerun-preservation.json"
+      ]
+    },
+    "FR-002": {
+      "status": "pass",
+      "evidence": [
+        "evidence/lesson-completion.json",
+        "evidence/final-structure.json",
+        "evidence/rerun-preservation.json"
+      ]
+    },
+    "FR-003": {
+      "status": "pass",
+      "evidence": [
+        "evidence/lesson-completion.json",
+        "evidence/final-structure.json",
+        "evidence/rerun-preservation.json"
+      ]
+    },
+    "FR-004": {
+      "status": "pass",
+      "evidence": [
+        "evidence/lesson-completion.json",
+        "evidence/final-structure.json",
+        "evidence/rerun-preservation.json"
+      ]
+    },
+    "FR-005": {
+      "status": "pass",
+      "evidence": [
+        "evidence/lesson-completion.json",
+        "evidence/final-structure.json",
+        "evidence/rerun-preservation.json"
+      ]
+    },
+    "FR-011": {
+      "status": "pass",
+      "evidence": [
+        "evidence/lesson-completion.json",
+        "evidence/final-structure.json",
+        "evidence/rerun-preservation.json"
+      ]
+    },
+    "FR-015": {
+      "status": "pass",
+      "evidence": [
+        "evidence/lesson-completion.json",
+        "evidence/final-structure.json",
+        "evidence/rerun-preservation.json"
+      ]
+    },
+    "FR-016": {
+      "status": "pass",
+      "evidence": [
+        "evidence/lesson-completion.json",
+        "evidence/final-structure.json",
+        "evidence/rerun-preservation.json"
+      ]
+    },
+    "FR-022": {
+      "status": "pass",
+      "evidence": [
+        "evidence/lesson-completion.json",
+        "evidence/final-structure.json",
+        "evidence/rerun-preservation.json"
+      ]
+    },
+    "FR-023": {
+      "status": "pass",
+      "evidence": [
+        "evidence/lesson-completion.json",
+        "evidence/final-structure.json",
+        "evidence/rerun-preservation.json"
+      ]
+    },
+    "FR-024": {
+      "status": "pass",
+      "evidence": [
+        "evidence/lesson-completion.json",
+        "evidence/final-structure.json",
+        "evidence/rerun-preservation.json"
+      ]
+    },
+    "FR-006": {
+      "status": "pass",
+      "evidence": [
+        "evidence/research-review.json",
+        "evidence/editorial-negative-cases.md"
+      ]
+    },
+    "FR-007": {
+      "status": "pass",
+      "evidence": [
+        "evidence/research-review.json",
+        "evidence/editorial-negative-cases.md"
+      ]
+    },
+    "FR-008": {
+      "status": "pass",
+      "evidence": [
+        "evidence/research-review.json",
+        "evidence/editorial-negative-cases.md"
+      ]
+    },
+    "FR-009": {
+      "status": "pass",
+      "evidence": [
+        "evidence/research-review.json",
+        "evidence/editorial-negative-cases.md"
+      ]
+    },
+    "FR-010": {
+      "status": "pass",
+      "evidence": [
+        "evidence/host-acceptance.json",
+        "evidence/learning-preservation.json",
+        "evidence/validator-regressions.json"
+      ]
+    },
+    "FR-012": {
+      "status": "pass",
+      "evidence": [
+        "evidence/host-acceptance.json",
+        "evidence/learning-preservation.json",
+        "evidence/validator-regressions.json"
+      ]
+    },
+    "FR-013": {
+      "status": "pass",
+      "evidence": [
+        "evidence/host-acceptance.json",
+        "evidence/learning-preservation.json",
+        "evidence/validator-regressions.json"
+      ]
+    },
+    "FR-014": {
+      "status": "pass",
+      "evidence": [
+        "evidence/host-acceptance.json",
+        "evidence/learning-preservation.json",
+        "evidence/validator-regressions.json"
+      ]
+    },
+    "FR-017": {
+      "status": "pass",
+      "evidence": [
+        "evidence/host-acceptance.json",
+        "evidence/learning-preservation.json",
+        "evidence/validator-regressions.json"
+      ]
+    },
+    "FR-018": {
+      "status": "pass",
+      "evidence": [
+        "evidence/host-acceptance.json",
+        "evidence/learning-preservation.json",
+        "evidence/validator-regressions.json"
+      ]
+    },
+    "FR-019": {
+      "status": "pass",
+      "evidence": [
+        "evidence/host-acceptance.json",
+        "evidence/learning-preservation.json",
+        "evidence/validator-regressions.json"
+      ]
+    },
+    "FR-021": {
+      "status": "pass",
+      "evidence": [
+        "evidence/host-acceptance.json",
+        "evidence/learning-preservation.json",
+        "evidence/validator-regressions.json"
+      ]
+    },
+    "FR-020": {
+      "status": "pass",
+      "evidence": [
+        "evidence/print-results.json"
+      ]
+    }
+  },
+  "outcomes": {
+    "SC-001": {
+      "status": "pass",
+      "evidence": [
+        "evidence/final-structure.json",
+        "evidence/lesson-completion.json"
+      ]
+    },
+    "SC-002": {
+      "status": "pass",
+      "evidence": [
+        "evidence/research-review.json",
+        "evidence/editorial-negative-cases.md"
+      ]
+    },
+    "SC-003": {
+      "status": "pass",
+      "evidence": [
+        "evidence/research-review.json"
+      ]
+    },
+    "SC-004": {
+      "status": "pass",
+      "evidence": [
+        "evidence/rerun-preservation.json",
+        "evidence/learning-preservation.json"
+      ]
+    },
+    "SC-005": {
+      "status": "pass",
+      "evidence": [
+        "evidence/learning-preservation.json",
+        "evidence/host-acceptance.json"
+      ]
+    },
+    "SC-006": {
+      "status": "pass",
+      "evidence": [
+        "evidence/host-acceptance.json"
+      ]
+    },
+    "SC-007": {
+      "status": "pass",
+      "evidence": [
+        "evidence/print-results.json"
+      ]
+    },
+    "SC-008": {
+      "status": "pass",
+      "evidence": [
+        "evidence/validator-regressions.json",
+        "evidence/editorial-negative-cases.md",
+        "evidence/lesson-completion.json"
+      ]
+    }
+  },
+  "perLessonRecord": "evidence/lesson-completion.json",
+  "limitations": [
+    "Exact prompt frequency/rank/company provenance remains unverified and is disclosed in all lessons.",
+    "One supplementary PDF source recheck timed out and is not used to support accepted answers.",
+    "Bulk PDFs/raster panels live outside the repository and can be regenerated."
+  ]
+}

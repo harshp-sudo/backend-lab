@@ -1,0 +1,165 @@
+{
+  "profile": "backend-architecture",
+  "phase": "intrinsic",
+  "result": "pass",
+  "counts": {
+    "totalNodes": 21,
+    "batch": {
+      "topics": 15,
+      "hubs": 6
+    }
+  },
+  "checks": [
+    {
+      "name": "catalog",
+      "status": "pass",
+      "artifact": "manifest.json",
+      "message": "Shape, identities, derived targets and requested membership verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/_overview.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/_overview.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/core-system-topologies/_overview.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/core-system-topologies/monolithic-architecture.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/core-system-topologies/modular-monolith.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/core-system-topologies/service-oriented-architecture.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/core-system-topologies/microservices-architecture.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/code-and-domain-organization/_overview.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/code-and-domain-organization/layered-architecture.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/code-and-domain-organization/clean-architecture.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/code-and-domain-organization/domain-driven-design.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/communication-and-routing/_overview.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/communication-and-routing/event-driven-architecture.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/communication-and-routing/api-gateway-pattern.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/communication-and-routing/backend-for-frontend.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/_overview.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/multi-tenant-architecture.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "files",
+      "status": "pass",
+      "artifact": "topics/",
+      "message": "No unregistered HTML partials"
+    },
+    {
+      "name": "history",
+      "status": "pending",
+      "artifact": "manifest.json",
+      "message": "No prior catalog supplied; initial-node format was checked"
+    },
+    {
+      "name": "bundle",
+      "status": "pass",
+      "artifact": "specs/001-backend-architecture/delivery.md",
+      "message": "Delivery record exists; content paths were individually checked"
+    }
+  ],
+  "integrationStatus": "pending"
+}

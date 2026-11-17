@@ -1,0 +1,103 @@
+{
+  "profile": "backend-architecture",
+  "root": {
+    "title": "System Design",
+    "slug": "system-design"
+  },
+  "parent": {
+    "title": "Backend Architecture",
+    "slug": "backend-architecture"
+  },
+  "groups": [
+    {
+      "title": "Core System Topologies",
+      "slug": "core-system-topologies",
+      "topics": [
+        {
+          "title": "Distributed System Fundamentals",
+          "slug": "distributed-system-fundamentals"
+        },
+        {
+          "title": "Monolithic Architecture",
+          "slug": "monolithic-architecture"
+        },
+        {
+          "title": "Modular Monolith",
+          "slug": "modular-monolith"
+        },
+        {
+          "title": "Service-Oriented Architecture (SOA)",
+          "slug": "service-oriented-architecture"
+        },
+        {
+          "title": "Microservices Architecture",
+          "slug": "microservices-architecture"
+        }
+      ]
+    },
+    {
+      "title": "Code & Domain Organization",
+      "slug": "code-and-domain-organization",
+      "topics": [
+        {
+          "title": "Layered Architecture",
+          "slug": "layered-architecture"
+        },
+        {
+          "title": "Clean Architecture",
+          "slug": "clean-architecture"
+        },
+        {
+          "title": "Hexagonal Architecture",
+          "slug": "hexagonal-architecture"
+        },
+        {
+          "title": "Domain-Driven Design (DDD)",
+          "slug": "domain-driven-design"
+        }
+      ]
+    },
+    {
+      "title": "Communication & Routing",
+      "slug": "communication-and-routing",
+      "topics": [
+        {
+          "title": "Event-Driven Architecture",
+          "slug": "event-driven-architecture"
+        },
+        {
+          "title": "API Gateway Pattern",
+          "slug": "api-gateway-pattern"
+        },
+        {
+          "title": "Backend for Frontend (BFF)",
+          "slug": "backend-for-frontend"
+        }
+      ]
+    },
+    {
+      "title": "Infrastructure & Multi-Tenancy",
+      "slug": "infrastructure-and-multi-tenancy",
+      "topics": [
+        {
+          "title": "Service Discovery",
+          "slug": "service-discovery"
+        },
+        {
+          "title": "Service Mesh",
+          "slug": "service-mesh"
+        },
+        {
+          "title": "Multi-Tenant Architecture",
+          "slug": "multi-tenant-architecture"
+        }
+      ]
+    }
+  ],
+  "deliveryRecord": "specs/003-backfill-interview-scenarios/delivery.md",
+  "recallProfile": "constitution-1.2",
+  "preservationBaseline": "specs/003-backfill-interview-scenarios/contracts/preservation-baseline.json",
+  "scenarioResearchDirectory": "specs/003-backfill-interview-scenarios/research",
+  "completionRecord": "specs/003-backfill-interview-scenarios/evidence/lesson-completion.json",
+  "runtimeCompatibilityRecord": "specs/003-backfill-interview-scenarios/evidence/renderer-compatibility.json"
+}

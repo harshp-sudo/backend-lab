@@ -1,0 +1,1159 @@
+{
+  "schemaVersion": 1,
+  "capturedOn": "2026-11-17",
+  "constitutionVersion": "1.2.0",
+  "manifest": {
+    "path": "manifest.json",
+    "sha256": "e78bb55441e16e450fc19c602cc689cec102793bd2798ae974832d64281d89aa",
+    "nodes": [
+      {
+        "id": "d3825659-12c2-4fc8-b6fe-bdd050762da3",
+        "kind": "hub",
+        "title": "System Design",
+        "slug": "system-design",
+        "route": "/system-design",
+        "childIds": [
+          "401502d7-77c1-438c-a663-053fc5d18ada"
+        ]
+      },
+      {
+        "id": "401502d7-77c1-438c-a663-053fc5d18ada",
+        "kind": "hub",
+        "title": "Backend Architecture",
+        "slug": "backend-architecture",
+        "route": "/system-design/backend-architecture",
+        "childIds": [
+          "782e772f-8c50-46aa-a26a-d37ff94599a2",
+          "1dce8024-d12a-4295-ae55-afa135170fb5",
+          "a83461a8-4d18-4132-908e-dac2eab5638d",
+          "e4b099e0-3f6c-480e-bb61-76e763a8e5e5"
+        ]
+      },
+      {
+        "id": "782e772f-8c50-46aa-a26a-d37ff94599a2",
+        "kind": "hub",
+        "title": "Core System Topologies",
+        "slug": "core-system-topologies",
+        "route": "/system-design/backend-architecture/core-system-topologies",
+        "childIds": [
+          "a1cef6f2-5f76-4376-980d-64af99310ec8",
+          "1901acc7-9225-428a-9397-072cff3d36d0",
+          "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+          "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+          "04eae1bf-07bc-4646-8ce4-db2871fcfada"
+        ]
+      },
+      {
+        "id": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+        "kind": "topic",
+        "title": "Distributed System Fundamentals",
+        "slug": "distributed-system-fundamentals",
+        "route": "/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals",
+        "childIds": []
+      },
+      {
+        "id": "1901acc7-9225-428a-9397-072cff3d36d0",
+        "kind": "topic",
+        "title": "Monolithic Architecture",
+        "slug": "monolithic-architecture",
+        "route": "/system-design/backend-architecture/core-system-topologies/monolithic-architecture",
+        "childIds": []
+      },
+      {
+        "id": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+        "kind": "topic",
+        "title": "Modular Monolith",
+        "slug": "modular-monolith",
+        "route": "/system-design/backend-architecture/core-system-topologies/modular-monolith",
+        "childIds": []
+      },
+      {
+        "id": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+        "kind": "topic",
+        "title": "Service-Oriented Architecture (SOA)",
+        "slug": "service-oriented-architecture",
+        "route": "/system-design/backend-architecture/core-system-topologies/service-oriented-architecture",
+        "childIds": []
+      },
+      {
+        "id": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+        "kind": "topic",
+        "title": "Microservices Architecture",
+        "slug": "microservices-architecture",
+        "route": "/system-design/backend-architecture/core-system-topologies/microservices-architecture",
+        "childIds": []
+      },
+      {
+        "id": "1dce8024-d12a-4295-ae55-afa135170fb5",
+        "kind": "hub",
+        "title": "Code & Domain Organization",
+        "slug": "code-and-domain-organization",
+        "route": "/system-design/backend-architecture/code-and-domain-organization",
+        "childIds": [
+          "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+          "d257fdd8-8532-4138-839b-7295ae2e2994",
+          "7db3e3c3-10aa-4709-bf33-63848952d81f",
+          "a612a2d8-260a-4e97-82e7-b2851459e0c7"
+        ]
+      },
+      {
+        "id": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+        "kind": "topic",
+        "title": "Layered Architecture",
+        "slug": "layered-architecture",
+        "route": "/system-design/backend-architecture/code-and-domain-organization/layered-architecture",
+        "childIds": []
+      },
+      {
+        "id": "d257fdd8-8532-4138-839b-7295ae2e2994",
+        "kind": "topic",
+        "title": "Clean Architecture",
+        "slug": "clean-architecture",
+        "route": "/system-design/backend-architecture/code-and-domain-organization/clean-architecture",
+        "childIds": []
+      },
+      {
+        "id": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+        "kind": "topic",
+        "title": "Hexagonal Architecture",
+        "slug": "hexagonal-architecture",
+        "route": "/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture",
+        "childIds": []
+      },
+      {
+        "id": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+        "kind": "topic",
+        "title": "Domain-Driven Design (DDD)",
+        "slug": "domain-driven-design",
+        "route": "/system-design/backend-architecture/code-and-domain-organization/domain-driven-design",
+        "childIds": []
+      },
+      {
+        "id": "a83461a8-4d18-4132-908e-dac2eab5638d",
+        "kind": "hub",
+        "title": "Communication & Routing",
+        "slug": "communication-and-routing",
+        "route": "/system-design/backend-architecture/communication-and-routing",
+        "childIds": [
+          "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+          "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+          "1be329da-9367-4c1c-a4c8-0eff6ec862e1"
+        ]
+      },
+      {
+        "id": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+        "kind": "topic",
+        "title": "Event-Driven Architecture",
+        "slug": "event-driven-architecture",
+        "route": "/system-design/backend-architecture/communication-and-routing/event-driven-architecture",
+        "childIds": []
+      },
+      {
+        "id": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+        "kind": "topic",
+        "title": "API Gateway Pattern",
+        "slug": "api-gateway-pattern",
+        "route": "/system-design/backend-architecture/communication-and-routing/api-gateway-pattern",
+        "childIds": []
+      },
+      {
+        "id": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+        "kind": "topic",
+        "title": "Backend for Frontend (BFF)",
+        "slug": "backend-for-frontend",
+        "route": "/system-design/backend-architecture/communication-and-routing/backend-for-frontend",
+        "childIds": []
+      },
+      {
+        "id": "e4b099e0-3f6c-480e-bb61-76e763a8e5e5",
+        "kind": "hub",
+        "title": "Infrastructure & Multi-Tenancy",
+        "slug": "infrastructure-and-multi-tenancy",
+        "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy",
+        "childIds": [
+          "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+          "84458963-012b-4a80-828a-2da27d8b509d",
+          "689dd587-de37-4e22-9412-bd42b118da79"
+        ]
+      },
+      {
+        "id": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+        "kind": "topic",
+        "title": "Service Discovery",
+        "slug": "service-discovery",
+        "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery",
+        "childIds": []
+      },
+      {
+        "id": "84458963-012b-4a80-828a-2da27d8b509d",
+        "kind": "topic",
+        "title": "Service Mesh",
+        "slug": "service-mesh",
+        "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh",
+        "childIds": []
+      },
+      {
+        "id": "689dd587-de37-4e22-9412-bd42b118da79",
+        "kind": "topic",
+        "title": "Multi-Tenant Architecture",
+        "slug": "multi-tenant-architecture",
+        "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy/multi-tenant-architecture",
+        "childIds": []
+      }
+    ]
+  },
+  "counts": {
+    "topics": 15,
+    "hubs": 6,
+    "foundationalRecall": 61,
+    "diagrams": 22
+  },
+  "hubs": [
+    {
+      "id": "d3825659-12c2-4fc8-b6fe-bdd050762da3",
+      "path": "topics/system-design/_overview.html",
+      "sha256": "a5bfa98b0c62a098b0b545060614b5cb7e4ddbe74af435af5bd1e3c163417485"
+    },
+    {
+      "id": "401502d7-77c1-438c-a663-053fc5d18ada",
+      "path": "topics/system-design/backend-architecture/_overview.html",
+      "sha256": "5202c30192b5543dbfb474189cfc7789386d56567fcdc7b683d31de4f8708fa7"
+    },
+    {
+      "id": "782e772f-8c50-46aa-a26a-d37ff94599a2",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/_overview.html",
+      "sha256": "e1e328a786fdc7a26e6e197b36bdad9953fd90cfa3a96a4cd7530aa4dd6612fa"
+    },
+    {
+      "id": "1dce8024-d12a-4295-ae55-afa135170fb5",
+      "path": "topics/system-design/backend-architecture/code-and-domain-organization/_overview.html",
+      "sha256": "812c1da62aa0731a534c00857608abf0a25086557d742790ba1be50c1465594e"
+    },
+    {
+      "id": "a83461a8-4d18-4132-908e-dac2eab5638d",
+      "path": "topics/system-design/backend-architecture/communication-and-routing/_overview.html",
+      "sha256": "8f6aead41282696e1cfc58876b4945acae871c76bb19a3f4f52001f9bb42fc72"
+    },
+    {
+      "id": "e4b099e0-3f6c-480e-bb61-76e763a8e5e5",
+      "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/_overview.html",
+      "sha256": "ebda2bb54bdefc1b44eb98f8803b0fa003e71fc6abbf7319cba5684c8218e2f5"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+      "title": "Distributed System Fundamentals",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals.html",
+      "route": "/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals",
+      "sourceSha256": "3abcb4e0c7dde8c951c6ccc6e058bcbe2a106a083cf5c33c406938ee672e51c3",
+      "sections": [
+        {
+          "key": "hook-eli5",
+          "id": "node-a1cef6f2-5f76-4376-980d-64af99310ec8-hook-eli5",
+          "sha256": "a973b584a8e4fc68961f139681348504236ddbac09f98d7c86770f10e137d3b9"
+        },
+        {
+          "key": "big-picture",
+          "id": "node-a1cef6f2-5f76-4376-980d-64af99310ec8-big-picture",
+          "sha256": "2062565691d8644f3a27c93efd2956a552c62a95e23df63080b6d196376cabad"
+        },
+        {
+          "key": "mechanics",
+          "id": "node-a1cef6f2-5f76-4376-980d-64af99310ec8-mechanics",
+          "sha256": "0f3b6e87e0377a74b7ef0759504c27a88a62ac045e9c7b1bf008c7a54c9f0015"
+        },
+        {
+          "key": "trade-offs",
+          "id": "node-a1cef6f2-5f76-4376-980d-64af99310ec8-trade-offs",
+          "sha256": "6c0f77a235df1809f8d01d0433f1d1a1f021cb6fb3625eb14d702475e70fae6c"
+        },
+        {
+          "key": "pitfalls",
+          "id": "node-a1cef6f2-5f76-4376-980d-64af99310ec8-pitfalls",
+          "sha256": "f2f85b91ef2a6fbebce320c3d7f1e69524d2976018c264549a8ba20e0b5081e4"
+        },
+        {
+          "key": "mastery",
+          "id": "node-a1cef6f2-5f76-4376-980d-64af99310ec8-mastery",
+          "sha256": "60479098256e1b6ec3330482aef3d56becdbfdc820ccc1752a684677ed96b3ea"
+        }
+      ],
+      "foundationalRecall": [
+        {
+          "key": "timeout-meaning",
+          "htmlSha256": "8106e52a5cbdab251a1f54f5ead0eea1c2d98422c2bc348da9dec80e22dfc090"
+        },
+        {
+          "key": "idempotency-race",
+          "htmlSha256": "8851a9a800e498a889100a12a4cdfdc5901c79c153c73af28c4696cd0464d576"
+        },
+        {
+          "key": "consistency-boundary",
+          "htmlSha256": "bf92a982d5ed9e45e2d6e4074baa5b0eafb37a4cd57a90dcf28d9ceacb433877"
+        },
+        {
+          "key": "retry-budget",
+          "htmlSha256": "9d4ba452b10328e2b328f944e74052a85ae3e1b59449d63688cabe834544d452"
+        }
+      ],
+      "diagramSourcesSha256": [
+        "e23608c0c735bf455d828ba22fd72de5f73205194f1343dce4e2937f2614051b"
+      ]
+    },
+    {
+      "id": "1901acc7-9225-428a-9397-072cff3d36d0",
+      "title": "Monolithic Architecture",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/monolithic-architecture.html",
+      "route": "/system-design/backend-architecture/core-system-topologies/monolithic-architecture",
+      "sourceSha256": "46eac71a26a46110c1d9854ee69142cb09ea301f185f436b6494f1f30c82a552",
+      "sections": [
+        {
+          "key": "hook-eli5",
+          "id": "node-1901acc7-9225-428a-9397-072cff3d36d0-hook-eli5",
+          "sha256": "57dc6eccbf76ff1605f0305653abbf0cf918bf81dd10d94c311e1e80b38b86f3"
+        },
+        {
+          "key": "big-picture",
+          "id": "node-1901acc7-9225-428a-9397-072cff3d36d0-big-picture",
+          "sha256": "eb38a0bcf33dc884e552fe749b41e8edda23d67db6086eb37f5c38a91d7570ae"
+        },
+        {
+          "key": "mechanics",
+          "id": "node-1901acc7-9225-428a-9397-072cff3d36d0-mechanics",
+          "sha256": "37772eb92cd0b6aa2834b44bccc20d8bdbcbc3c6bcae813e58d7a3790113e738"
+        },
+        {
+          "key": "trade-offs",
+          "id": "node-1901acc7-9225-428a-9397-072cff3d36d0-trade-offs",
+          "sha256": "cdce83c9b8807e611f6bd55e101c55ee0854c2bdab5340609c0a913af178dfde"
+        },
+        {
+          "key": "pitfalls",
+          "id": "node-1901acc7-9225-428a-9397-072cff3d36d0-pitfalls",
+          "sha256": "8dea66ede3b0968f24316925f8bcc9e828b310417f48bd29d86f40b335a363cb"
+        },
+        {
+          "key": "mastery",
+          "id": "node-1901acc7-9225-428a-9397-072cff3d36d0-mastery",
+          "sha256": "d66967deee53e8c46fed22105959b15cacf99b8e113f3f7da09967905bc426d2"
+        }
+      ],
+      "foundationalRecall": [
+        {
+          "key": "server-count",
+          "htmlSha256": "d41b3f196862e2ec491228a42b893d1cf7898acccdef96cd756cf7525a60f12e"
+        },
+        {
+          "key": "local-transaction",
+          "htmlSha256": "df5e9e8c5d4055251169462601561478aa26aad45389d0157511dbaff8d5a3b2"
+        },
+        {
+          "key": "modularity",
+          "htmlSha256": "33e66aca79d81606d5d61a4a09e1884a383c96e3dc7907b2ea99aa92aaafc008"
+        },
+        {
+          "key": "extraction-test",
+          "htmlSha256": "e824b0581024347a8b6eeeb52406f4f0d7895ae209f49e88c7c93519eafa1bb1"
+        }
+      ],
+      "diagramSourcesSha256": [
+        "cf6d3193dc8bc912a80ba2bdb68174d8d47da03614ffff364864f2859feb07e1"
+      ]
+    },
+    {
+      "id": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+      "title": "Modular Monolith",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/modular-monolith.html",
+      "route": "/system-design/backend-architecture/core-system-topologies/modular-monolith",
+      "sourceSha256": "2929717fc83fc431f769bf4aad42813a5d983a03c2c85d35387dae80ac4b50e8",
+      "sections": [
+        {
+          "key": "hook-eli5",
+          "id": "node-ab88a9ad-48ea-4968-becb-b0641aa6321d-hook-eli5",
+          "sha256": "54ce51841bf94ff595f2c2c7e3bab1b1246cc76c4928c701a302ea311eb67bf7"
+        },
+        {
+          "key": "big-picture",
+          "id": "node-ab88a9ad-48ea-4968-becb-b0641aa6321d-big-picture",
+          "sha256": "adcb4350881ee003945776b66d560a699b5ed0a812a30cf4f4b5962af21da43a"
+        },
+        {
+          "key": "mechanics",
+          "id": "node-ab88a9ad-48ea-4968-becb-b0641aa6321d-mechanics",
+          "sha256": "e56f021c6b7eed51398d4cb2ef803dd6e79709c197508c8af31ac3b4302453de"
+        },
+        {
+          "key": "trade-offs",
+          "id": "node-ab88a9ad-48ea-4968-becb-b0641aa6321d-trade-offs",
+          "sha256": "7a3239a3103f370ff95ac7dd6f1ee5cec804807e1b399250fc43d037596eb83b"
+        },
+        {
+          "key": "pitfalls",
+          "id": "node-ab88a9ad-48ea-4968-becb-b0641aa6321d-pitfalls",
+          "sha256": "cb8eeac99eec751b05380e0bd43aa3447a51afa0c79ad44432d6322e1c8e018b"
+        },
+        {
+          "key": "mastery",
+          "id": "node-ab88a9ad-48ea-4968-becb-b0641aa6321d-mastery",
+          "sha256": "50605658f5b436cb26215e08a3c0d866fb54d6728f1452edc741f834495b8667"
+        }
+      ],
+      "foundationalRecall": [
+        {
+          "key": "module-proof",
+          "htmlSha256": "f22b815198d156a783c70fe9a9fa8ad6ddc6cfb3f84b15273c0c1972bab2b014"
+        },
+        {
+          "key": "transaction-boundary",
+          "htmlSha256": "ea19ed2b521b30f5d1f329e5dcee8b16ab9559a24d6cf04cd6422b16f0c6ee1b"
+        },
+        {
+          "key": "durable-events",
+          "htmlSha256": "cd3f26c765b380fdc8f3111584d4873078d0a8dfe398e65844ce604a079b3172"
+        },
+        {
+          "key": "extraction-cost",
+          "htmlSha256": "f4b7c6d592cb5d12af510fcd98dc2657179e63cecb1d364feacadfdebbd25e64"
+        }
+      ],
+      "diagramSourcesSha256": [
+        "3b158078a8178bb49851372d9086a5a2edc99c1904bb7f95e87f26e7f8443d48"
+      ]
+    },
+    {
+      "id": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+      "title": "Service-Oriented Architecture (SOA)",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/service-oriented-architecture.html",
+      "route": "/system-design/backend-architecture/core-system-topologies/service-oriented-architecture",
+      "sourceSha256": "faedef5acd97ed6a2b2fd8c4f5b75cf24432c00358476113689b547309fe8e0a",
+      "sections": [
+        {
+          "key": "hook-eli5",
+          "id": "node-11d759b2-bda9-45ba-a34d-0a0326cabd56-hook-eli5",
+          "sha256": "81aa47015adb96a81bab9eea15ad0d756f50e3483a2022372a27602096525217"
+        },
+        {
+          "key": "big-picture",
+          "id": "node-11d759b2-bda9-45ba-a34d-0a0326cabd56-big-picture",
+          "sha256": "b00bc994436f6ae1a7c55526bf2e848af1426a3f6ad8c30d4835e67948614dc6"
+        },
+        {
+          "key": "mechanics",
+          "id": "node-11d759b2-bda9-45ba-a34d-0a0326cabd56-mechanics",
+          "sha256": "3c4d5afd9854ff4abf8fef009a24f6efea9a11508cb5e74b3349c6affffe12de"
+        },
+        {
+          "key": "trade-offs",
+          "id": "node-11d759b2-bda9-45ba-a34d-0a0326cabd56-trade-offs",
+          "sha256": "95b972f276ea83a7f8824117872927320471ded9647a0b6e33a2fc07a1c5de2c"
+        },
+        {
+          "key": "pitfalls",
+          "id": "node-11d759b2-bda9-45ba-a34d-0a0326cabd56-pitfalls",
+          "sha256": "ff3682b9bf4c37a30c3da7a7ee83667e830b5329262768a905b954ee838d7efe"
+        },
+        {
+          "key": "mastery",
+          "id": "node-11d759b2-bda9-45ba-a34d-0a0326cabd56-mastery",
+          "sha256": "ad946969ad753853949c1d65285e6c46f287bd637e4f0921eb6adec22e260fcb"
+        }
+      ],
+      "foundationalRecall": [
+        {
+          "key": "protocol-definition",
+          "htmlSha256": "c06b9912365156f978c30abe1820da98b1769dc01bc48096a4b6220e6cbdf4a0"
+        },
+        {
+          "key": "accepted-versus-done",
+          "htmlSha256": "b36840f204a844ff758150ff22f31b404b9f3a51cf37cf3074145d3cb779cafb"
+        },
+        {
+          "key": "compensation",
+          "htmlSha256": "771e0e0cadfb99d090afe41ddb60fe8326993ee34f7de4b9c104966839339947"
+        },
+        {
+          "key": "soa-versus-microservices",
+          "htmlSha256": "a7227d406f35ab954db1e91f3087bbd32cacfbaa20d4bc570fad69f4787eb5af"
+        }
+      ],
+      "diagramSourcesSha256": [
+        "a5e9a73faf695c13a369e8a7618178f1a50a7b27adf70a4546f9c2932ed8c39f"
+      ]
+    },
+    {
+      "id": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+      "title": "Microservices Architecture",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/microservices-architecture.html",
+      "route": "/system-design/backend-architecture/core-system-topologies/microservices-architecture",
+      "sourceSha256": "8068194890dfb5b8b72daa59b34698817fdb0bf93bf25172a0a8979b7c110acb",
+      "sections": [
+        {
+          "key": "hook-eli5",
+          "id": "node-04eae1bf-07bc-4646-8ce4-db2871fcfada-hook-eli5",
+          "sha256": "6f168212791b2f6e7e5b9ea487ce51a8e02d547cff8cbc3d275d8b67e38789c3"
+        },
+        {
+          "key": "big-picture",
+          "id": "node-04eae1bf-07bc-4646-8ce4-db2871fcfada-big-picture",
+          "sha256": "a34e2a96c0dc29f90ee11b0b49990e830ebde6d4ab38ff8cc4d63cf1361cf9f1"
+        },
+        {
+          "key": "mechanics",
+          "id": "node-04eae1bf-07bc-4646-8ce4-db2871fcfada-mechanics",
+          "sha256": "36e54527c3f4a85abde19442cf668a64bb6864aebc02ce53ce959dbac57ae241"
+        },
+        {
+          "key": "trade-offs",
+          "id": "node-04eae1bf-07bc-4646-8ce4-db2871fcfada-trade-offs",
+          "sha256": "08064658e3fa0629baf4c7b7906acb223e20cf3c7f6d628a02f05b370e1dfe93"
+        },
+        {
+          "key": "pitfalls",
+          "id": "node-04eae1bf-07bc-4646-8ce4-db2871fcfada-pitfalls",
+          "sha256": "b615660bb9b2db258f134d0dad073470945fafceda8fc8fa9a74d0f9327ab239"
+        },
+        {
+          "key": "mastery",
+          "id": "node-04eae1bf-07bc-4646-8ce4-db2871fcfada-mastery",
+          "sha256": "ae165169faee52ab2d7795fc132e7f74a96893ad11ac43f092c67fd8e27eed9a"
+        }
+      ],
+      "foundationalRecall": [
+        {
+          "key": "independence-test",
+          "htmlSha256": "4b034e963377b224fe8ae0d96c4ed7f6b1438593a53f33da7534f61c704a8863"
+        },
+        {
+          "key": "data-ownership",
+          "htmlSha256": "96105e444bbd7ab942c36662dcf25a326a43eae51c3c9fee5c41452943fb7b7a"
+        },
+        {
+          "key": "saga-failure",
+          "htmlSha256": "076e04ddb63b84a9d70da42eea155acb26479992caf3f25f85592fdc9acfde8d"
+        },
+        {
+          "key": "monolith-extraction",
+          "htmlSha256": "86209c260bfe27cd34cd2271986b4d48681a5342995c5255bfe54e34763bcca1"
+        }
+      ],
+      "diagramSourcesSha256": [
+        "3d56bab2a7c97ca3068d6842d5e3ea94d8895512712fe984fb25d880f7d22e24"
+      ]
+    },
+    {
+      "id": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+      "title": "Layered Architecture",
+      "path": "topics/system-design/backend-architecture/code-and-domain-organization/layered-architecture.html",
+      "route": "/system-design/backend-architecture/code-and-domain-organization/layered-architecture",
+      "sourceSha256": "18857fb41c38daf965434fa2dcbe3a984e131de71bcb98ff969aaf35859059aa",
+      "sections": [
+        {
+          "key": "hook-eli5",
+          "id": "node-012a24bf-b2d7-4824-9a52-016ed4399c5e-hook-eli5",
+          "sha256": "16266ac07f880cdd6c8492a91e1545805c1badb8e3115a53f9c8558be6b084fa"
+        },
+        {
+          "key": "big-picture",
+          "id": "node-012a24bf-b2d7-4824-9a52-016ed4399c5e-big-picture",
+          "sha256": "77ac96726d5ba8cbeefd10ce785561191f87eb0e524a5bf63478aed45f4a2f54"
+        },
+        {
+          "key": "mechanics",
+          "id": "node-012a24bf-b2d7-4824-9a52-016ed4399c5e-mechanics",
+          "sha256": "b4c06b0907908e8f51e686147bed5a380df52f9d552527ec1380cce766a59747"
+        },
+        {
+          "key": "trade-offs",
+          "id": "node-012a24bf-b2d7-4824-9a52-016ed4399c5e-trade-offs",
+          "sha256": "46a7dce61ad506cefc20e3b7e1bddd32ab6d36a3165b71b21f7281015f5d4225"
+        },
+        {
+          "key": "pitfalls",
+          "id": "node-012a24bf-b2d7-4824-9a52-016ed4399c5e-pitfalls",
+          "sha256": "990c106e51eff3c7129729b7af633132b30e6918f9c0265062345af6914ae29d"
+        },
+        {
+          "key": "mastery",
+          "id": "node-012a24bf-b2d7-4824-9a52-016ed4399c5e-mastery",
+          "sha256": "ea9cda2070a04e091bd5335e6bee45fc2580fe4ceb933b45097070b4657ed2f5"
+        }
+      ],
+      "foundationalRecall": [
+        {
+          "key": "layer-tier",
+          "htmlSha256": "f5af91e286928a8db6db578ea41cb2e429f116be91123aeaf6b2f3825ee47e2b"
+        },
+        {
+          "key": "rule-location",
+          "htmlSha256": "3422f7953471909d7a1d612c0ab36c06f2f4c2ea52cde406a8c48de3273ffcde"
+        },
+        {
+          "key": "dependency-rule",
+          "htmlSha256": "eb472229a046975e781698c81dd03d7cebf2e5624045eaf86804815f3bd05564"
+        },
+        {
+          "key": "concurrent-loans",
+          "htmlSha256": "453c19f6bc86d2dfd41411a739610a14babee4c445385a43ae5737f783ce12c1"
+        }
+      ],
+      "diagramSourcesSha256": [
+        "e93efd5b47f197e35691d4086d2609702ce21c7e8f440930305fb6e9237b32d5"
+      ]
+    },
+    {
+      "id": "d257fdd8-8532-4138-839b-7295ae2e2994",
+      "title": "Clean Architecture",
+      "path": "topics/system-design/backend-architecture/code-and-domain-organization/clean-architecture.html",
+      "route": "/system-design/backend-architecture/code-and-domain-organization/clean-architecture",
+      "sourceSha256": "77b92e8eb2168f286d2ef36e1dd114a2d31fefca827843553de319d0275b472b",
+      "sections": [
+        {
+          "key": "hook-eli5",
+          "id": "node-d257fdd8-8532-4138-839b-7295ae2e2994-hook-eli5",
+          "sha256": "7276fc60c40065bc73534241d286afa5ecba3b2815163b46bfe6506b0645743d"
+        },
+        {
+          "key": "big-picture",
+          "id": "node-d257fdd8-8532-4138-839b-7295ae2e2994-big-picture",
+          "sha256": "58931a25acb6bf1450318599085d5c9563e66de23b4019ea6903f5ceca9e4ae1"
+        },
+        {
+          "key": "mechanics",
+          "id": "node-d257fdd8-8532-4138-839b-7295ae2e2994-mechanics",
+          "sha256": "35f2f5fb40c4f9ac10869050f30adce6562c1f614b89166a262b61777d5979a7"
+        },
+        {
+          "key": "trade-offs",
+          "id": "node-d257fdd8-8532-4138-839b-7295ae2e2994-trade-offs",
+          "sha256": "fa4fc70e9e1ef0d55c44e5e99c66e718cd0c815896ab5cee996d899b236b5d6a"
+        },
+        {
+          "key": "pitfalls",
+          "id": "node-d257fdd8-8532-4138-839b-7295ae2e2994-pitfalls",
+          "sha256": "9c664f6598880dd85f99ed8a1aa69ea985281bc43a47a21bf6c7b1a41d0c2f78"
+        },
+        {
+          "key": "mastery",
+          "id": "node-d257fdd8-8532-4138-839b-7295ae2e2994-mastery",
+          "sha256": "c336fb0ae528c6dd5d3ee58d098a1b4518e893c31eed09986433a7b3ec8b1e7a"
+        }
+      ],
+      "foundationalRecall": [
+        {
+          "key": "dependency-direction",
+          "htmlSha256": "2b8dfb627308befc28339be489bab3eb5c015082621ac33859359db1133c75b4"
+        },
+        {
+          "key": "four-circles",
+          "htmlSha256": "b6c4e7e7b07f97d819d97088282bf22b97d2da6b193c5ee2e4e963f166b41b42"
+        },
+        {
+          "key": "adapter-tests",
+          "htmlSha256": "92fa1015f08cabf1438bbcaa3ccbae4affabbeb6154a965ccde12430f20d9fe6"
+        },
+        {
+          "key": "error-semantics",
+          "htmlSha256": "6e35ec5ea723884203142675c91527aef00e1f10b4ff692bb3d53d02f1c24591"
+        }
+      ],
+      "diagramSourcesSha256": [
+        "76f71dbeed804e36cc9015b391edde8796839d6e5d79d559521d301fdbba8497",
+        "30fc6d5e9eb62dc6c95c787cb78b2bcc5377b0ff4ccc5662cdd2482969034397"
+      ]
+    },
+    {
+      "id": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+      "title": "Hexagonal Architecture",
+      "path": "topics/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture.html",
+      "route": "/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture",
+      "sourceSha256": "4f12701004dffbb62eb259b89dfc150e028a36a976ab55b6cd6d8c745612d13e",
+      "sections": [
+        {
+          "key": "hook-eli5",
+          "id": "node-7db3e3c3-10aa-4709-bf33-63848952d81f-hook-eli5",
+          "sha256": "94ac55430ba8abf9bcdb6076bf9e7a0dce82d141a77a5f43584853aab98a0180"
+        },
+        {
+          "key": "big-picture",
+          "id": "node-7db3e3c3-10aa-4709-bf33-63848952d81f-big-picture",
+          "sha256": "95281b30c538f5c05816d49973a160bc98c5d9c4872b8379daa74bfc7d60fa88"
+        },
+        {
+          "key": "mechanics",
+          "id": "node-7db3e3c3-10aa-4709-bf33-63848952d81f-mechanics",
+          "sha256": "a3e22e0924810f4c7f719384ddde15705fcff6daded83af6202b5cd2b696d6e3"
+        },
+        {
+          "key": "trade-offs",
+          "id": "node-7db3e3c3-10aa-4709-bf33-63848952d81f-trade-offs",
+          "sha256": "d8992593a00d750da8608825baebd16ef22b8fa73f3a41062b8b2c7c02fc4afd"
+        },
+        {
+          "key": "pitfalls",
+          "id": "node-7db3e3c3-10aa-4709-bf33-63848952d81f-pitfalls",
+          "sha256": "242d3fa8fa2cf8b121499f3f3ca70c87d681a2ca490087f87d4183e620e0bc56"
+        },
+        {
+          "key": "mastery",
+          "id": "node-7db3e3c3-10aa-4709-bf33-63848952d81f-mastery",
+          "sha256": "02cbf29fa38b91bbbc26592da3c51802c06f1f58917ef8c2f51f0cbd7e89ff1b"
+        }
+      ],
+      "foundationalRecall": [
+        {
+          "key": "driving-driven",
+          "htmlSha256": "3401f75cc36cc81c794d45074b3354d2daa7b3fe12cf7f115915fec77f388e8d"
+        },
+        {
+          "key": "six-ports",
+          "htmlSha256": "fdbd21e1fdff336650d302202c57724b777bbc0d06d17ac3a3a999988923b9b5"
+        },
+        {
+          "key": "port-semantics",
+          "htmlSha256": "6b0379e3d8684726573d0c492c96d311750f8a08eef642eb512a47f7f8248970"
+        },
+        {
+          "key": "test-boundaries",
+          "htmlSha256": "0aa77cb658798ee98f5a241bdc7bb4c1c7c2eff7636aeeb4332be12b84e45915"
+        }
+      ],
+      "diagramSourcesSha256": [
+        "80e73bb3d8aeb1bca12b87def396baa3ebce50b2c9a16719c6d7be1268eaa176"
+      ]
+    },
+    {
+      "id": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+      "title": "Domain-Driven Design (DDD)",
+      "path": "topics/system-design/backend-architecture/code-and-domain-organization/domain-driven-design.html",
+      "route": "/system-design/backend-architecture/code-and-domain-organization/domain-driven-design",
+      "sourceSha256": "971468dc5feb170c4cfcc9df7123d26169ee9e30ceb091b17792a8a0078fbae0",
+      "sections": [
+        {
+          "key": "hook-eli5",
+          "id": "node-a612a2d8-260a-4e97-82e7-b2851459e0c7-hook-eli5",
+          "sha256": "7920e43af46d840033a7a759e3805c7889dd0177cfb35140429ae700aa571bc2"
+        },
+        {
+          "key": "big-picture",
+          "id": "node-a612a2d8-260a-4e97-82e7-b2851459e0c7-big-picture",
+          "sha256": "7b1b4a60ebedc1ab7199e4e7d47e1ecdeac3665eca54b408705dc769e8c3914b"
+        },
+        {
+          "key": "mechanics",
+          "id": "node-a612a2d8-260a-4e97-82e7-b2851459e0c7-mechanics",
+          "sha256": "a63e07ecbf39fedf5d6a2696a7ace278a4a4c33030d07b6d595c3f992cdf596a"
+        },
+        {
+          "key": "trade-offs",
+          "id": "node-a612a2d8-260a-4e97-82e7-b2851459e0c7-trade-offs",
+          "sha256": "335670f0d610f12f3a32fc6c7088598fa012badd848e9fe0ef6974ff7a05677a"
+        },
+        {
+          "key": "pitfalls",
+          "id": "node-a612a2d8-260a-4e97-82e7-b2851459e0c7-pitfalls",
+          "sha256": "92926e4277839dc2eb71684256ae836fd19fd72f46b7a5f79084ae5205f9cb70"
+        },
+        {
+          "key": "mastery",
+          "id": "node-a612a2d8-260a-4e97-82e7-b2851459e0c7-mastery",
+          "sha256": "5049698322dfa53ca0dbfad4b60a8b94a0c5d7056c6e0f6796962e00316d1148"
+        }
+      ],
+      "foundationalRecall": [
+        {
+          "key": "context-service",
+          "htmlSha256": "0b883e48309e72c646f8a00895c0b48b9545f23cbc16705c764c1df08dca1b5a"
+        },
+        {
+          "key": "entity-value",
+          "htmlSha256": "eeeff0480bf5c543bb98735a8f8e2c75d3096955135c56c4f9ea523d6f459bad"
+        },
+        {
+          "key": "aggregate-invariant",
+          "htmlSha256": "30f5ef017962548984aa3d32f036c92780bea0cd7447e3b10274ac1169e4d573"
+        },
+        {
+          "key": "event-guarantee",
+          "htmlSha256": "cde9078035e858d44e89fe4770a2af0a0360d4e10a8e09394727dc025076f9b0"
+        },
+        {
+          "key": "model-cost",
+          "htmlSha256": "353eb963e87dc028719eafc61383f013a322e10b59b35b8c9396f09ee918781d"
+        }
+      ],
+      "diagramSourcesSha256": [
+        "c5197a0a60fdef5150bc350f065ae1ec9f8090f10f8fd507bbce1a9e1226d49c"
+      ]
+    },
+    {
+      "id": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+      "title": "Event-Driven Architecture",
+      "path": "topics/system-design/backend-architecture/communication-and-routing/event-driven-architecture.html",
+      "route": "/system-design/backend-architecture/communication-and-routing/event-driven-architecture",
+      "sourceSha256": "18faf6927ce2eddb957861ef93052d2b65e1baf468cd8eecb4a1ae5e0bfbaba7",
+      "sections": [
+        {
+          "key": "hook-eli5",
+          "id": "node-0b36c2d3-9c94-47df-adce-d80bf6c3f720-hook-eli5",
+          "sha256": "aa670f086919faffe03b6bad9b1067d12c350102113b9a446e1be24dd7303320"
+        },
+        {
+          "key": "big-picture",
+          "id": "node-0b36c2d3-9c94-47df-adce-d80bf6c3f720-big-picture",
+          "sha256": "50a3a310f4841ba4de34f1747da77f4b5d1b64bcc38aac8e7d939f8cba0225d7"
+        },
+        {
+          "key": "mechanics",
+          "id": "node-0b36c2d3-9c94-47df-adce-d80bf6c3f720-mechanics",
+          "sha256": "2efcaabacf00ad78e33e75275874c6f5a8274e313999589593d84282320eff6b"
+        },
+        {
+          "key": "trade-offs",
+          "id": "node-0b36c2d3-9c94-47df-adce-d80bf6c3f720-trade-offs",
+          "sha256": "c87ab17959e197feb5ae77c4ad4297234777430d419e04da815be4933196a990"
+        },
+        {
+          "key": "pitfalls",
+          "id": "node-0b36c2d3-9c94-47df-adce-d80bf6c3f720-pitfalls",
+          "sha256": "e2b94555dff46603fd76ed2c0049cb93cfa531075faac0340aab767c55b54133"
+        },
+        {
+          "key": "mastery",
+          "id": "node-0b36c2d3-9c94-47df-adce-d80bf6c3f720-mastery",
+          "sha256": "8cc660ebee2ea3485f38e6cd2e73c9f6cf69cbabfdbb3cd369529a9add55c42d"
+        }
+      ],
+      "foundationalRecall": [
+        {
+          "key": "command-event",
+          "htmlSha256": "4257857a8c171658ce37a0ab1604416be8c4353e31b4a07387c11f4e0a596656"
+        },
+        {
+          "key": "outbox-duplicate",
+          "htmlSha256": "ec6ced9d4a91692d5bf091668d83e05fcc5af09c5297bdd3dc4241a6b8dbbce7"
+        },
+        {
+          "key": "ack-timing",
+          "htmlSha256": "ab4d0c5f505b1d6b2e71cb9d1250898b04e6bf25f9113d5e0296c3a21d65cd76"
+        },
+        {
+          "key": "replay-side-effects",
+          "htmlSha256": "69a2473410615b971a106b92c5b66226683111394f150e935502ee8f8a401546"
+        }
+      ],
+      "diagramSourcesSha256": [
+        "41210c7d131ff37b919a41ec4bb3177bb4f989a195abcd64942f0915652b975b"
+      ]
+    },
+    {
+      "id": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+      "title": "API Gateway Pattern",
+      "path": "topics/system-design/backend-architecture/communication-and-routing/api-gateway-pattern.html",
+      "route": "/system-design/backend-architecture/communication-and-routing/api-gateway-pattern",
+      "sourceSha256": "3e7cd9e2c0d68675c016357c42efce242dd43f0749d03cfdd112845343ca5e9d",
+      "sections": [
+        {
+          "key": "hook-eli5",
+          "id": "node-a5b7beee-bdbd-4987-9a41-8e16471b0a32-hook-eli5",
+          "sha256": "50142ec489188ee7277d79fcc7cff4a9e113231ddee013fbf8b80243ac21c1e3"
+        },
+        {
+          "key": "big-picture",
+          "id": "node-a5b7beee-bdbd-4987-9a41-8e16471b0a32-big-picture",
+          "sha256": "8148647cee921ed1085cf5dbff2295d25be83feebe9b70804bc69813a7a7eda4"
+        },
+        {
+          "key": "mechanics",
+          "id": "node-a5b7beee-bdbd-4987-9a41-8e16471b0a32-mechanics",
+          "sha256": "eec2c1bca6fe2c2d2c072640896dc4dfffc8ce532fd7eb17a37cf86943dfec21"
+        },
+        {
+          "key": "trade-offs",
+          "id": "node-a5b7beee-bdbd-4987-9a41-8e16471b0a32-trade-offs",
+          "sha256": "477a646a7fb05f4fe99e398704d2015f345876522155520a914d0a6bd516bce2"
+        },
+        {
+          "key": "pitfalls",
+          "id": "node-a5b7beee-bdbd-4987-9a41-8e16471b0a32-pitfalls",
+          "sha256": "13812abef134ade1b3489a1a7b623cc7998a0b7d3152f6e84f9db8fb71ffacc7"
+        },
+        {
+          "key": "mastery",
+          "id": "node-a5b7beee-bdbd-4987-9a41-8e16471b0a32-mastery",
+          "sha256": "91107ef8cee57229532e0dd587c08c3e0fa7f944862b438e183f8e7939e0e1b4"
+        }
+      ],
+      "foundationalRecall": [
+        {
+          "key": "single-point",
+          "htmlSha256": "4c4e3e04dca04bb60b77cb32a2439f9a48a9df5966638b2336ae797cb3ffb37f"
+        },
+        {
+          "key": "partial-result",
+          "htmlSha256": "5189b74b229c9ccc028656e579a426fb1a99edef2becedd9f9f4d517e6e0d2c6"
+        },
+        {
+          "key": "authorization-owner",
+          "htmlSha256": "7553b27e1e48f88ffbfa387aab27a6dd93a6f47878b6f6f64076972ec0cb73ef"
+        },
+        {
+          "key": "gateway-bff",
+          "htmlSha256": "37c490eb0368ba69c627d4f4ccac5a6d3b9db1ecbf247140a0fe86278eededec"
+        }
+      ],
+      "diagramSourcesSha256": [
+        "521c7134e80a3938add25c71ff16823fbc267b9305240f40f243cba4214f6cfd"
+      ]
+    },
+    {
+      "id": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+      "title": "Backend for Frontend (BFF)",
+      "path": "topics/system-design/backend-architecture/communication-and-routing/backend-for-frontend.html",
+      "route": "/system-design/backend-architecture/communication-and-routing/backend-for-frontend",
+      "sourceSha256": "eebd8406528dba33f6c5998609739bb36a755cbcad92a455a3b46b659f2dbd1d",
+      "sections": [
+        {
+          "key": "hook-eli5",
+          "id": "node-1be329da-9367-4c1c-a4c8-0eff6ec862e1-hook-eli5",
+          "sha256": "2eadd0939c976d975782a06a137d2f135135fba27a24f044f6f703dd8d1ceb7e"
+        },
+        {
+          "key": "big-picture",
+          "id": "node-1be329da-9367-4c1c-a4c8-0eff6ec862e1-big-picture",
+          "sha256": "c1d0e041f0e04f7656e88c662c607ad4bf7708c2c1118a8ea67b49749c9930f9"
+        },
+        {
+          "key": "mechanics",
+          "id": "node-1be329da-9367-4c1c-a4c8-0eff6ec862e1-mechanics",
+          "sha256": "9c1bda1bd271babb53114870f45a6608b03811f378be483c9c132a9a57781c7f"
+        },
+        {
+          "key": "trade-offs",
+          "id": "node-1be329da-9367-4c1c-a4c8-0eff6ec862e1-trade-offs",
+          "sha256": "ca5e7712f6085d8c762a078cabed708d6e522e2458b0e8972cfbbb538d88d77f"
+        },
+        {
+          "key": "pitfalls",
+          "id": "node-1be329da-9367-4c1c-a4c8-0eff6ec862e1-pitfalls",
+          "sha256": "4ab9703cc9e08cac40468c2320d572603944aa90ba4084e23da925d61532b2a9"
+        },
+        {
+          "key": "mastery",
+          "id": "node-1be329da-9367-4c1c-a4c8-0eff6ec862e1-mastery",
+          "sha256": "1b62059a842241f020216e8566af3e918477273177ab9db4697cd54e748d18ac"
+        }
+      ],
+      "foundationalRecall": [
+        {
+          "key": "boundary-choice",
+          "htmlSha256": "bde88f50b7c1e9f85673f96686a96987b95acbf28dc3ec02d85e4b2c96695a71"
+        },
+        {
+          "key": "rule-duplication",
+          "htmlSha256": "6cf60637494521da81ef3450b2a8ed73cc0f45b9f63fceccabc9524e5c3ad32a"
+        },
+        {
+          "key": "gateway-comparison",
+          "htmlSha256": "2507d24608d7449765f5a603b04b9d192bcbef0c2016c7fd9f536663ab7c458c"
+        },
+        {
+          "key": "query-language",
+          "htmlSha256": "76e0a2794993944599f3e067a5f3da8864d44d6d3ec0acd8b815d4f71fd66e42"
+        }
+      ],
+      "diagramSourcesSha256": [
+        "a4054b590db7140bf05c7a8b3347d29d8de3ff2975d3727f6d426bd14ada6e90"
+      ]
+    },
+    {
+      "id": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+      "title": "Service Discovery",
+      "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery.html",
+      "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery",
+      "sourceSha256": "d66f1ad036a71615c8893cf199baeab94f6a5fec148e618629967c459eec5459",
+      "sections": [
+        {
+          "key": "hook-eli5",
+          "id": "node-5522e024-f6dd-471e-a3e4-41d0a60a5d2f-hook-eli5",
+          "sha256": "b23746d218d4fca1c4724416fae1c02c65ef7c81599879638326ee306f1ad8e3"
+        },
+        {
+          "key": "big-picture",
+          "id": "node-5522e024-f6dd-471e-a3e4-41d0a60a5d2f-big-picture",
+          "sha256": "3ec6e75785cff90ac8a3a03ea4545b26f7468a2f71a2601c78831c10b6e7d3e8"
+        },
+        {
+          "key": "mechanics",
+          "id": "node-5522e024-f6dd-471e-a3e4-41d0a60a5d2f-mechanics",
+          "sha256": "83b6a66f67ec4fe2be60b44771c9718bcc89ffb033421007a0b2944387ba4bb9"
+        },
+        {
+          "key": "trade-offs",
+          "id": "node-5522e024-f6dd-471e-a3e4-41d0a60a5d2f-trade-offs",
+          "sha256": "ab05d7d485eec128f6bac6f5af3dea0feda283e987063a6bfa6957ed2bc59a63"
+        },
+        {
+          "key": "pitfalls",
+          "id": "node-5522e024-f6dd-471e-a3e4-41d0a60a5d2f-pitfalls",
+          "sha256": "15e86a222ba3c968f1022e8a0974e94a3684e888ae54aadb445dbae57d3ba4bb"
+        },
+        {
+          "key": "mastery",
+          "id": "node-5522e024-f6dd-471e-a3e4-41d0a60a5d2f-mastery",
+          "sha256": "f6cd4bef12ea3813f8709318472f3bed296d6571abf1dae22fe187b4ddaeb546"
+        }
+      ],
+      "foundationalRecall": [
+        {
+          "key": "discovery-selection",
+          "htmlSha256": "051ded1f92f7e693a585593ffa341a5c8ea67ecd44739c2182a29d33267ebdbe"
+        },
+        {
+          "key": "dns-ttl",
+          "htmlSha256": "c42220e5ec8ecf2f51ee74cd5843197b7bee65338cf61b1ccb3977209266ae11"
+        },
+        {
+          "key": "client-server",
+          "htmlSha256": "26308af9e27bbec3d3cefebb661d0747ec8920c9dce80beca001bc55c8fee7e1"
+        },
+        {
+          "key": "readiness",
+          "htmlSha256": "b2549baa0a31db123805bf78a858fcaa9cfe4500a27f793cc02a763c7690aea0"
+        }
+      ],
+      "diagramSourcesSha256": [
+        "027a46c7f4e5f8be1d5078cc62c3f03b79892fd83a0eb0a2caa7973bf4dc4725"
+      ]
+    },
+    {
+      "id": "84458963-012b-4a80-828a-2da27d8b509d",
+      "title": "Service Mesh",
+      "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh.html",
+      "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh",
+      "sourceSha256": "3a5d1f84133bda165640667525f9aea3869eaeaefe8a6bb555ed7e21eb0c0b50",
+      "sections": [
+        {
+          "key": "hook-eli5",
+          "id": "node-84458963-012b-4a80-828a-2da27d8b509d-hook-eli5",
+          "sha256": "4af05b05e2540d2969e1c0e810e0810c61645a564c8c0dd7c90758516dbf5e53"
+        },
+        {
+          "key": "big-picture",
+          "id": "node-84458963-012b-4a80-828a-2da27d8b509d-big-picture",
+          "sha256": "3b024b41a75dd870aa26418cef3a0660418bb7a73d02abf139ef4c905d49061e"
+        },
+        {
+          "key": "mechanics",
+          "id": "node-84458963-012b-4a80-828a-2da27d8b509d-mechanics",
+          "sha256": "c680117a6fde2dee78fd2586764268416e5821035667d4c512108de55cfdf18e"
+        },
+        {
+          "key": "trade-offs",
+          "id": "node-84458963-012b-4a80-828a-2da27d8b509d-trade-offs",
+          "sha256": "7b370b23648f1759674c70441b99763e4ec7b1ab185e32a84cbee180eeb5fdb1"
+        },
+        {
+          "key": "pitfalls",
+          "id": "node-84458963-012b-4a80-828a-2da27d8b509d-pitfalls",
+          "sha256": "3c7fe8f37c22e92a0652b255842486bb1e77fa4705c552096aa513d7220cd1f4"
+        },
+        {
+          "key": "mastery",
+          "id": "node-84458963-012b-4a80-828a-2da27d8b509d-mastery",
+          "sha256": "95e70ef9eab0d618338f5d18423dc72b8c0a5912b8d4677f57963a6e9ef6530f"
+        }
+      ],
+      "foundationalRecall": [
+        {
+          "key": "planes",
+          "htmlSha256": "e018767239fec114e5f447ec43088a126c4c973dff8b305f4b84d5068735bafd"
+        },
+        {
+          "key": "sidecars",
+          "htmlSha256": "8e7fb4996d07e45553c80165ba00286d17a14f054b0895845ae725e796cdf753"
+        },
+        {
+          "key": "identity-permission",
+          "htmlSha256": "49dd600a5daa5310456d2a7925319629ab7a88379d05f5b289827cfbd3cef413"
+        },
+        {
+          "key": "control-outage",
+          "htmlSha256": "5251bd858d83296ae0b91d5828f0b7668b4254d2db4ada95b885a91ca9974e55"
+        }
+      ],
+      "diagramSourcesSha256": [
+        "7fdfa03e1739f650b90c5553e9d9f227ab24c5a5498aa1244bff5d41a33065ee"
+      ]
+    },
+    {
+      "id": "689dd587-de37-4e22-9412-bd42b118da79",
+      "title": "Multi-Tenant Architecture",
+      "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/multi-tenant-architecture.html",
+      "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy/multi-tenant-architecture",
+      "sourceSha256": "0b0ab30537cd9688f039d28e93acb97d54de8967e84be3af147c9adfc3d26c78",
+      "sections": [
+        {
+          "key": "hook-eli5",
+          "id": "node-689dd587-de37-4e22-9412-bd42b118da79-hook-eli5",
+          "sha256": "fd85c2cfab2d67f97c6192d337bd7e7656409112213307faf1a88e98da781d09"
+        },
+        {
+          "key": "big-picture",
+          "id": "node-689dd587-de37-4e22-9412-bd42b118da79-big-picture",
+          "sha256": "7ec9315a1550a2eaddd8a81b025f32af0401b6bd1689398e71d0af0a72a7c717"
+        },
+        {
+          "key": "mechanics",
+          "id": "node-689dd587-de37-4e22-9412-bd42b118da79-mechanics",
+          "sha256": "a23e0b4cb40ec4c61452137b30a43242835478d607f17af95e8f4e603cf4c979"
+        },
+        {
+          "key": "trade-offs",
+          "id": "node-689dd587-de37-4e22-9412-bd42b118da79-trade-offs",
+          "sha256": "bc6c23f9239dc9b350c86109a42d70536380060a6963a973122da931964ff507"
+        },
+        {
+          "key": "pitfalls",
+          "id": "node-689dd587-de37-4e22-9412-bd42b118da79-pitfalls",
+          "sha256": "f98a42c991ad12e69322b78aa30973f0310f078b612b78428d8991362ad0ccee"
+        },
+        {
+          "key": "mastery",
+          "id": "node-689dd587-de37-4e22-9412-bd42b118da79-mastery",
+          "sha256": "ac63c090574cff340ca59b4b8ba513ab4d39fb0a0f7078e36132691469fe0487"
+        }
+      ],
+      "foundationalRecall": [
+        {
+          "key": "tenant-user",
+          "htmlSha256": "6b3909d18ec0ba8a00f422115b21247f8fdef12bc8188ad8e64a07945143111d"
+        },
+        {
+          "key": "shared-store",
+          "htmlSha256": "808e2354cd0c870de901e96a240356747dcee33cff90100fd86aad98c8a69e36"
+        },
+        {
+          "key": "async-context",
+          "htmlSha256": "95497a249b0214b589bd6ccf285b82d30de40006e7ee488f27d70aab4dabfa10"
+        },
+        {
+          "key": "isolation-test",
+          "htmlSha256": "352f3a05abb23cdfb80c591b587b043ec96135b809ac42eb0bc4df405bcd63f0"
+        }
+      ],
+      "diagramSourcesSha256": [
+        "163c4b054aec994378b627c202f72affab3a5ef1069e328121e7fb6a1ea746d0"
+      ]
+    }
+  ],
+  "runtimeFiles": {
+    "index.html": "9173f0fad95908654ed03e34d6f0335a797746ce9feb7969d69601442432eac0",
+    "app.js": "2f3cc2412f0768348492a3b9fcf8c414badd602b2391210c8cd25bb3fb87d0b9",
+    "styles.css": "926b414cafa81f3a99df7591161f70a84861bc5011cea1d282aa322ebe98259d",
+    ".nojekyll": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "assets/js/catalog.js": "debc3326ac7c2489fa26b60297de8afb4af0647b80b96a1e3855fbf7f503c9ea",
+    "assets/js/learning-state.js": "ff071d29ef0e54fa55c0e6d0ace126a02eb5d06b8b8abdf368de23fe482cc683",
+    "assets/js/content-renderer.js": "170805dd94b98fa00b84876f01678825639debcf4e09bd036c028ef561dc70e2"
+  }
+}

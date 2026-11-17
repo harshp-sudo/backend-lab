@@ -1,0 +1,223 @@
+<article class="kb-topic" data-node-id="a1cef6f2-5f76-4376-980d-64af99310ec8">
+<h1>Distributed System Fundamentals</h1>
+<section data-section="hook-eli5" id="node-a1cef6f2-5f76-4376-980d-64af99310ec8-hook-eli5">
+<h2>🎯 The Hook & ELI5</h2>
+<div class="kb-callout--insight"><p><strong>ELI5 mental model.</strong> Imagine three shops taking a dinner order by passing notes. One shop can be open while another is closed. A missing reply might mean the note was lost, the cook is slow, or dinner is already ready. Working together over a network has the same uncertainty: separate computers must coordinate without sharing one perfectly reliable view of events.</p></div><p>A backend becomes distributed when useful work depends on components that communicate across a network. A web application talking to a remote database already crosses such a boundary; a hundred microservices are not required. Distribution can share work and isolate some failures, but it introduces delays and outcomes that one participant cannot immediately observe.</p><div class="kb-callout--insight"><p>WHY it matters: a checkout can charge a customer even though the browser reports a timeout. Correctness depends on what the system did, not just what the caller heard. Start by naming the business promise: for one confirmed purchase, create at most one order and make its eventual outcome discoverable.</p></div>
+</section>
+<section data-section="big-picture" id="node-a1cef6f2-5f76-4376-980d-64af99310ec8-big-picture">
+<h2>🗺️ High-Level Big Picture</h2>
+<p>Our worked example is a ticket purchase. The browser asks Orders to reserve a seat; Orders coordinates with Inventory and Payments. Each arrow crosses a boundary where a request, reply, or participant can fail independently. A durable operation record gives the caller a way to learn the result later. This diagram describes responsibilities, not an atomic transaction across all three owners.</p><figure class="kb-diagram"><pre class="mermaid">sequenceDiagram
+    accTitle: Ticket purchase across independently failing participants
+    accDescr: Orders coordinates reservation and payment while retaining an operation record for uncertain replies.
+    participant B as Browser
+    participant O as Orders
+    participant I as Inventory
+    participant P as Payments
+    B-&gt;&gt;O: Purchase with operation key
+    O-&gt;&gt;I: Reserve seat
+    I--&gt;&gt;O: Reservation reference
+    O-&gt;&gt;P: Request payment with stable key
+    P--&gt;&gt;O: Outcome or delayed reply
+    O--&gt;&gt;B: Known result or operation reference
+    B-&gt;&gt;O: Query operation after uncertainty</pre><figcaption>Read the arrows as responsibilities and hand-offs, not as a promise that every step succeeds.</figcaption></figure>
+</section>
+<section data-section="mechanics" id="node-a1cef6f2-5f76-4376-980d-64af99310ec8-mechanics">
+<h2>🔍 Step-by-Step Mechanics</h2>
+<p>Follow the example one boundary at a time. Open each step to connect the familiar mental model to the internal mechanics.</p><details><summary>1. Find the boundaries where knowledge stops</summary><p>Like the shops with separate notebooks, each participant owns only the information it can observe. Orders can know that it sent a payment request without knowing whether Payments committed it. This is <strong>partial failure</strong>: some participants or network paths work while others do not. A failed function call within one process and an unanswered network call have different meanings.</p>
+<p>Write a small failure inventory for each arrow: request never arrives, server fails before committing, server commits then fails before replying, or reply arrives after the caller gives up. Serialization also matters: a request must carry an explicit operation identifier and versioned fields rather than relying on shared memory. The boundary deserves its own timeout, authentication context, and observable correlation ID.</p></details>
+<details><summary>2. Bound waiting without pretending uncertainty disappeared</summary><p>A person stops waiting outside a shop at closing time even if the cook is still working. A <strong>timeout</strong> similarly bounds the caller's wait; it does not prove cancellation or failure. Give the complete checkout an end-to-end deadline, then allocate smaller budgets to downstream work. A chain of independent ten-second waits can exceed the user's total budget.</p>
+<p>If a deadline expires, store or return a pending operation reference where the business permits it. Distinguish a definitive rejection from an unknown result. Cancellation is best-effort unless the protocol and owner provide a stronger guarantee. Measure latency distributions, queue time, and dependency-specific errors; averages alone hide the slow tail that customers actually encounter.</p></details>
+<details><summary>3. Make a repeated request refer to the same business action</summary><p>If the browser asks twice about the same dinner, the shop should find the original order rather than cook two dinners. <strong>Idempotency</strong> means repeating the operation has the same intended effect as doing it once. Use a stable key for a particular purchase attempt, persist it with the operation, and reject reuse with incompatible purchase data.</p>
+<p>The duplicate check and the side effect must be coordinated at the owning service. Two concurrent requests that both check an empty table before inserting can still double-book. A unique key plus a transaction around the operation record and local state change is one common building block. Keep the stored response or status long enough for the retry window; a new key on every retry defeats the protection.</p></details>
+<details><summary>4. Retry only when doing so can help</summary><p>Knocking faster does not reopen a crowded shop. Retries consume capacity and can turn a small slowdown into an outage. Retry eligible transient failures with a limited attempt budget, increasing delay, and randomness so clients do not synchronize. An operation with an uncertain outcome is only safe to retry when its protocol makes repetition safe.</p>
+<p>Put retry ownership at a deliberate layer. If a browser, gateway, Orders, and a client library each retry three times, downstream attempts can multiply. Stop when the remaining deadline cannot accommodate another attempt. Bound concurrent work and queues as well: rejecting excess load predictably is often more recoverable than retaining an unlimited pile of requests.</p></details>
+<details><summary>5. Decide which facts must agree now</summary><p>Two shops can display yesterday's opening hours harmlessly, but two cashiers cannot both sell the last reserved seat. <strong>Consistency</strong> is the agreement the application needs about observed state. Choose it per invariant, not with one slogan for the entire business.</p>
+<p>Keep seat allocation inside an owner that can enforce its local constraint. A replicated read model may show a slightly old availability count, so final reservation must recheck authoritatively. Across owners, a multi-step workflow can use durable progress, retries, and business compensation such as releasing an unpaid reservation. Compensation is another business action that can also fail; it is not a magical rewind. During a partition, some operations may deliberately refuse progress rather than violate a required invariant.</p></details>
+<details><summary>6. Reconstruct the story after the request finishes</summary><p>A receipt number lets every shop discuss the same dinner later. Correlation IDs, structured events, and traces let engineers connect a distributed operation. They complement, rather than replace, durable business state. Logs showing that a request was sent are not proof that its effect committed.</p>
+<p>Record meaningful transitions such as requested, reserved, payment-pending, confirmed, and rejected. Reconciliation compares recorded intent with authoritative outcomes after interruptions. Test failures between each pair of steps, including a lost reply after a successful commit. The aim is not that every dependency always works; the aim is that the system preserves its stated business promise and can explain uncertain outcomes.</p></details>
+</section>
+<section data-section="trade-offs" id="node-a1cef6f2-5f76-4376-980d-64af99310ec8-trade-offs">
+<h2>⚖️ Comparisons & Trade-Offs</h2>
+<p>Choose using the constraints of the system and its team. The table compares relevant choices; compatible ideas can be combined rather than ranked as universally better.</p><div class="kb-table-wrap"><table><caption>Choices, benefits, costs, and decision conditions</caption><thead><tr><th scope="col">Approach or condition</th><th scope="col">What you gain</th><th scope="col">What you give up</th><th scope="col">Choose when</th></tr></thead><tbody><tr><td>Single local transaction</td><td>A clear commit boundary for one owner and its data</td><td>Limited scope; it cannot atomically govern independent remote owners</td><td>The invariant and required data can live together.</td></tr><tr><td>Synchronous remote coordination</td><td>An immediate response when dependencies cooperate</td><td>Latency, availability coupling, and unknown outcomes on timeout</td><td>The caller needs a near-term decision and failure handling is explicit.</td></tr><tr><td>Durable asynchronous workflow</td><td>Work can resume after temporary dependency failure</td><td>Delayed completion, duplicate handling, and operational state</td><td>Pending outcomes are acceptable and recovery must survive restarts.</td></tr><tr><td>Replicated read model</td><td>Fast local queries and independent read scaling</td><td>A potentially stale view that cannot enforce every write invariant</td><td>Browsing tolerates delay while authoritative writes recheck constraints.</td></tr></tbody></table></div>
+</section>
+<section data-section="pitfalls" id="node-a1cef6f2-5f76-4376-980d-64af99310ec8-pitfalls">
+<h2>⚠️ Common Pitfalls, Bugs & What-If Scenarios</h2>
+<p>Treat a failure as a story: start with what a user observes, trace the boundary that failed, and choose a prevention that addresses the cause.</p><div class="kb-callout--pitfall"><h3>Charged twice after a timeout</h3><p><strong>Symptom:</strong> A customer sees two payment effects after pressing retry.</p><p><strong>Root Cause:</strong> Each retry became a new business action, or duplicate checking was separate from committing the effect.</p><p><strong>Fix/Prevention:</strong> Carry one operation key through retries, enforce uniqueness at the owner, and expose status lookup for unknown results.</p></div><div class="kb-callout--pitfall"><h3>A slow dependency overwhelms everyone</h3><p><strong>Symptom:</strong> Healthy endpoints become slow while retry traffic and queues grow.</p><p><strong>Root Cause:</strong> Unbounded waiting and retries amplify load instead of limiting it.</p><p><strong>Fix/Prevention:</strong> Use end-to-end deadlines, bounded queues/concurrency, and one deliberate retry owner with backoff and jitter.</p></div><div class="kb-callout--pitfall"><h3>Two buyers get the last seat</h3><p><strong>Symptom:</strong> A cached availability page allowed two reservations to be confirmed.</p><p><strong>Root Cause:</strong> A stale read model was treated as an authoritative constraint check.</p><p><strong>Fix/Prevention:</strong> Enforce reservation uniqueness at the authoritative owner and design the user flow to handle a failed final reservation gracefully.</p></div>
+</section>
+<section data-section="mastery" id="node-a1cef6f2-5f76-4376-980d-64af99310ec8-mastery">
+<h2>🧠 Active Recall & Mastery Check</h2>
+<div class="kb-callout--insight"><p><strong>Summarize this in your own words</strong></p><p>Explain the opening analogy, trace the worked example, and name one condition that would change your architectural decision. Try answering before opening the cards.</p></div><details class="kb-question" data-recall-id="timeout-meaning"><summary>A payment call times out. What do you know, and what do you not know?</summary><p>You know the caller did not receive a usable reply within its budget. You do not know whether the request arrived, whether payment committed, or whether a reply was lost. Query the durable operation or repeat the same safely deduplicated action; do not assume failure and create an unrelated charge.</p></details><details class="kb-question" data-recall-id="idempotency-race"><summary>Why is checking for an existing operation before inserting not enough?</summary><p>Two concurrent handlers can both observe absence. The owning service needs a uniqueness/concurrency mechanism that coordinates the operation record and its local effect. An atomic local transaction and unique operation key are a typical combination; the exact protocol must also cover failures after external effects.</p></details><details class="kb-question" data-recall-id="consistency-boundary"><summary>Which can be stale: a seat-count display or the final seat-allocation decision?</summary><p>The display may be stale if the interface explains availability can change. The final allocation must enforce the no-double-booking invariant at its authority. Separating read convenience from write correctness avoids forcing every browse operation into expensive coordination.</p></details><details class="kb-question" data-recall-id="retry-budget"><summary>What changes when four layers all retry independently?</summary><p>Attempts can multiply and consume the very capacity needed for recovery. Assign retry ownership, carry an overall deadline, bound attempts and concurrency, and retry only when the operation and failure class permit it. More attempts are not automatically more reliability.</p></details><!-- kb-interview-scenarios:start -->
+<section data-interview-scenarios aria-labelledby="node-a1cef6f2-5f76-4376-980d-64af99310ec8-interview-scenarios">
+<h3 id="node-a1cef6f2-5f76-4376-980d-64af99310ec8-interview-scenarios">Tricky &amp; Most-Asked Interview Scenarios</h3>
+<p>Practice making a decision under a concrete production constraint. Open each answer, explain your reasoning aloud, then rate your confidence. The budgets and organizations below are author-created assumptions.</p>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-payment-timeout-unknown-outcome" data-scenario-basis="adapted-production">
+<summary>A payment times out after a possible charge. How do you retry without charging twice?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Think of losing a receipt after paying: no receipt does not mean no payment. A checkout waits two seconds for a charge, times out, and the customer immediately retries. The provider may already have committed. You must avoid a second charge while still letting the customer discover the outcome. What will you do and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Treat the timeout as unknown, not rejected. Persist a purchase operation with one stable idempotency key before contacting the provider, and reuse that key for retries of the same amount, currency and customer. The effect owner must atomically bind the key to the effect; a caller-side check alone cannot prevent concurrent duplicate charges.</p>
+<p>Return a pending operation reference when the outcome is uncertain. Query the provider by that identity or reconcile its authoritative callbacks, then publish a confirmed or rejected result. Bound retries and retain deduplication records for the documented retry window; reject reuse of the key with different purchase data.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A payment times out after a possible charge. How do you retry without charging twice?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Persist purchase identity"]
+    N1["Call provider with same key"]
+    N2["Reconcile unknown outcome"]
+    N3["Expose durable result"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Persist purchase identity → Call provider with same key → Reconcile unknown outcome → Expose durable result.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain recoverable outcomes and duplicate protection at the cost of durable operation state, reconciliation and delayed confirmation. An alternative is a synchronous-only checkout that stops accepting work on timeout, but it still needs a way to reconcile a charge that already happened.</p>
+<p>Follow-up trap: generating a new key on each attempt creates new purchases. If the provider has no idempotency or lookup capability, do not claim exactly-once charging: stop automatic ambiguous retries, retain the unresolved operation and reconcile before allowing a fresh charge. A later genuine purchase needs a new identity.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-retry-storm-overload" data-scenario-basis="adapted-production">
+<summary>Three dependency layers retry during overload. How do you stop the recovery traffic becoming an outage?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Imagine everyone repeatedly redialing a busy shop. Three layers each permit up to three attempts, so one original call can produce 27 downstream attempts. Latency is rising and callers have a one-second overall deadline. Extra attempts consume the capacity the dependency needs to recover. What will you change first and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Measure downstream attempt volume separately from user traffic, shed excess load and temporarily reduce retries. Choose one deliberate retry owner for the operation rather than multiplying independent policies. Retry only eligible transient failures when the remaining deadline and retry budget permit it; back off with jitter so clients do not wake together.</p>
+<p>Propagate the end-to-end deadline, cap concurrency and queues, and require safe repetition for mutating operations. Test a degraded dependency under load, watching successful work, saturation and recovery time rather than celebrating a lower error count produced by more attempts.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Three dependency layers retry during overload. How do you stop the recovery traffic becoming an outage?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Measure amplified attempts"]
+    N1["Choose retry owner and budget"]
+    N2["Back off or reject excess"]
+    N3["Observe useful recovery"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Measure amplified attempts → Choose retry owner and budget → Back off or reject excess → Observe useful recovery.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You preserve recovery capacity and predictable latency, while some requests fail earlier instead of receiving extra chances. A small bounded queue or cached read is a viable alternative for selected workloads; it is not a replacement for controlling overload.</p>
+<p>Follow-up trap: increasing every timeout holds scarce connections longer and can worsen saturation. If traffic is an asynchronous job stream with a long completion window, move retries into a durable worker schedule with controlled concurrency rather than applying the interactive one-second policy unchanged. The deadline belongs to the user operation, not independently to each hop.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-partition-cart-versus-stock" data-scenario-basis="adapted-production">
+<summary>A region is partitioned. Can cart edits stay available while the final stock unit remains safe?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Two disconnected shops may write wish lists, but they cannot both promise the same last item without an allocation rule. A regional network partition interrupts coordination. Customers should still edit carts, yet confirmed purchases must never oversell a unique ticket. What do you allow in each region and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Separate cart intent from authoritative allocation. Accept reversible cart changes locally with version metadata and a defined merge policy. Confirm the ticket only through an owner or coordination mechanism that can enforce the single-unit invariant; a region unable to reach that authority must return pending or temporarily unavailable for purchase.</p>
+<p>Make the distinction visible: adding an item is not a reservation. After connectivity returns, merge permitted cart changes, revalidate stock and resolve pending operations using stable identities. If you preallocate disjoint regional stock rights, enforce those rights locally rather than letting both regions sell the full inventory.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A region is partitioned. Can cart edits stay available while the final stock unit remains safe?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Classify reversible intent"]
+    N1["Accept cart changes locally"]
+    N2["Require stock authority for sale"]
+    N3["Reconcile provisional work"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Classify reversible intent → Accept cart changes locally → Require stock authority for sale → Reconcile provisional work.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>Cart availability improves while strict purchase availability is deliberately reduced. Preallocated quotas are an alternative that preserves local sales within each region&#x27;s rights, but can strand unused capacity and complicate rebalancing.</p>
+<p>Follow-up trap: eventual reconciliation cannot undo the fact that two customers were promised the same unique seat. If the item becomes replenishable stock and the business explicitly accepts backorders, you may allow provisional orders with compensation and clear customer terms. That is a changed business guarantee, not evidence that a strict invariant was preserved during the partition.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-read-after-profile-update" data-scenario-basis="adapted-production">
+<summary>A successful profile update is followed by an old value. Which read guarantee will you add?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>You change a name at one desk, then ask another desk whose notebook has not caught up. A profile API acknowledges a committed update, but the next read hits a lagging replica and shows the old name. Browsing other people&#x27;s profiles can be slightly stale; seeing your own edit revert is unacceptable. What will you do and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Provide read-your-writes behavior for the editing session instead of making every read globally synchronous. Return an authoritative version with the update. Route the subsequent session read to a source known to include that version, or wait up to a bounded budget for a replica to reach it before falling back to the authority.</p>
+<p>Trace cache versions as well as database replication: a fresh database read can still be hidden by an old response cache. Invalidate or version the relevant cache entry, and test a delayed replica, region failover and session movement. Do not acknowledge a write before its required durability condition is satisfied.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A successful profile update is followed by an old value. Which read guarantee will you add?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Commit and return version"]
+    N1["Carry session minimum version"]
+    N2["Read a sufficiently fresh source"]
+    N3["Bound wait and fallback"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Commit and return version → Carry session minimum version → Read a sufficiently fresh source → Bound wait and fallback.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You improve the editing experience with less coordination than a universal latest-value guarantee, but carry session/version metadata and may increase authority load or latency. Reading all profile traffic from the writer is a simpler alternative when its capacity is adequate.</p>
+<p>Follow-up trap: a fixed sleep only guesses replication delay. If a legal-name decision must be current for every observer, session consistency is insufficient; move that decision to an authoritative, appropriately coordinated read and accept its availability/latency cost. Define what happens when the required version cannot be reached within the budget.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-offline-conflict-business-meaning" data-scenario-basis="adapted-production">
+<summary>Two offline devices edit the same record. Will last-write-wins preserve what the user intended?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Two children alter copies of the same shopping list while apart. One adds milk; the other removes bread. A server later receives both snapshots, and device clocks may be wrong. You must preserve meaningful changes without silently resurrecting a deliberate deletion. What conflict rule will you choose and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Model the operations and their business meaning before choosing a merge. Attach version information so the server can detect concurrent edits rather than pretending arrival order represents causality. For a cart, consider item-level add/remove operations with explicit deletion semantics; for a sensitive address change, surface a conflict or require an authoritative choice.</p>
+<p>Persist enough causal or revision information to distinguish a retry from a new edit, and make merges deterministic and testable. Explain any conflict to the user when intent cannot be inferred safely. The original Dynamo design is evidence for application-assisted reconciliation, not a universal recipe for every data type.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Two offline devices edit the same record. Will last-write-wins preserve what the user intended?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Detect concurrent revisions"]
+    N1["Interpret add and remove intent"]
+    N2["Merge or request resolution"]
+    N3["Store converged revision"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Detect concurrent revisions → Interpret add and remove intent → Merge or request resolution → Store converged revision.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>Semantic merging preserves more intent than overwriting whole snapshots, but increases metadata, testing and domain-specific rules. Last-write-wins is a viable cheaper alternative for replaceable preferences when the business accepts lost concurrent updates and understands clock/ordering limitations.</p>
+<p>Follow-up trap: unioning every list makes removals disappear. If the record is a bank balance or exclusive allocation rather than a shopping list, merging arbitrary edits may violate an invariant. Send authoritative commands with concurrency checks or serialize those decisions instead of transferring a cart merge policy to money.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-slow-replica-failure-suspicion" data-scenario-basis="adapted-production">
+<summary>A replica misses heartbeats but may still be alive. When is failover safe?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A friend who does not answer may be busy, not gone. A replica stops responding during a network slowdown, while some clients can still reach it. An operator wants to promote another writer immediately. The system must not allow conflicting authoritative writes. What will you check and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Treat timeout-based failure detection as suspicion. Investigate network reachability, process health and replication progress separately, while enforcing a bounded client deadline. If a single-writer design fails over, promotion must follow its authority protocol, such as quorum-backed leadership with fencing tokens that the storage layer checks.</p>
+<p>Stop or fence the old writer&#x27;s authority before relying on the new one; merely removing it from one load balancer is insufficient when old connections remain. Monitor lag and explicitly choose the permitted recovery point. Exercise a partition where the old process is alive, not only a clean process crash.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A replica misses heartbeats but may still be alive. When is failover safe?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Suspect failure after deadline"]
+    N1["Check authority and replication"]
+    N2["Fence stale writer authority"]
+    N3["Promote through agreed protocol"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Suspect failure after deadline → Check authority and replication → Fence stale writer authority → Promote through agreed protocol.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>Conservative promotion protects consistency but can lengthen unavailability. A multi-writer, conflict-resolving design is an alternative for data whose operations can be merged; it changes semantics and does not remove coordination requirements for strict invariants.</p>
+<p>Follow-up trap: aggressive heartbeats improve detection speed but do not prove death. If the workload is read-only and stale reads are acceptable, you can reroute reads sooner without granting new write authority. If the old writer cannot be fenced and a strict single-writer guarantee is mandatory, stop writes rather than silently create split brain.</p>
+</div>
+</details>
+<aside class="kb-callout--insight" data-interview-research>
+<p>Researched 2026-11-17. These scenarios adapt documented production problems and architectural guidance. Interview frequency, rankings and company provenance for these exact prompts were not independently verified. Numeric budgets and organization details are author-created assumptions. Web search was available and used for this concept; primary sources support the technical reasoning, not a claim that these prompts recur in interviews.</p>
+<ul><li><a href="https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/">AWS: Timeouts, retries, and backoff with jitter</a></li><li><a href="https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/">AWS: Making retries safe with idempotent APIs</a></li><li><a href="https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf">Original Dynamo paper</a></li><li><a href="https://docs.hazelcast.com/hazelcast/5.7/data-structures/fencedlock">Hazelcast: Fencing tokens and uncertain lock ownership</a></li><li><a href="https://learn.microsoft.com/en-us/azure/cosmos-db/consistency-levels">Microsoft: Cosmos DB consistency levels (session example)</a></li></ul>
+</aside>
+</section>
+<!-- kb-interview-scenarios:end --><div class="kb-callout--impact"><h3>Real-world impact</h3><p>For a ticketing service, the useful outcome is a purchase whose identity, seat claim, payment outcome, and recovery path remain understandable after failures. Distribution is a tool for particular scale and ownership needs. Its fundamental engineering work is drawing boundaries, choosing invariants, limiting uncertainty, and making interrupted work recoverable.</p></div>
+</section>
+<footer class="kb-references"><h2>Sources and further reading</h2><p>Original explanations and worked examples above; consult these primary references for the underlying ideas and implementation-specific details.</p><ul><li><a href="https://aws.amazon.com/builders-library/challenges-with-distributed-systems/">AWS Builders’ Library: Challenges with distributed systems</a></li><li><a href="https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/">AWS Builders’ Library: Timeouts, retries, and backoff with jitter</a></li><li><a href="https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/">AWS Builders’ Library: Making retries safe with idempotent APIs</a></li></ul><p>Connect this lesson to: <a href="#/system-design/backend-architecture/core-system-topologies/monolithic-architecture">Monolithic Architecture</a>, <a href="#/system-design/backend-architecture/core-system-topologies/microservices-architecture">Microservices Architecture</a>, <a href="#/system-design/backend-architecture/communication-and-routing/event-driven-architecture">Event-Driven Architecture</a>.</p></footer>
+</article>

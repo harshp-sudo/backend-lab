@@ -1,0 +1,102 @@
+{
+  "status": "pass",
+  "topicId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+  "path": "topics/system-design/backend-architecture/core-system-topologies/service-oriented-architecture.html",
+  "sourceSha256": "870cfd5f446eaa43b2630ae1054795b3e43953072cb65f70bec82e50f53033e3",
+  "outputs": [
+    {
+      "nodeId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+      "topicId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+      "sourceSha256": "870cfd5f446eaa43b2630ae1054795b3e43953072cb65f70bec82e50f53033e3",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-service-oriented-architecture.pdf",
+      "completeTextBlocks": 149,
+      "diagramLabels": 33,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+      "topicId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+      "sourceSha256": "870cfd5f446eaa43b2630ae1054795b3e43953072cb65f70bec82e50f53033e3",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-service-oriented-architecture.pdf",
+      "completeTextBlocks": 149,
+      "diagramLabels": 33,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    }
+  ],
+  "visualReview": {
+    "topicId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+    "path": "topics/system-design/backend-architecture/core-system-topologies/service-oriented-architecture.html",
+    "comparisonSheet": "/tmp/backend-interview-print-review/service-oriented-architecture-comparison.jpg",
+    "outputs": [
+      {
+        "theme": "light",
+        "pdf": "/tmp/backend-interview-pdfs/light-service-oriented-architecture.pdf",
+        "pages": 19,
+        "selectedPages": [
+          4,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/light-service-oriented-architecture-table.png",
+          "/tmp/backend-interview-print-review/light-service-oriented-architecture-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/light-service-oriented-architecture-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "d13d3d6b5d29fde70a1f2a8b76f256c627d5b6fa7eea0fd76bd01def4139bbf7",
+        "reviewPanelSha256": [
+          "4f69e7e963322457d08248c4fae4120c5339c0704450a567b82894934670aa94",
+          "8dac025e71e24255380e0a3c84d68927644600c9d7daa6c991a96f458973fcf4",
+          "efcedab336e4fac2d742317da77ed68512cd32eb1354a9f83599a27411e89bcb"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      },
+      {
+        "theme": "dark",
+        "pdf": "/tmp/backend-interview-pdfs/dark-service-oriented-architecture.pdf",
+        "pages": 19,
+        "selectedPages": [
+          4,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/dark-service-oriented-architecture-table.png",
+          "/tmp/backend-interview-print-review/dark-service-oriented-architecture-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/dark-service-oriented-architecture-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "ed661f52b0588e54eb406887c1d794c2080cbfaf622f75a37aebab6a4388de96",
+        "reviewPanelSha256": [
+          "4f69e7e963322457d08248c4fae4120c5339c0704450a567b82894934670aa94",
+          "8dac025e71e24255380e0a3c84d68927644600c9d7daa6c991a96f458973fcf4",
+          "efcedab336e4fac2d742317da77ed68512cd32eb1354a9f83599a27411e89bcb"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      }
+    ],
+    "reviewStatus": "pass",
+    "reviewedOn": "2026-11-17",
+    "reviewFindings": [
+      "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+      "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+      "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+      "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+    ]
+  },
+  "findings": [
+    "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+    "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+    "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+  ]
+}

@@ -1,0 +1,223 @@
+<article class="kb-topic" data-node-id="1901acc7-9225-428a-9397-072cff3d36d0">
+<h1>Monolithic Architecture</h1>
+<section data-section="hook-eli5" id="node-1901acc7-9225-428a-9397-072cff3d36d0-hook-eli5">
+<h2>🎯 The Hook & ELI5</h2>
+<div class="kb-callout--insight"><p><strong>ELI5 mental model.</strong> Picture a restaurant whose kitchen stations share one building and open for service together. The baker and grill cook can have different jobs without becoming separate restaurants. A monolithic backend similarly packages its main business capabilities into one application that is released as a unit. The useful question is whether that shared release boundary helps this team serve customers well.</p></div><p>An application needs a place to receive requests, apply business rules, and coordinate data changes. A monolith puts substantial business functionality behind one application deployment boundary. It can contain many modules, processes such as background workers from the same release, and multiple running replicas; one deployment unit does not mean one source file or exactly one server.</p><div class="kb-callout--insight"><p>WHY it matters: a small booking team may deliver safer changes with one versioned release and local transactions than with ten independently deployed services. Simplicity is valuable only when the inside remains understandable. A shared release can also become a coordination bottleneck as teams and workloads diverge.</p></div>
+</section>
+<section data-section="big-picture" id="node-1901acc7-9225-428a-9397-072cff3d36d0-big-picture">
+<h2>🗺️ High-Level Big Picture</h2>
+<p>Consider a neighborhood class-booking product. One application owns class schedules, seat reservations, and invoices. A request enters the booking handler, calls internal business capabilities, and commits the necessary local changes in its database. A separate notification worker can process follow-up work without turning every internal call into a network request. The diagram shows a chosen implementation, not a requirement that every monolith use one database.</p><figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A class booking inside one application release
+    accDescr: Multiple business modules run within one deployment boundary and use local coordination.
+    C[&quot;Student&quot;] --&gt; E[&quot;HTTP entry point&quot;]
+    subgraph R[&quot;One application release&quot;]
+        E --&gt; B[&quot;Booking workflow&quot;]
+        B --&gt; S[&quot;Schedule capability&quot;]
+        B --&gt; I[&quot;Invoice capability&quot;]
+        B --&gt; N[&quot;Notification job record&quot;]
+    end
+    S --&gt; D[&quot;Application database&quot;]
+    I --&gt; D
+    N --&gt; D
+    D --&gt; W[&quot;Worker from the same application release&quot;]</pre><figcaption>Read the arrows as responsibilities and hand-offs, not as a promise that every step succeeds.</figcaption></figure>
+</section>
+<section data-section="mechanics" id="node-1901acc7-9225-428a-9397-072cff3d36d0-mechanics">
+<h2>🔍 Step-by-Step Mechanics</h2>
+<p>Follow the example one boundary at a time. Open each step to connect the familiar mental model to the internal mechanics.</p><details><summary>1. Choose the release boundary deliberately</summary><p>Like the whole restaurant opening after one safety check, the application is built and released as a coherent version. A handler can call another module using ordinary language interfaces. This reduces remote protocol and version-mismatch problems inside that boundary, though calls to a database, email provider, or payment service still have network failure modes.</p>
+<p>Name the business responsibilities before naming folders. Booking, schedule management, billing, and notifications should be recognizable capabilities even when deployed together. A useful boundary is the set of changes the team can understand, test, and release safely. The mere fact that all code is in one repository does not prove it forms one deployment unit, and splitting repositories alone does not create independent services.</p></details>
+<details><summary>2. Trace one request through local calls</summary><p>A student asks for the last seat in a pottery class. The entry point translates the request into a booking command, validates its shape, and passes it to application logic. That logic checks the class, applies booking rules, and asks persistence code to save the result. Calling an internal schedule module is a local interface call; it need not serialize a request and cross a service network.</p>
+<p>Keep responsibilities visible while benefiting from local calls. Authentication and request parsing belong at the edge, the booking rule belongs with booking behavior, and database mechanics stay behind an intentional access boundary. If an invoice method directly reaches into an unrelated handler's mutable data structures, the release remains monolithic but the design has become harder to reason about.</p></details>
+<details><summary>3. Use a local transaction for a local invariant</summary><p>Think of writing a reservation and its invoice into one ledger before closing the page. A <strong>transaction</strong> can make a related set of local database changes commit or roll back together. For the last class seat, the database must also enforce an appropriate concurrency rule; counting remaining seats in application memory is not sufficient when several replicas handle requests.</p>
+<p>A transaction does not automatically include an email or remote payment. Commit a durable notification intent with the booking when needed, then deliver it with retry-safe processing. Otherwise a successful booking followed by a failed email can confuse the user, and sending email before commit can announce a reservation that never existed. The local boundary simplifies some consistency problems; it does not eliminate all distributed interaction.</p></details>
+<details><summary>4. Scale the application without pretending all work is identical</summary><p>A busy restaurant can open another identical location. A monolith can also run several application instances behind a traffic distributor. Avoid keeping essential session or booking state only in one instance's memory; a later request may reach another instance. Coordinate shared writes through the chosen database or another authoritative owner.</p>
+<p>Replicating the whole application may waste resources if one small capability consumes most CPU while others barely work. Measure before extracting it: query tuning, caching, job queues, and separating web versus background worker capacity can sometimes address the problem while preserving one application design. If a capability truly needs an independent release or scaling boundary, service extraction becomes a candidate with additional operational costs.</p></details>
+<details><summary>5. Make one release small enough to trust</summary><p>Opening the entire restaurant is easy when the change is one new dish; it is risky when every station changes at once. A shared application release benefits from small changes, fast feedback, automated checks around important behavior, and backwards-compatible database migrations. The ability to roll code back can be limited by data already transformed or external effects already triggered.</p>
+<p>Several teams can work in a monolith, but common code ownership and a shared pipeline need explicit coordination. Watch for build times, tangled imports, release queues, and changes that unexpectedly affect many capabilities. Those are signals to improve boundaries or evaluate decomposition, not evidence that every monolith has already failed. A modular monolith is one way to strengthen the inside without changing the deployment boundary.</p></details>
+<details><summary>6. Decide whether an extraction solves a measured problem</summary><p>If only catering needs a different opening schedule, making it a separate operation may help. First identify the concrete problem: independent team delivery, distinct capacity needs, fault isolation, or a regulatory boundary. Identify the data and invariants that would cross the new boundary and design ownership before moving code.</p>
+<p>A staged extraction can route one capability to a new owner while the rest remains in the existing application. That requires protocol compatibility, data migration, recovery, and observation of the new network path. Moving coupled functions onto separate servers without resolving their shared data and release requirements produces distributed coordination costs without the intended independence. Keep a monolith when its shared boundary still fits the product and team.</p></details>
+</section>
+<section data-section="trade-offs" id="node-1901acc7-9225-428a-9397-072cff3d36d0-trade-offs">
+<h2>⚖️ Comparisons & Trade-Offs</h2>
+<p>Choose using the constraints of the system and its team. The table compares relevant choices; compatible ideas can be combined rather than ranked as universally better.</p><div class="kb-table-wrap"><table><caption>Choices, benefits, costs, and decision conditions</caption><thead><tr><th scope="col">Approach or condition</th><th scope="col">What you gain</th><th scope="col">What you give up</th><th scope="col">Choose when</th></tr></thead><tbody><tr><td>Conventional monolith</td><td>Simple release coordination and fast local interaction</td><td>Internal coupling can grow without enforced boundaries</td><td>A small team needs a straightforward starting deployment.</td></tr><tr><td>Modular monolith</td><td>Explicit capability boundaries while retaining local coordination</td><td>Discipline and architecture checks; still one release boundary</td><td>The domain is growing but independent deployment is not yet required.</td></tr><tr><td>Independently deployed services</td><td>Separate ownership, release cadence, and capacity where achieved</td><td>Network failures, contracts, data ownership and operations</td><td>Measured independent-delivery or isolation needs justify the cost.</td></tr><tr><td>Web and worker roles from one application</td><td>Different runtime capacity for interactive and background work</td><td>Job delivery semantics and coordinated release compatibility</td><td>Slow background work is the bottleneck, not all capability boundaries.</td></tr></tbody></table></div>
+</section>
+<section data-section="pitfalls" id="node-1901acc7-9225-428a-9397-072cff3d36d0-pitfalls">
+<h2>⚠️ Common Pitfalls, Bugs & What-If Scenarios</h2>
+<p>Treat a failure as a story: start with what a user observes, trace the boundary that failed, and choose a prevention that addresses the cause.</p><div class="kb-callout--pitfall"><h3>One release becomes one tangled responsibility</h3><p><strong>Symptom:</strong> Changing an invoice breaks unrelated class-scheduling behavior.</p><p><strong>Root Cause:</strong> Shared deployment was mistaken for permission to share every internal structure.</p><p><strong>Fix/Prevention:</strong> Separate capability interfaces, hide implementation details, and check dependency directions while keeping local calls.</p></div><div class="kb-callout--pitfall"><h3>The second replica loses a reservation</h3><p><strong>Symptom:</strong> A student sees different booking state depending on which instance responds.</p><p><strong>Root Cause:</strong> Essential state or concurrency decisions lived only in one server process.</p><p><strong>Fix/Prevention:</strong> Use an authoritative shared state model, concurrency constraints, and retry-safe request identity across replicas.</p></div><div class="kb-callout--pitfall"><h3>An architecture rewrite replaces a clear performance fix</h3><p><strong>Symptom:</strong> Delivery slows after a broad service split, while the original slow query remains.</p><p><strong>Root Cause:</strong> The team chose a topology as a substitute for measuring the bottleneck.</p><p><strong>Fix/Prevention:</strong> Measure query, CPU, queue, and release constraints, then choose the smallest boundary change that addresses them.</p></div>
+</section>
+<section data-section="mastery" id="node-1901acc7-9225-428a-9397-072cff3d36d0-mastery">
+<h2>🧠 Active Recall & Mastery Check</h2>
+<div class="kb-callout--insight"><p><strong>Summarize this in your own words</strong></p><p>Explain the opening analogy, trace the worked example, and name one condition that would change your architectural decision. Try answering before opening the cards.</p></div><details class="kb-question" data-recall-id="server-count"><summary>Can a monolithic application run on ten machines?</summary><p>Yes. Monolithic describes the application deployment boundary, not the number of running instances. Ten replicas of the same application remain a monolithic deployment model. Shared state, concurrency, and dependencies still require deliberate design.</p></details><details class="kb-question" data-recall-id="local-transaction"><summary>Why might a booking and its invoice be easier to coordinate in one application?</summary><p>If they share an appropriate local database boundary, a transaction can commit their related state changes together. That benefit does not automatically cover remote payment or email, and concurrent seat allocation still needs an enforced invariant.</p></details><details class="kb-question" data-recall-id="modularity"><summary>Does calling a system a monolith imply its code is unmodular?</summary><p>No. Internal organization and deployment shape are different dimensions. A monolith can have explicit capability modules, inward dependency rules, and well-defined domain models. Conversely, separate services can still be tightly coupled.</p></details><details class="kb-question" data-recall-id="extraction-test"><summary>What evidence would justify extracting notifications?</summary><p>Examples include a separate ownership/release need or a capacity/failure-isolation requirement not adequately served by a worker role. Account for event delivery, duplicate handling, monitoring, and interface compatibility before assuming extraction reduces total complexity.</p></details><!-- kb-interview-scenarios:start -->
+<section data-interview-scenarios aria-labelledby="node-1901acc7-9225-428a-9397-072cff3d36d0-interview-scenarios">
+<h3 id="node-1901acc7-9225-428a-9397-072cff3d36d0-interview-scenarios">Tricky &amp; Most-Asked Interview Scenarios</h3>
+<p>Practice making a decision under a concrete production constraint. Open each answer, explain your reasoning aloud, then rate your confidence. The budgets and organizations below are author-created assumptions.</p>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-small-team-launch-boundary" data-scenario-basis="adapted-production">
+<summary>Four engineers have two weeks to launch. Should you begin with independently deployed services?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Think of one workshop with labeled benches instead of renting a building for each tool. Four engineers must deliver ordering, billing and support in two weeks, with no dedicated operations team. Load is modest and most changes cross these capabilities. What deployment topology will you choose and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Start with a single deployable application and clear internal responsibility boundaries. Keep order and billing rules in named modules, use explicit interfaces and a transaction-capable data store where needed, and build one repeatable deployment with health checks, backups and rollback. The deadline favors fewer operational moving parts.</p>
+<p>Write down the conditions that would justify extraction later: a measured scaling hotspot, a durable independent ownership boundary or a regulatory isolation requirement. Add observability by capability now so future choices have evidence. A single deployment need not mean every class can access every table.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Four engineers have two weeks to launch. Should you begin with independently deployed services?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Identify team and deadline"]
+    N1["Choose one deployable boundary"]
+    N2["Enforce internal ownership"]
+    N3["Measure extraction triggers"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Identify team and deadline → Choose one deployable boundary → Enforce internal ownership → Measure extraction triggers.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain fast local development, simpler transactions and one operational path; you accept shared resource and release boundaries. A small number of services is a viable alternative if an existing platform team already makes deployment, tracing and recovery routine.</p>
+<p>Follow-up trap: saying a monolith cannot scale confuses deployment topology with capacity. If one capability must run in a separately controlled environment from day one, that isolation requirement outweighs the launch convenience. Keep the remaining cohesive work together rather than automatically splitting every noun into a service.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-same-rps-expensive-writes" data-scenario-basis="adapted-production">
+<summary>Request count is flat, yet latency doubled after a write-heavy release. Do you add more application replicas?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A restaurant serving the same number of customers can still slow down if every order becomes elaborate. Your monolith handles the same requests per second, but a release replaces cached reads with transactional writes. Database waits and p99 latency jump. The release has a 300ms response target. What will you investigate first and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Compare work per request before scaling the application. Trace changed endpoints, query plans, lock waits, transaction duration and connection-pool queues; segment read and write latency rather than relying on average CPU. Reproduce the new write mix under a realistic load test and roll back the release if its regression is clearly responsible.</p>
+<p>Shorten transactions, remove redundant queries and index the actual access path before adding replicas that compete for the same database. Bound database connections across the whole fleet. Recheck correctness after batching or caching changes: neither should bypass the business rule that made the write necessary.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Request count is flat, yet latency doubled after a write-heavy release. Do you add more application replicas?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Compare request work mix"]
+    N1["Find waits and saturation"]
+    N2["Fix or roll back bottleneck"]
+    N3["Retest realistic load"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Compare request work mix → Find waits and saturation → Fix or roll back bottleneck → Retest realistic load.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You target the constrained resource and avoid buying idle application CPU, but diagnosis takes measurement and a rollback may delay functionality. Additional application replicas are an alternative when profiling shows application CPU is the bottleneck and the data tier has headroom.</p>
+<p>Follow-up trap: unchanged request count does not imply unchanged workload. If the database remains healthy while encryption or serialization now dominates CPU, scale or optimize the application instead. Make the decision from resource demand and tail latency, not from the word monolith.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-reporting-exhausts-checkout" data-scenario-basis="adapted-production">
+<summary>A reporting feature consumes all worker threads and checkout fails. How do you contain it inside a monolith?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>One noisy room can consume a shared building&#x27;s electricity. An export endpoint launches long reports in the same process and connection pool as checkout. During business hours, checkout times out even though its own code has not changed. You need a same-day containment fix. What will you do and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Disable or throttle the expensive feature immediately, then assign it bounded concurrency, time limits and a bounded queue separate from latency-sensitive requests. Reserve sufficient database and worker capacity for checkout, cancel abandoned work where supported, and reject additional exports predictably instead of retaining unlimited jobs.</p>
+<p>Move truly long reports to a controlled background worker using a durable job identity, and expose job status rather than holding an HTTP request open. Observe queues and database contention separately; thread isolation alone does not isolate a shared disk or database. Load-test export traffic alongside checkout.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A reporting feature consumes all worker threads and checkout fails. How do you contain it inside a monolith?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Throttle expensive endpoint"]
+    N1["Bound queues and concurrency"]
+    N2["Protect checkout capacity"]
+    N3["Run controlled background jobs"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Throttle expensive endpoint → Bound queues and concurrency → Protect checkout capacity → Run controlled background jobs.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You restore priority isolation quickly without a system rewrite, but users wait for exports and share some remaining failure domains. Extracting reporting into a separately scaled process is an alternative when sustained demand or crash isolation justifies the operational cost.</p>
+<p>Follow-up trap: putting work on an unbounded in-memory queue merely moves the overload. If reports must read a consistent historical snapshot, choose a reporting replica or snapshot pipeline with explicit freshness semantics instead of letting arbitrary analytical queries compete with transactional writes.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-shared-artifact-safe-releases" data-scenario-basis="adapted-production">
+<summary>Five teams ship one artifact. How do you release and roll back without disabling every team&#x27;s work?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A shared train can still have a timetable and guarded boarding. Five teams change one monolith, and a bad billing release causes a whole-application rollback that also removes a working support feature. You must improve release safety this month without creating five services. What will you change and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Keep a reproducible artifact, require capability ownership and targeted plus integration checks, and deploy incrementally with observable health gates. Use independently controlled feature flags for risky behavior so a feature can be disabled without immediately reverting unrelated code. Exercise the old and new paths before release.</p>
+<p>Design database changes with an expand-and-contract sequence: add compatible structures first, transition readers/writers, and remove old structures only after the rollback window closes. Record which artifact and flags are active. Test rollback against the deployed schema rather than assuming reverting application code reverses data migration.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Five teams ship one artifact. How do you release and roll back without disabling every team&#x27;s work?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Build compatible artifact"]
+    N1["Roll out behind guarded flags"]
+    N2["Observe capability health"]
+    N3["Disable or repair safely"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Build compatible artifact → Roll out behind guarded flags → Observe capability health → Disable or repair safely.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You reduce blast radius and coordinate releases without immediate service extraction, but own flag lifecycle, compatibility tests and a shared deployment train. Separate deployables are an alternative when teams have genuinely independent contracts and persistent release contention.</p>
+<p>Follow-up trap: a feature flag cannot safely undo a destructive schema change or an external payment effect. If a data migration is irreversible, plan a forward repair and reconciliation path before rollout. If regulatory change control requires independent artifacts, internal flags alone do not satisfy that requirement.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-replicas-do-not-fix-database" data-scenario-basis="adapted-production">
+<summary>You doubled monolith replicas but throughput stayed flat. Why is the database getting worse?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>More cashiers do not help when there is only one slow stock ledger. Application replicas grow from four to eight, but the database is saturated, lock waits rise and total connections double. Checkout throughput barely moves. What architecture or capacity change will you make and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Stop increasing callers until you identify the data-tier limit. Measure transaction contention, query cost, I/O and connection waits. Apply a fleet-wide connection/concurrency budget, optimize hot queries and reduce unnecessarily broad transactions. Check whether a single hot row serializes the real business operation.</p>
+<p>Separate read and write demand: cache safe reads or route them to replicas only where stale data is acceptable, while authoritative writes still enforce invariants. Consider partitioning data along a real access boundary only after a simpler indexing, vertical-capacity or workload-isolation fix is evaluated. Retest with the expected request mix.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: You doubled monolith replicas but throughput stayed flat. Why is the database getting worse?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Cap total database demand"]
+    N1["Measure contention and queries"]
+    N2["Optimize or isolate workload"]
+    N3["Scale the constrained owner"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Cap total database demand → Measure contention and queries → Optimize or isolate workload → Scale the constrained owner.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You improve useful database capacity and protect recovery, but introduce cache freshness or operational partitioning costs if those measures are selected. Vertical database scaling is a viable near-term alternative when the workload fits its limits and cost is acceptable.</p>
+<p>Follow-up trap: turning code into microservices while retaining the same contended tables does not remove the bottleneck. If profiling instead shows a stateless CPU-heavy image transformation, a separately scaled worker may isolate it cleanly. Choose a boundary that owns the constrained work, not a distribution exercise around the same ledger.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-extract-one-capability-gradually" data-scenario-basis="adapted-production">
+<summary>Only image processing needs independent scaling. How do you extract it without rewriting the whole monolith?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>You can open a specialist workshop while the original shop keeps serving customers. Image conversion consumes bursty CPU, while ordering and billing remain cohesive. A full rewrite would take a year and cannot interrupt existing clients. What migration sequence will you choose and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Use an incremental strangler boundary around image processing. Define an explicit request/job contract, place routing or an adapter at the old entry point, and move conversion behind that contract while the monolith continues handling other work. Start with a small traffic slice and compare outputs, latency and failure behavior.</p>
+<p>Give jobs stable identities and make duplicate processing safe before retrying across the new network boundary. Decide who owns image metadata and avoid uncontrolled dual writes. Retain a rollback route during the transition, observe both paths and remove the old implementation only when the new path proves operationally independent.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Only image processing needs independent scaling. How do you extract it without rewriting the whole monolith?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Wrap existing capability contract"]
+    N1["Route a controlled traffic slice"]
+    N2["Verify ownership and recovery"]
+    N3["Retire old implementation"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Wrap existing capability contract → Route a controlled traffic slice → Verify ownership and recovery → Retire old implementation.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain independent scaling and incremental risk control at the cost of routing, compatibility and a temporary two-path system. Keeping conversion as a separate worker of the same application is a viable cheaper alternative if independent business ownership is unnecessary.</p>
+<p>Follow-up trap: a network wrapper around a function that still writes private shared tables is not full ownership isolation. If the dependency graph reveals that conversion cannot be separated without many synchronous callbacks, first simplify the internal boundary. A measured extraction can pause without forcing a rewrite of the working core.</p>
+</div>
+</details>
+<aside class="kb-callout--insight" data-interview-research>
+<p>Researched 2026-11-17. These scenarios adapt documented production problems and architectural guidance. Interview frequency, rankings and company provenance for these exact prompts were not independently verified. Numeric budgets and organization details are author-created assumptions. Web search was available and used for this concept; primary sources support the technical reasoning, not a claim that these prompts recur in interviews.</p>
+<ul><li><a href="https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures">Microsoft: Common web application architectures</a></li><li><a href="https://cloud.google.com/blog/products/management-tools/sre-for-single-tiered-software-applications">Google Cloud engineering: Making your monolith more reliable</a></li><li><a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/strangler-fig.html">AWS: Strangler fig pattern</a></li></ul>
+</aside>
+</section>
+<!-- kb-interview-scenarios:end --><div class="kb-callout--impact"><h3>Real-world impact</h3><p>For a local class-booking business, a monolith can keep reservation rules, billing coordination, and deployment understandable while the product evolves. Its long-term health depends on disciplined internal boundaries and measured bottlenecks. The decision to distribute should improve a specific delivery or operational constraint, not merely change the architecture label.</p></div>
+</section>
+<footer class="kb-references"><h2>Sources and further reading</h2><p>Original explanations and worked examples above; consult these primary references for the underlying ideas and implementation-specific details.</p><ul><li><a href="https://martinfowler.com/bliki/MonolithFirst.html">Martin Fowler: Monolith First</a></li><li><a href="https://martinfowler.com/articles/microservices.html">Lewis and Fowler: Microservices</a></li><li><a href="https://docs.spring.io/spring-modulith/reference/fundamentals.html">Spring Modulith: Fundamentals</a></li></ul><p>Connect this lesson to: <a href="#/system-design/backend-architecture/core-system-topologies/modular-monolith">Modular Monolith</a>, <a href="#/system-design/backend-architecture/code-and-domain-organization/layered-architecture">Layered Architecture</a>, <a href="#/system-design/backend-architecture/core-system-topologies/microservices-architecture">Microservices Architecture</a>.</p></footer>
+</article>

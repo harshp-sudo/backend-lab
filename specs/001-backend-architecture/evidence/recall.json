@@ -1,0 +1,218 @@
+{
+  "phase": "reference-native-recall",
+  "result": "pass",
+  "topics": [
+    {
+      "route": "/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals",
+      "questions": 4,
+      "keys": [
+        "timeout-meaning",
+        "idempotency-race",
+        "consistency-boundary",
+        "retry-budget"
+      ],
+      "keyboard": "pass",
+      "independent": "pass",
+      "storageWrites": false,
+      "topicIdentityRetained": true
+    },
+    {
+      "route": "/system-design/backend-architecture/core-system-topologies/monolithic-architecture",
+      "questions": 4,
+      "keys": [
+        "server-count",
+        "local-transaction",
+        "modularity",
+        "extraction-test"
+      ],
+      "keyboard": "pass",
+      "independent": "pass",
+      "storageWrites": false,
+      "topicIdentityRetained": true
+    },
+    {
+      "route": "/system-design/backend-architecture/core-system-topologies/modular-monolith",
+      "questions": 4,
+      "keys": [
+        "module-proof",
+        "transaction-boundary",
+        "durable-events",
+        "extraction-cost"
+      ],
+      "keyboard": "pass",
+      "independent": "pass",
+      "storageWrites": false,
+      "topicIdentityRetained": true
+    },
+    {
+      "route": "/system-design/backend-architecture/core-system-topologies/service-oriented-architecture",
+      "questions": 4,
+      "keys": [
+        "protocol-definition",
+        "accepted-versus-done",
+        "compensation",
+        "soa-versus-microservices"
+      ],
+      "keyboard": "pass",
+      "independent": "pass",
+      "storageWrites": false,
+      "topicIdentityRetained": true
+    },
+    {
+      "route": "/system-design/backend-architecture/core-system-topologies/microservices-architecture",
+      "questions": 4,
+      "keys": [
+        "independence-test",
+        "data-ownership",
+        "saga-failure",
+        "monolith-extraction"
+      ],
+      "keyboard": "pass",
+      "independent": "pass",
+      "storageWrites": false,
+      "topicIdentityRetained": true
+    },
+    {
+      "route": "/system-design/backend-architecture/code-and-domain-organization/layered-architecture",
+      "questions": 4,
+      "keys": [
+        "layer-tier",
+        "rule-location",
+        "dependency-rule",
+        "concurrent-loans"
+      ],
+      "keyboard": "pass",
+      "independent": "pass",
+      "storageWrites": false,
+      "topicIdentityRetained": true
+    },
+    {
+      "route": "/system-design/backend-architecture/code-and-domain-organization/clean-architecture",
+      "questions": 4,
+      "keys": [
+        "dependency-direction",
+        "four-circles",
+        "adapter-tests",
+        "error-semantics"
+      ],
+      "keyboard": "pass",
+      "independent": "pass",
+      "storageWrites": false,
+      "topicIdentityRetained": true
+    },
+    {
+      "route": "/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture",
+      "questions": 4,
+      "keys": [
+        "driving-driven",
+        "six-ports",
+        "port-semantics",
+        "test-boundaries"
+      ],
+      "keyboard": "pass",
+      "independent": "pass",
+      "storageWrites": false,
+      "topicIdentityRetained": true
+    },
+    {
+      "route": "/system-design/backend-architecture/code-and-domain-organization/domain-driven-design",
+      "questions": 5,
+      "keys": [
+        "context-service",
+        "entity-value",
+        "aggregate-invariant",
+        "event-guarantee",
+        "model-cost"
+      ],
+      "keyboard": "pass",
+      "independent": "pass",
+      "storageWrites": false,
+      "topicIdentityRetained": true
+    },
+    {
+      "route": "/system-design/backend-architecture/communication-and-routing/event-driven-architecture",
+      "questions": 4,
+      "keys": [
+        "command-event",
+        "outbox-duplicate",
+        "ack-timing",
+        "replay-side-effects"
+      ],
+      "keyboard": "pass",
+      "independent": "pass",
+      "storageWrites": false,
+      "topicIdentityRetained": true
+    },
+    {
+      "route": "/system-design/backend-architecture/communication-and-routing/api-gateway-pattern",
+      "questions": 4,
+      "keys": [
+        "single-point",
+        "partial-result",
+        "authorization-owner",
+        "gateway-bff"
+      ],
+      "keyboard": "pass",
+      "independent": "pass",
+      "storageWrites": false,
+      "topicIdentityRetained": true
+    },
+    {
+      "route": "/system-design/backend-architecture/communication-and-routing/backend-for-frontend",
+      "questions": 4,
+      "keys": [
+        "boundary-choice",
+        "rule-duplication",
+        "gateway-comparison",
+        "query-language"
+      ],
+      "keyboard": "pass",
+      "independent": "pass",
+      "storageWrites": false,
+      "topicIdentityRetained": true
+    },
+    {
+      "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery",
+      "questions": 4,
+      "keys": [
+        "discovery-selection",
+        "dns-ttl",
+        "client-server",
+        "readiness"
+      ],
+      "keyboard": "pass",
+      "independent": "pass",
+      "storageWrites": false,
+      "topicIdentityRetained": true
+    },
+    {
+      "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh",
+      "questions": 4,
+      "keys": [
+        "planes",
+        "sidecars",
+        "identity-permission",
+        "control-outage"
+      ],
+      "keyboard": "pass",
+      "independent": "pass",
+      "storageWrites": false,
+      "topicIdentityRetained": true
+    },
+    {
+      "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy/multi-tenant-architecture",
+      "questions": 4,
+      "keys": [
+        "tenant-user",
+        "shared-store",
+        "async-context",
+        "isolation-test"
+      ],
+      "keyboard": "pass",
+      "independent": "pass",
+      "storageWrites": false,
+      "topicIdentityRetained": true
+    }
+  ],
+  "integrationStatus": "pending"
+}

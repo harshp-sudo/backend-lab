@@ -1,0 +1,102 @@
+{
+  "status": "pass",
+  "topicId": "689dd587-de37-4e22-9412-bd42b118da79",
+  "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/multi-tenant-architecture.html",
+  "sourceSha256": "1338b170aae459c923ceb05e9c0a203ed24ef6f1a6fc00db7ecd2ff77a512fb6",
+  "outputs": [
+    {
+      "nodeId": "689dd587-de37-4e22-9412-bd42b118da79",
+      "topicId": "689dd587-de37-4e22-9412-bd42b118da79",
+      "sourceSha256": "1338b170aae459c923ceb05e9c0a203ed24ef6f1a6fc00db7ecd2ff77a512fb6",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-multi-tenant-architecture.pdf",
+      "completeTextBlocks": 155,
+      "diagramLabels": 32,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "689dd587-de37-4e22-9412-bd42b118da79",
+      "topicId": "689dd587-de37-4e22-9412-bd42b118da79",
+      "sourceSha256": "1338b170aae459c923ceb05e9c0a203ed24ef6f1a6fc00db7ecd2ff77a512fb6",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-multi-tenant-architecture.pdf",
+      "completeTextBlocks": 155,
+      "diagramLabels": 32,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    }
+  ],
+  "visualReview": {
+    "topicId": "689dd587-de37-4e22-9412-bd42b118da79",
+    "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/multi-tenant-architecture.html",
+    "comparisonSheet": "/tmp/backend-interview-print-review/multi-tenant-architecture-comparison.jpg",
+    "outputs": [
+      {
+        "theme": "light",
+        "pdf": "/tmp/backend-interview-pdfs/light-multi-tenant-architecture.pdf",
+        "pages": 20,
+        "selectedPages": [
+          5,
+          9,
+          19
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/light-multi-tenant-architecture-table.png",
+          "/tmp/backend-interview-print-review/light-multi-tenant-architecture-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/light-multi-tenant-architecture-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "0abf4bf35a1866dda617217e31f4e98d0fb2e6d832a82c91f3dbfc9393afe0cc",
+        "reviewPanelSha256": [
+          "5c85bfcf2629f64e729bd1c2a20341a20a4e477411f383b2a23e37add46561c5",
+          "ae2cd68156e9a5b588e1be0f200779d35e1e039714f59ebeedd1fd8c702f517a",
+          "8fd418ffcb3fe30c4ff32693fb23e7e7bfc8a6bbaafbd4468b182050c60ff4f1"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      },
+      {
+        "theme": "dark",
+        "pdf": "/tmp/backend-interview-pdfs/dark-multi-tenant-architecture.pdf",
+        "pages": 20,
+        "selectedPages": [
+          5,
+          9,
+          19
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/dark-multi-tenant-architecture-table.png",
+          "/tmp/backend-interview-print-review/dark-multi-tenant-architecture-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/dark-multi-tenant-architecture-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "47480e4bf31e605b894829e88c8b707b890f5a38943b80923bb1be89529719fd",
+        "reviewPanelSha256": [
+          "5c85bfcf2629f64e729bd1c2a20341a20a4e477411f383b2a23e37add46561c5",
+          "ae2cd68156e9a5b588e1be0f200779d35e1e039714f59ebeedd1fd8c702f517a",
+          "8fd418ffcb3fe30c4ff32693fb23e7e7bfc8a6bbaafbd4468b182050c60ff4f1"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      }
+    ],
+    "reviewStatus": "pass",
+    "reviewedOn": "2026-11-17",
+    "reviewFindings": [
+      "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+      "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+      "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+      "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+    ]
+  },
+  "findings": [
+    "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+    "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+    "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+  ]
+}

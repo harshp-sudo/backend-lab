@@ -1,0 +1,102 @@
+{
+  "status": "pass",
+  "topicId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+  "path": "topics/system-design/backend-architecture/code-and-domain-organization/domain-driven-design.html",
+  "sourceSha256": "477c3f30a93c8be0715c1c076a2af53d2750a72da3680abe8e31e1fddf58594d",
+  "outputs": [
+    {
+      "nodeId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+      "topicId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+      "sourceSha256": "477c3f30a93c8be0715c1c076a2af53d2750a72da3680abe8e31e1fddf58594d",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-domain-driven-design.pdf",
+      "completeTextBlocks": 160,
+      "diagramLabels": 34,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+      "topicId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+      "sourceSha256": "477c3f30a93c8be0715c1c076a2af53d2750a72da3680abe8e31e1fddf58594d",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-domain-driven-design.pdf",
+      "completeTextBlocks": 160,
+      "diagramLabels": 34,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    }
+  ],
+  "visualReview": {
+    "topicId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+    "path": "topics/system-design/backend-architecture/code-and-domain-organization/domain-driven-design.html",
+    "comparisonSheet": "/tmp/backend-interview-print-review/domain-driven-design-comparison.jpg",
+    "outputs": [
+      {
+        "theme": "light",
+        "pdf": "/tmp/backend-interview-pdfs/light-domain-driven-design.pdf",
+        "pages": 21,
+        "selectedPages": [
+          5,
+          9,
+          19
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/light-domain-driven-design-table.png",
+          "/tmp/backend-interview-print-review/light-domain-driven-design-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/light-domain-driven-design-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "8f4e24e197290742e3b16090b3aca64f4299780cf48ed2d2da4c945b4fa28c65",
+        "reviewPanelSha256": [
+          "d16adf2dfdb35b354d457e12f58815e0a4d10ff9358c8bbcda3bfcf7a354aac7",
+          "03b0f7fb976170e30feda5d4224d8117923f169858812b5428fc529665dc5b69",
+          "dfd932dc27b61f4730df563012f1483c8e667e4517d4dcfa66fc6815efd48895"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      },
+      {
+        "theme": "dark",
+        "pdf": "/tmp/backend-interview-pdfs/dark-domain-driven-design.pdf",
+        "pages": 21,
+        "selectedPages": [
+          5,
+          9,
+          19
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/dark-domain-driven-design-table.png",
+          "/tmp/backend-interview-print-review/dark-domain-driven-design-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/dark-domain-driven-design-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "7241e7902c55d1bd5ec1e5e2f18bd541dc01ba94c859a722d2bdcb55b19e934f",
+        "reviewPanelSha256": [
+          "d16adf2dfdb35b354d457e12f58815e0a4d10ff9358c8bbcda3bfcf7a354aac7",
+          "03b0f7fb976170e30feda5d4224d8117923f169858812b5428fc529665dc5b69",
+          "dfd932dc27b61f4730df563012f1483c8e667e4517d4dcfa66fc6815efd48895"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      }
+    ],
+    "reviewStatus": "pass",
+    "reviewedOn": "2026-11-17",
+    "reviewFindings": [
+      "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+      "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+      "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+      "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+    ]
+  },
+  "findings": [
+    "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+    "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+    "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "status": "pass",
+  "topic": "clean-architecture",
+  "checks": [
+    {
+      "nodeId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+      "topicId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+      "sourceSha256": "e1ab624ca2a9d5845b2d307cc63b3fb33b45f0833411ee08a9e901f23ef9b04d",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pilot-pdfs/light-clean-architecture.pdf",
+      "completeTextBlocks": 151,
+      "diagramLabels": 43,
+      "diagrams": 8,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+      "topicId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+      "sourceSha256": "e1ab624ca2a9d5845b2d307cc63b3fb33b45f0833411ee08a9e901f23ef9b04d",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pilot-pdfs/dark-clean-architecture.pdf",
+      "completeTextBlocks": 151,
+      "diagramLabels": 43,
+      "diagrams": 8,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    }
+  ],
+  "findings": [
+    "The actual print stylesheet is used: Playwright media null explicitly releases overrides.",
+    "Both layout and raw text extraction protect prose and wrapped table cells.",
+    "Full summaries, constitutional labels, captions, code and diagram labels are included.",
+    "Only decorative leading heading emoji are excluded from text comparison because PDF font encoding varies.",
+    "Mixed disclosure states restore and host controls are absent in both PDFs."
+  ],
+  "scope": "Two-theme pilot only; full 15-lesson PDF acceptance remains pending."
+}

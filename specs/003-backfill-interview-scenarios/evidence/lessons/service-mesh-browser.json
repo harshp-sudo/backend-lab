@@ -1,0 +1,169 @@
+{
+  "status": "pass",
+  "topicId": "84458963-012b-4a80-828a-2da27d8b509d",
+  "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh.html",
+  "sourceSha256": "c8a730fa8338f586b148744f88995e70879f562de141da3a1eb38aae0909a284",
+  "browser": "141.0.7390.37",
+  "navigation": [
+    {
+      "base": "http://127.0.0.1:8020/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    },
+    {
+      "base": "http://127.0.0.1:8021/backend-lab/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    }
+  ],
+  "learning": {
+    "topicId": "84458963-012b-4a80-828a-2da27d8b509d",
+    "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh.html",
+    "sourceSha256": "c8a730fa8338f586b148744f88995e70879f562de141da3a1eb38aae0909a284",
+    "status": "pass",
+    "bases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "newKeys": [
+          "interview-mesh-app-retry-multiplication",
+          "interview-strict-mtls-legacy-migration",
+          "interview-mtls-not-object-permission",
+          "interview-sidecar-ambient-measured-choice",
+          "interview-canary-traffic-unexpected-share",
+          "interview-mesh-business-fallback-limit"
+        ],
+        "ratings": {
+          "interview-mesh-app-retry-multiplication": "hard",
+          "interview-strict-mtls-legacy-migration": "good",
+          "interview-mtls-not-object-permission": "easy",
+          "interview-sidecar-ambient-measured-choice": "hard",
+          "interview-canary-traffic-unexpected-share": "good",
+          "interview-mesh-business-fallback-limit": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "newKeys": [
+          "interview-mesh-app-retry-multiplication",
+          "interview-strict-mtls-legacy-migration",
+          "interview-mtls-not-object-permission",
+          "interview-sidecar-ambient-measured-choice",
+          "interview-canary-traffic-unexpected-share",
+          "interview-mesh-business-fallback-limit"
+        ],
+        "ratings": {
+          "interview-mesh-app-retry-multiplication": "hard",
+          "interview-strict-mtls-legacy-migration": "good",
+          "interview-mtls-not-object-permission": "easy",
+          "interview-sidecar-ambient-measured-choice": "hard",
+          "interview-canary-traffic-unexpected-share": "good",
+          "interview-mesh-business-fallback-limit": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      }
+    ]
+  },
+  "mobileThemes": {
+    "topicId": "84458963-012b-4a80-828a-2da27d8b509d",
+    "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh.html",
+    "sourceSha256": "c8a730fa8338f586b148744f88995e70879f562de141da3a1eb38aae0909a284",
+    "status": "pass",
+    "cases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-mesh-app-retry-multiplication",
+          "interview-strict-mtls-legacy-migration",
+          "interview-mtls-not-object-permission",
+          "interview-sidecar-ambient-measured-choice",
+          "interview-canary-traffic-unexpected-share",
+          "interview-mesh-business-fallback-limit"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-mesh-app-retry-multiplication",
+          "interview-strict-mtls-legacy-migration",
+          "interview-mtls-not-object-permission",
+          "interview-sidecar-ambient-measured-choice",
+          "interview-canary-traffic-unexpected-share",
+          "interview-mesh-business-fallback-limit"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-mesh-app-retry-multiplication",
+          "interview-strict-mtls-legacy-migration",
+          "interview-mtls-not-object-permission",
+          "interview-sidecar-ambient-measured-choice",
+          "interview-canary-traffic-unexpected-share",
+          "interview-mesh-business-fallback-limit"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-mesh-app-retry-multiplication",
+          "interview-strict-mtls-legacy-migration",
+          "interview-mtls-not-object-permission",
+          "interview-sidecar-ambient-measured-choice",
+          "interview-canary-traffic-unexpected-share",
+          "interview-mesh-business-fallback-limit"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      }
+    ]
+  },
+  "errors": [],
+  "supportingFixture": "reading_fixture passed all 21 actual partials without learning writes."
+}

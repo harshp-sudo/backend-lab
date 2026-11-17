@@ -1,0 +1,22 @@
+{
+  "status": "fail",
+  "phase": "first unfiltered acceptance run (completed with failures)",
+  "lesson": "modular-monolith",
+  "theme": "light",
+  "missingDiagramLabels": [
+    "Private catalog implementation",
+    "Private billing implementation"
+  ],
+  "allProseAndTablesPresent": true,
+  "cause": "Deprecated nested flowchart.htmlLabels setting leaves fixed-height foreignObject labels; long labels clip. Unbounded print width also stretches a tall diagram across pages.",
+  "diagnostics": "/tmp/backend-interview-svg-diagnostics.json",
+  "failedPDF": "/tmp/backend-interview-pilot-pdfs/light-modular-monolith.pdf",
+  "isolatedFixPrototype": "/tmp/backend-interview-fix-prototype.json",
+  "prototypePDFs": 2,
+  "source": "https://mermaid.js.org/config/schema-docs/config.html#htmllabels",
+  "historical": true,
+  "additionalFailures": {
+    "expanded_host": "Subdirectory server became unavailable during the final mobile/theme check.",
+    "reading_fixture": "ERR_CONNECTION_REFUSED from the same pre-existing subdirectory server."
+  }
+}

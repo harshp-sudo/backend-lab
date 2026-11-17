@@ -1,0 +1,169 @@
+{
+  "status": "pass",
+  "topicId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+  "path": "topics/system-design/backend-architecture/core-system-topologies/service-oriented-architecture.html",
+  "sourceSha256": "870cfd5f446eaa43b2630ae1054795b3e43953072cb65f70bec82e50f53033e3",
+  "browser": "141.0.7390.37",
+  "navigation": [
+    {
+      "base": "http://127.0.0.1:8020/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    },
+    {
+      "base": "http://127.0.0.1:8021/backend-lab/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    }
+  ],
+  "learning": {
+    "topicId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+    "path": "topics/system-design/backend-architecture/core-system-topologies/service-oriented-architecture.html",
+    "sourceSha256": "870cfd5f446eaa43b2630ae1054795b3e43953072cb65f70bec82e50f53033e3",
+    "status": "pass",
+    "bases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "newKeys": [
+          "interview-legacy-contract-mediation",
+          "interview-integration-bus-outage",
+          "interview-service-contract-versioning",
+          "interview-long-running-approval-workflow",
+          "interview-business-policy-inside-middleware",
+          "interview-canonical-model-change-coupling"
+        ],
+        "ratings": {
+          "interview-legacy-contract-mediation": "hard",
+          "interview-integration-bus-outage": "good",
+          "interview-service-contract-versioning": "easy",
+          "interview-long-running-approval-workflow": "hard",
+          "interview-business-policy-inside-middleware": "good",
+          "interview-canonical-model-change-coupling": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "newKeys": [
+          "interview-legacy-contract-mediation",
+          "interview-integration-bus-outage",
+          "interview-service-contract-versioning",
+          "interview-long-running-approval-workflow",
+          "interview-business-policy-inside-middleware",
+          "interview-canonical-model-change-coupling"
+        ],
+        "ratings": {
+          "interview-legacy-contract-mediation": "hard",
+          "interview-integration-bus-outage": "good",
+          "interview-service-contract-versioning": "easy",
+          "interview-long-running-approval-workflow": "hard",
+          "interview-business-policy-inside-middleware": "good",
+          "interview-canonical-model-change-coupling": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      }
+    ]
+  },
+  "mobileThemes": {
+    "topicId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+    "path": "topics/system-design/backend-architecture/core-system-topologies/service-oriented-architecture.html",
+    "sourceSha256": "870cfd5f446eaa43b2630ae1054795b3e43953072cb65f70bec82e50f53033e3",
+    "status": "pass",
+    "cases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-legacy-contract-mediation",
+          "interview-integration-bus-outage",
+          "interview-service-contract-versioning",
+          "interview-long-running-approval-workflow",
+          "interview-business-policy-inside-middleware",
+          "interview-canonical-model-change-coupling"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-legacy-contract-mediation",
+          "interview-integration-bus-outage",
+          "interview-service-contract-versioning",
+          "interview-long-running-approval-workflow",
+          "interview-business-policy-inside-middleware",
+          "interview-canonical-model-change-coupling"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-legacy-contract-mediation",
+          "interview-integration-bus-outage",
+          "interview-service-contract-versioning",
+          "interview-long-running-approval-workflow",
+          "interview-business-policy-inside-middleware",
+          "interview-canonical-model-change-coupling"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-legacy-contract-mediation",
+          "interview-integration-bus-outage",
+          "interview-service-contract-versioning",
+          "interview-long-running-approval-workflow",
+          "interview-business-policy-inside-middleware",
+          "interview-canonical-model-change-coupling"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      }
+    ]
+  },
+  "errors": [],
+  "supportingFixture": "reading_fixture passed all 21 actual partials without learning writes."
+}

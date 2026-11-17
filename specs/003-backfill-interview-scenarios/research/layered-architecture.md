@@ -1,0 +1,372 @@
+# Final Research: Layered Architecture
+
+State: reviewed. Separate editorial/source pass completed 2026-11-17 for all six permanent scenario keys. Exact interview frequency remains unverified; adaptations are disclosed. Browser/print acceptance is recorded separately.
+
+The JSON map records actual planning queries, implementation source checks (or explicit limitations), final selection/technical mappings and all eight per-card editorial dispositions. Vendor-specific sources are examples, not universal architectural guarantees.
+
+```json
+{
+  "topicId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+  "title": "Layered Architecture",
+  "path": "topics/system-design/backend-architecture/code-and-domain-organization/layered-architecture.html",
+  "constitutionVersion": "1.2.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "site.learn.microsoft.com architecture n-tier architecture style bypass middle tier latency",
+      "date": "2026-11-17",
+      "result": "success; concept-specific planning research found technical guidance; exact prompt recurrence unverified"
+    },
+    {
+      "query": "\"layered architecture\" \"interview\" production constraints",
+      "date": "2026-11-17",
+      "result": "success; concept-specific planning research found technical guidance; exact prompt recurrence unverified"
+    }
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "title": "Microsoft: N-tier architecture style",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/n-tier",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Primary architectural or product guidance used for the specifically mapped decisions; not evidence of hiring frequency."
+    },
+    {
+      "id": "S2",
+      "title": "Microsoft: Common web application architectures",
+      "url": "https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Primary architectural or product guidance used for the specifically mapped decisions; not evidence of hiring frequency."
+    },
+    {
+      "id": "S3",
+      "title": "Microsoft: EF Core transactions (implementation-specific example)",
+      "url": "https://learn.microsoft.com/en-us/ef/core/saving/transactions",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Primary architectural or product guidance used for the specifically mapped decisions; not evidence of hiring frequency."
+    },
+    {
+      "id": "S4",
+      "title": "Microsoft: Choosing a testing strategy",
+      "url": "https://learn.microsoft.com/en-us/ef/core/testing/choosing-a-testing-strategy",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Test doubles can differ from real databases; real-adapter checks are needed for provider semantics and transaction behavior."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-pass-through-network-layers",
+      "theme": "Six pass-through layers create six network hops. Which boundaries need to remain physical?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "S1"
+      ],
+      "technicalSources": [
+        "S1"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Scenario organization, numbers, deadlines and proposed implementation details are author-created; sources support underlying mechanics, not an observed company incident or exact interview prompt.",
+      "limitations": "Exact recurrence/rank/company provenance unverified; vendor examples do not imply universal defaults.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Layered Architecture: Six pass-through layers create six network hops. Which boundaries need to remain physical?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: Six pass-through layers create six network hops. Which boundaries need to remain physical? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Passing a note through six desks is slow when five only forward it unchanged. A CRUD request crosses six deployed tiers with almost no policy between them. Network latency dominates the response budget, while the team calls every tier a required architectural layer. What will you change and why?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Separate logical responsibilities from physical deployment. Keep presentation, application policy and persistence responsibilities clear in code, but co-locate pass-through layers unless an actual scaling, security or ownership requirement justifies a network boundary. Profile the request path and remove needless serialization and round trips.\n\nReview strict versus relaxed layer access deliberately: an agreed read projection may bypass redundant orchestration, while writes still pass required policy. Test behavior and access controls after consolidation. A layer diagram describes dependency organization; it does not mandate one machine or service per box."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You reduce latency and operational overhead while retaining logical separation, but give up independent physical scaling/isolation for co-located components. Keeping tiers separate is a viable alternative when a trust boundary or distinct resource demand requires it.\n\nFollow-up trap: removing every layer can also remove validation and authorization. If compliance mandates a physically isolated data tier, retain that boundary and optimize within its constraints. Measure the necessary hops rather than interpreting fewer boxes as the only performance objective."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You reduce latency and operational overhead while retaining logical separation, but give up independent physical scaling/isolation for co-located components. Keeping tiers separate is a viable alternative when a trust boundary or distinct resource demand requires it.\n\nFollow-up trap: removing every layer can also remove validation and authorization. If compliance mandates a physically isolated data tier, retain that boundary and optimize within its constraints. Measure the necessary hops rather than interpreting fewer boxes as the only performance objective."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S1 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      }
+    },
+    {
+      "key": "interview-bypassed-pricing-policy",
+      "theme": "A fast endpoint writes directly to the database and bypasses pricing checks. Where should the rule live?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "S2"
+      ],
+      "technicalSources": [
+        "S2"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Scenario organization, numbers, deadlines and proposed implementation details are author-created; sources support underlying mechanics, not an observed company incident or exact interview prompt.",
+      "limitations": "Exact recurrence/rank/company provenance unverified; vendor examples do not imply universal defaults.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Layered Architecture: A fast endpoint writes directly to the database and bypasses pricing checks. Where should the rule live?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: A fast endpoint writes directly to the database and bypasses pricing checks. Where should the rule live? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "A side door avoids the cashier as well as the queue. A new controller writes orders directly to persistence for speed, while batch jobs call an application service that validates discounts. Some API orders now receive invalid prices. What boundary will you repair and why?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Place the authoritative pricing/ordering rule in the shared domain or application use case, then route both HTTP and batch commands through it. Let controllers translate and validate transport shape; let repositories persist data rather than decide eligibility. Audit other write paths for the same bypass and add behavior tests for an invalid discount through each entry point.\n\nMeasure the actual overhead before treating policy execution as expendable. Enforce simple data invariants in the database as defense in depth, but keep policy and its explanation in the responsible business layer. Return a consistent rejection rather than silently correcting prices in only one adapter."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You gain consistent business decisions with one implementation, but may need to redesign an overly large application service. Direct read projections are an alternative for read-only views that cannot bypass a write invariant; they do not justify an unguarded write path.\n\nFollow-up trap: duplicating the rule in every controller makes the initial fix appear quick but invites drift. If a future import intentionally bypasses a rule, model that as an explicitly authorized business operation with its own constraints and audit trail, not a secret database shortcut."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You gain consistent business decisions with one implementation, but may need to redesign an overly large application service. Direct read projections are an alternative for read-only views that cannot bypass a write invariant; they do not justify an unguarded write path.\n\nFollow-up trap: duplicating the rule in every controller makes the initial fix appear quick but invites drift. If a future import intentionally bypasses a rule, model that as an explicitly authorized business operation with its own constraints and audit trail, not a secret database shortcut."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S2 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      }
+    },
+    {
+      "key": "interview-logical-layers-versus-tiers",
+      "theme": "A team proposes a server for every layer. Will that improve independent scaling?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "S1"
+      ],
+      "technicalSources": [
+        "S1"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Scenario organization, numbers, deadlines and proposed implementation details are author-created; sources support underlying mechanics, not an observed company incident or exact interview prompt.",
+      "limitations": "Exact recurrence/rank/company provenance unverified; vendor examples do not imply universal defaults.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Layered Architecture: A team proposes a server for every layer. Will that improve independent scaling?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: A team proposes a server for every layer. Will that improve independent scaling? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Separate folders do not require separate office buildings. A layered application runs well in one process, but an architecture review proposes deploying presentation, application and domain code on separate servers simply because they are distinct layers. There is no measured capacity issue. What will you recommend?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Keep logical layers in one deployable initially and choose physical tiers from measured operational constraints. Identify actual independent scaling units, such as CPU-heavy background work, and trust boundaries before adding remote calls. Ensure source dependencies stay intentional regardless of deployment placement.\n\nPrototype and load-test any proposed split, including serialization, authorization, timeout and partial-failure handling. Document how the split improves a concrete objective. If no benefit outweighs those costs, retain the simpler topology while preserving code boundaries that allow a later move."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Co-location preserves fast calls and simpler failure handling but shares deployment and resources. Separate physical tiers are a valid alternative when a protected database network, distinct scaling profile or organizational boundary requires them.\n\nFollow-up trap: multiplying tiers does not automatically create microservices or independent business ownership. If application CPU becomes the bottleneck while storage is healthy, scaling whole stateless application replicas may be enough. If a sensitive adapter requires an isolated network zone, split that physical responsibility instead of distributing every conceptual layer."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Co-location preserves fast calls and simpler failure handling but shares deployment and resources. Separate physical tiers are a valid alternative when a protected database network, distinct scaling profile or organizational boundary requires them.\n\nFollow-up trap: multiplying tiers does not automatically create microservices or independent business ownership. If application CPU becomes the bottleneck while storage is healthy, scaling whole stateless application replicas may be enough. If a sensitive adapter requires an isolated network zone, split that physical responsibility instead of distributing every conceptual layer."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S1 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      }
+    },
+    {
+      "key": "interview-query-builder-leaks-upward",
+      "theme": "Controllers depend on ORM query builders during a storage migration. How do you contain the leak?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "S2"
+      ],
+      "technicalSources": [
+        "S2"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Scenario organization, numbers, deadlines and proposed implementation details are author-created; sources support underlying mechanics, not an observed company incident or exact interview prompt.",
+      "limitations": "Exact recurrence/rank/company provenance unverified; vendor examples do not imply universal defaults.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Layered Architecture: Controllers depend on ORM query builders during a storage migration. How do you contain the leak?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: Controllers depend on ORM query builders during a storage migration. How do you contain the leak? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Customers should order a meal, not operate the kitchen machinery. Controllers compose provider-specific queries and catch database exceptions directly. Switching storage now requires editing presentation code across the application. What contract will you introduce and why?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Identify the queries and commands the application actually needs, then expose purpose-specific application/repository operations with application-owned inputs and outputs. Translate provider models and exceptions in the data-access boundary, preserving useful distinctions such as not-found, conflict and unavailable. Avoid exporting a generic query builder that lets callers rebuild provider coupling.\n\nMigrate one use case at a time with behavior and adapter integration tests. For reports, an explicit read-query service can return a projection without forcing every result through a rich domain object. Verify pagination, ordering and null semantics rather than assuming two providers behave identically."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You reduce storage leakage and localize provider changes, but maintain translation and explicit query operations. Direct ORM use is a viable simpler alternative for a small stable application that consciously accepts that coupling.\n\nFollow-up trap: a universal repository interface can become an untestable imitation of every database feature. If a new use case needs a provider-specific analytical query, isolate that capability explicitly and acknowledge its portability limit instead of pretending the entire application has become database-independent."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You reduce storage leakage and localize provider changes, but maintain translation and explicit query operations. Direct ORM use is a viable simpler alternative for a small stable application that consciously accepts that coupling.\n\nFollow-up trap: a universal repository interface can become an untestable imitation of every database feature. If a new use case needs a provider-specific analytical query, isolate that capability explicitly and acknowledge its portability limit instead of pretending the entire application has become database-independent."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S2 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      }
+    },
+    {
+      "key": "interview-use-case-transaction-owner",
+      "theme": "Two repository writes partially succeed. Which layer should own their transaction?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "S3"
+      ],
+      "technicalSources": [
+        "S3"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Scenario organization, numbers, deadlines and proposed implementation details are author-created; sources support underlying mechanics, not an observed company incident or exact interview prompt.",
+      "limitations": "Exact recurrence/rank/company provenance unverified; vendor examples do not imply universal defaults.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Layered Architecture: Two repository writes partially succeed. Which layer should own their transaction?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: Two repository writes partially succeed. Which layer should own their transaction? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Writing half an invoice is not a completed sale. An application service saves an order, then its second repository call fails while updating a related local reservation. Both use the same transactional database, but each repository commits independently. What will you change and why?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Make the application use case own the transaction boundary for the business operation. Configure both repositories to participate in the same actual database transaction/session, and commit only after the required writes succeed. Keep repository methods from silently committing work that the use case expects to be atomic.\n\nUse concurrency constraints as well as rollback: a transaction does not automatically prevent overselling under every isolation level. Test failure between writes, commit failure and concurrent access against the real provider. EF Core transaction behavior is a provider-specific example, not a guarantee supplied by layered architecture itself."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You gain one explicit local atomic boundary but couple those writes to a shared transactional resource and transaction lifetime. Moving the invariant into one aggregate/repository operation is another viable design. A durable workflow is an alternative when independent commits are intentional and temporary inconsistency is acceptable.\n\nFollow-up trap: wrapping remote service calls in the same application method does not enlist them automatically. If one write moves to a separate database, redesign the workflow or supported coordination rather than retaining an unsupported local-transaction promise. Keep slow external calls outside short database transactions where possible."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You gain one explicit local atomic boundary but couple those writes to a shared transactional resource and transaction lifetime. Moving the invariant into one aggregate/repository operation is another viable design. A durable workflow is an alternative when independent commits are intentional and temporary inconsistency is acceptable.\n\nFollow-up trap: wrapping remote service calls in the same application method does not enlist them automatically. If one write moves to a separate database, redesign the workflow or supported coordination rather than retaining an unsupported local-transaction promise. Keep slow external calls outside short database transactions where possible."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S3 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      }
+    },
+    {
+      "key": "interview-fake-repository-hides-provider-bug",
+      "theme": "Unit tests pass with fake repositories, but production loses updates. What test is missing?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "S2",
+        "S3",
+        "S4"
+      ],
+      "technicalSources": [
+        "S2",
+        "S3",
+        "S4"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Scenario organization, numbers, deadlines and proposed implementation details are author-created; sources support underlying mechanics, not an observed company incident or exact interview prompt.",
+      "limitations": "Exact recurrence/rank/company provenance unverified; vendor examples do not imply universal defaults.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Layered Architecture: Unit tests pass with fake repositories, but production loses updates. What test is missing?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: Unit tests pass with fake repositories, but production loses updates. What test is missing? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "A practice lock that never jams cannot prove the real door is safe. Fake repositories store objects in memory and every layered use-case test passes. Production behaves differently under concurrent writes and database constraints. What verification will you add without abandoning fast unit tests?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Keep fast tests for application decisions, and add adapter integration tests using the real database engine/configuration for persistence semantics. Exercise unique constraints, concurrency conflicts, transaction rollback, ordering and provider error translation. Run selected end-to-end use cases through the actual repository boundary.\n\nMake the fake honor the contract where practical, but do not expand it into a second database implementation. Include the observed lost-update race as a regression with two concurrent actors. Separate a business-policy failure from an infrastructure-semantics failure so each test layer has a clear purpose."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You catch provider-specific behavior and realistic transactions at the cost of slower setup and controlled test data. A lightweight substitute database is an alternative for some feedback, but may differ in precisely the locking or SQL feature under investigation.\n\nFollow-up trap: adding more mock expectations does not validate isolation behavior. If a provider change removes a required transaction feature, either choose a supported design or state the changed guarantee; do not weaken the production invariant just to keep an in-memory fake passing."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You catch provider-specific behavior and realistic transactions at the cost of slower setup and controlled test data. A lightweight substitute database is an alternative for some feedback, but may differ in precisely the locking or SQL feature under investigation.\n\nFollow-up trap: adding more mock expectations does not validate isolation behavior. If a provider change removes a required transaction feature, either choose a supported design or state the changed guarantee; do not weaken the production invariant just to keep an in-memory fake passing."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S2, S3, S4 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These scenarios adapt documented production problems and architectural guidance. Interview frequency, rankings and company provenance for these exact prompts were not independently verified. Numeric budgets and organization details are author-created assumptions. Web search was available and used for this concept; primary sources support the technical reasoning, not a claim that these prompts recur in interviews.",
+  "sourceNoteUrls": [
+    "https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/n-tier",
+    "https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures",
+    "https://learn.microsoft.com/en-us/ef/core/saving/transactions",
+    "https://learn.microsoft.com/en-us/ef/core/testing/choosing-a-testing-strategy"
+  ],
+  "editorialReviewedOn": "2026-11-17"
+}
+```

@@ -1,0 +1,102 @@
+{
+  "status": "pass",
+  "topicId": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+  "path": "topics/system-design/backend-architecture/core-system-topologies/microservices-architecture.html",
+  "sourceSha256": "30cf45daf87d29229699d48f5764c921e3e755b584330049fd85a7e07477687a",
+  "outputs": [
+    {
+      "nodeId": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+      "topicId": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+      "sourceSha256": "30cf45daf87d29229699d48f5764c921e3e755b584330049fd85a7e07477687a",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-microservices-architecture.pdf",
+      "completeTextBlocks": 150,
+      "diagramLabels": 33,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+      "topicId": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+      "sourceSha256": "30cf45daf87d29229699d48f5764c921e3e755b584330049fd85a7e07477687a",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-microservices-architecture.pdf",
+      "completeTextBlocks": 150,
+      "diagramLabels": 33,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    }
+  ],
+  "visualReview": {
+    "topicId": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+    "path": "topics/system-design/backend-architecture/core-system-topologies/microservices-architecture.html",
+    "comparisonSheet": "/tmp/backend-interview-print-review/microservices-architecture-comparison.jpg",
+    "outputs": [
+      {
+        "theme": "light",
+        "pdf": "/tmp/backend-interview-pdfs/light-microservices-architecture.pdf",
+        "pages": 19,
+        "selectedPages": [
+          4,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/light-microservices-architecture-table.png",
+          "/tmp/backend-interview-print-review/light-microservices-architecture-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/light-microservices-architecture-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "058532c02ef93a52f2f3ede1546fdfa3772b9cbce4e2c9ff7af2a9f7231f3da9",
+        "reviewPanelSha256": [
+          "493603f923e856544461d0ba136f98c289a7f049fb9b897ee2d0b398a27a833c",
+          "d0ca3e94abeeb9a123e281e89a25115099bb98a0d910d3bab88e94944fbad288",
+          "32e83c60ef802b04565404b4e6726db515e1b91f42ea851b4a462e27e35a0ca8"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      },
+      {
+        "theme": "dark",
+        "pdf": "/tmp/backend-interview-pdfs/dark-microservices-architecture.pdf",
+        "pages": 19,
+        "selectedPages": [
+          4,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/dark-microservices-architecture-table.png",
+          "/tmp/backend-interview-print-review/dark-microservices-architecture-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/dark-microservices-architecture-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "01d5b885c11a6e19d995fcadfb7d66e9ba6b60c65b23fcadabba1ecaa5368754",
+        "reviewPanelSha256": [
+          "493603f923e856544461d0ba136f98c289a7f049fb9b897ee2d0b398a27a833c",
+          "d0ca3e94abeeb9a123e281e89a25115099bb98a0d910d3bab88e94944fbad288",
+          "32e83c60ef802b04565404b4e6726db515e1b91f42ea851b4a462e27e35a0ca8"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      }
+    ],
+    "reviewStatus": "pass",
+    "reviewedOn": "2026-11-17",
+    "reviewFindings": [
+      "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+      "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+      "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+      "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+    ]
+  },
+  "findings": [
+    "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+    "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+    "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+  ]
+}

@@ -1,0 +1,217 @@
+{
+  "phase": "final-high-contrast-A4",
+  "result": "pass",
+  "partials": [
+    {
+      "route": "/system-design",
+      "status": "pass",
+      "sourceTheme": "dark",
+      "printTextColor": "#172534",
+      "printConnectorColor": "#334155",
+      "allParagraphsPrinted": 8,
+      "disclosureStateRestored": true,
+      "pdf": "/tmp/backend-architecture-pdfs/system-design-overview.pdf"
+    },
+    {
+      "route": "/system-design/backend-architecture",
+      "status": "pass",
+      "sourceTheme": "dark",
+      "printTextColor": "#172534",
+      "printConnectorColor": "#334155",
+      "allParagraphsPrinted": 12,
+      "disclosureStateRestored": true,
+      "pdf": "/tmp/backend-architecture-pdfs/backend-architecture-overview.pdf"
+    },
+    {
+      "route": "/system-design/backend-architecture/core-system-topologies",
+      "status": "pass",
+      "sourceTheme": "dark",
+      "printTextColor": "#172534",
+      "printConnectorColor": "#334155",
+      "allParagraphsPrinted": 13,
+      "disclosureStateRestored": true,
+      "pdf": "/tmp/backend-architecture-pdfs/core-system-topologies-overview.pdf"
+    },
+    {
+      "route": "/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals",
+      "status": "pass",
+      "sourceTheme": "dark",
+      "printTextColor": "#172534",
+      "printConnectorColor": "#334155",
+      "allParagraphsPrinted": 37,
+      "disclosureStateRestored": true,
+      "pdf": "/tmp/backend-architecture-pdfs/distributed-system-fundamentals.pdf"
+    },
+    {
+      "route": "/system-design/backend-architecture/core-system-topologies/monolithic-architecture",
+      "status": "pass",
+      "sourceTheme": "dark",
+      "printTextColor": "#172534",
+      "printConnectorColor": "#334155",
+      "allParagraphsPrinted": 37,
+      "disclosureStateRestored": true,
+      "pdf": "/tmp/backend-architecture-pdfs/monolithic-architecture.pdf"
+    },
+    {
+      "route": "/system-design/backend-architecture/core-system-topologies/modular-monolith",
+      "status": "pass",
+      "sourceTheme": "dark",
+      "printTextColor": "#172534",
+      "printConnectorColor": "#334155",
+      "allParagraphsPrinted": 37,
+      "disclosureStateRestored": true,
+      "pdf": "/tmp/backend-architecture-pdfs/modular-monolith.pdf"
+    },
+    {
+      "route": "/system-design/backend-architecture/core-system-topologies/service-oriented-architecture",
+      "status": "pass",
+      "sourceTheme": "dark",
+      "printTextColor": "#172534",
+      "printConnectorColor": "#334155",
+      "allParagraphsPrinted": 37,
+      "disclosureStateRestored": true,
+      "pdf": "/tmp/backend-architecture-pdfs/service-oriented-architecture.pdf"
+    },
+    {
+      "route": "/system-design/backend-architecture/core-system-topologies/microservices-architecture",
+      "status": "pass",
+      "sourceTheme": "dark",
+      "printTextColor": "#172534",
+      "printConnectorColor": "#334155",
+      "allParagraphsPrinted": 37,
+      "disclosureStateRestored": true,
+      "pdf": "/tmp/backend-architecture-pdfs/microservices-architecture.pdf"
+    },
+    {
+      "route": "/system-design/backend-architecture/code-and-domain-organization",
+      "status": "pass",
+      "sourceTheme": "dark",
+      "printTextColor": "#172534",
+      "printConnectorColor": "#334155",
+      "allParagraphsPrinted": 12,
+      "disclosureStateRestored": true,
+      "pdf": "/tmp/backend-architecture-pdfs/code-and-domain-organization-overview.pdf"
+    },
+    {
+      "route": "/system-design/backend-architecture/code-and-domain-organization/layered-architecture",
+      "status": "pass",
+      "sourceTheme": "dark",
+      "printTextColor": "#172534",
+      "printConnectorColor": "#334155",
+      "allParagraphsPrinted": 37,
+      "disclosureStateRestored": true,
+      "pdf": "/tmp/backend-architecture-pdfs/layered-architecture.pdf"
+    },
+    {
+      "route": "/system-design/backend-architecture/code-and-domain-organization/clean-architecture",
+      "status": "pass",
+      "sourceTheme": "dark",
+      "printTextColor": "#172534",
+      "printConnectorColor": "#334155",
+      "allParagraphsPrinted": 37,
+      "disclosureStateRestored": true,
+      "pdf": "/tmp/backend-architecture-pdfs/clean-architecture.pdf"
+    },
+    {
+      "route": "/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture",
+      "status": "pass",
+      "sourceTheme": "dark",
+      "printTextColor": "#172534",
+      "printConnectorColor": "#334155",
+      "allParagraphsPrinted": 37,
+      "disclosureStateRestored": true,
+      "pdf": "/tmp/backend-architecture-pdfs/hexagonal-architecture.pdf"
+    },
+    {
+      "route": "/system-design/backend-architecture/code-and-domain-organization/domain-driven-design",
+      "status": "pass",
+      "sourceTheme": "dark",
+      "printTextColor": "#172534",
+      "printConnectorColor": "#334155",
+      "allParagraphsPrinted": 41,
+      "disclosureStateRestored": true,
+      "pdf": "/tmp/backend-architecture-pdfs/domain-driven-design.pdf"
+    },
+    {
+      "route": "/system-design/backend-architecture/communication-and-routing",
+      "status": "pass",
+      "sourceTheme": "dark",
+      "printTextColor": "#172534",
+      "printConnectorColor": "#334155",
+      "allParagraphsPrinted": 11,
+      "disclosureStateRestored": true,
+      "pdf": "/tmp/backend-architecture-pdfs/communication-and-routing-overview.pdf"
+    },
+    {
+      "route": "/system-design/backend-architecture/communication-and-routing/event-driven-architecture",
+      "status": "pass",
+      "sourceTheme": "dark",
+      "printTextColor": "#172534",
+      "printConnectorColor": "#334155",
+      "allParagraphsPrinted": 37,
+      "disclosureStateRestored": true,
+      "pdf": "/tmp/backend-architecture-pdfs/event-driven-architecture.pdf"
+    },
+    {
+      "route": "/system-design/backend-architecture/communication-and-routing/api-gateway-pattern",
+      "status": "pass",
+      "sourceTheme": "dark",
+      "printTextColor": "#172534",
+      "printConnectorColor": "#334155",
+      "allParagraphsPrinted": 38,
+      "disclosureStateRestored": true,
+      "pdf": "/tmp/backend-architecture-pdfs/api-gateway-pattern.pdf"
+    },
+    {
+      "route": "/system-design/backend-architecture/communication-and-routing/backend-for-frontend",
+      "status": "pass",
+      "sourceTheme": "dark",
+      "printTextColor": "#172534",
+      "printConnectorColor": "#334155",
+      "allParagraphsPrinted": 37,
+      "disclosureStateRestored": true,
+      "pdf": "/tmp/backend-architecture-pdfs/backend-for-frontend.pdf"
+    },
+    {
+      "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy",
+      "status": "pass",
+      "sourceTheme": "dark",
+      "printTextColor": "#172534",
+      "printConnectorColor": "#334155",
+      "allParagraphsPrinted": 11,
+      "disclosureStateRestored": true,
+      "pdf": "/tmp/backend-architecture-pdfs/infrastructure-and-multi-tenancy-overview.pdf"
+    },
+    {
+      "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery",
+      "status": "pass",
+      "sourceTheme": "dark",
+      "printTextColor": "#172534",
+      "printConnectorColor": "#334155",
+      "allParagraphsPrinted": 37,
+      "disclosureStateRestored": true,
+      "pdf": "/tmp/backend-architecture-pdfs/service-discovery.pdf"
+    },
+    {
+      "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh",
+      "status": "pass",
+      "sourceTheme": "dark",
+      "printTextColor": "#172534",
+      "printConnectorColor": "#334155",
+      "allParagraphsPrinted": 37,
+      "disclosureStateRestored": true,
+      "pdf": "/tmp/backend-architecture-pdfs/service-mesh.pdf"
+    },
+    {
+      "route": "/system-design/backend-architecture/infrastructure-and-multi-tenancy/multi-tenant-architecture",
+      "status": "pass",
+      "sourceTheme": "dark",
+      "printTextColor": "#172534",
+      "printConnectorColor": "#334155",
+      "allParagraphsPrinted": 40,
+      "disclosureStateRestored": true,
+      "pdf": "/tmp/backend-architecture-pdfs/multi-tenant-architecture.pdf"
+    }
+  ],
+  "integrationStatus": "pending"
+}

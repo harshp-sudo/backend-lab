@@ -1,0 +1,21 @@
+{
+  "status": "pass",
+  "contentTests": 61,
+  "nodeTestFiles": 2,
+  "nodeAssertionsHistorical": 14,
+  "contentLog": "/tmp/backend-interview-final-content-tests.log",
+  "nodeLog": "/tmp/backend-interview-final-node-tests.log",
+  "negativeCoverage": [
+    "missing duplicate or misplaced group/title/marker",
+    "separate count bounds including fifth foundational DDD card",
+    "missing empty wrong-order parts and labels",
+    "duplicate missing unstable keys and nested/open/exclusive cards",
+    "source reconstruction protects modules answers and footer",
+    "research dates roles source mappings basis claims and editorial state",
+    "legacy production waiver and unsafe scoped paths",
+    "malformed research rows produce validation failures instead of tracebacks",
+    "line-ending-only changes fail exact original-byte reconstruction; no newline normalization",
+    "runtime changes require an exact reviewed before/after hash exception; missing or substituted waiver is rejected"
+  ],
+  "editorialNegativeCases": "specs/003-backfill-interview-scenarios/evidence/editorial-negative-cases.md"
+}

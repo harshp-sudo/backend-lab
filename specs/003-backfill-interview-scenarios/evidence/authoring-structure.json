@@ -1,0 +1,555 @@
+{
+  "profile": "backend-architecture",
+  "phase": "intrinsic",
+  "result": "pass",
+  "counts": {
+    "totalNodes": 21,
+    "batch": {
+      "topics": 15,
+      "hubs": 6
+    },
+    "diagrams": 112,
+    "foundationalRecall": 61,
+    "interviewRecall": 90,
+    "recallQuestions": 151
+  },
+  "checks": [
+    {
+      "name": "catalog",
+      "status": "pass",
+      "artifact": "manifest.json",
+      "message": "Shape, identities, derived targets and requested membership verified"
+    },
+    {
+      "name": "preservation-inputs",
+      "status": "pass",
+      "artifact": "specs/003-backfill-interview-scenarios/contracts/preservation-baseline.json",
+      "message": "Frozen catalog, hubs, runtime and evidence identities verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/_overview.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/_overview.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/core-system-topologies/_overview.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/core-system-topologies/monolithic-architecture.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/core-system-topologies/modular-monolith.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/core-system-topologies/service-oriented-architecture.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/core-system-topologies/microservices-architecture.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/code-and-domain-organization/_overview.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/code-and-domain-organization/layered-architecture.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/code-and-domain-organization/clean-architecture.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/code-and-domain-organization/domain-driven-design.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/communication-and-routing/_overview.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/communication-and-routing/event-driven-architecture.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/communication-and-routing/api-gateway-pattern.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/communication-and-routing/backend-for-frontend.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/_overview.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/multi-tenant-architecture.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "files",
+      "status": "pass",
+      "artifact": "topics/",
+      "message": "No unregistered HTML partials"
+    },
+    {
+      "name": "history",
+      "status": "pending",
+      "artifact": "manifest.json",
+      "message": "No prior catalog supplied; initial-node format was checked"
+    },
+    {
+      "name": "bundle",
+      "status": "pass",
+      "artifact": "specs/003-backfill-interview-scenarios/delivery.md",
+      "message": "Delivery record exists; content paths were individually checked"
+    }
+  ],
+  "integrationStatus": "pending",
+  "scope": "batch",
+  "recallProfile": "constitution-1.2",
+  "lessons": [
+    {
+      "foundationalKeys": [
+        "timeout-meaning",
+        "idempotency-race",
+        "consistency-boundary",
+        "retry-budget"
+      ],
+      "interviewKeys": [
+        "interview-payment-timeout-unknown-outcome",
+        "interview-retry-storm-overload",
+        "interview-partition-cart-versus-stock",
+        "interview-read-after-profile-update",
+        "interview-offline-conflict-business-meaning",
+        "interview-slow-replica-failure-suspicion"
+      ],
+      "diagrams": 7,
+      "topicId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals.html",
+      "sourceSha256": "37081c0ced0c059597d477f267d706938e158b2b4a7141463c6780b11af0970b",
+      "acceptance": {
+        "editorial": "pending",
+        "browser": "pending",
+        "print": "pending"
+      }
+    },
+    {
+      "foundationalKeys": [
+        "server-count",
+        "local-transaction",
+        "modularity",
+        "extraction-test"
+      ],
+      "interviewKeys": [
+        "interview-small-team-launch-boundary",
+        "interview-same-rps-expensive-writes",
+        "interview-reporting-exhausts-checkout",
+        "interview-shared-artifact-safe-releases",
+        "interview-replicas-do-not-fix-database",
+        "interview-extract-one-capability-gradually"
+      ],
+      "diagrams": 7,
+      "topicId": "1901acc7-9225-428a-9397-072cff3d36d0",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/monolithic-architecture.html",
+      "sourceSha256": "8b193bfe38ac6ca56ae67ec11ee25a72bf34cf54a1c4a83690bd8648766179e2",
+      "acceptance": {
+        "editorial": "pending",
+        "browser": "pending",
+        "print": "pending"
+      }
+    },
+    {
+      "foundationalKeys": [
+        "module-proof",
+        "transaction-boundary",
+        "durable-events",
+        "extraction-cost"
+      ],
+      "interviewKeys": [
+        "interview-private-module-access",
+        "interview-cyclic-order-billing-inventory",
+        "interview-cross-module-local-invariant",
+        "interview-after-commit-listener-loss",
+        "interview-shared-common-business-rules",
+        "interview-extraction-readiness-hidden-coupling"
+      ],
+      "diagrams": 7,
+      "topicId": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/modular-monolith.html",
+      "sourceSha256": "d110a3cbd2776547bfa9de6a9369ddbf1f58a0241de1ac23c997fa845f043900",
+      "acceptance": {
+        "editorial": "pending",
+        "browser": "pending",
+        "print": "pending"
+      }
+    },
+    {
+      "foundationalKeys": [
+        "protocol-definition",
+        "accepted-versus-done",
+        "compensation",
+        "soa-versus-microservices"
+      ],
+      "interviewKeys": [
+        "interview-legacy-contract-mediation",
+        "interview-integration-bus-outage",
+        "interview-service-contract-versioning",
+        "interview-long-running-approval-workflow",
+        "interview-business-policy-inside-middleware",
+        "interview-canonical-model-change-coupling"
+      ],
+      "diagrams": 7,
+      "topicId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/service-oriented-architecture.html",
+      "sourceSha256": "870cfd5f446eaa43b2630ae1054795b3e43953072cb65f70bec82e50f53033e3",
+      "acceptance": {
+        "editorial": "pending",
+        "browser": "pending",
+        "print": "pending"
+      }
+    },
+    {
+      "foundationalKeys": [
+        "independence-test",
+        "data-ownership",
+        "saga-failure",
+        "monolith-extraction"
+      ],
+      "interviewKeys": [
+        "interview-lockstep-service-releases",
+        "interview-checkout-critical-path-latency",
+        "interview-checkout-partial-commit-recovery",
+        "interview-shared-writable-reporting-tables",
+        "interview-downstream-resource-cascade",
+        "interview-service-sprawl-small-team"
+      ],
+      "diagrams": 7,
+      "topicId": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/microservices-architecture.html",
+      "sourceSha256": "30cf45daf87d29229699d48f5764c921e3e755b584330049fd85a7e07477687a",
+      "acceptance": {
+        "editorial": "pending",
+        "browser": "pending",
+        "print": "pending"
+      }
+    },
+    {
+      "foundationalKeys": [
+        "layer-tier",
+        "rule-location",
+        "dependency-rule",
+        "concurrent-loans"
+      ],
+      "interviewKeys": [
+        "interview-pass-through-network-layers",
+        "interview-bypassed-pricing-policy",
+        "interview-logical-layers-versus-tiers",
+        "interview-query-builder-leaks-upward",
+        "interview-use-case-transaction-owner",
+        "interview-fake-repository-hides-provider-bug"
+      ],
+      "diagrams": 7,
+      "topicId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+      "path": "topics/system-design/backend-architecture/code-and-domain-organization/layered-architecture.html",
+      "sourceSha256": "a3a3c473f3948c2df06a49dda9e05e21fa98125beba7cd5e61d8a600a8f7eea4",
+      "acceptance": {
+        "editorial": "pending",
+        "browser": "pending",
+        "print": "pending"
+      }
+    },
+    {
+      "foundationalKeys": [
+        "dependency-direction",
+        "four-circles",
+        "adapter-tests",
+        "error-semantics"
+      ],
+      "interviewKeys": [
+        "interview-framework-context-in-domain-tests",
+        "interview-orm-types-in-inner-port",
+        "interview-atomic-use-case-without-orm-import",
+        "interview-outward-execution-inward-source-dependency",
+        "interview-crud-abstraction-ceremony",
+        "interview-http-and-job-shared-policy"
+      ],
+      "diagrams": 8,
+      "topicId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+      "path": "topics/system-design/backend-architecture/code-and-domain-organization/clean-architecture.html",
+      "sourceSha256": "5bc7f7bd03ead2439e0f7475fec1cb410a22a756298a34940133d55362a009ca",
+      "acceptance": {
+        "editorial": "pending",
+        "browser": "pending",
+        "print": "pending"
+      }
+    },
+    {
+      "foundationalKeys": [
+        "driving-driven",
+        "six-ports",
+        "port-semantics",
+        "test-boundaries"
+      ],
+      "interviewKeys": [
+        "interview-rest-csv-same-application-port",
+        "interview-outbound-timeout-port-semantics",
+        "interview-in-memory-adapter-contract-gap",
+        "interview-provider-sdk-model-leak",
+        "interview-port-per-class-ceremony",
+        "interview-compatible-module-direct-port-call"
+      ],
+      "diagrams": 7,
+      "topicId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+      "path": "topics/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture.html",
+      "sourceSha256": "ce4e01c321e494b8376cb6610a79f11917c9951e569399f26ce378a438899e44",
+      "acceptance": {
+        "editorial": "pending",
+        "browser": "pending",
+        "print": "pending"
+      }
+    },
+    {
+      "foundationalKeys": [
+        "context-service",
+        "entity-value",
+        "aggregate-invariant",
+        "event-guarantee",
+        "model-cost"
+      ],
+      "interviewKeys": [
+        "interview-customer-bounded-context-language",
+        "interview-aggregate-last-unit-concurrency",
+        "interview-oversized-aggregate-contention",
+        "interview-cross-context-order-workflow",
+        "interview-legacy-erp-anti-corruption",
+        "interview-simple-crud-tactical-ddd-cost"
+      ],
+      "diagrams": 7,
+      "topicId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+      "path": "topics/system-design/backend-architecture/code-and-domain-organization/domain-driven-design.html",
+      "sourceSha256": "dd0c514ad1f19f178cc46768d7d7b9cdf7e4772599649cdf0235b03a92f2888e",
+      "acceptance": {
+        "editorial": "pending",
+        "browser": "pending",
+        "print": "pending"
+      }
+    },
+    {
+      "foundationalKeys": [
+        "command-event",
+        "outbox-duplicate",
+        "ack-timing",
+        "replay-side-effects"
+      ],
+      "interviewKeys": [
+        "interview-database-commit-event-gap",
+        "interview-duplicate-delivery-external-effect",
+        "interview-entity-events-out-of-order",
+        "interview-consumer-lag-user-feedback",
+        "interview-notification-versus-state-transfer",
+        "interview-event-disguises-command"
+      ],
+      "diagrams": 7,
+      "topicId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+      "path": "topics/system-design/backend-architecture/communication-and-routing/event-driven-architecture.html",
+      "sourceSha256": "9f8517a6f5499487fabfd780f0530bb4ca6cb4441b362a5e31e11039f23b53da",
+      "acceptance": {
+        "editorial": "pending",
+        "browser": "pending",
+        "print": "pending"
+      }
+    },
+    {
+      "foundationalKeys": [
+        "single-point",
+        "partial-result",
+        "authorization-owner",
+        "gateway-bff"
+      ],
+      "interviewKeys": [
+        "interview-mobile-screen-fanout-budget",
+        "interview-optional-dependency-partial-response",
+        "interview-shared-quota-multiple-replicas",
+        "interview-authentication-versus-object-authorization",
+        "interview-gateway-domain-orchestration-growth",
+        "interview-edge-release-shared-blast-radius"
+      ],
+      "diagrams": 7,
+      "topicId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+      "path": "topics/system-design/backend-architecture/communication-and-routing/api-gateway-pattern.html",
+      "sourceSha256": "64080edec089c3e019c3706d13249471f5905b4e1a14d08d97b58bce7171a641",
+      "acceptance": {
+        "editorial": "pending",
+        "browser": "pending",
+        "print": "pending"
+      }
+    },
+    {
+      "foundationalKeys": [
+        "boundary-choice",
+        "rule-duplication",
+        "gateway-comparison",
+        "query-language"
+      ],
+      "interviewKeys": [
+        "interview-mobile-web-conflicting-payloads",
+        "interview-ios-android-ownership-boundary",
+        "interview-shared-library-release-coupling",
+        "interview-business-rule-drift-between-bffs",
+        "interview-old-mobile-client-compatibility",
+        "interview-single-frontend-extra-hop"
+      ],
+      "diagrams": 7,
+      "topicId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+      "path": "topics/system-design/backend-architecture/communication-and-routing/backend-for-frontend.html",
+      "sourceSha256": "b6d0dec45c5de51f3ec10f041bb4dcb26cae9d38e1568aed06e660c926a7ede4",
+      "acceptance": {
+        "editorial": "pending",
+        "browser": "pending",
+        "print": "pending"
+      }
+    },
+    {
+      "foundationalKeys": [
+        "discovery-selection",
+        "dns-ttl",
+        "client-server",
+        "readiness"
+      ],
+      "interviewKeys": [
+        "interview-terminating-endpoints-drain",
+        "interview-negative-dns-cache-new-service",
+        "interview-stale-registry-during-outage",
+        "interview-headless-service-client-balancing",
+        "interview-namespace-name-resolution",
+        "interview-vm-without-discovery-sdk"
+      ],
+      "diagrams": 7,
+      "topicId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+      "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery.html",
+      "sourceSha256": "24b49213b1f874bf2e635a74a53a3e4e96bd7b73a1374f1b59ed5ba24570b53d",
+      "acceptance": {
+        "editorial": "pending",
+        "browser": "pending",
+        "print": "pending"
+      }
+    },
+    {
+      "foundationalKeys": [
+        "planes",
+        "sidecars",
+        "identity-permission",
+        "control-outage"
+      ],
+      "interviewKeys": [
+        "interview-mesh-app-retry-multiplication",
+        "interview-strict-mtls-legacy-migration",
+        "interview-mtls-not-object-permission",
+        "interview-sidecar-ambient-measured-choice",
+        "interview-canary-traffic-unexpected-share",
+        "interview-mesh-business-fallback-limit"
+      ],
+      "diagrams": 7,
+      "topicId": "84458963-012b-4a80-828a-2da27d8b509d",
+      "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh.html",
+      "sourceSha256": "fa16e5e279dbbba6bddbf748c1cf10932fa7900c207be2a5b7281a118c593d10",
+      "acceptance": {
+        "editorial": "pending",
+        "browser": "pending",
+        "print": "pending"
+      }
+    },
+    {
+      "foundationalKeys": [
+        "tenant-user",
+        "shared-store",
+        "async-context",
+        "isolation-test"
+      ],
+      "interviewKeys": [
+        "interview-noisy-neighbor-fair-capacity",
+        "interview-enterprise-isolation-model",
+        "interview-tenant-filter-cache-key-leak",
+        "interview-per-tenant-restore-residency",
+        "interview-live-tenant-migration-single-writer",
+        "interview-tenant-customization-schema-sprawl"
+      ],
+      "diagrams": 7,
+      "topicId": "689dd587-de37-4e22-9412-bd42b118da79",
+      "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/multi-tenant-architecture.html",
+      "sourceSha256": "89e8e6ad62447bcf47782b58f140c4c905655b65d5253e6a6f48c9ce878f2c7f",
+      "acceptance": {
+        "editorial": "pending",
+        "browser": "pending",
+        "print": "pending"
+      }
+    }
+  ]
+}

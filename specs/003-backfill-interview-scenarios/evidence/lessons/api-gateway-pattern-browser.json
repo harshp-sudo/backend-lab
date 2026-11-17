@@ -1,0 +1,169 @@
+{
+  "status": "pass",
+  "topicId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+  "path": "topics/system-design/backend-architecture/communication-and-routing/api-gateway-pattern.html",
+  "sourceSha256": "9d00059b8eaaa28c200bf119ff9682fab320c0141c6603194de26aaf8e6db561",
+  "browser": "141.0.7390.37",
+  "navigation": [
+    {
+      "base": "http://127.0.0.1:8020/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    },
+    {
+      "base": "http://127.0.0.1:8021/backend-lab/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    }
+  ],
+  "learning": {
+    "topicId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+    "path": "topics/system-design/backend-architecture/communication-and-routing/api-gateway-pattern.html",
+    "sourceSha256": "9d00059b8eaaa28c200bf119ff9682fab320c0141c6603194de26aaf8e6db561",
+    "status": "pass",
+    "bases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "newKeys": [
+          "interview-mobile-screen-fanout-budget",
+          "interview-optional-dependency-partial-response",
+          "interview-shared-quota-multiple-replicas",
+          "interview-authentication-versus-object-authorization",
+          "interview-gateway-domain-orchestration-growth",
+          "interview-edge-release-shared-blast-radius"
+        ],
+        "ratings": {
+          "interview-mobile-screen-fanout-budget": "hard",
+          "interview-optional-dependency-partial-response": "good",
+          "interview-shared-quota-multiple-replicas": "easy",
+          "interview-authentication-versus-object-authorization": "hard",
+          "interview-gateway-domain-orchestration-growth": "good",
+          "interview-edge-release-shared-blast-radius": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "newKeys": [
+          "interview-mobile-screen-fanout-budget",
+          "interview-optional-dependency-partial-response",
+          "interview-shared-quota-multiple-replicas",
+          "interview-authentication-versus-object-authorization",
+          "interview-gateway-domain-orchestration-growth",
+          "interview-edge-release-shared-blast-radius"
+        ],
+        "ratings": {
+          "interview-mobile-screen-fanout-budget": "hard",
+          "interview-optional-dependency-partial-response": "good",
+          "interview-shared-quota-multiple-replicas": "easy",
+          "interview-authentication-versus-object-authorization": "hard",
+          "interview-gateway-domain-orchestration-growth": "good",
+          "interview-edge-release-shared-blast-radius": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      }
+    ]
+  },
+  "mobileThemes": {
+    "topicId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+    "path": "topics/system-design/backend-architecture/communication-and-routing/api-gateway-pattern.html",
+    "sourceSha256": "9d00059b8eaaa28c200bf119ff9682fab320c0141c6603194de26aaf8e6db561",
+    "status": "pass",
+    "cases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-mobile-screen-fanout-budget",
+          "interview-optional-dependency-partial-response",
+          "interview-shared-quota-multiple-replicas",
+          "interview-authentication-versus-object-authorization",
+          "interview-gateway-domain-orchestration-growth",
+          "interview-edge-release-shared-blast-radius"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-mobile-screen-fanout-budget",
+          "interview-optional-dependency-partial-response",
+          "interview-shared-quota-multiple-replicas",
+          "interview-authentication-versus-object-authorization",
+          "interview-gateway-domain-orchestration-growth",
+          "interview-edge-release-shared-blast-radius"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-mobile-screen-fanout-budget",
+          "interview-optional-dependency-partial-response",
+          "interview-shared-quota-multiple-replicas",
+          "interview-authentication-versus-object-authorization",
+          "interview-gateway-domain-orchestration-growth",
+          "interview-edge-release-shared-blast-radius"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-mobile-screen-fanout-budget",
+          "interview-optional-dependency-partial-response",
+          "interview-shared-quota-multiple-replicas",
+          "interview-authentication-versus-object-authorization",
+          "interview-gateway-domain-orchestration-growth",
+          "interview-edge-release-shared-blast-radius"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      }
+    ]
+  },
+  "errors": [],
+  "supportingFixture": "reading_fixture passed all 21 actual partials without learning writes."
+}

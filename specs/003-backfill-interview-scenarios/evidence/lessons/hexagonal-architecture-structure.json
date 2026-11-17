@@ -1,0 +1,135 @@
+{
+  "profile": "backend-architecture",
+  "phase": "intrinsic",
+  "result": "pass",
+  "counts": {
+    "totalNodes": 21,
+    "batch": {
+      "topics": 15,
+      "hubs": 6
+    },
+    "diagrams": 7,
+    "foundationalRecall": 4,
+    "interviewRecall": 6,
+    "recallQuestions": 10
+  },
+  "checks": [
+    {
+      "name": "catalog",
+      "status": "pass",
+      "artifact": "manifest.json",
+      "message": "Shape, identities, derived targets and requested membership verified"
+    },
+    {
+      "name": "preservation-inputs",
+      "status": "pass",
+      "artifact": "specs/003-backfill-interview-scenarios/contracts/preservation-baseline.json",
+      "message": "Frozen catalog/hubs and evidence identities verified; runtime hashes match baseline or the explicit compatibility review"
+    },
+    {
+      "name": "content",
+      "status": "pass",
+      "artifact": "topics/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture.html",
+      "message": "Content contract and references verified"
+    },
+    {
+      "name": "files",
+      "status": "pass",
+      "artifact": "topics/",
+      "message": "No unregistered HTML partials"
+    },
+    {
+      "name": "history",
+      "status": "pending",
+      "artifact": "manifest.json",
+      "message": "No prior catalog supplied; initial-node format was checked"
+    },
+    {
+      "name": "bundle",
+      "status": "pass",
+      "artifact": "specs/003-backfill-interview-scenarios/delivery.md",
+      "message": "Delivery record exists; content paths were individually checked"
+    }
+  ],
+  "integrationStatus": "pending",
+  "scope": "lesson",
+  "recallProfile": "constitution-1.2",
+  "lessons": [
+    {
+      "foundationalKeys": [
+        "driving-driven",
+        "six-ports",
+        "port-semantics",
+        "test-boundaries"
+      ],
+      "interviewKeys": [
+        "interview-rest-csv-same-application-port",
+        "interview-outbound-timeout-port-semantics",
+        "interview-in-memory-adapter-contract-gap",
+        "interview-provider-sdk-model-leak",
+        "interview-port-per-class-ceremony",
+        "interview-compatible-module-direct-port-call"
+      ],
+      "diagrams": 7,
+      "topicId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+      "path": "topics/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture.html",
+      "sourceSha256": "57d34d9889e6ba85f48db13365fc3abd0fe77be4990b9ec315b49adbf4bc1ea1",
+      "acceptance": {
+        "editorial": "pass",
+        "browser": "pass",
+        "print": "pass"
+      }
+    }
+  ],
+  "selectedLesson": "topics/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture.html",
+  "runtimeCompatibility": {
+    "schemaVersion": 1,
+    "status": "reviewed",
+    "reviewedOn": "2026-11-17",
+    "baselineSha256": "dd31a3f4d8d595cbe5463c87231b10cce293bf11d38caa1fdf624ada928f3e11",
+    "rationale": "Actual PDF acceptance exposed clipped original SVG labels and a tall diagram crossing printable pages. Apply the documented Mermaid root-level htmlLabels setting and a print-only diagram height/fragmentation limit. No lesson or state/backup identity changes.",
+    "reference": "https://mermaid.js.org/config/schema-docs/config.html#htmllabels",
+    "files": [
+      {
+        "path": "assets/js/content-renderer.js",
+        "beforeSha256": "170805dd94b98fa00b84876f01678825639debcf4e09bd036c028ef561dc70e2",
+        "afterSha256": "45a2f676a734f98597bf28e42bfeddcfef9e1227d7508c122cffab73006bb6b8",
+        "reason": "Use supported top-level htmlLabels:false so flowcharts emit complete SVG text instead of clipped HTML foreignObject labels."
+      },
+      {
+        "path": "styles.css",
+        "beforeSha256": "926b414cafa81f3a99df7591161f70a84861bc5011cea1d282aa322ebe98259d",
+        "afterSha256": "03ab5879375428e174ddf6158ccb170fa197da5c100732e2b200aab5534ad433",
+        "reason": "Print-only max-height 230mm and break-inside:avoid keep each complete SVG/figure inside printable page bounds."
+      }
+    ],
+    "supportingFiles": [
+      {
+        "path": "assets/styles/shell.css",
+        "beforeSha256": "b71c066dfd9343be25ea82913fa02ced966eaffa8fb71dabb0bc1489759903cf",
+        "afterSha256": "d28ffb021729bc705dc49d7320dddfb9d168fd1acb93ae6bcdb7392ec882343f",
+        "reason": "Keep the CSS source and non-persistent reading fixture aligned with the same shared rendering fix."
+      },
+      {
+        "path": "tests/fixtures/content-host.js",
+        "beforeSha256": "baf592c1af285ac17d2f39b58c2ec4ee385fc0713a070cf3b8d328bc381dc316",
+        "afterSha256": "db58dcc0def19f73ecf76b56a0101f26cde99213947658c8eac7d7d93c9a26a3",
+        "reason": "Keep the CSS source and non-persistent reading fixture aligned with the same shared rendering fix."
+      },
+      {
+        "path": "tests/fixtures/content-host.css",
+        "beforeSha256": "07e73eddcce863ece5fa856985c33a851f01062d6529aa32f6e9b7acf33e2a57",
+        "afterSha256": "bbeb3808fc040cc653a8cdda0a5995ab70ea3f43aee2b659209a79ffd558625c",
+        "reason": "Keep the CSS source and non-persistent reading fixture aligned with the same shared rendering fix."
+      }
+    ],
+    "regressionStatus": "pass",
+    "regressionEvidence": [
+      "specs/003-backfill-interview-scenarios/evidence/host-acceptance.json",
+      "specs/003-backfill-interview-scenarios/evidence/print-results.json"
+    ],
+    "failureEvidence": "specs/003-backfill-interview-scenarios/evidence/diagram-print-failure.json",
+    "prototypeEvidence": "/tmp/backend-interview-fix-prototype.json",
+    "verifiedOn": "2026-11-17"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "status": "pass",
+  "contentTests": 39,
+  "nodeTestFiles": 2,
+  "logicAssertionsHistorical": 14,
+  "legacyContentCLI": "pass",
+  "python": "3.12.11",
+  "playwright": "1.56.0",
+  "jsonschema": "4.25.1",
+  "chromium": "141.0.7390.37",
+  "poppler": "available",
+  "browserEnvironment": {
+    "PYTHONPATH": "/tmp/backend-browser-check:/tmp/backend-lab-plan-schema-check",
+    "PLAYWRIGHT_BROWSERS_PATH": "/tmp/backend-playwright",
+    "LD_LIBRARY_PATH": "/tmp/backend-browser-libs/usr/lib/x86_64-linux-gnu"
+  },
+  "initialScenarioRejectionTests": "expected failure before implementation",
+  "redLog": "/tmp/backend-interview-red-tests.log"
+}

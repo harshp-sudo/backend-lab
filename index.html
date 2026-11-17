@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fafafa">
+  <meta name="description" content="A quiet place to understand, connect, and remember backend architecture.">
+  <title>Learning Dashboard · Backend Lab</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%23236052'/%3E%3Cpath d='M10 11h9v19h-9zM22 11h8v19h-8z' fill='%23f5f5df'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <div class="app-layout">
+    <aside id="desktop-sidebar" class="sidebar-mount" aria-label="Library sidebar">
+      <div id="sidebar" class="sidebar">
+        <a class="brand" href="#/"><span class="brand-icon" aria-hidden="true">▥</span><span>Backend Lab<small>YOUR LEARNING LIBRARY</small></span></a>
+        <div class="sidebar-heading"><span>EXPLORE THE LIBRARY</span><span id="library-count"></span></div>
+        <nav id="library-nav" aria-label="Learning library"><p class="muted">Loading your library…</p></nav>
+        <div class="sidebar-footer"><span class="tiny-orbit" aria-hidden="true">✧</span><p>A little curiosity, every day.<small>Understanding builds on understanding.</small></p></div>
+      </div>
+    </aside>
+    <div class="workspace">
+      <header class="topbar">
+        <div class="header-context"><button id="drawer-open" class="icon-button mobile-only" aria-label="Open learning library" aria-controls="drawer-dialog">☰</button><nav id="breadcrumbs" aria-label="Breadcrumb"><a href="#/">Dashboard</a></nav></div>
+        <div class="header-tools">
+          <button id="search-open" class="search-opener"><span aria-hidden="true">⌕</span><span>Find a concept</span><kbd>⌘ / Ctrl K</kbd></button>
+          <div class="header-progress"><label for="global-progress"><span id="global-percent">0%</span> mastered</label><progress id="global-progress" max="100" value="0">0%</progress></div>
+          <button id="theme-toggle" class="icon-button" aria-label="Switch to dark theme" title="Switch theme">◐</button>
+          <button id="export-progress" class="quiet-button" title="Export progress as JSON">Export</button>
+          <button id="import-progress" class="quiet-button" title="Import progress from JSON">Import</button>
+          <input id="import-file" type="file" accept="application/json,.json" hidden>
+        </div>
+      </header>
+      <div id="persistence-notice" class="notice" role="status" hidden></div>
+      <p id="route-status" class="route-status" role="status" aria-live="polite"></p>
+      <main id="main-content" tabindex="-1" aria-busy="true"></main>
+      <footer class="workspace-footer"><span>Made for curious minds.</span><span>Your progress stays in this browser.</span></footer>
+    </div>
+  </div>
+  <dialog id="drawer-dialog" class="drawer-dialog" aria-labelledby="drawer-title"><div class="drawer-bar"><h2 id="drawer-title">Your library</h2><button class="icon-button" data-close-dialog aria-label="Close library">×</button></div><div id="mobile-sidebar"></div></dialog>
+  <dialog id="search-dialog" class="search-dialog" aria-labelledby="search-title"><div class="dialog-heading"><h2 id="search-title">Follow your curiosity</h2><button class="icon-button" data-close-dialog aria-label="Close search">×</button></div><label class="sr-only" for="search-input">Search titles and paths</label><input id="search-input" type="search" placeholder="A topic, an idea, a question…" autocomplete="off" aria-controls="search-results"><p id="search-count" class="muted"></p><ul id="search-results" class="search-results"></ul><p class="dialog-hint">↑ ↓ to explore <span>Enter to open · Esc to close</span></p></dialog>
+  <dialog id="import-dialog" class="import-dialog" aria-labelledby="import-title"><div class="dialog-heading"><h2 id="import-title">Restore your learning</h2><button class="icon-button" data-close-dialog aria-label="Cancel import">×</button></div><div id="import-summary"></div><p id="import-error" role="alert"></p><div class="dialog-actions"><button class="quiet-button" data-close-dialog>Cancel</button><button id="confirm-import" class="primary-button">Replace saved progress</button></div></dialog>
+  <noscript><p class="notice">Enable JavaScript to browse the learning dashboard. Your lessons are ordinary HTML files in the topics folder.</p></noscript>
+</body>
+</html>

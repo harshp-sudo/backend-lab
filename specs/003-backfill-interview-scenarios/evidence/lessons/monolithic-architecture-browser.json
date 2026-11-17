@@ -1,0 +1,169 @@
+{
+  "status": "pass",
+  "topicId": "1901acc7-9225-428a-9397-072cff3d36d0",
+  "path": "topics/system-design/backend-architecture/core-system-topologies/monolithic-architecture.html",
+  "sourceSha256": "8b193bfe38ac6ca56ae67ec11ee25a72bf34cf54a1c4a83690bd8648766179e2",
+  "browser": "141.0.7390.37",
+  "navigation": [
+    {
+      "base": "http://127.0.0.1:8020/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    },
+    {
+      "base": "http://127.0.0.1:8021/backend-lab/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    }
+  ],
+  "learning": {
+    "topicId": "1901acc7-9225-428a-9397-072cff3d36d0",
+    "path": "topics/system-design/backend-architecture/core-system-topologies/monolithic-architecture.html",
+    "sourceSha256": "8b193bfe38ac6ca56ae67ec11ee25a72bf34cf54a1c4a83690bd8648766179e2",
+    "status": "pass",
+    "bases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "newKeys": [
+          "interview-small-team-launch-boundary",
+          "interview-same-rps-expensive-writes",
+          "interview-reporting-exhausts-checkout",
+          "interview-shared-artifact-safe-releases",
+          "interview-replicas-do-not-fix-database",
+          "interview-extract-one-capability-gradually"
+        ],
+        "ratings": {
+          "interview-small-team-launch-boundary": "hard",
+          "interview-same-rps-expensive-writes": "good",
+          "interview-reporting-exhausts-checkout": "easy",
+          "interview-shared-artifact-safe-releases": "hard",
+          "interview-replicas-do-not-fix-database": "good",
+          "interview-extract-one-capability-gradually": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "newKeys": [
+          "interview-small-team-launch-boundary",
+          "interview-same-rps-expensive-writes",
+          "interview-reporting-exhausts-checkout",
+          "interview-shared-artifact-safe-releases",
+          "interview-replicas-do-not-fix-database",
+          "interview-extract-one-capability-gradually"
+        ],
+        "ratings": {
+          "interview-small-team-launch-boundary": "hard",
+          "interview-same-rps-expensive-writes": "good",
+          "interview-reporting-exhausts-checkout": "easy",
+          "interview-shared-artifact-safe-releases": "hard",
+          "interview-replicas-do-not-fix-database": "good",
+          "interview-extract-one-capability-gradually": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      }
+    ]
+  },
+  "mobileThemes": {
+    "topicId": "1901acc7-9225-428a-9397-072cff3d36d0",
+    "path": "topics/system-design/backend-architecture/core-system-topologies/monolithic-architecture.html",
+    "sourceSha256": "8b193bfe38ac6ca56ae67ec11ee25a72bf34cf54a1c4a83690bd8648766179e2",
+    "status": "pass",
+    "cases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-small-team-launch-boundary",
+          "interview-same-rps-expensive-writes",
+          "interview-reporting-exhausts-checkout",
+          "interview-shared-artifact-safe-releases",
+          "interview-replicas-do-not-fix-database",
+          "interview-extract-one-capability-gradually"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-small-team-launch-boundary",
+          "interview-same-rps-expensive-writes",
+          "interview-reporting-exhausts-checkout",
+          "interview-shared-artifact-safe-releases",
+          "interview-replicas-do-not-fix-database",
+          "interview-extract-one-capability-gradually"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-small-team-launch-boundary",
+          "interview-same-rps-expensive-writes",
+          "interview-reporting-exhausts-checkout",
+          "interview-shared-artifact-safe-releases",
+          "interview-replicas-do-not-fix-database",
+          "interview-extract-one-capability-gradually"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-small-team-launch-boundary",
+          "interview-same-rps-expensive-writes",
+          "interview-reporting-exhausts-checkout",
+          "interview-shared-artifact-safe-releases",
+          "interview-replicas-do-not-fix-database",
+          "interview-extract-one-capability-gradually"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      }
+    ]
+  },
+  "errors": [],
+  "supportingFixture": "reading_fixture passed all 21 actual partials without learning writes."
+}

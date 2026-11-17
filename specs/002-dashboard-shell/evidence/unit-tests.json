@@ -1,0 +1,17 @@
+{
+  "result": "pass",
+  "nodeVersion": "v20.19.4",
+  "tests": 14,
+  "checks": [
+    {
+      "file": "tests/dashboard/test_catalog.mjs",
+      "result": "pass",
+      "tests": 5
+    },
+    {
+      "file": "tests/dashboard/test_learning_state.mjs",
+      "result": "pass",
+      "tests": 9
+    }
+  ]
+}

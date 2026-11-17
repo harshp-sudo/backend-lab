@@ -1,0 +1,60 @@
+{
+  "result": "pass",
+  "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "referenceDevice": "WSL2 local headless Chromium, 1440px desktop / 360px mobile",
+  "dependencies": {
+    "mermaid": "12.3.0",
+    "highlight": "11.11.1",
+    "tailwind": "3.4.17",
+    "playwright": "1.56.0"
+  },
+  "bases": [
+    "http://127.0.0.1:8000/",
+    "http://127.0.0.1:8001/backend-lab/"
+  ],
+  "browser": "141.0.7390.37",
+  "checks": [
+    {
+      "story": "US3",
+      "scenario": "lessons",
+      "result": "pass",
+      "seconds": 102.54,
+      "details": [
+        {
+          "base": "http://127.0.0.1:8000/",
+          "articles": 21,
+          "diagrams": 22,
+          "recallQuestions": 61,
+          "consoleErrors": []
+        },
+        {
+          "base": "http://127.0.0.1:8001/backend-lab/",
+          "articles": 21,
+          "diagrams": 22,
+          "recallQuestions": 61,
+          "consoleErrors": []
+        }
+      ]
+    },
+    {
+      "story": "US3",
+      "scenario": "enhancement_failures",
+      "result": "pass",
+      "seconds": 2.59,
+      "details": [
+        {
+          "blocked": "**/mermaid@12.3.0/**",
+          "completeProsePreserved": true,
+          "retry": "pass",
+          "uncaughtErrors": []
+        },
+        {
+          "blocked": "**/@highlightjs/cdn-assets@11.11.1/**",
+          "completeProsePreserved": true,
+          "retry": "pass",
+          "uncaughtErrors": []
+        }
+      ]
+    }
+  ]
+}

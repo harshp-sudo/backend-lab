@@ -1,0 +1,169 @@
+{
+  "status": "pass",
+  "topicId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+  "path": "topics/system-design/backend-architecture/communication-and-routing/backend-for-frontend.html",
+  "sourceSha256": "b6d0dec45c5de51f3ec10f041bb4dcb26cae9d38e1568aed06e660c926a7ede4",
+  "browser": "141.0.7390.37",
+  "navigation": [
+    {
+      "base": "http://127.0.0.1:8020/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    },
+    {
+      "base": "http://127.0.0.1:8021/backend-lab/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    }
+  ],
+  "learning": {
+    "topicId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+    "path": "topics/system-design/backend-architecture/communication-and-routing/backend-for-frontend.html",
+    "sourceSha256": "b6d0dec45c5de51f3ec10f041bb4dcb26cae9d38e1568aed06e660c926a7ede4",
+    "status": "pass",
+    "bases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "newKeys": [
+          "interview-mobile-web-conflicting-payloads",
+          "interview-ios-android-ownership-boundary",
+          "interview-shared-library-release-coupling",
+          "interview-business-rule-drift-between-bffs",
+          "interview-old-mobile-client-compatibility",
+          "interview-single-frontend-extra-hop"
+        ],
+        "ratings": {
+          "interview-mobile-web-conflicting-payloads": "hard",
+          "interview-ios-android-ownership-boundary": "good",
+          "interview-shared-library-release-coupling": "easy",
+          "interview-business-rule-drift-between-bffs": "hard",
+          "interview-old-mobile-client-compatibility": "good",
+          "interview-single-frontend-extra-hop": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "newKeys": [
+          "interview-mobile-web-conflicting-payloads",
+          "interview-ios-android-ownership-boundary",
+          "interview-shared-library-release-coupling",
+          "interview-business-rule-drift-between-bffs",
+          "interview-old-mobile-client-compatibility",
+          "interview-single-frontend-extra-hop"
+        ],
+        "ratings": {
+          "interview-mobile-web-conflicting-payloads": "hard",
+          "interview-ios-android-ownership-boundary": "good",
+          "interview-shared-library-release-coupling": "easy",
+          "interview-business-rule-drift-between-bffs": "hard",
+          "interview-old-mobile-client-compatibility": "good",
+          "interview-single-frontend-extra-hop": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      }
+    ]
+  },
+  "mobileThemes": {
+    "topicId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+    "path": "topics/system-design/backend-architecture/communication-and-routing/backend-for-frontend.html",
+    "sourceSha256": "b6d0dec45c5de51f3ec10f041bb4dcb26cae9d38e1568aed06e660c926a7ede4",
+    "status": "pass",
+    "cases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-mobile-web-conflicting-payloads",
+          "interview-ios-android-ownership-boundary",
+          "interview-shared-library-release-coupling",
+          "interview-business-rule-drift-between-bffs",
+          "interview-old-mobile-client-compatibility",
+          "interview-single-frontend-extra-hop"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-mobile-web-conflicting-payloads",
+          "interview-ios-android-ownership-boundary",
+          "interview-shared-library-release-coupling",
+          "interview-business-rule-drift-between-bffs",
+          "interview-old-mobile-client-compatibility",
+          "interview-single-frontend-extra-hop"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-mobile-web-conflicting-payloads",
+          "interview-ios-android-ownership-boundary",
+          "interview-shared-library-release-coupling",
+          "interview-business-rule-drift-between-bffs",
+          "interview-old-mobile-client-compatibility",
+          "interview-single-frontend-extra-hop"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-mobile-web-conflicting-payloads",
+          "interview-ios-android-ownership-boundary",
+          "interview-shared-library-release-coupling",
+          "interview-business-rule-drift-between-bffs",
+          "interview-old-mobile-client-compatibility",
+          "interview-single-frontend-extra-hop"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      }
+    ]
+  },
+  "errors": [],
+  "supportingFixture": "reading_fixture passed all 21 actual partials without learning writes."
+}

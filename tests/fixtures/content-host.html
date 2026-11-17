@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Backend Architecture · Content Reading Fixture</title>
+  <link rel="stylesheet" href="content-host.css">
+  <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.11.1/highlight.min.js" defer></script>
+  <script type="module" src="content-host.js"></script>
+</head>
+<body>
+  <header class="fixture-chrome">
+    <p class="eyebrow">PERSONAL LEARNING KNOWLEDGE BASE · CONTENT VALIDATION</p>
+    <h1>Backend Architecture</h1>
+    <p>A reading canvas for the lesson batch. Learning-state controls belong to the future dashboard.</p>
+    <div class="fixture-controls">
+      <label for="route">Preview content</label><select id="route"></select>
+      <button id="theme" type="button">Use dark theme</button>
+      <button id="check-all" type="button">Check every partial</button>
+      <button id="print" type="button">Print lesson</button>
+    </div>
+    <p id="location" aria-label="Content location"></p>
+    <p id="status" role="status" aria-live="polite">Loading catalog…</p>
+    <details><summary>Validation report</summary><pre id="report">No full-batch run yet.</pre></details>
+  </header>
+  <main id="canvas" aria-label="Lesson reading canvas" aria-busy="true"></main>
+  <noscript>This fixture requires JavaScript to mount the script-free lesson partials.</noscript>
+</body>
+</html>

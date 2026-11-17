@@ -1,0 +1,221 @@
+<article class="kb-topic" data-node-id="04eae1bf-07bc-4646-8ce4-db2871fcfada">
+<h1>Microservices Architecture</h1>
+<section data-section="hook-eli5" id="node-04eae1bf-07bc-4646-8ce4-db2871fcfada-hook-eli5">
+<h2>🎯 The Hook & ELI5</h2>
+<div class="kb-callout--insight"><p><strong>ELI5 mental model.</strong> Think of a town with separate bakeries, pharmacies, and repair shops. Each can change its opening hours and equipment without rebuilding the whole town, but a shared errand now depends on travel and coordination between shops. Microservices aim for similarly independent business capabilities. Independence is useful only if the shops can actually make decisions without waiting for everybody else.</p></div><p>As products and teams grow, one shared release or runtime boundary can obstruct independent delivery and capacity choices. Microservices divide an application into services organized around business capabilities, with intentional interfaces and operational ownership. The important properties are the independence achieved and the responsibilities owned, not a particular number of lines, containers, or endpoints.</p><div class="kb-callout--insight"><p>WHY it matters: a retailer might need its search team to deploy ranking improvements independently of its order team, and to scale search reads differently from payment coordination. The same split can make checkout harder through remote failures, contract evolution, and distributed data changes. Extract boundaries to address a specific constraint, not to earn a modern architecture label.</p></div>
+</section>
+<section data-section="big-picture" id="node-04eae1bf-07bc-4646-8ce4-db2871fcfada-big-picture">
+<h2>🗺️ High-Level Big Picture</h2>
+<p>A purchase crosses Orders, Stock, and Payments. Each service owns behavior and its authoritative records. Orders runs a recoverable workflow rather than relying on a single database transaction across all owners. Search can consume published changes into its own read view without becoming the authority for whether stock can be reserved. Separate boxes are promises of ownership that must be implemented and operated.</p><figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A purchase coordinated between independently owned services
+    accDescr: Orders requests stock and payment decisions while Search maintains a separate read view.
+    C[&quot;Customer&quot;] --&gt; O[&quot;Orders service&quot;]
+    O --&gt; OD[&quot;Order-owned records&quot;]
+    O --&gt; S[&quot;Stock service&quot;]
+    S --&gt; SD[&quot;Stock-owned records&quot;]
+    O --&gt; P[&quot;Payments service&quot;]
+    P --&gt; PD[&quot;Payment-owned records&quot;]
+    S --&gt; E[&quot;Published stock changes&quot;]
+    E --&gt; R[&quot;Search read view&quot;]
+    C --&gt; R</pre><figcaption>Read the arrows as responsibilities and hand-offs, not as a promise that every step succeeds.</figcaption></figure>
+</section>
+<section data-section="mechanics" id="node-04eae1bf-07bc-4646-8ce4-db2871fcfada-mechanics">
+<h2>🔍 Step-by-Step Mechanics</h2>
+<p>Follow the example one boundary at a time. Open each step to connect the familiar mental model to the internal mechanics.</p><details><summary>1. Draw a business boundary that can own decisions</summary><p>A pharmacy should not have to ask the bakery how to price medicine. A service boundary needs a similarly coherent set of decisions and data. Identify business language, invariants, change patterns, and team responsibilities before splitting by technical layers such as a universal controller service and a universal database service.</p>
+<p>For Stock, the key decision is whether a quantity can be reserved under current rules. Expose a reserve/release contract instead of letting Orders update Stock’s private tables. If almost every useful change requires coordinated edits and releases across several services, the boundary may be wrong or independence may not yet exist. Service size is an outcome of coherent ownership, not a universal numeric rule.</p></details>
+<details><summary>2. Make deployment independence real</summary><p>The bakery can update its oven without requiring every shop to close. A service should likewise have a release process that can change its implementation while preserving its consumers’ supported contracts. Independent deployment needs more than a separate container: compatible interfaces, migration discipline, automated checks, and operational ownership matter.</p>
+<p>Additive changes still need consumer awareness when schemas, meanings, or timing assumptions change. Keep old and new representations compatible during staged migrations, observe usage, and remove deprecated behavior deliberately. A shared library that every service must upgrade simultaneously can recreate a shared-release boundary. Sharing basic tooling may help; sharing mutable business models can distribute coupling instead of removing it.</p></details>
+<details><summary>3. Give data an authoritative owner</summary><p>Each shop keeps its own stock ledger, so another shop asks for a decision rather than rewriting the ledger. <strong>Data ownership</strong> means a service controls writes and invariants for its information. Separate ownership does not necessarily demand a separate physical database server per service, but it does require boundaries that prevent accidental cross-owner writes.</p>
+<p>Orders may store the price and product description agreed at purchase time while Catalog owns current product information. Those are different business facts, not automatically an error called duplication. Cross-service reporting often needs a read model or analytical pipeline. Direct joins into every service’s private tables may be convenient initially but tie consumers to internal schemas and weaken independent evolution.</p></details>
+<details><summary>4. Coordinate across boundaries with an explicit recovery story</summary><p>A shopper may reserve an item before paying, then release it if payment fails. Each owner can use a local transaction for its own state, while the overall purchase tracks a multi-step workflow. A <strong>saga</strong> is one way to represent such a sequence of local actions and compensations; it does not give the sequence one magical atomic rollback.</p>
+<p>Give the purchase a stable identity. Persist state before handing off work that must survive a crash, and make handlers safe against duplicate delivery. Decide what happens when reservation succeeds but its reply is lost, payment stays pending, or compensation cannot complete immediately. Choose between a coordinator and event-driven collaboration based on process clarity and coupling, not on the assumption that asynchronous automatically means independent.</p></details>
+<details><summary>5. Engineer the network and operational costs</summary><p>Separate shops need roads, directions, and opening information. Services need discovery/routing, bounded calls, authentication, deployment infrastructure, telemetry, and incident procedures. A single request can fan out to many dependencies, so end-to-end latency and reliability depend on the shape of that call graph.</p>
+<p>Set deadlines and concurrency limits, avoid multiplying retries, and design fallback behavior that preserves the business promise. A cached recommendation can be optional; a failed authorization check cannot simply become allow. Use traces and business operation IDs to reconstruct cross-service journeys, and monitor user outcomes rather than only healthy process counts. A team unable to operate many independently changing components should count that constraint as part of the architectural decision.</p></details>
+<details><summary>6. Decompose gradually and verify the benefit</summary><p>Moving one successful shop to a better location is easier to evaluate than rebuilding the town overnight. Start with a capability whose boundaries and operational need are understood. Define its public contract, transfer authoritative data deliberately, route relevant traffic to the new owner, and observe both old and new paths during migration.</p>
+<p>Measure whether deployment queues, capacity costs, or isolation improve enough to justify the additional network and ownership work. Keep the remaining application healthy; a large monolith plus one well-owned service can be a sensible intermediate or final state. If extracted services still need shared database edits and synchronized releases, the result may be a distributed monolith whose failure surface grew without gaining meaningful independence.</p></details>
+</section>
+<section data-section="trade-offs" id="node-04eae1bf-07bc-4646-8ce4-db2871fcfada-trade-offs">
+<h2>⚖️ Comparisons & Trade-Offs</h2>
+<p>Choose using the constraints of the system and its team. The table compares relevant choices; compatible ideas can be combined rather than ranked as universally better.</p><div class="kb-table-wrap"><table><caption>Choices, benefits, costs, and decision conditions</caption><thead><tr><th scope="col">Approach or condition</th><th scope="col">What you gain</th><th scope="col">What you give up</th><th scope="col">Choose when</th></tr></thead><tbody><tr><td>Modular monolith</td><td>Local calls, clearer module ownership, simpler shared release</td><td>Independent deployment and capacity boundaries remain limited</td><td>The team needs internal structure more than separate operation.</td></tr><tr><td>Microservices by business capability</td><td>Potential independent delivery, ownership and capacity decisions</td><td>Distributed failures, data coordination and operational overhead</td><td>Real organizational/runtime constraints justify durable service ownership.</td></tr><tr><td>Synchronous service collaboration</td><td>Straightforward near-term request/result interaction</td><td>Latency and availability coupling across the call chain</td><td>The caller needs a decision now and failure budgets are explicit.</td></tr><tr><td>Asynchronous event collaboration</td><td>Durable hand-offs and processing-time decoupling when configured</td><td>Delayed views, duplicates and a harder-to-follow process</td><td>The business tolerates pending work and ownership/events are clear.</td></tr></tbody></table></div>
+</section>
+<section data-section="pitfalls" id="node-04eae1bf-07bc-4646-8ce4-db2871fcfada-pitfalls">
+<h2>⚠️ Common Pitfalls, Bugs & What-If Scenarios</h2>
+<p>Treat a failure as a story: start with what a user observes, trace the boundary that failed, and choose a prevention that addresses the cause.</p><div class="kb-callout--pitfall"><h3>Many services, one release train</h3><p><strong>Symptom:</strong> A small product change still requires every team to deploy together.</p><p><strong>Root Cause:</strong> Shared contracts, libraries, data, or capability boundaries preserved the original coupling.</p><p><strong>Fix/Prevention:</strong> Identify synchronized changes, improve compatibility and ownership, or merge a boundary that provides no useful independence.</p></div><div class="kb-callout--pitfall"><h3>Distributed transactions are hidden in the user flow</h3><p><strong>Symptom:</strong> A paid order has no stock reservation after an interruption.</p><p><strong>Root Cause:</strong> The workflow assumed local commits across owners would succeed as one unit.</p><p><strong>Fix/Prevention:</strong> Track process state, implement retry-safe actions and explicit compensation/reconciliation, and expose pending outcomes honestly.</p></div><div class="kb-callout--pitfall"><h3>Availability improves on paper but worsens for users</h3><p><strong>Symptom:</strong> Every service health check is green while checkout times out.</p><p><strong>Root Cause:</strong> The request path fans out to slow dependencies and retries amplify load.</p><p><strong>Fix/Prevention:</strong> Measure complete journeys, limit fan-out and deadlines, bound retries/concurrency, and distinguish required from optional dependencies.</p></div>
+</section>
+<section data-section="mastery" id="node-04eae1bf-07bc-4646-8ce4-db2871fcfada-mastery">
+<h2>🧠 Active Recall & Mastery Check</h2>
+<div class="kb-callout--insight"><p><strong>Summarize this in your own words</strong></p><p>Explain the opening analogy, trace the worked example, and name one condition that would change your architectural decision. Try answering before opening the cards.</p></div><details class="kb-question" data-recall-id="independence-test"><summary>What would convince you a service is independently deployable?</summary><p>It can release an implementation change through its own safe pipeline while supported consumers continue working, without mandatory synchronized upgrades or private-data coordination. Separate repositories or containers are evidence of packaging, not sufficient evidence of independence.</p></details><details class="kb-question" data-recall-id="data-ownership"><summary>Does data ownership prohibit all copied data?</summary><p>No. A service can own authoritative product information while an order stores the historical facts agreed at purchase. A search service can maintain a derived view. The design must identify authority, update/lag semantics, and which owner enforces each invariant.</p></details><details class="kb-question" data-recall-id="saga-failure"><summary>A compensation request fails after a partially completed purchase. What happens next?</summary><p>The process remains an explicit recoverable state, not a pretend rollback. Retry or reconcile according to business rules, preserve operation identity, and make the outcome inspectable. Some effects require manual resolution or have business costs that cannot be erased.</p></details><details class="kb-question" data-recall-id="monolith-extraction"><summary>When would you keep a capability inside a modular monolith?</summary><p>When clear local boundaries already support the team and no measured release, capacity, ownership, or isolation need justifies remote operation. Local coordination can be the simpler reliable choice. The decision can be revisited when constraints change.</p></details><!-- kb-interview-scenarios:start -->
+<section data-interview-scenarios aria-labelledby="node-04eae1bf-07bc-4646-8ce4-db2871fcfada-interview-scenarios">
+<h3 id="node-04eae1bf-07bc-4646-8ce4-db2871fcfada-interview-scenarios">Tricky &amp; Most-Asked Interview Scenarios</h3>
+<p>Practice making a decision under a concrete production constraint. Open each answer, explain your reasoning aloud, then rate your confidence. The budgets and organizations below are author-created assumptions.</p>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-lockstep-service-releases" data-scenario-basis="adapted-production">
+<summary>Two microservices must deploy together for ordinary changes. Is the split giving you autonomy?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Two supposedly separate shops cannot change their menus unless both reopen together. Orders and Fulfillment make chatty calls and share internal data shapes; every release requires a coordinated deployment. Independent team delivery was the reason for the split. What boundary will you change and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Trace the changes and invariants that cross the boundary. Replace exposure of internal models with stable business contracts, move each decision to a clear owner and use compatible contract evolution. If the two services genuinely implement one tightly coupled capability, merge them or co-locate that responsibility instead of defending the existing service count.</p>
+<p>Test whether either side can deploy an ordinary compatible change without changing the other. Review data access and release history as well as diagrams: a clean API picture does not remove a shared-table dependency. Treat service boundaries as hypotheses to validate against real change patterns.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Two microservices must deploy together for ordinary changes. Is the split giving you autonomy?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Inspect change and call coupling"]
+    N1["Assign cohesive capability owner"]
+    N2["Evolve compatible contracts"]
+    N3["Prove independent deployment"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Inspect change and call coupling → Assign cohesive capability owner → Evolve compatible contracts → Prove independent deployment.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>A better boundary reduces coordination but requires migration and may produce fewer, larger services. Maintaining the split with explicit compatibility adapters is a viable alternative when independent scaling or isolation still provides strong value.</p>
+<p>Follow-up trap: asynchronous messages still couple consumers to semantics and do not automatically create autonomy. If two teams only coordinate because they lack additive versioning, fix contract practices before merging cohesive independent capabilities. If a strict invariant inherently spans the split, place that invariant under one owner or change its business timing explicitly.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-checkout-critical-path-latency" data-scenario-basis="adapted-production">
+<summary>Checkout crosses six synchronous services and exceeds 500ms. Which calls should disappear?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Waiting in six separate queues makes a short errand slow. Checkout spends 900ms on six sequential remote calls against a 500ms budget. Stock and payment authorization are essential; recommendations and analytics are not. What will you change without weakening purchase correctness?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Use distributed traces to identify the critical path and allocate one end-to-end deadline. Remove nonessential work from the synchronous purchase decision, run independent required reads concurrently where safe, and consider a local projection for data whose staleness is acceptable. Keep authoritative stock and payment decisions with their owners.</p>
+<p>Define explicit partial or pending responses rather than silently skipping essential checks. Avoid replacing six sequential calls with unbounded fan-out; cap concurrency and handle each dependency&#x27;s timeout. If the services continually exchange fine-grained steps of one decision, redraw that boundary instead of optimizing only the network transport.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Checkout crosses six synchronous services and exceeds 500ms. Which calls should disappear?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Trace critical decision path"]
+    N1["Separate essential and optional work"]
+    N2["Parallelize safe independent reads"]
+    N3["Return bounded explicit outcome"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Trace critical decision path → Separate essential and optional work → Parallelize safe independent reads → Return bounded explicit outcome.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You reduce user-visible latency and failure coupling but accept projection lag, asynchronous follow-up and more explicit response states. A coarser-grained service operation is a viable alternative when the data and invariant naturally belong together.</p>
+<p>Follow-up trap: adding a gateway changes where fan-out occurs, not the sum of dependent critical-path waits. If recommendations become a required fraud decision, they are no longer optional; incorporate that requirement into the latency/availability budget or return pending rather than claim the old optimization still preserves the new guarantee.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-checkout-partial-commit-recovery" data-scenario-basis="adapted-production">
+<summary>Payment succeeds but stock reservation fails. How do you recover across independent databases?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A travel agent books one part of a trip before another supplier refuses. Orders, Payments and Inventory commit independently, and a crash can happen after any step. You cannot run one local database transaction across them. What completion and recovery protocol will you implement?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Use a durable workflow with explicit participant states and stable operation identities. Choose an order appropriate to the business, such as reserving stock, authorizing payment and confirming the order. Persist transitions and make retried commands idempotent. Reconcile a timeout before treating an uncertain effect as absent.</p>
+<p>Define compensations such as releasing a reservation or voiding/refunding a payment, with their own retries and monitoring. Show pending or failed states truthfully to the caller, and add manual resolution for irrecoverable cases. Test crashes between commit and acknowledgment, not only clean success and rejection.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Payment succeeds but stock reservation fails. How do you recover across independent databases?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Persist workflow intent"]
+    N1["Execute identified local commits"]
+    N2["Reconcile uncertain effects"]
+    N3["Compensate or resolve explicitly"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Persist workflow intent → Execute identified local commits → Reconcile uncertain effects → Compensate or resolve explicitly.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain recoverable multi-owner workflows without pretending every step commits atomically, but manage intermediate states, compensation cost and operational visibility. Keeping the immediate invariant within one service/database is a viable alternative when the business boundary permits it.</p>
+<p>Follow-up trap: a refund is not equivalent to never charging, and compensation can fail. If the business requires a stronger immediate guarantee, reconsider ownership or supported transaction coordination rather than relabeling a saga ACID. An irreversible shipment should follow the necessary confirmation gates, not precede them casually.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-shared-writable-reporting-tables" data-scenario-basis="adapted-production">
+<summary>Every service writes the same customer tables for easy reporting. What is the hidden cost?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Different shops share one editable ledger and accidentally alter each other&#x27;s records. Several microservices write common customer tables, while analysts depend on cross-service joins. Schema changes force coordinated deployments. You must preserve reporting while restoring ownership. What will you do?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Assign one authoritative writer for each business fact and stop new direct cross-service writes. Expose commands through that owner&#x27;s contract, then migrate existing writers gradually with reconciliation. Build reporting projections or a warehouse from versioned facts/change streams so analytical reads do not dictate operational write schemas.</p>
+<p>Track freshness, deletion and backfill semantics in the reporting pipeline. During migration, define which path is authoritative and compare outputs; avoid indefinite uncontrolled dual writes. Separate database ownership logically first if moving physical databases immediately would add risk without solving the responsibility problem.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Every service writes the same customer tables for easy reporting. What is the hidden cost?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Assign authoritative data owners"]
+    N1["Route commands through owners"]
+    N2["Publish reporting facts"]
+    N3["Verify projection freshness"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Assign authoritative data owners → Route commands through owners → Publish reporting facts → Verify projection freshness.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain independent schema evolution and clearer invariants, but operate an eventually updated reporting model and a migration pipeline. A modular monolith with one deliberately governed transaction model is a valid alternative if shared ownership is real and independent deployment offers little benefit.</p>
+<p>Follow-up trap: database-per-service does not require a separate database server per service, while shared storage does not justify unrestricted writes. If a report drives an immediate credit decision, its stale projection may be unsuitable; obtain an authoritative decision through the owner rather than treating every query as analytics.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-downstream-resource-cascade" data-scenario-basis="adapted-production">
+<summary>A slow recommendation service exhausts checkout connections. Where do you stop the cascade?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A blocked side corridor should not trap everyone in the building. Recommendations becomes slow, checkout waits on it, and shared connection/thread pools fill until payment requests fail too. Recommendation data is optional. What resilience boundary will you add and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Give the optional dependency a short bounded budget, cap its concurrent requests and isolate its resources from essential checkout work. Fail fast or temporarily open a circuit when repeated failures show the dependency is unhealthy, then probe recovery cautiously. Return checkout without recommendations using an explicit degraded state.</p>
+<p>Set retry ownership and budgets so application libraries, gateways and proxies do not all retry the same failure. Instrument pool utilization, queue depth and fallback rate. Test the slow-but-alive case under realistic traffic; a fast connection refusal often misses the resource-exhaustion failure.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A slow recommendation service exhausts checkout connections. Where do you stop the cascade?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Bound optional dependency work"]
+    N1["Isolate essential resource pools"]
+    N2["Degrade with truthful response"]
+    N3["Probe and observe recovery"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Bound optional dependency work → Isolate essential resource pools → Degrade with truthful response → Probe and observe recovery.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You protect essential capacity and bound user latency, but recommendations may be absent while the dependency recovers. A cached stale recommendation is a viable fallback if its semantics and expiry are acceptable; a durable queue is useful for optional later work, not an immediate response.</p>
+<p>Follow-up trap: a circuit breaker is not a replacement for bounded concurrency, and a fallback must not invent successful payment authorization. If the dependency becomes mandatory for fraud prevention, fail closed or return pending according to business policy rather than reusing an optional-data fallback.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-service-sprawl-small-team" data-scenario-basis="adapted-production">
+<summary>Six engineers operate forty services and spend most weeks firefighting. Should you add a platform first?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A small crew maintains forty separate workshops and spends more time opening doors than making products. On-call noise, contract failures and deployment maintenance dominate delivery. There is no independent scaling or security need for many splits. What architecture decision will you make and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Measure the sources of operational cost and group tightly coupled capabilities by ownership and change patterns. Consolidate services that always change together into a smaller set of coherent deployables or a modular monolith, preserving external contracts during migration. Keep independently valuable boundaries rather than making consolidation an all-or-nothing ideology.</p>
+<p>Standardize deployment, observability and incident practices for the remaining services. Assign an accountable owner and recovery objective to each. Compare the cost of a shared platform with the smaller service estate; a platform cannot make arbitrary boundaries free to maintain.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Six engineers operate forty services and spend most weeks firefighting. Should you add a platform first?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Measure operational burden"]
+    N1["Find coupled service clusters"]
+    N2["Consolidate low-value boundaries"]
+    N3["Standardize remaining operations"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Measure operational burden → Find coupled service clusters → Consolidate low-value boundaries → Standardize remaining operations.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You reduce network and operational overhead but regain shared release and resource boundaries for consolidated work. Investing in platform automation is a viable alternative when service autonomy is demonstrably valuable and the organization can sustain that investment.</p>
+<p>Follow-up trap: fewer services without internal module discipline can recreate uncontrolled coupling. If regulation requires a payment workload to stay isolated, retain that boundary even while merging others. Optimize the architecture for the team&#x27;s constraints and business guarantees, not for the largest possible service count.</p>
+</div>
+</details>
+<aside class="kb-callout--insight" data-interview-research>
+<p>Researched 2026-11-17. These scenarios adapt documented production problems and architectural guidance. Interview frequency, rankings and company provenance for these exact prompts were not independently verified. Numeric budgets and organization details are author-created assumptions. Web search was available and used for this concept; primary sources support the technical reasoning, not a claim that these prompts recur in interviews.</p>
+<ul><li><a href="https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/microservices">Microsoft: Microservices architecture style</a></li><li><a href="https://learn.microsoft.com/en-us/azure/architecture/microservices/model/microservice-boundaries">Microsoft: Identify microservice boundaries</a></li><li><a href="https://learn.microsoft.com/en-us/azure/architecture/microservices/design/patterns">Microsoft: Design patterns for microservices</a></li><li><a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/saga-orchestration.html">AWS: Saga orchestration pattern</a></li></ul>
+</aside>
+</section>
+<!-- kb-interview-scenarios:end --><div class="kb-callout--impact"><h3>Real-world impact</h3><p>For the retailer, the benefit is a search capability that can evolve without entangling the purchase promise—not a larger service inventory. Independent ownership must extend through contracts, authoritative data, delivery, and operations. Successful decomposition buys a specific freedom at a known distributed-systems cost.</p></div>
+</section>
+<footer class="kb-references"><h2>Sources and further reading</h2><p>Original explanations and worked examples above; consult these primary references for the underlying ideas and implementation-specific details.</p><ul><li><a href="https://martinfowler.com/articles/microservices.html">Lewis and Fowler: Microservices</a></li><li><a href="https://martinfowler.com/bliki/MonolithFirst.html">Martin Fowler: Monolith First</a></li><li><a href="https://aws.amazon.com/builders-library/challenges-with-distributed-systems/">AWS Builders’ Library: Challenges with distributed systems</a></li></ul><p>Connect this lesson to: <a href="#/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals">Distributed System Fundamentals</a>, <a href="#/system-design/backend-architecture/core-system-topologies/modular-monolith">Modular Monolith</a>, <a href="#/system-design/backend-architecture/code-and-domain-organization/domain-driven-design">Domain-Driven Design (DDD)</a>, <a href="#/system-design/backend-architecture/communication-and-routing/event-driven-architecture">Event-Driven Architecture</a>.</p></footer>
+</article>

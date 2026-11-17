@@ -1,0 +1,221 @@
+<article class="kb-topic" data-node-id="7db3e3c3-10aa-4709-bf33-63848952d81f">
+<h1>Hexagonal Architecture</h1>
+<section data-section="hook-eli5" id="node-7db3e3c3-10aa-4709-bf33-63848952d81f-hook-eli5">
+<h2>🎯 The Hook & ELI5</h2>
+<div class="kb-callout--insight"><p><strong>ELI5 mental model.</strong> A music player can receive commands from its buttons or a remote control and send sound to headphones or speakers. The act of playing music should not depend on one brand of remote or speaker. Hexagonal architecture gives an application deliberate connection points so different outside devices can interact with the same core behavior.</p></div><p>An application needs to interact with people, other programs, storage, and external providers. If those details are mixed into business behavior, changing one outside system can require changing the whole application. Hexagonal Architecture, also called Ports and Adapters, separates the application’s inside from the technologies that drive it or that it uses.</p><div class="kb-callout--insight"><p>WHY it matters: a room-booking system should be testable through a simple programmatic driver, not only by clicking a browser with a real database and email account behind it. Clear ports make expected behavior explicit and adapters translate each external technology. The hexagon is a visual reminder of multiple connections, not a requirement for six ports.</p></div>
+</section>
+<section data-section="big-picture" id="node-7db3e3c3-10aa-4709-bf33-63848952d81f-big-picture">
+<h2>🗺️ High-Level Big Picture</h2>
+<p>For a room reservation, an HTTP adapter or command-line adapter drives the same ReserveRoom use case through an input port. The application asks for room-state storage and notification through output ports. A SQL adapter and an email adapter implement those needs. Ports are defined around purposeful interactions; adapters speak the language of the outside technology and the inside contract.</p><figure class="kb-diagram"><pre class="mermaid">flowchart LR
+    accTitle: Room reservation through ports and adapters
+    accDescr: Browser and command-line adapters drive an application whose storage and notification needs are implemented by replaceable outer adapters.
+    H[&quot;HTTP adapter&quot;] --&gt; I[&quot;ReserveRoom input port&quot;]
+    C[&quot;Command-line adapter&quot;] --&gt; I
+    subgraph CORE[&quot;Application inside&quot;]
+        I --&gt; U[&quot;Reservation rules and use case&quot;]
+        U --&gt; S[&quot;RoomStore output port&quot;]
+        U --&gt; N[&quot;Notification output port&quot;]
+    end
+    A[&quot;SQL adapter&quot;] -. implements .-&gt; S
+    E[&quot;Email adapter&quot;] -. implements .-&gt; N</pre><figcaption>Read the arrows as responsibilities and hand-offs, not as a promise that every step succeeds.</figcaption></figure>
+</section>
+<section data-section="mechanics" id="node-7db3e3c3-10aa-4709-bf33-63848952d81f-mechanics">
+<h2>🔍 Step-by-Step Mechanics</h2>
+<p>Follow the example one boundary at a time. Open each step to connect the familiar mental model to the internal mechanics.</p><details><summary>1. Decide what belongs inside</summary><p>The music player’s core job is choosing and playing a track, not interpreting a particular remote-control protocol. The application inside similarly owns use cases and business rules. For room booking, it decides what a valid reservation means, when a conflict occurs, and which outcome to return.</p>
+<p>Draw the boundary around behavior you want to preserve while technologies change. Inside code should not require a browser request object, SQL connection, or provider SDK exception just to express a reservation. This does not require every rule to live in a separate service or repository. A monolith can have hexagonal boundaries, and each service in a distributed system can use the same pattern internally.</p></details>
+<details><summary>2. Define the way an outside actor drives a use case</summary><p>Buttons and a remote can both ask for play without exposing their electrical details to the playback rule. An <strong>input port</strong>, sometimes called a driving or primary port, expresses an application capability that an outside actor can invoke. For example, ReserveRoom accepts room, time interval, and requester information and returns a defined outcome.</p>
+<p>An HTTP adapter maps a route, body, identity, and status code into that contract. A command-line adapter maps arguments and exit messages into the same capability. The port is not necessarily a language interface object; a clearly defined callable API can serve the role. Keep parsing errors separate from business conflicts so each adapter can translate the same use-case meaning appropriately.</p></details>
+<details><summary>3. Define what the application needs from the outside</summary><p>The player asks a sound output to deliver audio without knowing a speaker’s internal circuitry. An <strong>output port</strong>, often called a driven or secondary port, expresses a capability the application requires. RoomStore might need to attempt a reservation under an overlap constraint, while Notification might record or send a message according to explicit semantics.</p>
+<p>The inner application owns the meaning of those requests. A SQL adapter can implement RoomStore, and an in-memory adapter can support focused tests. Avoid a vague universal repository that returns provider-specific query objects: it makes the outside technology leak back into the inside. Name behavior and guarantees important to the use case, including conflicts, missing records, and failure/uncertainty.</p></details>
+<details><summary>4. Let each adapter translate both data and errors</summary><p>A headphone plug is useful because it matches the connection’s expectations, not because it is merely called an adapter. The SQL implementation translates the application’s reservation operation into database behavior and maps a detected overlap into the promised conflict result. The email implementation maps a notification request into a provider interaction and its possible outcomes.</p>
+<p>A timeout to an external provider may mean unknown outcome, not definitive failure. Hiding that distinction behind a Boolean success flag can violate the application’s recovery needs. Adapters should also carry the correlation and identity information needed for observability and authorization. Translation protects meaning; it must not invent a stronger guarantee than the underlying system can deliver.</p></details>
+<details><summary>5. Compose adapters and test the contracts</summary><p>A player manufacturer chooses which remote receiver and speaker output to wire in. An outer composition point supplies concrete adapters to the application. Production may use HTTP, SQL, and a message provider; a focused test may drive the input port directly and substitute a controlled output adapter.</p>
+<p>Those focused tests verify reservation decisions and use-case coordination without a complete runtime stack. They do not prove the SQL adapter’s overlap handling or a provider’s duplicate behavior. Add contract/integration checks for actual adapters, including a race between two overlapping reservation attempts. A fake that always accepts a reservation can make inner tests pleasant while the production invariant remains broken.</p></details>
+<details><summary>6. Evolve connection points without creating interface clutter</summary><p>You need a deliberate connector where equipment varies, not a plug between every screw. Define ports around business-relevant interactions and genuine outside dependencies. Adding an interface to every class can bury the use case under forwarding code without improving independence.</p>
+<p>When a port changes, review all driving and driven adapters that use it. A new notification provider may require different timing or failure semantics even if its method names look similar. Keep the application’s promises stable where possible, adapt explicitly where not, and retain end-to-end checks for the actual user journey. Replaceability is a consequence of compatible contracts, not a guarantee that swapping an adapter is always cost-free.</p></details>
+</section>
+<section data-section="trade-offs" id="node-7db3e3c3-10aa-4709-bf33-63848952d81f-trade-offs">
+<h2>⚖️ Comparisons & Trade-Offs</h2>
+<p>Choose using the constraints of the system and its team. The table compares relevant choices; compatible ideas can be combined rather than ranked as universally better.</p><div class="kb-table-wrap"><table><caption>Choices, benefits, costs, and decision conditions</caption><thead><tr><th scope="col">Approach or condition</th><th scope="col">What you gain</th><th scope="col">What you give up</th><th scope="col">Choose when</th></tr></thead><tbody><tr><td>Technology code mixed into use cases</td><td>Few initial abstraction layers</td><td>Changes/tests become tied to concrete infrastructure</td><td>A very small application has little valuable policy to protect.</td></tr><tr><td>Ports and adapters</td><td>Explicit boundaries and alternative drivers/resources</td><td>Contract design, mapping and adapter verification</td><td>The same capabilities need several delivery mechanisms or infrastructure independence.</td></tr><tr><td>Clean Architecture framing</td><td>An additional emphasis on policy levels and inward dependencies</td><td>Teams must avoid duplicating equivalent boundary abstractions</td><td>The design needs a richer discussion of domain versus application policies.</td></tr><tr><td>A port for every helper class</td><td>Uniform-looking abstraction everywhere</td><td>More indirection without a meaningful external boundary</td><td>Rarely by default; introduce an abstraction for a specific variation or policy need.</td></tr></tbody></table></div>
+</section>
+<section data-section="pitfalls" id="node-7db3e3c3-10aa-4709-bf33-63848952d81f-pitfalls">
+<h2>⚠️ Common Pitfalls, Bugs & What-If Scenarios</h2>
+<p>Treat a failure as a story: start with what a user observes, trace the boundary that failed, and choose a prevention that addresses the cause.</p><div class="kb-callout--pitfall"><h3>An adapter has the right name but leaks SQL</h3><p><strong>Symptom:</strong> Use-case code must configure query-builder joins.</p><p><strong>Root Cause:</strong> The port exposed database implementation concepts instead of application needs.</p><p><strong>Fix/Prevention:</strong> Express reservation behavior and its guarantees in the inner vocabulary; keep query construction in the SQL adapter.</p></div><div class="kb-callout--pitfall"><h3>The fake proves a false guarantee</h3><p><strong>Symptom:</strong> Tests pass while simultaneous users book the same room.</p><p><strong>Root Cause:</strong> The in-memory adapter did not model the concurrency promise required by RoomStore.</p><p><strong>Fix/Prevention:</strong> Make overlap semantics explicit and test real database conflict handling; use focused fakes only for claims they can support.</p></div><div class="kb-callout--pitfall"><h3>One outside provider dictates all application outcomes</h3><p><strong>Symptom:</strong> Replacing email delivery changes reservation rules and HTTP handlers.</p><p><strong>Root Cause:</strong> Provider-specific data and exceptions crossed the application boundary.</p><p><strong>Fix/Prevention:</strong> Translate at the adapter, distinguish durable intent from external delivery, and keep use-case outcomes in the application vocabulary.</p></div>
+</section>
+<section data-section="mastery" id="node-7db3e3c3-10aa-4709-bf33-63848952d81f-mastery">
+<h2>🧠 Active Recall & Mastery Check</h2>
+<div class="kb-callout--insight"><p><strong>Summarize this in your own words</strong></p><p>Explain the opening analogy, trace the worked example, and name one condition that would change your architectural decision. Try answering before opening the cards.</p></div><details class="kb-question" data-recall-id="driving-driven"><summary>How do an HTTP adapter and a SQL adapter differ in their relationship to the application?</summary><p>The HTTP adapter drives an application capability through an input port. The application invokes the storage capability through an output port implemented by the SQL adapter. Both are outside adapters, but their role in the interaction differs.</p></details><details class="kb-question" data-recall-id="six-ports"><summary>Why is the shape not a requirement for six interfaces?</summary><p>The hexagon emphasizes that an application can have multiple purposeful connection points without a privileged top/bottom technology stack. The number of ports follows meaningful interactions, not the number of sides in the drawing.</p></details><details class="kb-question" data-recall-id="port-semantics"><summary>What must a room-storage port promise beyond a save method?</summary><p>It should express the reservation behavior the application relies on, including overlap/concurrency rules, missing records, conflicts, and relevant failure semantics. An adapter with a matching method signature but weaker guarantees does not satisfy the same contract.</p></details><details class="kb-question" data-recall-id="test-boundaries"><summary>What can direct input-port tests prove, and what still needs real infrastructure checks?</summary><p>They can verify policy and use-case coordination independently of a web server or database. Real adapters still need validation for mapping, transactions, concurrency, delivery semantics, and provider errors. Retain a representative user-journey check across the assembled application.</p></details><!-- kb-interview-scenarios:start -->
+<section data-interview-scenarios aria-labelledby="node-7db3e3c3-10aa-4709-bf33-63848952d81f-interview-scenarios">
+<h3 id="node-7db3e3c3-10aa-4709-bf33-63848952d81f-interview-scenarios">Tricky &amp; Most-Asked Interview Scenarios</h3>
+<p>Practice making a decision under a concrete production constraint. Open each answer, explain your reasoning aloud, then rate your confidence. The budgets and organizations below are author-created assumptions.</p>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-rest-csv-same-application-port" data-scenario-basis="adapted-production">
+<summary>REST and nightly CSV imports disagree on order validation. Which port should they share?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Different plugs should power the same appliance behavior. A REST adapter rejects invalid orders, while a CSV importer writes directly to storage and accepts them. The business rule must hold regardless of entry channel. What port and adapters will you define?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Expose an application operation such as PlaceOrder with application-owned inputs and outcomes. Make REST and CSV separate driving adapters that translate transport data into that operation. Put the authoritative validation and invariant inside the application/domain rather than trusting either adapter&#x27;s preliminary checks.</p>
+<p>Keep HTTP status codes, CSV row errors and file parsing at the edges. Test the operation without either transport, then test each adapter&#x27;s mapping of valid and invalid input. Give batch rows stable operation identities if retries can repeat a purchase. An adapter should translate entry mechanics, not supply an alternate business implementation.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: REST and nightly CSV imports disagree on order validation. Which port should they share?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Translate REST or CSV input"]
+    N1["Call shared application port"]
+    N2["Enforce order policy once"]
+    N3["Map channel-specific outcome"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Translate REST or CSV input → Call shared application port → Enforce order policy once → Map channel-specific outcome.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain consistent behavior and isolated testing but maintain two translation paths. Separate use cases sharing a smaller domain policy are a viable alternative when bulk import and interactive ordering have different authorized semantics.</p>
+<p>Follow-up trap: calling the REST endpoint from the importer adds network and authentication failure without necessarily improving the boundary. If the import must cross a process or trust boundary, a remote API may be appropriate, but keep its contract explicit and handle retries and partial batch completion deliberately.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-outbound-timeout-port-semantics" data-scenario-basis="adapted-production">
+<summary>A payment adapter times out after a possible effect. What should the outbound port return?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A courier can lose the reply after delivering the parcel. A payment adapter catches every timeout and returns payment-failed. The application retries with a new charge and customers sometimes pay twice. What should the port&#x27;s contract express and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Model confirmed success, definitive rejection and unknown outcome separately in the application-owned port. Pass one stable operation key to the adapter and require it to preserve that identity across safe retries. Persist the application&#x27;s pending intent and use provider lookup or reconciliation to resolve ambiguity rather than treating a transport exception as a business rejection.</p>
+<p>Keep provider response codes and SDK exception classes inside the adapter, but do not erase uncertainty during translation. Contract-test a lost reply after a committed charge and verify that retries reuse the same identity. The business use case decides whether to wait, return pending or request manual resolution.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A payment adapter times out after a possible effect. What should the outbound port return?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Persist operation identity"]
+    N1["Invoke outbound payment port"]
+    N2["Distinguish rejection from unknown"]
+    N3["Reconcile before fresh effect"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Persist operation identity → Invoke outbound payment port → Distinguish rejection from unknown → Reconcile before fresh effect.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain honest failure semantics and safer recovery at the cost of more application states and durable reconciliation. A provider with a synchronous, queryable idempotent operation can simplify recovery; it still requires the application to distinguish unknown from rejected.</p>
+<p>Follow-up trap: an adapter cannot guarantee exactly-once effects from an external system that offers neither deduplication nor outcome lookup. If that assumption changes, stop blind automatic retries and introduce reconciliation or a different provider contract. Renaming the exception does not remove the original distributed uncertainty.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-in-memory-adapter-contract-gap" data-scenario-basis="adapted-production">
+<summary>The in-memory adapter passes, but real storage violates uniqueness and rollback. How do you test the port?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A toy socket that always works cannot certify the building&#x27;s wiring. Unit tests use an in-memory repository whose behavior differs from production under concurrent inserts and transaction failures. The port promises one reservation per seat. What tests will establish that promise?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Write a shared behavioral contract for the port&#x27;s required semantics, then run it against the real adapter with the production database engine/configuration. Include duplicate-key races, failed writes, transaction rollback and error mapping. Keep the in-memory adapter for fast policy tests, but make its documented simplifications explicit.</p>
+<p>Exercise the invariant with concurrent callers through the application and verify the database constraint or concurrency mechanism actually enforces it. Avoid implementing a second database inside the fake. A passing fake shows how policy reacts to assumed outcomes; it does not prove infrastructure can produce those outcomes correctly.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: The in-memory adapter passes, but real storage violates uniqueness and rollback. How do you test the port?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Define observable port guarantees"]
+    N1["Run real-adapter contract tests"]
+    N2["Exercise concurrency and failure"]
+    N3["Retain fast policy fake"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Define observable port guarantees → Run real-adapter contract tests → Exercise concurrency and failure → Retain fast policy fake.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain realistic adapter guarantees while paying for integration setup and slower tests. A lightweight substitute provider is a useful alternative for some feedback, but cannot validate locking or SQL semantics it does not share.</p>
+<p>Follow-up trap: asserting that Save was called once says nothing about two concurrent requests. If the selected store cannot meet the port&#x27;s atomic reservation contract, change the implementation or explicitly redesign the guarantee; do not quietly weaken the contract to match the fake.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-provider-sdk-model-leak" data-scenario-basis="adapted-production">
+<summary>A vendor SDK upgrade breaks the core. Where should its models and exceptions stop?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Replacing a phone charger should not require rewiring every room. An outbound shipping adapter exposes SDK address objects and vendor exceptions through an application port. A provider upgrade now breaks use cases and tests. What will you change and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Make the port accept and return application-owned concepts such as ShipmentRequest, ShipmentReference and explicit outcomes. Translate vendor models, authentication and error details inside the shipping adapter. Preserve useful semantics such as invalid address, temporarily unavailable and unknown outcome without leaking SDK types.</p>
+<p>Create focused mapping tests and adapter contract tests for the upgraded provider. Wire the implementation at the composition root so the core need not import or instantiate the SDK. Review serialization and units as well as type names; an address or weight conversion can be syntactically valid and still wrong.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A vendor SDK upgrade breaks the core. Where should its models and exceptions stop?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Define application shipping contract"]
+    N1["Map provider inputs and outputs"]
+    N2["Translate errors meaningfully"]
+    N3["Wire replaceable adapter externally"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Define application shipping contract → Map provider inputs and outputs → Translate errors meaningfully → Wire replaceable adapter externally.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You localize provider churn and simplify application tests, but maintain a mapping layer and may expose fewer provider-specific capabilities. A deliberately vendor-specific boundary is a viable alternative when the application depends fundamentally on unique features and accepts that coupling.</p>
+<p>Follow-up trap: copying every SDK field into an identically shaped internal object preserves semantic coupling. If a new capability is actually required, add an intentional application contract for it rather than a generic provider escape hatch that bypasses the boundary.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-port-per-class-ceremony" data-scenario-basis="adapted-production">
+<summary>An interface per class produces dozens of meaningless ports. What deserves a real port?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A building does not need a new entrance for every cupboard. A team creates a port and adapter for each helper class, so a small feature requires many pass-through files. There is only one external storage dependency and little domain complexity. What will you simplify?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Define ports at meaningful application conversations or external capability boundaries, not mechanically at every class. Keep internal collaboration ordinary when it does not cross a dependency boundary or need replacement. Consolidate pass-through abstractions while preserving the actual driving use case and outbound storage contract.</p>
+<p>Explain each remaining port in business or application terms: what does the application need, and what behavior must an adapter satisfy? Test through those stable conversations. Hexagonal architecture describes inside/outside separation; the drawing&#x27;s six sides do not prescribe a number of ports or layers.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: An interface per class produces dozens of meaningless ports. What deserves a real port?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Locate actual application boundaries"]
+    N1["Group coherent conversations"]
+    N2["Remove pass-through abstractions"]
+    N3["Test stable port behavior"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Locate actual application boundaries → Group coherent conversations → Remove pass-through abstractions → Test stable port behavior.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You reduce ceremony and improve navigation while accepting ordinary internal coupling that may later need refactoring. More granular ports are a viable alternative when capabilities vary independently or require distinct failure/security contracts.</p>
+<p>Follow-up trap: one enormous generic port can be as harmful as dozens of trivial ones because it exposes unrelated capabilities. If a helper becomes a third-party boundary with its own timeout or authorization behavior, introduce a deliberate port then rather than retaining a simplicity rule after its assumptions change.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-compatible-module-direct-port-call" data-scenario-basis="adapted-production">
+<summary>Two in-process modules already share a compatible application contract. Is another adapter necessary?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Two matching plugs do not need a converter just to look architectural. A reporting module can call an application-owned query interface implemented by Orders in the same process. A reviewer demands an extra pass-through adapter on principle. No translation or policy difference exists. What will you recommend?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Allow direct collaboration through the explicit compatible contract when dependency direction and ownership are correct. An adapter earns its place by translating a protocol/model, enforcing an edge policy or adapting a real mismatch; it need not exist as an empty forwarding class. Keep private storage and domain internals behind the contract.</p>
+<p>Add contract tests for the observable query behavior and document its consistency and authorization expectations. Wire the implementation outside the consuming policy. If the modules later separate physically, introduce a remote adapter that preserves the application-facing contract while making latency and failure behavior explicit.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Two in-process modules already share a compatible application contract. Is another adapter necessary?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Check contract and dependency fit"]
+    N1["Call explicit public capability"]
+    N2["Keep internals private"]
+    N3["Adapt only a real boundary mismatch"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Check contract and dependency fit → Call explicit public capability → Keep internals private → Adapt only a real boundary mismatch.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You keep local code simple and avoid meaningless wrappers, but depend on a stable agreed interface. A real anti-corruption adapter is a viable alternative when the modules use different meanings or when isolation from provider change is needed.</p>
+<p>Follow-up trap: direct access to another module&#x27;s tables is not equivalent to direct use of its public port. If a remote move introduces unknown outcomes or partial availability, revisit the contract; retaining a synchronous-looking method name must not conceal a materially different failure model.</p>
+</div>
+</details>
+<aside class="kb-callout--insight" data-interview-research>
+<p>Researched 2026-11-17. These scenarios adapt documented production problems and architectural guidance. Interview frequency, rankings and company provenance for these exact prompts were not independently verified. Numeric budgets and organization details are author-created assumptions. Web search was available and used for this concept; primary sources support the technical reasoning, not a claim that these prompts recur in interviews. A supplementary Ports and Adapters PDF timed out during rechecking and is not relied on for these answers.</p>
+<ul><li><a href="https://alistair.cockburn.us/hexagonal-architecture">Alistair Cockburn: Hexagonal Architecture</a></li><li><a href="https://alistaircockburn.com/Component%20plus%20strategy.pdf">Alistair Cockburn: Component + Strategy / Ports and Adapters revisited</a></li><li><a href="https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/">AWS: Making retries safe with idempotent APIs</a></li><li><a href="https://learn.microsoft.com/en-us/ef/core/testing/choosing-a-testing-strategy">Microsoft: Choosing a testing strategy</a></li></ul>
+</aside>
+</section>
+<!-- kb-interview-scenarios:end --><div class="kb-callout--impact"><h3>Real-world impact</h3><p>A room-booking service benefits when the browser, batch driver, database, and notification provider can vary around a stable reservation capability. The architecture is successful when the inside remains understandable, the ports tell the truth about behavior, and real adapters are held to those promises.</p></div>
+</section>
+<footer class="kb-references"><h2>Sources and further reading</h2><p>Original explanations and worked examples above; consult these primary references for the underlying ideas and implementation-specific details.</p><ul><li><a href="https://alistair.cockburn.us/hexagonal-architecture">Alistair Cockburn: Hexagonal Architecture</a></li><li><a href="https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html">Robert C. Martin: The Clean Architecture</a></li></ul><p>Connect this lesson to: <a href="#/system-design/backend-architecture/code-and-domain-organization/clean-architecture">Clean Architecture</a>, <a href="#/system-design/backend-architecture/code-and-domain-organization/layered-architecture">Layered Architecture</a>, <a href="#/system-design/backend-architecture/core-system-topologies/modular-monolith">Modular Monolith</a>.</p></footer>
+</article>

@@ -1,0 +1,221 @@
+<article class="kb-topic" data-node-id="ab88a9ad-48ea-4968-becb-b0641aa6321d">
+<h1>Modular Monolith</h1>
+<section data-section="hook-eli5" id="node-ab88a9ad-48ea-4968-becb-b0641aa6321d-hook-eli5">
+<h2>🎯 The Hook & ELI5</h2>
+<div class="kb-callout--insight"><p><strong>ELI5 mental model.</strong> Imagine a school in one building. The library, office, and classrooms share the building, but each has a door and a clear way to ask for help. Students should not rummage through the office filing cabinet to borrow a book. A modular monolith keeps one application release while giving its business capabilities similarly deliberate doors.</p></div><p>A growing application needs internal boundaries before every change becomes a search through everybody else’s code. A modular monolith organizes one deployable application into cohesive capabilities with explicit public interfaces and hidden implementation details. Modules are architectural boundaries inside the application; they are not automatically independent services.</p><div class="kb-callout--insight"><p>WHY it matters: an online learning business can let Enrollment, Billing, and Catalog evolve behind clear interfaces while retaining fast local calls and simpler deployment. The value comes from enforcing the doors, not drawing a package diagram. A folder named billing is not an effective boundary if every other module reads its private tables and classes.</p></div>
+</section>
+<section data-section="big-picture" id="node-ab88a9ad-48ea-4968-becb-b0641aa6321d-big-picture">
+<h2>🗺️ High-Level Big Picture</h2>
+<p>Our example enrolls a learner in a paid course. Enrollment owns the enrollment decision and asks Catalog for the course’s public availability information. Billing owns invoice behavior. The arrows represent allowed public collaborations. Each module hides its internal records and persistence details, even if all tables happen to live in the same database process. One application release contains the modules and any shared composition code.</p><figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Capability modules within one application
+    accDescr: Enrollment talks to public Catalog and Billing interfaces while module internals stay private.
+    U[&quot;Learner requests enrollment&quot;] --&gt; E[&quot;Enrollment public API&quot;]
+    subgraph A[&quot;One application release&quot;]
+        E --&gt; ER[&quot;Enrollment rules and owned records&quot;]
+        ER --&gt; C[&quot;Catalog public API&quot;]
+        ER --&gt; B[&quot;Billing public API&quot;]
+        C --&gt; CI[&quot;Private catalog implementation&quot;]
+        B --&gt; BI[&quot;Private billing implementation&quot;]
+    end
+    ER --&gt; O[&quot;Enrollment result&quot;]</pre><figcaption>Read the arrows as responsibilities and hand-offs, not as a promise that every step succeeds.</figcaption></figure>
+</section>
+<section data-section="mechanics" id="node-ab88a9ad-48ea-4968-becb-b0641aa6321d-mechanics">
+<h2>🔍 Step-by-Step Mechanics</h2>
+<p>Follow the example one boundary at a time. Open each step to connect the familiar mental model to the internal mechanics.</p><details><summary>1. Group code by a business capability</summary><p>The school library has a meaningful job, rather than being a cupboard for all paper. A module should similarly gather behavior that changes together for a recognizable business purpose. Enrollment contains its use cases, domain rules, and persistence adapters rather than scattering all enrollment behavior across application-wide controller and database folders.</p>
+<p>Start by describing ownership: who decides whether a learner is enrolled, who defines a course, and who issues an invoice? These questions identify responsibilities and their contracts. Layering may still exist inside each module. Avoid treating a shared utility package as the home for business rules that seem inconvenient to place; that turns common code into a hidden dependency joining unrelated capabilities.</p></details>
+<details><summary>2. Define the door and hide the filing cabinet</summary><p>A caller asks the library desk whether a book is available; it does not edit the librarian’s catalog file. A module’s <strong>public interface</strong> should express stable capabilities and data it is willing to share. Other modules depend on that interface, not its database entities, implementation classes, or private repositories.</p>
+<p>For Catalog, a public operation might return a small course-availability result. Returning the live internal course entity lets callers mutate or depend on fields that Catalog never intended to promise. Choose request/result types that explain the operation and preserve ownership. Visibility rules, package exports, import restrictions, or language modules help enforce the distinction; frameworks such as Spring Modulith are examples of tooling, not requirements of the architectural idea.</p></details>
+<details><summary>3. Draw a dependency graph the team can enforce</summary><p>A school works poorly if every request must circle through all departments before anyone can answer. Circular module dependencies create similar confusion. Record which public interfaces each module may use and run automated architecture checks against those allowed relationships.</p>
+<p>If Enrollment needs Billing and Billing needs Enrollment for a different operation, first examine whether one collaboration is really an event notification, whether responsibilities are misplaced, or whether a third workflow should coordinate them. Do not hide a cycle by introducing a generic service locator. A small shared kernel can be intentional, but changes to that shared contract require coordinated ownership. Tests should detect forbidden imports and cycles, not merely confirm that a diagram was drawn.</p></details>
+<details><summary>4. Keep local consistency explicit</summary><p>Using the same building makes it easy to walk to another office, but it does not make every filing cabinet everybody’s property. Modules can use local calls and, when appropriate, a shared database transaction. However, reaching directly into another module’s table creates a contract that is usually undocumented and hard to change.</p>
+<p>Suppose enrollment and invoice creation need coordinated behavior. Expose the required Billing operation and decide whether the workflow truly needs one local atomic transaction or can tolerate a pending invoice. Avoid assuming that any in-process event is durable: a crash after committing enrollment but before dispatching a notification can lose work unless intent is recorded. Ownership and recovery remain design choices even without network services.</p></details>
+<details><summary>5. Test a module through its promised surface</summary><p>If the library’s public borrowing process works, tests should not need to impersonate its internal filing system. Exercise module behavior through its public API and verify important invariants with its own storage adapter where needed. Replace other module collaborators with explicit contract-compatible test doubles for focused tests, then add integration checks around real collaborations.</p>
+<p>The goal is a failure that points to a capability boundary. If a small Catalog change requires rewriting unrelated Enrollment tests that inspect private Catalog internals, the tests are exposing coupling. At application composition time, wire the real collaborators and validate the dependency graph. A shared deployment still needs cross-module regression coverage; module tests do not prove the whole enrollment workflow behaves correctly.</p></details>
+<details><summary>6. Use boundaries to preserve options, not promise free extraction</summary><p>Clear department doors make it easier to move a department later, but somebody still has to move the files and change how requests travel. A strong module boundary can reduce the conceptual work of extracting a service. It does not remove network latency, protocol versioning, data migration, retries, or distributed transaction decisions.</p>
+<p>Before extracting Billing, list every synchronous caller, shared transaction, shared table access, and implicit assumption about immediate completion. Those are the places where local collaboration must become an explicit remote contract. If independent deployment is unnecessary, leaving Billing in the monolith may remain the better decision. Modularity is useful on its own, even if extraction never happens.</p></details>
+</section>
+<section data-section="trade-offs" id="node-ab88a9ad-48ea-4968-becb-b0641aa6321d-trade-offs">
+<h2>⚖️ Comparisons & Trade-Offs</h2>
+<p>Choose using the constraints of the system and its team. The table compares relevant choices; compatible ideas can be combined rather than ranked as universally better.</p><div class="kb-table-wrap"><table><caption>Choices, benefits, costs, and decision conditions</caption><thead><tr><th scope="col">Approach or condition</th><th scope="col">What you gain</th><th scope="col">What you give up</th><th scope="col">Choose when</th></tr></thead><tbody><tr><td>Unstructured single application</td><td>Minimal initial ceremony</td><td>Private internals and changes can become widely coupled</td><td>The code is genuinely tiny and the team watches coupling as it grows.</td></tr><tr><td>Capability modules in one release</td><td>Clearer ownership and local collaboration</td><td>Boundary enforcement and shared-release coordination</td><td>Business complexity needs separation while deployment can remain shared.</td></tr><tr><td>Independent services</td><td>Potentially independent releases and operational boundaries</td><td>Remote contracts, failure modes, and data coordination</td><td>A module has a measured need for a separate operational lifecycle.</td></tr><tr><td>Shared kernel between modules</td><td>One intentionally common vocabulary or rule</td><td>Changes need agreement and can spread coupling</td><td>The shared concept is truly stable and jointly owned, not merely duplicated code.</td></tr></tbody></table></div>
+</section>
+<section data-section="pitfalls" id="node-ab88a9ad-48ea-4968-becb-b0641aa6321d-pitfalls">
+<h2>⚠️ Common Pitfalls, Bugs & What-If Scenarios</h2>
+<p>Treat a failure as a story: start with what a user observes, trace the boundary that failed, and choose a prevention that addresses the cause.</p><div class="kb-callout--pitfall"><h3>A package diagram hides table coupling</h3><p><strong>Symptom:</strong> Renaming a Billing column breaks Enrollment.</p><p><strong>Root Cause:</strong> Enrollment depended on Billing’s private persistence structure.</p><p><strong>Fix/Prevention:</strong> Move the required collaboration behind Billing’s public interface; detect forbidden repository/import access and make data ownership visible.</p></div><div class="kb-callout--pitfall"><h3>In-process events silently disappear</h3><p><strong>Symptom:</strong> Enrollment commits but the invoice notification is lost during a crash.</p><p><strong>Root Cause:</strong> An in-memory dispatch was assumed to have the durability of stored intent.</p><p><strong>Fix/Prevention:</strong> Choose and document delivery guarantees; record pending work transactionally when it must survive a restart and make consumers retry-safe.</p></div><div class="kb-callout--pitfall"><h3>Everything moves into common</h3><p><strong>Symptom:</strong> A shared package becomes the place every feature must change.</p><p><strong>Root Cause:</strong> Code reuse was prioritized over clear capability ownership.</p><p><strong>Fix/Prevention:</strong> Keep business decisions inside owners; restrict shared contracts to small stable concepts and review dependency growth.</p></div>
+</section>
+<section data-section="mastery" id="node-ab88a9ad-48ea-4968-becb-b0641aa6321d-mastery">
+<h2>🧠 Active Recall & Mastery Check</h2>
+<div class="kb-callout--insight"><p><strong>Summarize this in your own words</strong></p><p>Explain the opening analogy, trace the worked example, and name one condition that would change your architectural decision. Try answering before opening the cards.</p></div><details class="kb-question" data-recall-id="module-proof"><summary>What evidence distinguishes a real module boundary from a folder name?</summary><p>Callers use explicit public contracts, internals and owned data remain hidden, forbidden dependencies are detected, and tests exercise behavior through the public surface. A folder alone cannot prevent another module from reaching into a private repository or table.</p></details><details class="kb-question" data-recall-id="transaction-boundary"><summary>Does one database mean every module may read every table?</summary><p>No. Physical storage placement and logical ownership differ. A shared database can simplify transactions while modules still access one another through public behavior. Direct cross-module table access creates coupling that must be treated as an intentional contract if allowed.</p></details><details class="kb-question" data-recall-id="durable-events"><summary>Is an event raised inside a monolith automatically durable?</summary><p>No. A synchronous or in-memory event can disappear when the process fails. If follow-up work must survive a crash, record durable intent and define retry/duplicate behavior. The word event does not specify its transport or delivery guarantee.</p></details><details class="kb-question" data-recall-id="extraction-cost"><summary>Why is extracting a well-isolated module still significant work?</summary><p>Local assumptions must become remote contracts. Teams need to address latency, uncertain outcomes, separate data ownership, migration, compatibility, and operation of the new service. Good boundaries reduce entanglement; they do not erase distributed-systems costs.</p></details><!-- kb-interview-scenarios:start -->
+<section data-interview-scenarios aria-labelledby="node-ab88a9ad-48ea-4968-becb-b0641aa6321d-interview-scenarios">
+<h3 id="node-ab88a9ad-48ea-4968-becb-b0641aa6321d-interview-scenarios">Tricky &amp; Most-Asked Interview Scenarios</h3>
+<p>Practice making a decision under a concrete production constraint. Open each answer, explain your reasoning aloud, then rate your confidence. The budgets and organizations below are author-created assumptions.</p>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-private-module-access" data-scenario-basis="adapted-production">
+<summary>Developers bypass module APIs to query private internals. How will you make boundaries real?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Labeled rooms are not private if every door stays open. A modular monolith has packages named Orders and Billing, but Orders imports Billing&#x27;s persistence classes and reads its tables directly. Routine billing changes now break checkout. You must regain isolation without separate deployments. What will you do and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Define the small published Billing API in business terms and migrate callers to it, translating data at that boundary. Assign table and rule ownership so a package name is backed by an actual dependency policy. Add build-time architecture checks that reject access to internal packages and disallowed module dependencies; Spring Modulith verification is one implementation-specific option.</p>
+<p>Inventory existing violations and reduce them deliberately rather than hiding every internal type behind a permissive shared package. Test the API&#x27;s business behavior and track new violations in CI. Modules can share one process and database while keeping code and data responsibilities explicit.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Developers bypass module APIs to query private internals. How will you make boundaries real?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Identify private dependencies"]
+    N1["Publish business-facing API"]
+    N2["Migrate and restrict imports"]
+    N3["Verify boundaries in CI"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Identify private dependencies → Publish business-facing API → Migrate and restrict imports → Verify boundaries in CI.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You reduce accidental coupling and make refactoring safer, at the cost of API design and migration effort. Team conventions alone are a cheaper alternative for a tiny stable codebase, but provide weaker protection as contributors increase.</p>
+<p>Follow-up trap: exposing the internal entity through the public method preserves the coupling under a new name. If a hot read truly requires a cross-module projection, agree on an explicit read model or query contract rather than secretly reusing write internals. If existing modules remain inseparable for every change, revisit their responsibility boundaries.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-cyclic-order-billing-inventory" data-scenario-basis="adapted-production">
+<summary>Orders, Billing and Inventory depend on one another in a cycle. Should every call become an event?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Three departments each insist the other must approve first. Orders calls Billing, Billing calls Inventory, and Inventory calls Orders for business rules. Tests need the whole application and no module can be understood alone. Immediate stock validation is required during purchase. What dependency shape will you choose and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Draw the responsibilities behind the cycle before changing transports. Put the purchase workflow in an explicit application coordinator that invokes narrow capabilities, while each module owns its own invariant. Remove callbacks that merely ask another module to finish the same orchestration. Keep required immediate checks synchronous within the process.</p>
+<p>Use events for facts that can be handled later, such as a notification after an accepted order, with explicit transaction and delivery semantics. Add dependency-cycle checks so the repaired graph stays acyclic. If two modules jointly own every immediate decision, combine or redraw them instead of inventing a broker to disguise that relationship.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Orders, Billing and Inventory depend on one another in a cycle. Should every call become an event?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Map cycle responsibilities"]
+    N1["Choose workflow coordinator"]
+    N2["Separate immediate checks from reactions"]
+    N3["Enforce acyclic dependencies"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Map cycle responsibilities → Choose workflow coordinator → Separate immediate checks from reactions → Enforce acyclic dependencies.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain an understandable dependency graph and smaller tests, but introduce an orchestration owner and explicit contracts. Moving a noncritical reaction to an event is an alternative for that edge; converting all edges changes timing and failure handling unnecessarily.</p>
+<p>Follow-up trap: asynchronous delivery does not erase conceptual coupling or guarantee an invariant before acceptance. If a later requirement allows stock confirmation to be pending, then a durable workflow with compensations becomes viable. State that changed promise rather than claiming the original immediate transaction remains intact.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-cross-module-local-invariant" data-scenario-basis="adapted-production">
+<summary>Two modules must enforce one immediate invariant. Can a modular monolith use one transaction?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Two counters share one ledger even though their staff have separate responsibilities. Orders must reserve inventory and create an accepted order together; either both changes commit or neither does. Both modules currently use the same transactional database. What consistency boundary will you choose and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Use one local transaction initiated by the application use case when the same database and transaction infrastructure genuinely cover both writes. Invoke each module through its owned API; the order module must not mutate inventory tables directly. Let Inventory perform an atomic conditional reservation or appropriate concurrency check, not a read-then-write race.</p>
+<p>Test a failure after each write and concurrent attempts for the final unit. Keep the transaction short and avoid remote calls inside it. Document that this convenience depends on a shared local commit boundary; it is an extraction constraint, not evidence that the modules can already deploy independently.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Two modules must enforce one immediate invariant. Can a modular monolith use one transaction?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Start local use-case transaction"]
+    N1["Reserve through inventory API"]
+    N2["Create accepted order"]
+    N3["Commit together or roll back"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Start local use-case transaction → Reserve through inventory API → Create accepted order → Commit together or roll back.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You preserve the immediate invariant with simple recovery but accept transaction and data-tier coupling. Co-locating the tightly related invariant under one owner is another valid design. A saga is an alternative only if temporary partial completion and compensation are acceptable business semantics.</p>
+<p>Follow-up trap: a module API does not automatically create a transaction across separate databases. If one module moves to independently committed storage, revisit the invariant: retain a shared owner, preallocate rights, or change the workflow to pending states. Do not retain an atomicity claim after removing the atomic commit mechanism.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-after-commit-listener-loss" data-scenario-basis="adapted-production">
+<summary>An email listener fails after the order commits. How do you recover without rolling back the purchase?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A stamped order remains real even when the messenger loses its notification. A noncritical listener sends a receipt after a committed order. The process crashes before the listener finishes, and the customer received no email. Purchases must remain accepted, but notifications need eventual delivery. What will you do and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Record the obligation durably with the order transaction, using a persistent event-publication registry or outbox appropriate to the actual framework. A worker retries outstanding publications and marks completion only after the defined delivery step. Spring Modulith&#x27;s publication tracking is a concrete example whose configured persistence and resubmission behavior must be verified.</p>
+<p>Make the handler idempotent with a stable publication key, observe backlog age and failed attempts, and provide a repair path. Test a crash after the main commit and after the external email is accepted but before local completion is recorded. The latter can still cause duplicate sends unless the provider or workflow deduplicates them.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: An email listener fails after the order commits. How do you recover without rolling back the purchase?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Commit order and publication intent"]
+    N1["Dispatch pending notification"]
+    N2["Retry with stable identity"]
+    N3["Record completed publication"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Commit order and publication intent → Dispatch pending notification → Retry with stable identity → Record completed publication.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You decouple purchase success from notification availability, but manage durable publication storage, retries and monitoring. Synchronous email is a simpler alternative only when the business accepts its latency and failure coupling; it still cannot undo an already accepted external effect reliably.</p>
+<p>Follow-up trap: an in-memory event callback is not durable delivery. If the reaction becomes a required credit authorization before acceptance, move it into the decision workflow rather than treating it as a best-effort after-commit notification. Reassess the business promise when criticality changes.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-shared-common-business-rules" data-scenario-basis="adapted-production">
+<summary>A common package becomes everyone&#x27;s business-rule dumping ground. What belongs there?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A communal cupboard becomes unusable when every team stores its private tools there. A common library now contains discount policy, invoice state transitions and generic string utilities. Any pricing change forces edits across modules. What will you move or share, and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Move business rules to the module that owns their meaning, then expose a narrow capability or an immutable agreed value where another module needs it. Keep a shared kernel small, deliberate and jointly governed; a utility should not silently decide domain policy. Use dependency checks to stop common code from importing business modules.</p>
+<p>Compare apparently identical concepts with the domain owners before unifying them. Billing&#x27;s settled amount and Catalog&#x27;s displayed price may need different models. Migrate one rule at a time with characterization tests so the boundary repair does not change behavior accidentally.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A common package becomes everyone&#x27;s business-rule dumping ground. What belongs there?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Classify shared code by meaning"]
+    N1["Assign business-rule owner"]
+    N2["Expose narrow agreed contract"]
+    N3["Constrain shared-kernel dependencies"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Classify shared code by meaning → Assign business-rule owner → Expose narrow agreed contract → Constrain shared-kernel dependencies.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You restore ownership and reduce coordinated changes, but may accept small, intentional duplication and translation. A jointly maintained shared kernel is a viable alternative for genuinely identical, stable concepts when its change process is explicit.</p>
+<p>Follow-up trap: renaming common to platform does not establish ownership, and a remote shared service can worsen coupling if it holds unrelated rules. If two teams truly share one invariant and always change together, reconsider whether the proposed module split reflects reality rather than forcing separate copies of a single responsibility.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-extraction-readiness-hidden-coupling" data-scenario-basis="adapted-production">
+<summary>A module looks isolated in code but shares writable tables. Is it ready to become a service?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A room with its own door may still share plumbing that nobody mapped. A team wants to extract Shipping for independent releases. Its public package is clean, yet nightly jobs and Orders write the same shipment tables. You cannot freeze releases for a rewrite. What will you check and change first?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Audit data readers/writers, transaction scope, background jobs and operational dependencies, not only imports. Assign Shipping authoritative ownership and route writes through its API while still in the monolith. Replace private-table reads with explicit queries or projections, and test failure and compatibility at the proposed contract.</p>
+<p>Measure whether independence solves a real delivery or scaling problem. Once the local boundary behaves independently, introduce a remote adapter and migrate traffic incrementally with observable rollback. Define durable messaging or reconciliation where a former local transaction becomes multiple commits; do not make two owners write the same data as an indefinite transition.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A module looks isolated in code but shares writable tables. Is it ready to become a service?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Audit code and data coupling"]
+    N1["Establish one write owner"]
+    N2["Test local public contract"]
+    N3["Migrate remote boundary gradually"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Audit code and data coupling → Establish one write owner → Test local public contract → Migrate remote boundary gradually.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You reduce extraction risk and expose hidden coupling early, but postpone the separate deployment and temporarily maintain compatibility paths. Remaining a modular monolith is a valid alternative if independent deployment brings little measurable benefit.</p>
+<p>Follow-up trap: replacing a method call with HTTP creates network failure without solving ownership. If Shipping must still share one immediate invariant with Orders, keep that decision under one transactional owner or explicitly change to a pending workflow. Do not call a database-sharing deployment fully autonomous.</p>
+</div>
+</details>
+<aside class="kb-callout--insight" data-interview-research>
+<p>Researched 2026-11-17. These scenarios adapt documented production problems and architectural guidance. Interview frequency, rankings and company provenance for these exact prompts were not independently verified. Numeric budgets and organization details are author-created assumptions. Web search was available and used for this concept; primary sources support the technical reasoning, not a claim that these prompts recur in interviews.</p>
+<ul><li><a href="https://shopify.engineering/deconstructing-monolith-designing-software-maximizes-developer-productivity">Shopify: Deconstructing the Monolith</a></li><li><a href="https://shopify.engineering/shopify-monolith">Shopify: Under Deconstruction</a></li><li><a href="https://docs.spring.io/spring-modulith/reference/verification.html">Spring Modulith: Verifying Application Module Structure</a></li><li><a href="https://docs.spring.io/spring-modulith/reference/events.html">Spring Modulith: Working with Application Events</a></li><li><a href="https://learn.microsoft.com/en-us/ef/core/saving/transactions">Microsoft: EF Core transactions (provider-specific example)</a></li></ul>
+</aside>
+</section>
+<!-- kb-interview-scenarios:end --><div class="kb-callout--impact"><h3>Real-world impact</h3><p>For the learning business, a modular monolith can make course, enrollment, and billing changes easier to localize while keeping releases and local consistency manageable. Measure success through fewer boundary violations and clearer ownership, not the number of folders or a promise that all modules will eventually become services.</p></div>
+</section>
+<footer class="kb-references"><h2>Sources and further reading</h2><p>Original explanations and worked examples above; consult these primary references for the underlying ideas and implementation-specific details.</p><ul><li><a href="https://docs.spring.io/spring-modulith/reference/fundamentals.html">Spring Modulith: Fundamentals</a></li><li><a href="https://martinfowler.com/bliki/MonolithFirst.html">Martin Fowler: Monolith First</a></li></ul><p>Connect this lesson to: <a href="#/system-design/backend-architecture/core-system-topologies/monolithic-architecture">Monolithic Architecture</a>, <a href="#/system-design/backend-architecture/code-and-domain-organization/domain-driven-design">Domain-Driven Design (DDD)</a>, <a href="#/system-design/backend-architecture/core-system-topologies/microservices-architecture">Microservices Architecture</a>.</p></footer>
+</article>

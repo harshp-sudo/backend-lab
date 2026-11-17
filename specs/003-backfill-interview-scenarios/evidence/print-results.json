@@ -1,0 +1,2184 @@
+{
+  "status": "pass",
+  "runtimeFileHashes": {
+    "index.html": "9173f0fad95908654ed03e34d6f0335a797746ce9feb7969d69601442432eac0",
+    "app.js": "2f3cc2412f0768348492a3b9fcf8c414badd602b2391210c8cd25bb3fb87d0b9",
+    "styles.css": "03ab5879375428e174ddf6158ccb170fa197da5c100732e2b200aab5534ad433",
+    ".nojekyll": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "assets/js/catalog.js": "debc3326ac7c2489fa26b60297de8afb4af0647b80b96a1e3855fbf7f503c9ea",
+    "assets/js/learning-state.js": "ff071d29ef0e54fa55c0e6d0ace126a02eb5d06b8b8abdf368de23fe482cc683",
+    "assets/js/content-renderer.js": "45a2f676a734f98597bf28e42bfeddcfef9e1227d7508c122cffab73006bb6b8"
+  },
+  "requiredLessonPDFs": 30,
+  "actualPDFs": 42,
+  "hubRegressionPDFs": 12,
+  "textComparison": "layout plus reading-order text; whitespace/soft-hyphen normalization; decorative leading heading emoji omitted only",
+  "lessons": [
+    {
+      "status": "pass",
+      "topicId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals.html",
+      "sourceSha256": "6c76a52a1524bd3bf53e20f7d03a70a89deffdf839dd007fa01b4afd78156acb",
+      "outputs": [
+        {
+          "nodeId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+          "topicId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+          "sourceSha256": "6c76a52a1524bd3bf53e20f7d03a70a89deffdf839dd007fa01b4afd78156acb",
+          "kind": "topic",
+          "theme": "light",
+          "pdf": "/tmp/backend-interview-pdfs/light-distributed-system-fundamentals.pdf",
+          "completeTextBlocks": 151,
+          "diagramLabels": 39,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        },
+        {
+          "nodeId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+          "topicId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+          "sourceSha256": "6c76a52a1524bd3bf53e20f7d03a70a89deffdf839dd007fa01b4afd78156acb",
+          "kind": "topic",
+          "theme": "dark",
+          "pdf": "/tmp/backend-interview-pdfs/dark-distributed-system-fundamentals.pdf",
+          "completeTextBlocks": 151,
+          "diagramLabels": 39,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        }
+      ],
+      "visualReview": {
+        "topicId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+        "path": "topics/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals.html",
+        "comparisonSheet": "/tmp/backend-interview-print-review/distributed-system-fundamentals-comparison.jpg",
+        "outputs": [
+          {
+            "theme": "light",
+            "pdf": "/tmp/backend-interview-pdfs/light-distributed-system-fundamentals.pdf",
+            "pages": 19,
+            "selectedPages": [
+              4,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/light-distributed-system-fundamentals-table.png",
+              "/tmp/backend-interview-print-review/light-distributed-system-fundamentals-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/light-distributed-system-fundamentals-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "ba44855b783a312ba0b8ea7387b428df7bd7194a39e506482f17a69c0d9a8808",
+            "reviewPanelSha256": [
+              "c447110ec01b075a48fd4ac536ec7eb708f3649b375e13845eb66fedd6473993",
+              "f33e522a8bb60254ee79063163ce16dd24d74b0082b7f1fa637c1093aa7838d9",
+              "ab20f3443baba535fafa87c80055a733a7cedf02c897a12d6f31401b5a5a4e3a"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          },
+          {
+            "theme": "dark",
+            "pdf": "/tmp/backend-interview-pdfs/dark-distributed-system-fundamentals.pdf",
+            "pages": 19,
+            "selectedPages": [
+              4,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/dark-distributed-system-fundamentals-table.png",
+              "/tmp/backend-interview-print-review/dark-distributed-system-fundamentals-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/dark-distributed-system-fundamentals-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "fc5d022ecbcdd0a49e53af7ab1882b07364593a5cf4dc2df6162cae1f2dc0baa",
+            "reviewPanelSha256": [
+              "c447110ec01b075a48fd4ac536ec7eb708f3649b375e13845eb66fedd6473993",
+              "f33e522a8bb60254ee79063163ce16dd24d74b0082b7f1fa637c1093aa7838d9",
+              "ab20f3443baba535fafa87c80055a733a7cedf02c897a12d6f31401b5a5a4e3a"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          }
+        ],
+        "reviewStatus": "pass",
+        "reviewedOn": "2026-11-17",
+        "reviewFindings": [
+          "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+          "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+          "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+          "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+        ]
+      },
+      "findings": [
+        "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+        "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+        "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+      ]
+    },
+    {
+      "status": "pass",
+      "topicId": "1901acc7-9225-428a-9397-072cff3d36d0",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/monolithic-architecture.html",
+      "sourceSha256": "8b193bfe38ac6ca56ae67ec11ee25a72bf34cf54a1c4a83690bd8648766179e2",
+      "outputs": [
+        {
+          "nodeId": "1901acc7-9225-428a-9397-072cff3d36d0",
+          "topicId": "1901acc7-9225-428a-9397-072cff3d36d0",
+          "sourceSha256": "8b193bfe38ac6ca56ae67ec11ee25a72bf34cf54a1c4a83690bd8648766179e2",
+          "kind": "topic",
+          "theme": "light",
+          "pdf": "/tmp/backend-interview-pdfs/light-monolithic-architecture.pdf",
+          "completeTextBlocks": 149,
+          "diagramLabels": 33,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        },
+        {
+          "nodeId": "1901acc7-9225-428a-9397-072cff3d36d0",
+          "topicId": "1901acc7-9225-428a-9397-072cff3d36d0",
+          "sourceSha256": "8b193bfe38ac6ca56ae67ec11ee25a72bf34cf54a1c4a83690bd8648766179e2",
+          "kind": "topic",
+          "theme": "dark",
+          "pdf": "/tmp/backend-interview-pdfs/dark-monolithic-architecture.pdf",
+          "completeTextBlocks": 149,
+          "diagramLabels": 33,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        }
+      ],
+      "visualReview": {
+        "topicId": "1901acc7-9225-428a-9397-072cff3d36d0",
+        "path": "topics/system-design/backend-architecture/core-system-topologies/monolithic-architecture.html",
+        "comparisonSheet": "/tmp/backend-interview-print-review/monolithic-architecture-comparison.jpg",
+        "outputs": [
+          {
+            "theme": "light",
+            "pdf": "/tmp/backend-interview-pdfs/light-monolithic-architecture.pdf",
+            "pages": 19,
+            "selectedPages": [
+              5,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/light-monolithic-architecture-table.png",
+              "/tmp/backend-interview-print-review/light-monolithic-architecture-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/light-monolithic-architecture-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "8711607d80a594aa2bd977c3942118ab5918083250357bbe1b9d427433076452",
+            "reviewPanelSha256": [
+              "6135ec4704a4f42dae3e9c2e597cb7a3a4ccc6720c7db59739fce62d87741407",
+              "73e6257baaba04d08f83e295f3a2e6bce15cc4d472efbcdaf0278a8ebb43d744",
+              "869fa74ee4c1aa2daf4b2338788fd7fc149665d6bc8ba3d3f894097443b6827a"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          },
+          {
+            "theme": "dark",
+            "pdf": "/tmp/backend-interview-pdfs/dark-monolithic-architecture.pdf",
+            "pages": 19,
+            "selectedPages": [
+              5,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/dark-monolithic-architecture-table.png",
+              "/tmp/backend-interview-print-review/dark-monolithic-architecture-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/dark-monolithic-architecture-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "639cae25adceca5cfa36ebc346b5fb32eb67fd164da9897fd636c17439a4df58",
+            "reviewPanelSha256": [
+              "6135ec4704a4f42dae3e9c2e597cb7a3a4ccc6720c7db59739fce62d87741407",
+              "73e6257baaba04d08f83e295f3a2e6bce15cc4d472efbcdaf0278a8ebb43d744",
+              "869fa74ee4c1aa2daf4b2338788fd7fc149665d6bc8ba3d3f894097443b6827a"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          }
+        ],
+        "reviewStatus": "pass",
+        "reviewedOn": "2026-11-17",
+        "reviewFindings": [
+          "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+          "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+          "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+          "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+        ]
+      },
+      "findings": [
+        "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+        "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+        "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+      ]
+    },
+    {
+      "status": "pass",
+      "topicId": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/modular-monolith.html",
+      "sourceSha256": "f7d71910f6a616c24f6f3692fd4588eea4df4ee08e0b5350e8beb6b055fbc06c",
+      "outputs": [
+        {
+          "nodeId": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+          "topicId": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+          "sourceSha256": "f7d71910f6a616c24f6f3692fd4588eea4df4ee08e0b5350e8beb6b055fbc06c",
+          "kind": "topic",
+          "theme": "light",
+          "pdf": "/tmp/backend-interview-pdfs/light-modular-monolith.pdf",
+          "completeTextBlocks": 150,
+          "diagramLabels": 33,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        },
+        {
+          "nodeId": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+          "topicId": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+          "sourceSha256": "f7d71910f6a616c24f6f3692fd4588eea4df4ee08e0b5350e8beb6b055fbc06c",
+          "kind": "topic",
+          "theme": "dark",
+          "pdf": "/tmp/backend-interview-pdfs/dark-modular-monolith.pdf",
+          "completeTextBlocks": 150,
+          "diagramLabels": 33,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        }
+      ],
+      "visualReview": {
+        "topicId": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+        "path": "topics/system-design/backend-architecture/core-system-topologies/modular-monolith.html",
+        "comparisonSheet": "/tmp/backend-interview-print-review/modular-monolith-comparison.jpg",
+        "outputs": [
+          {
+            "theme": "light",
+            "pdf": "/tmp/backend-interview-pdfs/light-modular-monolith.pdf",
+            "pages": 19,
+            "selectedPages": [
+              5,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/light-modular-monolith-table.png",
+              "/tmp/backend-interview-print-review/light-modular-monolith-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/light-modular-monolith-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "72b4ff3362e753525a43576520a206f7834a2cd8b5035efb6cae98871aac6cb1",
+            "reviewPanelSha256": [
+              "53efed38d4c229c2b41cefb6732618e8a1fae265953283f2b9726099fe3534ef",
+              "1e2780a408fc8cf154cab7f1f6887d5e2a85c79677054289d25f8a7e0be103e5",
+              "c32fa222e822251cb794872ab87ab126fd59879f25ff86e739028a844e6a74c1"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          },
+          {
+            "theme": "dark",
+            "pdf": "/tmp/backend-interview-pdfs/dark-modular-monolith.pdf",
+            "pages": 19,
+            "selectedPages": [
+              5,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/dark-modular-monolith-table.png",
+              "/tmp/backend-interview-print-review/dark-modular-monolith-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/dark-modular-monolith-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "58b19d0f28fbbeb0db96350897129fd768a7c234c635cdf8f155178d12e0cd2d",
+            "reviewPanelSha256": [
+              "53efed38d4c229c2b41cefb6732618e8a1fae265953283f2b9726099fe3534ef",
+              "1e2780a408fc8cf154cab7f1f6887d5e2a85c79677054289d25f8a7e0be103e5",
+              "c32fa222e822251cb794872ab87ab126fd59879f25ff86e739028a844e6a74c1"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          }
+        ],
+        "reviewStatus": "pass",
+        "reviewedOn": "2026-11-17",
+        "reviewFindings": [
+          "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+          "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+          "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+          "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+        ]
+      },
+      "findings": [
+        "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+        "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+        "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+      ]
+    },
+    {
+      "status": "pass",
+      "topicId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/service-oriented-architecture.html",
+      "sourceSha256": "870cfd5f446eaa43b2630ae1054795b3e43953072cb65f70bec82e50f53033e3",
+      "outputs": [
+        {
+          "nodeId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+          "topicId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+          "sourceSha256": "870cfd5f446eaa43b2630ae1054795b3e43953072cb65f70bec82e50f53033e3",
+          "kind": "topic",
+          "theme": "light",
+          "pdf": "/tmp/backend-interview-pdfs/light-service-oriented-architecture.pdf",
+          "completeTextBlocks": 149,
+          "diagramLabels": 33,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        },
+        {
+          "nodeId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+          "topicId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+          "sourceSha256": "870cfd5f446eaa43b2630ae1054795b3e43953072cb65f70bec82e50f53033e3",
+          "kind": "topic",
+          "theme": "dark",
+          "pdf": "/tmp/backend-interview-pdfs/dark-service-oriented-architecture.pdf",
+          "completeTextBlocks": 149,
+          "diagramLabels": 33,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        }
+      ],
+      "visualReview": {
+        "topicId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+        "path": "topics/system-design/backend-architecture/core-system-topologies/service-oriented-architecture.html",
+        "comparisonSheet": "/tmp/backend-interview-print-review/service-oriented-architecture-comparison.jpg",
+        "outputs": [
+          {
+            "theme": "light",
+            "pdf": "/tmp/backend-interview-pdfs/light-service-oriented-architecture.pdf",
+            "pages": 19,
+            "selectedPages": [
+              4,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/light-service-oriented-architecture-table.png",
+              "/tmp/backend-interview-print-review/light-service-oriented-architecture-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/light-service-oriented-architecture-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "d13d3d6b5d29fde70a1f2a8b76f256c627d5b6fa7eea0fd76bd01def4139bbf7",
+            "reviewPanelSha256": [
+              "4f69e7e963322457d08248c4fae4120c5339c0704450a567b82894934670aa94",
+              "8dac025e71e24255380e0a3c84d68927644600c9d7daa6c991a96f458973fcf4",
+              "efcedab336e4fac2d742317da77ed68512cd32eb1354a9f83599a27411e89bcb"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          },
+          {
+            "theme": "dark",
+            "pdf": "/tmp/backend-interview-pdfs/dark-service-oriented-architecture.pdf",
+            "pages": 19,
+            "selectedPages": [
+              4,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/dark-service-oriented-architecture-table.png",
+              "/tmp/backend-interview-print-review/dark-service-oriented-architecture-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/dark-service-oriented-architecture-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "ed661f52b0588e54eb406887c1d794c2080cbfaf622f75a37aebab6a4388de96",
+            "reviewPanelSha256": [
+              "4f69e7e963322457d08248c4fae4120c5339c0704450a567b82894934670aa94",
+              "8dac025e71e24255380e0a3c84d68927644600c9d7daa6c991a96f458973fcf4",
+              "efcedab336e4fac2d742317da77ed68512cd32eb1354a9f83599a27411e89bcb"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          }
+        ],
+        "reviewStatus": "pass",
+        "reviewedOn": "2026-11-17",
+        "reviewFindings": [
+          "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+          "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+          "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+          "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+        ]
+      },
+      "findings": [
+        "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+        "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+        "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+      ]
+    },
+    {
+      "status": "pass",
+      "topicId": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/microservices-architecture.html",
+      "sourceSha256": "30cf45daf87d29229699d48f5764c921e3e755b584330049fd85a7e07477687a",
+      "outputs": [
+        {
+          "nodeId": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+          "topicId": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+          "sourceSha256": "30cf45daf87d29229699d48f5764c921e3e755b584330049fd85a7e07477687a",
+          "kind": "topic",
+          "theme": "light",
+          "pdf": "/tmp/backend-interview-pdfs/light-microservices-architecture.pdf",
+          "completeTextBlocks": 150,
+          "diagramLabels": 33,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        },
+        {
+          "nodeId": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+          "topicId": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+          "sourceSha256": "30cf45daf87d29229699d48f5764c921e3e755b584330049fd85a7e07477687a",
+          "kind": "topic",
+          "theme": "dark",
+          "pdf": "/tmp/backend-interview-pdfs/dark-microservices-architecture.pdf",
+          "completeTextBlocks": 150,
+          "diagramLabels": 33,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        }
+      ],
+      "visualReview": {
+        "topicId": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+        "path": "topics/system-design/backend-architecture/core-system-topologies/microservices-architecture.html",
+        "comparisonSheet": "/tmp/backend-interview-print-review/microservices-architecture-comparison.jpg",
+        "outputs": [
+          {
+            "theme": "light",
+            "pdf": "/tmp/backend-interview-pdfs/light-microservices-architecture.pdf",
+            "pages": 19,
+            "selectedPages": [
+              4,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/light-microservices-architecture-table.png",
+              "/tmp/backend-interview-print-review/light-microservices-architecture-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/light-microservices-architecture-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "058532c02ef93a52f2f3ede1546fdfa3772b9cbce4e2c9ff7af2a9f7231f3da9",
+            "reviewPanelSha256": [
+              "493603f923e856544461d0ba136f98c289a7f049fb9b897ee2d0b398a27a833c",
+              "d0ca3e94abeeb9a123e281e89a25115099bb98a0d910d3bab88e94944fbad288",
+              "32e83c60ef802b04565404b4e6726db515e1b91f42ea851b4a462e27e35a0ca8"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          },
+          {
+            "theme": "dark",
+            "pdf": "/tmp/backend-interview-pdfs/dark-microservices-architecture.pdf",
+            "pages": 19,
+            "selectedPages": [
+              4,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/dark-microservices-architecture-table.png",
+              "/tmp/backend-interview-print-review/dark-microservices-architecture-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/dark-microservices-architecture-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "01d5b885c11a6e19d995fcadfb7d66e9ba6b60c65b23fcadabba1ecaa5368754",
+            "reviewPanelSha256": [
+              "493603f923e856544461d0ba136f98c289a7f049fb9b897ee2d0b398a27a833c",
+              "d0ca3e94abeeb9a123e281e89a25115099bb98a0d910d3bab88e94944fbad288",
+              "32e83c60ef802b04565404b4e6726db515e1b91f42ea851b4a462e27e35a0ca8"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          }
+        ],
+        "reviewStatus": "pass",
+        "reviewedOn": "2026-11-17",
+        "reviewFindings": [
+          "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+          "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+          "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+          "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+        ]
+      },
+      "findings": [
+        "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+        "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+        "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+      ]
+    },
+    {
+      "status": "pass",
+      "topicId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+      "path": "topics/system-design/backend-architecture/code-and-domain-organization/layered-architecture.html",
+      "sourceSha256": "5815f427794062a094795a79b6b7dcf367a6cf84f4aeb65f6210a60987eff0de",
+      "outputs": [
+        {
+          "nodeId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+          "topicId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+          "sourceSha256": "5815f427794062a094795a79b6b7dcf367a6cf84f4aeb65f6210a60987eff0de",
+          "kind": "topic",
+          "theme": "light",
+          "pdf": "/tmp/backend-interview-pdfs/light-layered-architecture.pdf",
+          "completeTextBlocks": 150,
+          "diagramLabels": 31,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        },
+        {
+          "nodeId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+          "topicId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+          "sourceSha256": "5815f427794062a094795a79b6b7dcf367a6cf84f4aeb65f6210a60987eff0de",
+          "kind": "topic",
+          "theme": "dark",
+          "pdf": "/tmp/backend-interview-pdfs/dark-layered-architecture.pdf",
+          "completeTextBlocks": 150,
+          "diagramLabels": 31,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        }
+      ],
+      "visualReview": {
+        "topicId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+        "path": "topics/system-design/backend-architecture/code-and-domain-organization/layered-architecture.html",
+        "comparisonSheet": "/tmp/backend-interview-print-review/layered-architecture-comparison.jpg",
+        "outputs": [
+          {
+            "theme": "light",
+            "pdf": "/tmp/backend-interview-pdfs/light-layered-architecture.pdf",
+            "pages": 19,
+            "selectedPages": [
+              5,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/light-layered-architecture-table.png",
+              "/tmp/backend-interview-print-review/light-layered-architecture-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/light-layered-architecture-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "deaa9ee7dd8daff7955d2ab2cebc36caa29a60b2a96694b0e328f16c8960ac75",
+            "reviewPanelSha256": [
+              "ec25e9f686ee8d74fb12b96b790e2fd0b69776c6ffb841f89f2fc057fabf32be",
+              "728a6436704c56b76df283d26c3f9b2018178847389240a69d0611bf477a8fd2",
+              "9ba7471ce25d5aedd41bff4847783597a64d1f59a6458e91da7ff100ad6da4a7"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          },
+          {
+            "theme": "dark",
+            "pdf": "/tmp/backend-interview-pdfs/dark-layered-architecture.pdf",
+            "pages": 19,
+            "selectedPages": [
+              5,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/dark-layered-architecture-table.png",
+              "/tmp/backend-interview-print-review/dark-layered-architecture-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/dark-layered-architecture-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "9d15110cb71fd6309a7bd437c1c8ddcbb91003618928088fe7761181767886d4",
+            "reviewPanelSha256": [
+              "ec25e9f686ee8d74fb12b96b790e2fd0b69776c6ffb841f89f2fc057fabf32be",
+              "728a6436704c56b76df283d26c3f9b2018178847389240a69d0611bf477a8fd2",
+              "9ba7471ce25d5aedd41bff4847783597a64d1f59a6458e91da7ff100ad6da4a7"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          }
+        ],
+        "reviewStatus": "pass",
+        "reviewedOn": "2026-11-17",
+        "reviewFindings": [
+          "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+          "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+          "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+          "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+        ]
+      },
+      "findings": [
+        "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+        "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+        "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+      ]
+    },
+    {
+      "status": "pass",
+      "topicId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+      "path": "topics/system-design/backend-architecture/code-and-domain-organization/clean-architecture.html",
+      "sourceSha256": "e1ab624ca2a9d5845b2d307cc63b3fb33b45f0833411ee08a9e901f23ef9b04d",
+      "outputs": [
+        {
+          "nodeId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+          "topicId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+          "sourceSha256": "e1ab624ca2a9d5845b2d307cc63b3fb33b45f0833411ee08a9e901f23ef9b04d",
+          "kind": "topic",
+          "theme": "light",
+          "pdf": "/tmp/backend-interview-pdfs/light-clean-architecture.pdf",
+          "completeTextBlocks": 151,
+          "diagramLabels": 43,
+          "diagrams": 8,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        },
+        {
+          "nodeId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+          "topicId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+          "sourceSha256": "e1ab624ca2a9d5845b2d307cc63b3fb33b45f0833411ee08a9e901f23ef9b04d",
+          "kind": "topic",
+          "theme": "dark",
+          "pdf": "/tmp/backend-interview-pdfs/dark-clean-architecture.pdf",
+          "completeTextBlocks": 151,
+          "diagramLabels": 43,
+          "diagrams": 8,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        }
+      ],
+      "visualReview": {
+        "topicId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+        "path": "topics/system-design/backend-architecture/code-and-domain-organization/clean-architecture.html",
+        "comparisonSheet": "/tmp/backend-interview-print-review/clean-architecture-comparison.jpg",
+        "outputs": [
+          {
+            "theme": "light",
+            "pdf": "/tmp/backend-interview-pdfs/light-clean-architecture.pdf",
+            "pages": 19,
+            "selectedPages": [
+              5,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/light-clean-architecture-table.png",
+              "/tmp/backend-interview-print-review/light-clean-architecture-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/light-clean-architecture-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "2d9fdef110b834ef14ad56e755fd701715f52ea3c470d7d6d0e9a8092c335ad7",
+            "reviewPanelSha256": [
+              "8d6e0bb4680eb9c5f1ee52af223f41c7e5d774de4254b259ee611b0c6d3bd1d3",
+              "ee26c7310c7f89e359384fe9f783ad151b151681443830dffe8c9db1970629df",
+              "269c0735292c130aca1770bdc1b9d8e36d329babf009e2ed466d5ed576e47224"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          },
+          {
+            "theme": "dark",
+            "pdf": "/tmp/backend-interview-pdfs/dark-clean-architecture.pdf",
+            "pages": 19,
+            "selectedPages": [
+              5,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/dark-clean-architecture-table.png",
+              "/tmp/backend-interview-print-review/dark-clean-architecture-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/dark-clean-architecture-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "e94ae6d821b9c89e00b0b8e9b184baa6bb9012ff5977540a7e6b2a0aae2738d8",
+            "reviewPanelSha256": [
+              "8d6e0bb4680eb9c5f1ee52af223f41c7e5d774de4254b259ee611b0c6d3bd1d3",
+              "ee26c7310c7f89e359384fe9f783ad151b151681443830dffe8c9db1970629df",
+              "269c0735292c130aca1770bdc1b9d8e36d329babf009e2ed466d5ed576e47224"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          }
+        ],
+        "reviewStatus": "pass",
+        "reviewedOn": "2026-11-17",
+        "reviewFindings": [
+          "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+          "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+          "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+          "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+        ]
+      },
+      "findings": [
+        "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+        "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+        "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+      ]
+    },
+    {
+      "status": "pass",
+      "topicId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+      "path": "topics/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture.html",
+      "sourceSha256": "57d34d9889e6ba85f48db13365fc3abd0fe77be4990b9ec315b49adbf4bc1ea1",
+      "outputs": [
+        {
+          "nodeId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+          "topicId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+          "sourceSha256": "57d34d9889e6ba85f48db13365fc3abd0fe77be4990b9ec315b49adbf4bc1ea1",
+          "kind": "topic",
+          "theme": "light",
+          "pdf": "/tmp/backend-interview-pdfs/light-hexagonal-architecture.pdf",
+          "completeTextBlocks": 149,
+          "diagramLabels": 35,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        },
+        {
+          "nodeId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+          "topicId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+          "sourceSha256": "57d34d9889e6ba85f48db13365fc3abd0fe77be4990b9ec315b49adbf4bc1ea1",
+          "kind": "topic",
+          "theme": "dark",
+          "pdf": "/tmp/backend-interview-pdfs/dark-hexagonal-architecture.pdf",
+          "completeTextBlocks": 149,
+          "diagramLabels": 35,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        }
+      ],
+      "visualReview": {
+        "topicId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+        "path": "topics/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture.html",
+        "comparisonSheet": "/tmp/backend-interview-print-review/hexagonal-architecture-comparison.jpg",
+        "outputs": [
+          {
+            "theme": "light",
+            "pdf": "/tmp/backend-interview-pdfs/light-hexagonal-architecture.pdf",
+            "pages": 18,
+            "selectedPages": [
+              4,
+              7,
+              17
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/light-hexagonal-architecture-table.png",
+              "/tmp/backend-interview-print-review/light-hexagonal-architecture-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/light-hexagonal-architecture-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "fc6f3f0bc32a8853ed18607db89391c11695dc657ce12b60486feb2a11d1c095",
+            "reviewPanelSha256": [
+              "8280abe8e5bfce83546efc6bb9ced8b0d5ea1bbbceb28cf561a7d9c864d59d9e",
+              "c657ab91ae997151a79ac242a9db0f2f0ea93851cca2f5458bbfadd900ac5827",
+              "66cb76fe90133e091ed1a68e60caec328560c2a1d3e9c22dc6e97c81def90d6e"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          },
+          {
+            "theme": "dark",
+            "pdf": "/tmp/backend-interview-pdfs/dark-hexagonal-architecture.pdf",
+            "pages": 18,
+            "selectedPages": [
+              4,
+              7,
+              17
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/dark-hexagonal-architecture-table.png",
+              "/tmp/backend-interview-print-review/dark-hexagonal-architecture-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/dark-hexagonal-architecture-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "0116a041791012758fa3f2e175b0aca957b7c45c3c398f43d92df634357346f5",
+            "reviewPanelSha256": [
+              "8280abe8e5bfce83546efc6bb9ced8b0d5ea1bbbceb28cf561a7d9c864d59d9e",
+              "c657ab91ae997151a79ac242a9db0f2f0ea93851cca2f5458bbfadd900ac5827",
+              "66cb76fe90133e091ed1a68e60caec328560c2a1d3e9c22dc6e97c81def90d6e"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          }
+        ],
+        "reviewStatus": "pass",
+        "reviewedOn": "2026-11-17",
+        "reviewFindings": [
+          "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+          "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+          "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+          "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+        ]
+      },
+      "findings": [
+        "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+        "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+        "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+      ]
+    },
+    {
+      "status": "pass",
+      "topicId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+      "path": "topics/system-design/backend-architecture/code-and-domain-organization/domain-driven-design.html",
+      "sourceSha256": "477c3f30a93c8be0715c1c076a2af53d2750a72da3680abe8e31e1fddf58594d",
+      "outputs": [
+        {
+          "nodeId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+          "topicId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+          "sourceSha256": "477c3f30a93c8be0715c1c076a2af53d2750a72da3680abe8e31e1fddf58594d",
+          "kind": "topic",
+          "theme": "light",
+          "pdf": "/tmp/backend-interview-pdfs/light-domain-driven-design.pdf",
+          "completeTextBlocks": 160,
+          "diagramLabels": 34,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        },
+        {
+          "nodeId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+          "topicId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+          "sourceSha256": "477c3f30a93c8be0715c1c076a2af53d2750a72da3680abe8e31e1fddf58594d",
+          "kind": "topic",
+          "theme": "dark",
+          "pdf": "/tmp/backend-interview-pdfs/dark-domain-driven-design.pdf",
+          "completeTextBlocks": 160,
+          "diagramLabels": 34,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        }
+      ],
+      "visualReview": {
+        "topicId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+        "path": "topics/system-design/backend-architecture/code-and-domain-organization/domain-driven-design.html",
+        "comparisonSheet": "/tmp/backend-interview-print-review/domain-driven-design-comparison.jpg",
+        "outputs": [
+          {
+            "theme": "light",
+            "pdf": "/tmp/backend-interview-pdfs/light-domain-driven-design.pdf",
+            "pages": 21,
+            "selectedPages": [
+              5,
+              9,
+              19
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/light-domain-driven-design-table.png",
+              "/tmp/backend-interview-print-review/light-domain-driven-design-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/light-domain-driven-design-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "8f4e24e197290742e3b16090b3aca64f4299780cf48ed2d2da4c945b4fa28c65",
+            "reviewPanelSha256": [
+              "d16adf2dfdb35b354d457e12f58815e0a4d10ff9358c8bbcda3bfcf7a354aac7",
+              "03b0f7fb976170e30feda5d4224d8117923f169858812b5428fc529665dc5b69",
+              "dfd932dc27b61f4730df563012f1483c8e667e4517d4dcfa66fc6815efd48895"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          },
+          {
+            "theme": "dark",
+            "pdf": "/tmp/backend-interview-pdfs/dark-domain-driven-design.pdf",
+            "pages": 21,
+            "selectedPages": [
+              5,
+              9,
+              19
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/dark-domain-driven-design-table.png",
+              "/tmp/backend-interview-print-review/dark-domain-driven-design-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/dark-domain-driven-design-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "7241e7902c55d1bd5ec1e5e2f18bd541dc01ba94c859a722d2bdcb55b19e934f",
+            "reviewPanelSha256": [
+              "d16adf2dfdb35b354d457e12f58815e0a4d10ff9358c8bbcda3bfcf7a354aac7",
+              "03b0f7fb976170e30feda5d4224d8117923f169858812b5428fc529665dc5b69",
+              "dfd932dc27b61f4730df563012f1483c8e667e4517d4dcfa66fc6815efd48895"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          }
+        ],
+        "reviewStatus": "pass",
+        "reviewedOn": "2026-11-17",
+        "reviewFindings": [
+          "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+          "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+          "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+          "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+        ]
+      },
+      "findings": [
+        "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+        "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+        "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+      ]
+    },
+    {
+      "status": "pass",
+      "topicId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+      "path": "topics/system-design/backend-architecture/communication-and-routing/event-driven-architecture.html",
+      "sourceSha256": "3ad2ffb26dce35ad4e0e72015b2323da19e022f7ab34eefef30f93e2b2ac873a",
+      "outputs": [
+        {
+          "nodeId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+          "topicId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+          "sourceSha256": "3ad2ffb26dce35ad4e0e72015b2323da19e022f7ab34eefef30f93e2b2ac873a",
+          "kind": "topic",
+          "theme": "light",
+          "pdf": "/tmp/backend-interview-pdfs/light-event-driven-architecture.pdf",
+          "completeTextBlocks": 150,
+          "diagramLabels": 33,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        },
+        {
+          "nodeId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+          "topicId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+          "sourceSha256": "3ad2ffb26dce35ad4e0e72015b2323da19e022f7ab34eefef30f93e2b2ac873a",
+          "kind": "topic",
+          "theme": "dark",
+          "pdf": "/tmp/backend-interview-pdfs/dark-event-driven-architecture.pdf",
+          "completeTextBlocks": 150,
+          "diagramLabels": 33,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        }
+      ],
+      "visualReview": {
+        "topicId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+        "path": "topics/system-design/backend-architecture/communication-and-routing/event-driven-architecture.html",
+        "comparisonSheet": "/tmp/backend-interview-print-review/event-driven-architecture-comparison.jpg",
+        "outputs": [
+          {
+            "theme": "light",
+            "pdf": "/tmp/backend-interview-pdfs/light-event-driven-architecture.pdf",
+            "pages": 19,
+            "selectedPages": [
+              5,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/light-event-driven-architecture-table.png",
+              "/tmp/backend-interview-print-review/light-event-driven-architecture-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/light-event-driven-architecture-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "100c94b9da19056b3a07007b2f39ba1185507a38bf61a594614fdb6b537e405a",
+            "reviewPanelSha256": [
+              "da533ccd2b94502fb9c84b15b1da865b83ed6148b63b6375bc6276ee5250e607",
+              "9cfecec2049769a01701cd714c8ba618708e66f2fd19bbdf3bfbe63fc96b6994",
+              "038ca3fd99876671b6a1f096ea4efee614e8915a368cbbf60c3e4a4c9eeee48a"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          },
+          {
+            "theme": "dark",
+            "pdf": "/tmp/backend-interview-pdfs/dark-event-driven-architecture.pdf",
+            "pages": 19,
+            "selectedPages": [
+              5,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/dark-event-driven-architecture-table.png",
+              "/tmp/backend-interview-print-review/dark-event-driven-architecture-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/dark-event-driven-architecture-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "83db87a89daabb4ccb2bc9d2c3e1766be4b77fa6d5569b83a9e649c7e1a78653",
+            "reviewPanelSha256": [
+              "da533ccd2b94502fb9c84b15b1da865b83ed6148b63b6375bc6276ee5250e607",
+              "9cfecec2049769a01701cd714c8ba618708e66f2fd19bbdf3bfbe63fc96b6994",
+              "038ca3fd99876671b6a1f096ea4efee614e8915a368cbbf60c3e4a4c9eeee48a"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          }
+        ],
+        "reviewStatus": "pass",
+        "reviewedOn": "2026-11-17",
+        "reviewFindings": [
+          "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+          "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+          "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+          "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+        ]
+      },
+      "findings": [
+        "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+        "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+        "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+      ]
+    },
+    {
+      "status": "pass",
+      "topicId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+      "path": "topics/system-design/backend-architecture/communication-and-routing/api-gateway-pattern.html",
+      "sourceSha256": "9d00059b8eaaa28c200bf119ff9682fab320c0141c6603194de26aaf8e6db561",
+      "outputs": [
+        {
+          "nodeId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+          "topicId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+          "sourceSha256": "9d00059b8eaaa28c200bf119ff9682fab320c0141c6603194de26aaf8e6db561",
+          "kind": "topic",
+          "theme": "light",
+          "pdf": "/tmp/backend-interview-pdfs/light-api-gateway-pattern.pdf",
+          "completeTextBlocks": 151,
+          "diagramLabels": 30,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        },
+        {
+          "nodeId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+          "topicId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+          "sourceSha256": "9d00059b8eaaa28c200bf119ff9682fab320c0141c6603194de26aaf8e6db561",
+          "kind": "topic",
+          "theme": "dark",
+          "pdf": "/tmp/backend-interview-pdfs/dark-api-gateway-pattern.pdf",
+          "completeTextBlocks": 151,
+          "diagramLabels": 30,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        }
+      ],
+      "visualReview": {
+        "topicId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+        "path": "topics/system-design/backend-architecture/communication-and-routing/api-gateway-pattern.html",
+        "comparisonSheet": "/tmp/backend-interview-print-review/api-gateway-pattern-comparison.jpg",
+        "outputs": [
+          {
+            "theme": "light",
+            "pdf": "/tmp/backend-interview-pdfs/light-api-gateway-pattern.pdf",
+            "pages": 19,
+            "selectedPages": [
+              5,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/light-api-gateway-pattern-table.png",
+              "/tmp/backend-interview-print-review/light-api-gateway-pattern-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/light-api-gateway-pattern-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "e0fb37dfbb739b56421579e3281199e0cff8894bdee2d0487aceaeef1f96fee6",
+            "reviewPanelSha256": [
+              "d24fda32aa8d69ae8b0645a0bd66da3a40f696ae5bd4f235cba3b3f52b920134",
+              "852267ee5fb0f871df4e566b8f29c7951e1ad1d1edd469e50b076f50a8149638",
+              "b204b6d9692417e0b6dc963b5ba608e19d13b791ea570e53b31ad4ddc829b993"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          },
+          {
+            "theme": "dark",
+            "pdf": "/tmp/backend-interview-pdfs/dark-api-gateway-pattern.pdf",
+            "pages": 19,
+            "selectedPages": [
+              5,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/dark-api-gateway-pattern-table.png",
+              "/tmp/backend-interview-print-review/dark-api-gateway-pattern-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/dark-api-gateway-pattern-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "035fe254c708a6870fa57892fb19ea70b1c0d229ad2221abe123ef22a01b9981",
+            "reviewPanelSha256": [
+              "d24fda32aa8d69ae8b0645a0bd66da3a40f696ae5bd4f235cba3b3f52b920134",
+              "852267ee5fb0f871df4e566b8f29c7951e1ad1d1edd469e50b076f50a8149638",
+              "b204b6d9692417e0b6dc963b5ba608e19d13b791ea570e53b31ad4ddc829b993"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          }
+        ],
+        "reviewStatus": "pass",
+        "reviewedOn": "2026-11-17",
+        "reviewFindings": [
+          "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+          "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+          "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+          "Rechecked the page containing actual table header and cells rather than the preceding section heading.",
+          "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+        ]
+      },
+      "findings": [
+        "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+        "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+        "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+      ]
+    },
+    {
+      "status": "pass",
+      "topicId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+      "path": "topics/system-design/backend-architecture/communication-and-routing/backend-for-frontend.html",
+      "sourceSha256": "b6d0dec45c5de51f3ec10f041bb4dcb26cae9d38e1568aed06e660c926a7ede4",
+      "outputs": [
+        {
+          "nodeId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+          "topicId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+          "sourceSha256": "b6d0dec45c5de51f3ec10f041bb4dcb26cae9d38e1568aed06e660c926a7ede4",
+          "kind": "topic",
+          "theme": "light",
+          "pdf": "/tmp/backend-interview-pdfs/light-backend-for-frontend.pdf",
+          "completeTextBlocks": 147,
+          "diagramLabels": 32,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        },
+        {
+          "nodeId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+          "topicId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+          "sourceSha256": "b6d0dec45c5de51f3ec10f041bb4dcb26cae9d38e1568aed06e660c926a7ede4",
+          "kind": "topic",
+          "theme": "dark",
+          "pdf": "/tmp/backend-interview-pdfs/dark-backend-for-frontend.pdf",
+          "completeTextBlocks": 147,
+          "diagramLabels": 32,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        }
+      ],
+      "visualReview": {
+        "topicId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+        "path": "topics/system-design/backend-architecture/communication-and-routing/backend-for-frontend.html",
+        "comparisonSheet": "/tmp/backend-interview-print-review/backend-for-frontend-comparison.jpg",
+        "outputs": [
+          {
+            "theme": "light",
+            "pdf": "/tmp/backend-interview-pdfs/light-backend-for-frontend.pdf",
+            "pages": 19,
+            "selectedPages": [
+              4,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/light-backend-for-frontend-table.png",
+              "/tmp/backend-interview-print-review/light-backend-for-frontend-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/light-backend-for-frontend-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "d7e9743d2cf0faf405823337962aad67523d2febe6ed858b71c3b08eb03e5d00",
+            "reviewPanelSha256": [
+              "eeb5f089ada5aa7a40a9e95a94be753920e5e105a92cf07088dae7919fd65af8",
+              "e4a0b311a0ccca6dd14e061d6c8f4aa6739e9da4e8741cf33b3ab734a68172f3",
+              "c8ba3b8e3da51bde60935882b446c1731f5fc8f4046f627b8f78ff4f431d3e55"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          },
+          {
+            "theme": "dark",
+            "pdf": "/tmp/backend-interview-pdfs/dark-backend-for-frontend.pdf",
+            "pages": 19,
+            "selectedPages": [
+              4,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/dark-backend-for-frontend-table.png",
+              "/tmp/backend-interview-print-review/dark-backend-for-frontend-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/dark-backend-for-frontend-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "5716e3b648e0cd6d131a0c9f3ff83266d74b22fd11255480d316188f9cc4a4b4",
+            "reviewPanelSha256": [
+              "eeb5f089ada5aa7a40a9e95a94be753920e5e105a92cf07088dae7919fd65af8",
+              "e4a0b311a0ccca6dd14e061d6c8f4aa6739e9da4e8741cf33b3ab734a68172f3",
+              "c8ba3b8e3da51bde60935882b446c1731f5fc8f4046f627b8f78ff4f431d3e55"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          }
+        ],
+        "reviewStatus": "pass",
+        "reviewedOn": "2026-11-17",
+        "reviewFindings": [
+          "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+          "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+          "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+          "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+        ]
+      },
+      "findings": [
+        "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+        "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+        "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+      ]
+    },
+    {
+      "status": "pass",
+      "topicId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+      "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery.html",
+      "sourceSha256": "36e23c0a254c8545580386e986007ce8d76aadee09b7bce135366d91cd011fd7",
+      "outputs": [
+        {
+          "nodeId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+          "topicId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+          "sourceSha256": "36e23c0a254c8545580386e986007ce8d76aadee09b7bce135366d91cd011fd7",
+          "kind": "topic",
+          "theme": "light",
+          "pdf": "/tmp/backend-interview-pdfs/light-service-discovery.pdf",
+          "completeTextBlocks": 150,
+          "diagramLabels": 31,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        },
+        {
+          "nodeId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+          "topicId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+          "sourceSha256": "36e23c0a254c8545580386e986007ce8d76aadee09b7bce135366d91cd011fd7",
+          "kind": "topic",
+          "theme": "dark",
+          "pdf": "/tmp/backend-interview-pdfs/dark-service-discovery.pdf",
+          "completeTextBlocks": 150,
+          "diagramLabels": 31,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        }
+      ],
+      "visualReview": {
+        "topicId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+        "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery.html",
+        "comparisonSheet": "/tmp/backend-interview-print-review/service-discovery-comparison.jpg",
+        "outputs": [
+          {
+            "theme": "light",
+            "pdf": "/tmp/backend-interview-pdfs/light-service-discovery.pdf",
+            "pages": 19,
+            "selectedPages": [
+              5,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/light-service-discovery-table.png",
+              "/tmp/backend-interview-print-review/light-service-discovery-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/light-service-discovery-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "46baaa269232efdc08d963e8facb09133312b0f20c1e15ccd64a0d9c4e548c13",
+            "reviewPanelSha256": [
+              "018febce780554957ba49d78d9a73b31752419ddb3938ed1ef77dd0f56af0a12",
+              "85611f3c77e0fd1f45154b6620925635114b6530521d48bd4757f87ef89ff7aa",
+              "a214e4208903c4190511fb9a6a3ef3477c703ffde2cde70603b4df5667ce1688"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          },
+          {
+            "theme": "dark",
+            "pdf": "/tmp/backend-interview-pdfs/dark-service-discovery.pdf",
+            "pages": 19,
+            "selectedPages": [
+              5,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/dark-service-discovery-table.png",
+              "/tmp/backend-interview-print-review/dark-service-discovery-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/dark-service-discovery-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "43adb84e382c4435c893db3100753c2bb1d56d697fb323df085715fb3ee72edf",
+            "reviewPanelSha256": [
+              "018febce780554957ba49d78d9a73b31752419ddb3938ed1ef77dd0f56af0a12",
+              "85611f3c77e0fd1f45154b6620925635114b6530521d48bd4757f87ef89ff7aa",
+              "a214e4208903c4190511fb9a6a3ef3477c703ffde2cde70603b4df5667ce1688"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          }
+        ],
+        "reviewStatus": "pass",
+        "reviewedOn": "2026-11-17",
+        "reviewFindings": [
+          "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+          "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+          "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+          "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+        ]
+      },
+      "findings": [
+        "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+        "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+        "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+      ]
+    },
+    {
+      "status": "pass",
+      "topicId": "84458963-012b-4a80-828a-2da27d8b509d",
+      "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh.html",
+      "sourceSha256": "c8a730fa8338f586b148744f88995e70879f562de141da3a1eb38aae0909a284",
+      "outputs": [
+        {
+          "nodeId": "84458963-012b-4a80-828a-2da27d8b509d",
+          "topicId": "84458963-012b-4a80-828a-2da27d8b509d",
+          "sourceSha256": "c8a730fa8338f586b148744f88995e70879f562de141da3a1eb38aae0909a284",
+          "kind": "topic",
+          "theme": "light",
+          "pdf": "/tmp/backend-interview-pdfs/light-service-mesh.pdf",
+          "completeTextBlocks": 152,
+          "diagramLabels": 30,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        },
+        {
+          "nodeId": "84458963-012b-4a80-828a-2da27d8b509d",
+          "topicId": "84458963-012b-4a80-828a-2da27d8b509d",
+          "sourceSha256": "c8a730fa8338f586b148744f88995e70879f562de141da3a1eb38aae0909a284",
+          "kind": "topic",
+          "theme": "dark",
+          "pdf": "/tmp/backend-interview-pdfs/dark-service-mesh.pdf",
+          "completeTextBlocks": 152,
+          "diagramLabels": 30,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        }
+      ],
+      "visualReview": {
+        "topicId": "84458963-012b-4a80-828a-2da27d8b509d",
+        "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh.html",
+        "comparisonSheet": "/tmp/backend-interview-print-review/service-mesh-comparison.jpg",
+        "outputs": [
+          {
+            "theme": "light",
+            "pdf": "/tmp/backend-interview-pdfs/light-service-mesh.pdf",
+            "pages": 20,
+            "selectedPages": [
+              5,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/light-service-mesh-table.png",
+              "/tmp/backend-interview-print-review/light-service-mesh-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/light-service-mesh-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "2e7afb902cd8fb76d129964446ec5406a0dae07980b0a07b29b2571b0bc157cc",
+            "reviewPanelSha256": [
+              "aa1bbe9f849d3fa82f8ef007982824aa7fb655912a60c2ba3c46b1cb4b7b3e9b",
+              "c78c70c235f80e456b734667c36b9a23c3bec3b25d199567ed5444552f9acc3a",
+              "56bdd445627bbb9e21e447bb48ab348f3a1070170172aeea0d9d32641b087029"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          },
+          {
+            "theme": "dark",
+            "pdf": "/tmp/backend-interview-pdfs/dark-service-mesh.pdf",
+            "pages": 20,
+            "selectedPages": [
+              5,
+              8,
+              18
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/dark-service-mesh-table.png",
+              "/tmp/backend-interview-print-review/dark-service-mesh-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/dark-service-mesh-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "08d6d314126015ed62ffdb110ff3a62af70f76151ad368aed27b068fbbf9222d",
+            "reviewPanelSha256": [
+              "aa1bbe9f849d3fa82f8ef007982824aa7fb655912a60c2ba3c46b1cb4b7b3e9b",
+              "c78c70c235f80e456b734667c36b9a23c3bec3b25d199567ed5444552f9acc3a",
+              "56bdd445627bbb9e21e447bb48ab348f3a1070170172aeea0d9d32641b087029"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          }
+        ],
+        "reviewStatus": "pass",
+        "reviewedOn": "2026-11-17",
+        "reviewFindings": [
+          "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+          "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+          "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+          "Rechecked the page containing actual table header and cells rather than the preceding section heading.",
+          "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+        ]
+      },
+      "findings": [
+        "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+        "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+        "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+      ]
+    },
+    {
+      "status": "pass",
+      "topicId": "689dd587-de37-4e22-9412-bd42b118da79",
+      "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/multi-tenant-architecture.html",
+      "sourceSha256": "1338b170aae459c923ceb05e9c0a203ed24ef6f1a6fc00db7ecd2ff77a512fb6",
+      "outputs": [
+        {
+          "nodeId": "689dd587-de37-4e22-9412-bd42b118da79",
+          "topicId": "689dd587-de37-4e22-9412-bd42b118da79",
+          "sourceSha256": "1338b170aae459c923ceb05e9c0a203ed24ef6f1a6fc00db7ecd2ff77a512fb6",
+          "kind": "topic",
+          "theme": "light",
+          "pdf": "/tmp/backend-interview-pdfs/light-multi-tenant-architecture.pdf",
+          "completeTextBlocks": 155,
+          "diagramLabels": 32,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        },
+        {
+          "nodeId": "689dd587-de37-4e22-9412-bd42b118da79",
+          "topicId": "689dd587-de37-4e22-9412-bd42b118da79",
+          "sourceSha256": "1338b170aae459c923ceb05e9c0a203ed24ef6f1a6fc00db7ecd2ff77a512fb6",
+          "kind": "topic",
+          "theme": "dark",
+          "pdf": "/tmp/backend-interview-pdfs/dark-multi-tenant-architecture.pdf",
+          "completeTextBlocks": 155,
+          "diagramLabels": 32,
+          "diagrams": 7,
+          "disclosuresRestored": true,
+          "mixedDisclosureStates": true,
+          "controlsHidden": true,
+          "status": "pass"
+        }
+      ],
+      "visualReview": {
+        "topicId": "689dd587-de37-4e22-9412-bd42b118da79",
+        "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/multi-tenant-architecture.html",
+        "comparisonSheet": "/tmp/backend-interview-print-review/multi-tenant-architecture-comparison.jpg",
+        "outputs": [
+          {
+            "theme": "light",
+            "pdf": "/tmp/backend-interview-pdfs/light-multi-tenant-architecture.pdf",
+            "pages": 20,
+            "selectedPages": [
+              5,
+              9,
+              19
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/light-multi-tenant-architecture-table.png",
+              "/tmp/backend-interview-print-review/light-multi-tenant-architecture-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/light-multi-tenant-architecture-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "0abf4bf35a1866dda617217e31f4e98d0fb2e6d832a82c91f3dbfc9393afe0cc",
+            "reviewPanelSha256": [
+              "5c85bfcf2629f64e729bd1c2a20341a20a4e477411f383b2a23e37add46561c5",
+              "ae2cd68156e9a5b588e1be0f200779d35e1e039714f59ebeedd1fd8c702f517a",
+              "8fd418ffcb3fe30c4ff32693fb23e7e7bfc8a6bbaafbd4468b182050c60ff4f1"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          },
+          {
+            "theme": "dark",
+            "pdf": "/tmp/backend-interview-pdfs/dark-multi-tenant-architecture.pdf",
+            "pages": 20,
+            "selectedPages": [
+              5,
+              9,
+              19
+            ],
+            "rasterPanels": [
+              "/tmp/backend-interview-print-review/dark-multi-tenant-architecture-table.png",
+              "/tmp/backend-interview-print-review/dark-multi-tenant-architecture-first-scenario-diagram.png",
+              "/tmp/backend-interview-print-review/dark-multi-tenant-architecture-last-scenario-diagram.png"
+            ],
+            "pdfSha256": "47480e4bf31e605b894829e88c8b707b890f5a38943b80923bb1be89529719fd",
+            "reviewPanelSha256": [
+              "5c85bfcf2629f64e729bd1c2a20341a20a4e477411f383b2a23e37add46561c5",
+              "ae2cd68156e9a5b588e1be0f200779d35e1e039714f59ebeedd1fd8c702f517a",
+              "8fd418ffcb3fe30c4ff32693fb23e7e7bfc8a6bbaafbd4468b182050c60ff4f1"
+            ],
+            "finalPDFMatchesReviewedPixels": true
+          }
+        ],
+        "reviewStatus": "pass",
+        "reviewedOn": "2026-11-17",
+        "reviewFindings": [
+          "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+          "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+          "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+          "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+        ]
+      },
+      "findings": [
+        "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+        "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+        "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+      ]
+    }
+  ],
+  "allOutputs": [
+    {
+      "nodeId": "d3825659-12c2-4fc8-b6fe-bdd050762da3",
+      "topicId": "d3825659-12c2-4fc8-b6fe-bdd050762da3",
+      "sourceSha256": "a5bfa98b0c62a098b0b545060614b5cb7e4ddbe74af435af5bd1e3c163417485",
+      "kind": "hub",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-system-design.pdf",
+      "completeTextBlocks": 14,
+      "diagramLabels": 2,
+      "diagrams": 1,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "401502d7-77c1-438c-a663-053fc5d18ada",
+      "topicId": "401502d7-77c1-438c-a663-053fc5d18ada",
+      "sourceSha256": "5202c30192b5543dbfb474189cfc7789386d56567fcdc7b683d31de4f8708fa7",
+      "kind": "hub",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-backend-architecture.pdf",
+      "completeTextBlocks": 21,
+      "diagramLabels": 5,
+      "diagrams": 1,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "782e772f-8c50-46aa-a26a-d37ff94599a2",
+      "topicId": "782e772f-8c50-46aa-a26a-d37ff94599a2",
+      "sourceSha256": "e1e328a786fdc7a26e6e197b36bdad9953fd90cfa3a96a4cd7530aa4dd6612fa",
+      "kind": "hub",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-core-system-topologies.pdf",
+      "completeTextBlocks": 23,
+      "diagramLabels": 6,
+      "diagrams": 1,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+      "topicId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+      "sourceSha256": "6c76a52a1524bd3bf53e20f7d03a70a89deffdf839dd007fa01b4afd78156acb",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-distributed-system-fundamentals.pdf",
+      "completeTextBlocks": 151,
+      "diagramLabels": 39,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "1901acc7-9225-428a-9397-072cff3d36d0",
+      "topicId": "1901acc7-9225-428a-9397-072cff3d36d0",
+      "sourceSha256": "8b193bfe38ac6ca56ae67ec11ee25a72bf34cf54a1c4a83690bd8648766179e2",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-monolithic-architecture.pdf",
+      "completeTextBlocks": 149,
+      "diagramLabels": 33,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+      "topicId": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+      "sourceSha256": "f7d71910f6a616c24f6f3692fd4588eea4df4ee08e0b5350e8beb6b055fbc06c",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-modular-monolith.pdf",
+      "completeTextBlocks": 150,
+      "diagramLabels": 33,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+      "topicId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+      "sourceSha256": "870cfd5f446eaa43b2630ae1054795b3e43953072cb65f70bec82e50f53033e3",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-service-oriented-architecture.pdf",
+      "completeTextBlocks": 149,
+      "diagramLabels": 33,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+      "topicId": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+      "sourceSha256": "30cf45daf87d29229699d48f5764c921e3e755b584330049fd85a7e07477687a",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-microservices-architecture.pdf",
+      "completeTextBlocks": 150,
+      "diagramLabels": 33,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "1dce8024-d12a-4295-ae55-afa135170fb5",
+      "topicId": "1dce8024-d12a-4295-ae55-afa135170fb5",
+      "sourceSha256": "812c1da62aa0731a534c00857608abf0a25086557d742790ba1be50c1465594e",
+      "kind": "hub",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-code-and-domain-organization.pdf",
+      "completeTextBlocks": 21,
+      "diagramLabels": 5,
+      "diagrams": 1,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+      "topicId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+      "sourceSha256": "5815f427794062a094795a79b6b7dcf367a6cf84f4aeb65f6210a60987eff0de",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-layered-architecture.pdf",
+      "completeTextBlocks": 150,
+      "diagramLabels": 31,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+      "topicId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+      "sourceSha256": "e1ab624ca2a9d5845b2d307cc63b3fb33b45f0833411ee08a9e901f23ef9b04d",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-clean-architecture.pdf",
+      "completeTextBlocks": 151,
+      "diagramLabels": 43,
+      "diagrams": 8,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+      "topicId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+      "sourceSha256": "57d34d9889e6ba85f48db13365fc3abd0fe77be4990b9ec315b49adbf4bc1ea1",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-hexagonal-architecture.pdf",
+      "completeTextBlocks": 149,
+      "diagramLabels": 35,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+      "topicId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+      "sourceSha256": "477c3f30a93c8be0715c1c076a2af53d2750a72da3680abe8e31e1fddf58594d",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-domain-driven-design.pdf",
+      "completeTextBlocks": 160,
+      "diagramLabels": 34,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "a83461a8-4d18-4132-908e-dac2eab5638d",
+      "topicId": "a83461a8-4d18-4132-908e-dac2eab5638d",
+      "sourceSha256": "8f6aead41282696e1cfc58876b4945acae871c76bb19a3f4f52001f9bb42fc72",
+      "kind": "hub",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-communication-and-routing.pdf",
+      "completeTextBlocks": 19,
+      "diagramLabels": 4,
+      "diagrams": 1,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+      "topicId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+      "sourceSha256": "3ad2ffb26dce35ad4e0e72015b2323da19e022f7ab34eefef30f93e2b2ac873a",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-event-driven-architecture.pdf",
+      "completeTextBlocks": 150,
+      "diagramLabels": 33,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+      "topicId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+      "sourceSha256": "9d00059b8eaaa28c200bf119ff9682fab320c0141c6603194de26aaf8e6db561",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-api-gateway-pattern.pdf",
+      "completeTextBlocks": 151,
+      "diagramLabels": 30,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+      "topicId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+      "sourceSha256": "b6d0dec45c5de51f3ec10f041bb4dcb26cae9d38e1568aed06e660c926a7ede4",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-backend-for-frontend.pdf",
+      "completeTextBlocks": 147,
+      "diagramLabels": 32,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "e4b099e0-3f6c-480e-bb61-76e763a8e5e5",
+      "topicId": "e4b099e0-3f6c-480e-bb61-76e763a8e5e5",
+      "sourceSha256": "ebda2bb54bdefc1b44eb98f8803b0fa003e71fc6abbf7319cba5684c8218e2f5",
+      "kind": "hub",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-infrastructure-and-multi-tenancy.pdf",
+      "completeTextBlocks": 19,
+      "diagramLabels": 4,
+      "diagrams": 1,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+      "topicId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+      "sourceSha256": "36e23c0a254c8545580386e986007ce8d76aadee09b7bce135366d91cd011fd7",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-service-discovery.pdf",
+      "completeTextBlocks": 150,
+      "diagramLabels": 31,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "84458963-012b-4a80-828a-2da27d8b509d",
+      "topicId": "84458963-012b-4a80-828a-2da27d8b509d",
+      "sourceSha256": "c8a730fa8338f586b148744f88995e70879f562de141da3a1eb38aae0909a284",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-service-mesh.pdf",
+      "completeTextBlocks": 152,
+      "diagramLabels": 30,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "689dd587-de37-4e22-9412-bd42b118da79",
+      "topicId": "689dd587-de37-4e22-9412-bd42b118da79",
+      "sourceSha256": "1338b170aae459c923ceb05e9c0a203ed24ef6f1a6fc00db7ecd2ff77a512fb6",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-multi-tenant-architecture.pdf",
+      "completeTextBlocks": 155,
+      "diagramLabels": 32,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "d3825659-12c2-4fc8-b6fe-bdd050762da3",
+      "topicId": "d3825659-12c2-4fc8-b6fe-bdd050762da3",
+      "sourceSha256": "a5bfa98b0c62a098b0b545060614b5cb7e4ddbe74af435af5bd1e3c163417485",
+      "kind": "hub",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-system-design.pdf",
+      "completeTextBlocks": 14,
+      "diagramLabels": 2,
+      "diagrams": 1,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "401502d7-77c1-438c-a663-053fc5d18ada",
+      "topicId": "401502d7-77c1-438c-a663-053fc5d18ada",
+      "sourceSha256": "5202c30192b5543dbfb474189cfc7789386d56567fcdc7b683d31de4f8708fa7",
+      "kind": "hub",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-backend-architecture.pdf",
+      "completeTextBlocks": 21,
+      "diagramLabels": 5,
+      "diagrams": 1,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "782e772f-8c50-46aa-a26a-d37ff94599a2",
+      "topicId": "782e772f-8c50-46aa-a26a-d37ff94599a2",
+      "sourceSha256": "e1e328a786fdc7a26e6e197b36bdad9953fd90cfa3a96a4cd7530aa4dd6612fa",
+      "kind": "hub",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-core-system-topologies.pdf",
+      "completeTextBlocks": 23,
+      "diagramLabels": 6,
+      "diagrams": 1,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+      "topicId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+      "sourceSha256": "6c76a52a1524bd3bf53e20f7d03a70a89deffdf839dd007fa01b4afd78156acb",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-distributed-system-fundamentals.pdf",
+      "completeTextBlocks": 151,
+      "diagramLabels": 39,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "1901acc7-9225-428a-9397-072cff3d36d0",
+      "topicId": "1901acc7-9225-428a-9397-072cff3d36d0",
+      "sourceSha256": "8b193bfe38ac6ca56ae67ec11ee25a72bf34cf54a1c4a83690bd8648766179e2",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-monolithic-architecture.pdf",
+      "completeTextBlocks": 149,
+      "diagramLabels": 33,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+      "topicId": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+      "sourceSha256": "f7d71910f6a616c24f6f3692fd4588eea4df4ee08e0b5350e8beb6b055fbc06c",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-modular-monolith.pdf",
+      "completeTextBlocks": 150,
+      "diagramLabels": 33,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+      "topicId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+      "sourceSha256": "870cfd5f446eaa43b2630ae1054795b3e43953072cb65f70bec82e50f53033e3",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-service-oriented-architecture.pdf",
+      "completeTextBlocks": 149,
+      "diagramLabels": 33,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+      "topicId": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+      "sourceSha256": "30cf45daf87d29229699d48f5764c921e3e755b584330049fd85a7e07477687a",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-microservices-architecture.pdf",
+      "completeTextBlocks": 150,
+      "diagramLabels": 33,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "1dce8024-d12a-4295-ae55-afa135170fb5",
+      "topicId": "1dce8024-d12a-4295-ae55-afa135170fb5",
+      "sourceSha256": "812c1da62aa0731a534c00857608abf0a25086557d742790ba1be50c1465594e",
+      "kind": "hub",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-code-and-domain-organization.pdf",
+      "completeTextBlocks": 21,
+      "diagramLabels": 5,
+      "diagrams": 1,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+      "topicId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+      "sourceSha256": "5815f427794062a094795a79b6b7dcf367a6cf84f4aeb65f6210a60987eff0de",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-layered-architecture.pdf",
+      "completeTextBlocks": 150,
+      "diagramLabels": 31,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+      "topicId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+      "sourceSha256": "e1ab624ca2a9d5845b2d307cc63b3fb33b45f0833411ee08a9e901f23ef9b04d",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-clean-architecture.pdf",
+      "completeTextBlocks": 151,
+      "diagramLabels": 43,
+      "diagrams": 8,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+      "topicId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+      "sourceSha256": "57d34d9889e6ba85f48db13365fc3abd0fe77be4990b9ec315b49adbf4bc1ea1",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-hexagonal-architecture.pdf",
+      "completeTextBlocks": 149,
+      "diagramLabels": 35,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+      "topicId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+      "sourceSha256": "477c3f30a93c8be0715c1c076a2af53d2750a72da3680abe8e31e1fddf58594d",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-domain-driven-design.pdf",
+      "completeTextBlocks": 160,
+      "diagramLabels": 34,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "a83461a8-4d18-4132-908e-dac2eab5638d",
+      "topicId": "a83461a8-4d18-4132-908e-dac2eab5638d",
+      "sourceSha256": "8f6aead41282696e1cfc58876b4945acae871c76bb19a3f4f52001f9bb42fc72",
+      "kind": "hub",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-communication-and-routing.pdf",
+      "completeTextBlocks": 19,
+      "diagramLabels": 4,
+      "diagrams": 1,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+      "topicId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+      "sourceSha256": "3ad2ffb26dce35ad4e0e72015b2323da19e022f7ab34eefef30f93e2b2ac873a",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-event-driven-architecture.pdf",
+      "completeTextBlocks": 150,
+      "diagramLabels": 33,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+      "topicId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+      "sourceSha256": "9d00059b8eaaa28c200bf119ff9682fab320c0141c6603194de26aaf8e6db561",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-api-gateway-pattern.pdf",
+      "completeTextBlocks": 151,
+      "diagramLabels": 30,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+      "topicId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+      "sourceSha256": "b6d0dec45c5de51f3ec10f041bb4dcb26cae9d38e1568aed06e660c926a7ede4",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-backend-for-frontend.pdf",
+      "completeTextBlocks": 147,
+      "diagramLabels": 32,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "e4b099e0-3f6c-480e-bb61-76e763a8e5e5",
+      "topicId": "e4b099e0-3f6c-480e-bb61-76e763a8e5e5",
+      "sourceSha256": "ebda2bb54bdefc1b44eb98f8803b0fa003e71fc6abbf7319cba5684c8218e2f5",
+      "kind": "hub",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-infrastructure-and-multi-tenancy.pdf",
+      "completeTextBlocks": 19,
+      "diagramLabels": 4,
+      "diagrams": 1,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+      "topicId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+      "sourceSha256": "36e23c0a254c8545580386e986007ce8d76aadee09b7bce135366d91cd011fd7",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-service-discovery.pdf",
+      "completeTextBlocks": 150,
+      "diagramLabels": 31,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "84458963-012b-4a80-828a-2da27d8b509d",
+      "topicId": "84458963-012b-4a80-828a-2da27d8b509d",
+      "sourceSha256": "c8a730fa8338f586b148744f88995e70879f562de141da3a1eb38aae0909a284",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-service-mesh.pdf",
+      "completeTextBlocks": 152,
+      "diagramLabels": 30,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "689dd587-de37-4e22-9412-bd42b118da79",
+      "topicId": "689dd587-de37-4e22-9412-bd42b118da79",
+      "sourceSha256": "1338b170aae459c923ceb05e9c0a203ed24ef6f1a6fc00db7ecd2ff77a512fb6",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-multi-tenant-architecture.pdf",
+      "completeTextBlocks": 155,
+      "diagramLabels": 32,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    }
+  ],
+  "artifactDirectory": "/tmp/backend-interview-pdfs",
+  "visualReviewDirectory": "/tmp/backend-interview-print-review"
+}

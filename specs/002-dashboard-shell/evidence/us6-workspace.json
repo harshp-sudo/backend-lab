@@ -1,0 +1,349 @@
+{
+  "result": "pass",
+  "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "referenceDevice": "WSL2 local headless Chromium, 1440px desktop / 360px mobile",
+  "dependencies": {
+    "mermaid": "12.3.0",
+    "highlight": "11.11.1",
+    "tailwind": "3.4.17",
+    "playwright": "1.56.0"
+  },
+  "bases": [
+    "http://127.0.0.1:8000/",
+    "http://127.0.0.1:8001/backend-lab/"
+  ],
+  "browser": "141.0.7390.37",
+  "checks": [
+    {
+      "story": "US6",
+      "scenario": "workspace",
+      "result": "pass",
+      "seconds": 4.76,
+      "details": {
+        "viewport": 360,
+        "drawerAndResize": "pass",
+        "themeReload": "pass",
+        "backupRoundtrip": "pass",
+        "cancelAndInvalidUnchanged": true,
+        "unknownRecordsRetained": true
+      }
+    },
+    {
+      "story": "US6",
+      "scenario": "persistence_failures",
+      "result": "pass",
+      "seconds": 2.07,
+      "details": {
+        "corruptBytesPreserved": "pass",
+        "quotaSessionExport": "pass",
+        "validRecovery": "pass",
+        "failedImportMemoryAndStorageUnchanged": "pass"
+      }
+    },
+    {
+      "story": "US6",
+      "scenario": "print_articles",
+      "result": "pass",
+      "seconds": 11.27,
+      "details": {
+        "pdfs": 42,
+        "checks": [
+          {
+            "nodeId": "d3825659-12c2-4fc8-b6fe-bdd050762da3",
+            "theme": "light",
+            "pdf": "/tmp/backend-dashboard-pdfs/light-system-design.pdf",
+            "completeParagraphs": 8,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "401502d7-77c1-438c-a663-053fc5d18ada",
+            "theme": "light",
+            "pdf": "/tmp/backend-dashboard-pdfs/light-backend-architecture.pdf",
+            "completeParagraphs": 12,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "782e772f-8c50-46aa-a26a-d37ff94599a2",
+            "theme": "light",
+            "pdf": "/tmp/backend-dashboard-pdfs/light-core-system-topologies.pdf",
+            "completeParagraphs": 13,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+            "theme": "light",
+            "pdf": "/tmp/backend-dashboard-pdfs/light-distributed-system-fundamentals.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "1901acc7-9225-428a-9397-072cff3d36d0",
+            "theme": "light",
+            "pdf": "/tmp/backend-dashboard-pdfs/light-monolithic-architecture.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+            "theme": "light",
+            "pdf": "/tmp/backend-dashboard-pdfs/light-modular-monolith.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+            "theme": "light",
+            "pdf": "/tmp/backend-dashboard-pdfs/light-service-oriented-architecture.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+            "theme": "light",
+            "pdf": "/tmp/backend-dashboard-pdfs/light-microservices-architecture.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "1dce8024-d12a-4295-ae55-afa135170fb5",
+            "theme": "light",
+            "pdf": "/tmp/backend-dashboard-pdfs/light-code-and-domain-organization.pdf",
+            "completeParagraphs": 12,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+            "theme": "light",
+            "pdf": "/tmp/backend-dashboard-pdfs/light-layered-architecture.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+            "theme": "light",
+            "pdf": "/tmp/backend-dashboard-pdfs/light-clean-architecture.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+            "theme": "light",
+            "pdf": "/tmp/backend-dashboard-pdfs/light-hexagonal-architecture.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+            "theme": "light",
+            "pdf": "/tmp/backend-dashboard-pdfs/light-domain-driven-design.pdf",
+            "completeParagraphs": 41,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "a83461a8-4d18-4132-908e-dac2eab5638d",
+            "theme": "light",
+            "pdf": "/tmp/backend-dashboard-pdfs/light-communication-and-routing.pdf",
+            "completeParagraphs": 11,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+            "theme": "light",
+            "pdf": "/tmp/backend-dashboard-pdfs/light-event-driven-architecture.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+            "theme": "light",
+            "pdf": "/tmp/backend-dashboard-pdfs/light-api-gateway-pattern.pdf",
+            "completeParagraphs": 38,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+            "theme": "light",
+            "pdf": "/tmp/backend-dashboard-pdfs/light-backend-for-frontend.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "e4b099e0-3f6c-480e-bb61-76e763a8e5e5",
+            "theme": "light",
+            "pdf": "/tmp/backend-dashboard-pdfs/light-infrastructure-and-multi-tenancy.pdf",
+            "completeParagraphs": 11,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+            "theme": "light",
+            "pdf": "/tmp/backend-dashboard-pdfs/light-service-discovery.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "84458963-012b-4a80-828a-2da27d8b509d",
+            "theme": "light",
+            "pdf": "/tmp/backend-dashboard-pdfs/light-service-mesh.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "689dd587-de37-4e22-9412-bd42b118da79",
+            "theme": "light",
+            "pdf": "/tmp/backend-dashboard-pdfs/light-multi-tenant-architecture.pdf",
+            "completeParagraphs": 40,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "d3825659-12c2-4fc8-b6fe-bdd050762da3",
+            "theme": "dark",
+            "pdf": "/tmp/backend-dashboard-pdfs/dark-system-design.pdf",
+            "completeParagraphs": 8,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "401502d7-77c1-438c-a663-053fc5d18ada",
+            "theme": "dark",
+            "pdf": "/tmp/backend-dashboard-pdfs/dark-backend-architecture.pdf",
+            "completeParagraphs": 12,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "782e772f-8c50-46aa-a26a-d37ff94599a2",
+            "theme": "dark",
+            "pdf": "/tmp/backend-dashboard-pdfs/dark-core-system-topologies.pdf",
+            "completeParagraphs": 13,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+            "theme": "dark",
+            "pdf": "/tmp/backend-dashboard-pdfs/dark-distributed-system-fundamentals.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "1901acc7-9225-428a-9397-072cff3d36d0",
+            "theme": "dark",
+            "pdf": "/tmp/backend-dashboard-pdfs/dark-monolithic-architecture.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+            "theme": "dark",
+            "pdf": "/tmp/backend-dashboard-pdfs/dark-modular-monolith.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+            "theme": "dark",
+            "pdf": "/tmp/backend-dashboard-pdfs/dark-service-oriented-architecture.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+            "theme": "dark",
+            "pdf": "/tmp/backend-dashboard-pdfs/dark-microservices-architecture.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "1dce8024-d12a-4295-ae55-afa135170fb5",
+            "theme": "dark",
+            "pdf": "/tmp/backend-dashboard-pdfs/dark-code-and-domain-organization.pdf",
+            "completeParagraphs": 12,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+            "theme": "dark",
+            "pdf": "/tmp/backend-dashboard-pdfs/dark-layered-architecture.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+            "theme": "dark",
+            "pdf": "/tmp/backend-dashboard-pdfs/dark-clean-architecture.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+            "theme": "dark",
+            "pdf": "/tmp/backend-dashboard-pdfs/dark-hexagonal-architecture.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+            "theme": "dark",
+            "pdf": "/tmp/backend-dashboard-pdfs/dark-domain-driven-design.pdf",
+            "completeParagraphs": 41,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "a83461a8-4d18-4132-908e-dac2eab5638d",
+            "theme": "dark",
+            "pdf": "/tmp/backend-dashboard-pdfs/dark-communication-and-routing.pdf",
+            "completeParagraphs": 11,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+            "theme": "dark",
+            "pdf": "/tmp/backend-dashboard-pdfs/dark-event-driven-architecture.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+            "theme": "dark",
+            "pdf": "/tmp/backend-dashboard-pdfs/dark-api-gateway-pattern.pdf",
+            "completeParagraphs": 38,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+            "theme": "dark",
+            "pdf": "/tmp/backend-dashboard-pdfs/dark-backend-for-frontend.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "e4b099e0-3f6c-480e-bb61-76e763a8e5e5",
+            "theme": "dark",
+            "pdf": "/tmp/backend-dashboard-pdfs/dark-infrastructure-and-multi-tenancy.pdf",
+            "completeParagraphs": 11,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+            "theme": "dark",
+            "pdf": "/tmp/backend-dashboard-pdfs/dark-service-discovery.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "84458963-012b-4a80-828a-2da27d8b509d",
+            "theme": "dark",
+            "pdf": "/tmp/backend-dashboard-pdfs/dark-service-mesh.pdf",
+            "completeParagraphs": 37,
+            "disclosuresRestored": true
+          },
+          {
+            "nodeId": "689dd587-de37-4e22-9412-bd42b118da79",
+            "theme": "dark",
+            "pdf": "/tmp/backend-dashboard-pdfs/dark-multi-tenant-architecture.pdf",
+            "completeParagraphs": 40,
+            "disclosuresRestored": true
+          }
+        ]
+      }
+    }
+  ]
+}

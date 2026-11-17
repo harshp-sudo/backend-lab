@@ -1,0 +1,169 @@
+{
+  "status": "pass",
+  "topicId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+  "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery.html",
+  "sourceSha256": "36e23c0a254c8545580386e986007ce8d76aadee09b7bce135366d91cd011fd7",
+  "browser": "141.0.7390.37",
+  "navigation": [
+    {
+      "base": "http://127.0.0.1:8020/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    },
+    {
+      "base": "http://127.0.0.1:8021/backend-lab/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    }
+  ],
+  "learning": {
+    "topicId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+    "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery.html",
+    "sourceSha256": "36e23c0a254c8545580386e986007ce8d76aadee09b7bce135366d91cd011fd7",
+    "status": "pass",
+    "bases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "newKeys": [
+          "interview-terminating-endpoints-drain",
+          "interview-negative-dns-cache-new-service",
+          "interview-stale-registry-during-outage",
+          "interview-headless-service-client-balancing",
+          "interview-namespace-name-resolution",
+          "interview-vm-without-discovery-sdk"
+        ],
+        "ratings": {
+          "interview-terminating-endpoints-drain": "hard",
+          "interview-negative-dns-cache-new-service": "good",
+          "interview-stale-registry-during-outage": "easy",
+          "interview-headless-service-client-balancing": "hard",
+          "interview-namespace-name-resolution": "good",
+          "interview-vm-without-discovery-sdk": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "newKeys": [
+          "interview-terminating-endpoints-drain",
+          "interview-negative-dns-cache-new-service",
+          "interview-stale-registry-during-outage",
+          "interview-headless-service-client-balancing",
+          "interview-namespace-name-resolution",
+          "interview-vm-without-discovery-sdk"
+        ],
+        "ratings": {
+          "interview-terminating-endpoints-drain": "hard",
+          "interview-negative-dns-cache-new-service": "good",
+          "interview-stale-registry-during-outage": "easy",
+          "interview-headless-service-client-balancing": "hard",
+          "interview-namespace-name-resolution": "good",
+          "interview-vm-without-discovery-sdk": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      }
+    ]
+  },
+  "mobileThemes": {
+    "topicId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+    "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery.html",
+    "sourceSha256": "36e23c0a254c8545580386e986007ce8d76aadee09b7bce135366d91cd011fd7",
+    "status": "pass",
+    "cases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-terminating-endpoints-drain",
+          "interview-negative-dns-cache-new-service",
+          "interview-stale-registry-during-outage",
+          "interview-headless-service-client-balancing",
+          "interview-namespace-name-resolution",
+          "interview-vm-without-discovery-sdk"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-terminating-endpoints-drain",
+          "interview-negative-dns-cache-new-service",
+          "interview-stale-registry-during-outage",
+          "interview-headless-service-client-balancing",
+          "interview-namespace-name-resolution",
+          "interview-vm-without-discovery-sdk"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-terminating-endpoints-drain",
+          "interview-negative-dns-cache-new-service",
+          "interview-stale-registry-during-outage",
+          "interview-headless-service-client-balancing",
+          "interview-namespace-name-resolution",
+          "interview-vm-without-discovery-sdk"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-terminating-endpoints-drain",
+          "interview-negative-dns-cache-new-service",
+          "interview-stale-registry-during-outage",
+          "interview-headless-service-client-balancing",
+          "interview-namespace-name-resolution",
+          "interview-vm-without-discovery-sdk"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      }
+    ]
+  },
+  "errors": [],
+  "supportingFixture": "reading_fixture passed all 21 actual partials without learning writes."
+}

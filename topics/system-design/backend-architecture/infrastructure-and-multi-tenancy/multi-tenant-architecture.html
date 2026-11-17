@@ -1,0 +1,227 @@
+<article class="kb-topic" data-node-id="689dd587-de37-4e22-9412-bd42b118da79">
+<h1>Multi-Tenant Architecture</h1>
+<section data-section="hook-eli5" id="node-689dd587-de37-4e22-9412-bd42b118da79-hook-eli5">
+<h2>🎯 The Hook & ELI5</h2>
+<div class="kb-callout--insight"><p><strong>ELI5 mental model.</strong> An apartment building shares a roof and some services, but each household has its own home, keys, and usage expectations. Sharing the building must not give one household access to another’s rooms. A multi-tenant system similarly serves several customer contexts while deciding deliberately which resources are shared and how each context stays isolated.</p></div><p>A software product may serve several customers or organizational groups through one managed solution. A tenant is the customer/isolation context; a user is an actor who may have permissions in one or more tenants. Multi-tenant architecture defines how tenant identity, data, configuration, capacity, and operations remain correctly scoped across shared or dedicated resources.</p><div class="kb-callout--insight"><p>WHY it matters: a project-management product must never show one company another company’s projects, cached search results, exports, or background-job output. It also needs predictable operation when one tenant becomes unusually busy. Adding a tenant_id column is a useful mechanism in some designs, not a complete isolation architecture.</p></div>
+</section>
+<section data-section="big-picture" id="node-689dd587-de37-4e22-9412-bd42b118da79-big-picture">
+<h2>🗺️ High-Level Big Picture</h2>
+<p>A request establishes both the acting user and a validated tenant context. The application enforces membership/resource permissions before using tenant-scoped data, cache, and job paths. Storage can be pooled, dedicated, or mixed according to requirements. The same context must survive asynchronous work; an HTTP filter alone cannot protect a worker that later processes an unscoped job.</p><figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Tenant context must follow synchronous and asynchronous work
+    accDescr: A verified tenant context scopes authorization, storage, cache, and background processing across pooled or dedicated resources.
+    U[&quot;User requests a project&quot;] --&gt; T[&quot;Establish trusted user and tenant context&quot;]
+    T --&gt; A[&quot;Authorize action and resource ownership&quot;]
+    A --&gt; D[&quot;Tenant-scoped data path&quot;]
+    A --&gt; C[&quot;Tenant-scoped cache key&quot;]
+    A --&gt; J[&quot;Job with explicit tenant context&quot;]
+    J --&gt; W[&quot;Worker validates and applies tenant scope&quot;]
+    D --&gt; P[&quot;Pooled or dedicated storage&quot;]
+    W --&gt; P</pre><figcaption>Read the arrows as responsibilities and hand-offs, not as a promise that every step succeeds.</figcaption></figure>
+</section>
+<section data-section="mechanics" id="node-689dd587-de37-4e22-9412-bd42b118da79-mechanics">
+<h2>🔍 Step-by-Step Mechanics</h2>
+<p>Follow the example one boundary at a time. Open each step to connect the familiar mental model to the internal mechanics.</p><details><summary>1. Define the tenant boundary before storing the identifier</summary><p>An apartment household is not the same thing as an individual person holding a key. Model the tenant as the account, organization, workspace, or other isolation context the product actually serves. A user can belong to several tenants, and an individual customer can also be a tenant when that matches the business model.</p>
+<p>Establish how a request selects its active tenant and how the server verifies the actor’s membership and permissions. A tenant ID typed into a header, route, or request body is a claim, not proof of authorization. Bind the verified context to the operation and recheck the requested resource belongs within the permitted scope. Treat privileged cross-tenant administration as a separate explicit capability, not a silent bypass.</p></details>
+<details><summary>2. Choose what is shared and what is dedicated</summary><p>An apartment building can share plumbing while keeping private rooms, or a housing provider can operate separate houses. A <strong>pooled</strong> model shares resources among tenants, while a <strong>siloed</strong> model gives tenants dedicated resources. A <strong>hybrid/bridge</strong> arrangement combines choices at different layers or for different tenant classes.</p>
+<p>These terms describe resource/isolation decisions, not a universal ranking. Shared tables with tenant keys can provide high density but need strict scoping and careful blast-radius management. A separate database per tenant improves some operational boundaries but adds provisioning, migration, connection, and backup work. Dedicated application resources still need correct identity and authorization. List data, compute, search, cache, keys, queues, and management-plane boundaries separately rather than treating one storage choice as the entire architecture.</p></details>
+<details><summary>3. Enforce data ownership at every access path</summary><p>A key labeled household A is useless if a corridor door opens every apartment. Every query or mutation must preserve tenant scope and resource permissions. In a pooled-table example, an identifier lookup must not accidentally omit the tenant predicate:</p>
+<pre><code class="language-sql">SELECT id, title
+FROM project
+WHERE tenant_id = :tenant_id
+  AND id = :project_id;</code></pre>
+<p>The parameters come from the validated operation context and request data under the application’s authorization contract; they are not string-concatenated SQL. Database row-level policies or separate stores can provide additional enforcement where supported, but configuration and access paths still need testing.</p>
+<p>Check joins, unique constraints, administrative tools, reports, and exports as well as ordinary requests. Uniqueness may need to be scoped by tenant. If connection/session state carries tenant information, reset and verify it correctly when pooling connections so one request cannot inherit another tenant’s context.</p></details>
+<details><summary>4. Carry context through caches, messages, and background jobs</summary><p>A delivery addressed only to unit 12 is ambiguous when the company manages many buildings. Resource IDs and cache keys need the scope necessary to distinguish tenants and any relevant permission-dependent view. A key based solely on projectId can expose an earlier tenant’s response if identifiers or cache namespaces overlap.</p>
+<p>Background jobs and events must carry a trustworthy tenant reference and the identity/context needed for their authorized action. Workers validate that context before accessing data; they must not rely on an HTTP middleware that is no longer present. Search indexes, object-storage keys, temporary exports, and notification recipients also need deliberate scoping. Review each path where information leaves its original request, because context is often lost at those hand-offs.</p></details>
+<details><summary>5. Protect fairness and bound a noisy neighbor</summary><p>One household running every appliance should not make the entire building unusable. A <strong>noisy neighbor</strong> consumes shared capacity in a way that harms other tenants. Control request rates, concurrency, queued work, query cost, storage growth, or other scarce resources according to the product’s capacity policy.</p>
+<p>A single global queue can let one tenant delay everyone else even when per-request authorization is correct. Consider deliberate scheduling/fairness and bounded work, and observe per-tenant impact without creating uncontrolled telemetry cardinality or logging sensitive content. Isolating a demanding tenant’s compute or database can be a measured response. Fairness controls should produce understandable limits and recovery behavior rather than unexplained global failures.</p></details>
+<details><summary>6. Make the tenant lifecycle an operational workflow</summary><p>A household needs keys and utilities when it moves in, not just a row in a register. Provisioning can require tenant identity, configuration, storage, policies, routing, and monitoring. Track its progress so a partially provisioned tenant cannot be served with missing isolation controls.</p>
+<p>Plan schema/configuration rollout across tenant resources, including failures halfway through a fleet. Backup and restore granularity matter: restoring one tenant from a shared database is different from restoring a dedicated database. Suspension, export, retention, and offboarding follow explicit product/customer requirements and must cover asynchronous jobs, caches, and derived stores. A deletion in the primary table alone does not establish that every copy or scheduled effect is gone.</p></details>
+<details><summary>7. Test isolation adversarially and observe the full path</summary><p>A building manager tests the locks by trying the wrong key, not merely confirming the right key works once. Create at least two tenant contexts with deliberately overlapping local identifiers. Attempt reads, writes, search, cached responses, exports, and job processing across the boundary; verify denial and absence of data leakage.</p>
+<p>Include users with different memberships, tenant switching, reused worker/connection contexts, stale permissions, concurrent requests, and privileged operations. Trace a request through every component that uses its tenant context and retain useful audit evidence without exposing tenant data. A correct login or database filter in one layer is not enough to certify the whole solution. Review isolation again when adding a new cache, analytical path, integration, or background process.</p></details>
+</section>
+<section data-section="trade-offs" id="node-689dd587-de37-4e22-9412-bd42b118da79-trade-offs">
+<h2>⚖️ Comparisons & Trade-Offs</h2>
+<p>Choose using the constraints of the system and its team. The table compares relevant choices; compatible ideas can be combined rather than ranked as universally better.</p><div class="kb-table-wrap"><table><caption>Choices, benefits, costs, and decision conditions</caption><thead><tr><th scope="col">Approach or condition</th><th scope="col">What you gain</th><th scope="col">What you give up</th><th scope="col">Choose when</th></tr></thead><tbody><tr><td>Shared tables with tenant scoping</td><td>High resource density and centralized schema operations</td><td>Every data path and shared capacity needs strong isolation controls</td><td>The product can enforce/test pooled isolation and accept shared blast radius.</td></tr><tr><td>Database per tenant</td><td>Clearer per-tenant backup/data-operation boundaries</td><td>Fleet migration, connections, provisioning and cost overhead</td><td>Per-tenant data operations or isolation needs justify separate stores.</td></tr><tr><td>Dedicated tenant runtime/resources</td><td>Greater capacity/blast-radius separation for selected resources</td><td>Higher cost and operational fleet management</td><td>A tenant’s workload or requirements warrant dedicated resources.</td></tr><tr><td>Hybrid placement</td><td>A deliberate balance across tenant classes/resource types</td><td>More routing, lifecycle and consistency choices</td><td>Requirements differ and the team can operate the placement model safely.</td></tr></tbody></table></div>
+</section>
+<section data-section="pitfalls" id="node-689dd587-de37-4e22-9412-bd42b118da79-pitfalls">
+<h2>⚠️ Common Pitfalls, Bugs & What-If Scenarios</h2>
+<p>Treat a failure as a story: start with what a user observes, trace the boundary that failed, and choose a prevention that addresses the cause.</p><div class="kb-callout--pitfall"><h3>The data query is scoped but the cache is not</h3><p><strong>Symptom:</strong> Tenant B receives Tenant A’s previously cached project summary.</p><p><strong>Root Cause:</strong> A shared cache key omitted the tenant or permission-relevant scope.</p><p><strong>Fix/Prevention:</strong> Define cache key/authorization semantics explicitly, isolate namespaces where appropriate, and test overlapping identifiers across tenants.</p></div><div class="kb-callout--pitfall"><h3>A background job loses its owner</h3><p><strong>Symptom:</strong> A worker writes results into the wrong customer’s storage.</p><p><strong>Root Cause:</strong> Tenant context lived only in the original HTTP request or leaked through reused process/session state.</p><p><strong>Fix/Prevention:</strong> Carry explicit validated tenant context in the job contract and re-establish scope at the worker before every owned data operation.</p></div><div class="kb-callout--pitfall"><h3>One tenant slows every customer</h3><p><strong>Symptom:</strong> A large export blocks the shared job queue and database for everyone.</p><p><strong>Root Cause:</strong> Capacity and scheduling were global with no deliberate fairness or workload bounds.</p><p><strong>Fix/Prevention:</strong> Measure tenant impact, bound expensive work, apply appropriate scheduling/limits, and isolate resources when justified.</p></div>
+</section>
+<section data-section="mastery" id="node-689dd587-de37-4e22-9412-bd42b118da79-mastery">
+<h2>🧠 Active Recall & Mastery Check</h2>
+<div class="kb-callout--insight"><p><strong>Summarize this in your own words</strong></p><p>Explain the opening analogy, trace the worked example, and name one condition that would change your architectural decision. Try answering before opening the cards.</p></div><details class="kb-question" data-recall-id="tenant-user"><summary>Why should tenant identity and user identity be modeled separately?</summary><p>A tenant is the customer/isolation context, while a user is an actor who can have roles in one or more contexts. The server must establish the active tenant and authorize the user’s action there. A valid user login does not imply access to every tenant.</p></details><details class="kb-question" data-recall-id="shared-store"><summary>Does a multi-tenant system require all tenants to share one database?</summary><p>No. A solution can use pooled, dedicated, or hybrid resources. The architecture must define identity, isolation, lifecycle, and operation across the chosen resource boundaries. A dedicated database addresses some concerns but does not replace authorization or context propagation.</p></details><details class="kb-question" data-recall-id="async-context"><summary>Why is tenant-aware HTTP middleware insufficient for background processing?</summary><p>A later worker does not have that original request context. Its message/job contract must identify the authorized tenant and operation, and the worker must apply the scope to data, cache, storage, and downstream work. Reused process state is not a trustworthy substitute.</p></details><details class="kb-question" data-recall-id="isolation-test"><summary>What test catches a tenant leak that ordinary happy-path tests may miss?</summary><p>Use two tenants with overlapping local resource IDs, switch identities/contexts, and attempt cross-tenant reads, writes, cache hits, search, exports, and jobs. Verify both explicit denial and absence of leaked data across reused connections/workers. Test new derived paths as they are introduced.</p></details><!-- kb-interview-scenarios:start -->
+<section data-interview-scenarios aria-labelledby="node-689dd587-de37-4e22-9412-bd42b118da79-interview-scenarios">
+<h3 id="node-689dd587-de37-4e22-9412-bd42b118da79-interview-scenarios">Tricky &amp; Most-Asked Interview Scenarios</h3>
+<p>Practice making a decision under a concrete production constraint. Open each answer, explain your reasoning aloud, then rate your confidence. The budgets and organizations below are author-created assumptions.</p>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-noisy-neighbor-fair-capacity" data-scenario-basis="adapted-production">
+<summary>One tenant&#x27;s bulk job ruins everyone else&#x27;s latency. How will you enforce fair resource use?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>One apartment should not consume the building&#x27;s entire water supply. A tenant runs large exports in a shared SaaS deployment and p99 latency rises for every other tenant. The service has a shared capacity budget and paid service tiers. What containment will you implement?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Measure resource use by trusted tenant identity, then apply per-tenant admission, concurrency and queue limits alongside fleet-wide protection. Separate interactive and bulk work, schedule fairly and bound database/worker demand so one tenant cannot consume every pool. Return explicit throttling or queued-job state instead of allowing unlimited backlog.</p>
+<p>Observe hot queries, storage I/O and shared dependencies as well as HTTP request rates. Load-test a heavy tenant alongside ordinary tenants and verify recovery. Offer dedicated capacity for workloads whose demand consistently exceeds the pooled fairness model, with a clear operational owner.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: One tenant&#x27;s bulk job ruins everyone else&#x27;s latency. How will you enforce fair resource use?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Attribute resource demand by tenant"]
+    N1["Bound concurrent and queued work"]
+    N2["Schedule shared capacity fairly"]
+    N3["Isolate persistent heavy workloads"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Attribute resource demand by tenant → Bound concurrent and queued work → Schedule shared capacity fairly → Isolate persistent heavy workloads.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You protect shared service quality and make tier limits enforceable, but add scheduling/observability complexity and may delay legitimate bursts. Dedicated tenant resources are a viable alternative for strong performance isolation at higher infrastructure and operating cost.</p>
+<p>Follow-up trap: requests per second is a poor fairness metric when one request performs a huge scan. If a tenant buys a stronger performance guarantee, allocate and verify the corresponding resource budget; do not assume a higher HTTP limit creates isolation from shared database contention.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-enterprise-isolation-model" data-scenario-basis="adapted-production">
+<summary>One enterprise demands dedicated data and performance isolation. Must every tenant get a full stack?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A building can offer private suites without rebuilding every room as a separate house. Most SaaS customers fit a shared pool, but one enterprise requires dedicated data resources and a stronger performance boundary. Cost matters for the long tail. What tenancy model will you choose?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Map the actual isolation requirement across compute, data, network, keys and operations before promising a dedicated solution. Use a hybrid model when appropriate: pooled infrastructure for ordinary tenants and a separately provisioned database or deployment stamp for tenants whose guarantees need it. Keep one controlled tenant-placement/routing model and common automation.</p>
+<p>Verify that shared identity, caches, queues, telemetry and management paths do not undermine the promised isolation. Define provisioning, upgrades, backups and incident response for both models. Dedicated storage alone is not a claim that every resource or administrative boundary is dedicated.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: One enterprise demands dedicated data and performance isolation. Must every tenant get a full stack?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Translate contract into isolation dimensions"]
+    N1["Choose pooled or isolated placement"]
+    N2["Automate consistent tenant routing"]
+    N3["Verify end-to-end isolation promise"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Translate contract into isolation dimensions → Choose pooled or isolated placement → Automate consistent tenant routing → Verify end-to-end isolation promise.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You match expensive isolation to customers that need it, but operate multiple placement models and migration paths. A fully siloed stack for each tenant is a viable alternative when uniformly strong isolation outweighs cost; a pooled model fits weaker guarantees.</p>
+<p>Follow-up trap: calling a database dedicated does not establish regulatory compliance or eliminate a shared noisy compute neighbor. If the contract expands to dedicated keys, regional processing or administrative separation, reassess those boundaries explicitly and verify the actual guarantee before accepting the tenant.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-tenant-filter-cache-key-leak" data-scenario-basis="adapted-production">
+<summary>A query or cache key omits tenant identity. How will you prevent cross-tenant data leaks?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A locker number is not unique across buildings. A shared-table query filters only by order ID, and a cache uses order:123 without tenant scope. One customer receives another tenant&#x27;s data. What immediate fix and durable defenses will you apply?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Contain the incident by disabling the unsafe path and invalidating affected cache entries, then enforce tenant-aware access from a trusted authenticated context. Include tenant identity in every relevant data predicate, cache key and authorization decision. Do not trust a freely supplied tenant header or assume globally unique object IDs replace access checks.</p>
+<p>Add cross-tenant negative tests through real APIs, background jobs and cache hits. Use database-enforced row isolation or separate storage where supported as defense in depth, and verify the application&#x27;s connection/session context cannot bleed between pooled requests. Audit logs and exports for the same missing scope.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A query or cache key omits tenant identity. How will you prevent cross-tenant data leaks?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Establish trusted tenant context"]
+    N1["Authorize tenant and object"]
+    N2["Scope storage and cache access"]
+    N3["Test denied cross-tenant paths"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Establish trusted tenant context → Authorize tenant and object → Scope storage and cache access → Test denied cross-tenant paths.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You reduce leakage risk through layered enforcement, but maintain context propagation and tests across every access path. Separate tenant databases are a viable stronger isolation option with higher provisioning/migration cost; they still need correct routing and permissions.</p>
+<p>Follow-up trap: fixing the SQL filter while leaving an unscoped response cache preserves the leak. If administrators require cross-tenant support access, model a separately authorized audited capability rather than allowing a general bypass flag inherited by normal requests.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-per-tenant-restore-residency" data-scenario-basis="adapted-production">
+<summary>One tenant needs yesterday&#x27;s restore in a specific region. Can a pooled database meet that promise?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Restoring one family&#x27;s papers is harder when all families share one filing cabinet. A pooled database serves many tenants, but one customer requests an independent point-in-time restore and regional data placement. Other tenants must not roll back. What will you verify and design?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Translate the request into explicit restore scope, recovery point/time and residency boundaries, then check the actual storage product&#x27;s supported backup and restore behavior. A full shared-database restore cannot simply replace production for one tenant. If supported, restore to an isolated temporary target, extract only that tenant&#x27;s consistent data and reconcile related state before a controlled cutover.</p>
+<p>For repeated strong requirements, use a per-tenant database or suitable isolated placement with automated backup/restore and routing. Account for indexes, object storage, caches, events and downstream projections, not only core rows. Validate the restored tenant without exposing another tenant&#x27;s data.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: One tenant needs yesterday&#x27;s restore in a specific region. Can a pooled database meet that promise?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Define recovery and regional scope"]
+    N1["Validate actual backup capabilities"]
+    N2["Restore tenant in isolation"]
+    N3["Reconcile and cut over safely"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Define recovery and regional scope → Validate actual backup capabilities → Restore tenant in isolation → Reconcile and cut over safely.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain a verifiable customer-specific recovery path but pay for orchestration, consistency checks and possibly dedicated resources. A pooled model with a tested selective restore pipeline is a viable alternative when its complexity and recovery time meet the promise.</p>
+<p>Follow-up trap: backups in the right region do not prove all replicas, logs and processing meet a residency requirement. If the required recovery point cannot be achieved selectively, change placement or the service commitment before selling the guarantee. Do not offer an untested one-click tenant restore.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-live-tenant-migration-single-writer" data-scenario-basis="adapted-production">
+<summary>A large tenant must move to a dedicated store with minimal downtime. How do you avoid two writers?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Moving one shop&#x27;s ledger while it is still taking orders can leave two conflicting books. A large tenant moves from pooled storage to a dedicated database. Data copying takes hours, but write interruption must be brief. What migration and cutover protocol will you use?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Keep one authoritative writer during the copy. Take a consistent starting snapshot and capture subsequent changes with a supported ordered/replayable mechanism. Copy tenant-scoped data, apply changes and validate counts plus business invariants at the target. Include related objects and identifiers needed for a coherent tenant, not just the largest table.</p>
+<p>At cutover, fence or briefly pause source writes for that tenant, drain and apply the final changes, atomically switch tenant routing, then resume against the new owner. Define rollback before allowing target-only writes; switching back after divergence requires reverse replication or reconciliation, not a blind pointer flip.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A large tenant must move to a dedicated store with minimal downtime. How do you avoid two writers?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Snapshot under one source writer"]
+    N1["Catch up tenant-scoped changes"]
+    N2["Fence source and validate target"]
+    N3["Switch routing to new writer"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Snapshot under one source writer → Catch up tenant-scoped changes → Fence source and validate target → Switch routing to new writer.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You minimize interruption and keep a clear authority, but operate change capture, validation and a controlled cutover state machine. A maintenance-window export/import is a viable simpler alternative if the tenant accepts longer downtime.</p>
+<p>Follow-up trap: uncontrolled dual writes can acknowledge different outcomes and make rollback ambiguous. If the platform cannot capture all relevant changes reliably, use a longer write pause or a different migration method rather than claiming zero downtime. The strongest promise is verified single-owner correctness during the move.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-tenant-customization-schema-sprawl" data-scenario-basis="adapted-production">
+<summary>Every tenant asks for custom fields and workflows. How will you avoid an unmaintainable schema fork?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A hotel cannot rebuild its wiring for every guest preference. Hundreds of tenants request custom fields, and the team proposes unique tables and application branches per customer. Upgrades and reporting are already difficult. What customization boundary will you choose?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Separate configuration, extensible data and truly different domain behavior. Use a validated metadata/configuration model for bounded custom fields and approved workflow options, with tenant-scoped validation, indexing and authorization. Keep shared core invariants in one maintained implementation rather than allowing arbitrary per-tenant code paths.</p>
+<p>Set limits on field types, cardinality, queryability and migration behavior. Version configuration and test upgrades across representative tenant profiles. When a customer genuinely needs incompatible behavior or storage guarantees, consider a deliberate isolated product/placement with an explicit support cost instead of silently accumulating forks.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Every tenant asks for custom fields and workflows. How will you avoid an unmaintainable schema fork?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Classify requested customization"]
+    N1["Validate bounded tenant configuration"]
+    N2["Protect shared core invariants"]
+    N3["Version and test tenant profiles"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Classify requested customization → Validate bounded tenant configuration → Protect shared core invariants → Version and test tenant profiles.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You preserve a manageable upgrade path and common security policy, but constrain tenant flexibility and must design extensibility carefully. Dedicated schemas or isolated deployments are viable alternatives for a small set of high-value incompatible requirements, with clear automation and ownership.</p>
+<p>Follow-up trap: storing everything in an unvalidated JSON blob merely hides schema and query complexity. If a custom field becomes central to shared reporting or policy, promote its semantics deliberately and migrate it. Keep tenant extensions from bypassing authorization or creating uncontrolled cross-tenant queries.</p>
+</div>
+</details>
+<aside class="kb-callout--insight" data-interview-research>
+<p>Researched 2026-11-17. These scenarios adapt documented production problems and architectural guidance. Interview frequency, rankings and company provenance for these exact prompts were not independently verified. Numeric budgets and organization details are author-created assumptions. Web search was available and used for this concept; primary sources support the technical reasoning, not a claim that these prompts recur in interviews.</p>
+<ul><li><a href="https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenancy-models">Microsoft: Tenancy models</a></li><li><a href="https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/approaches/storage-data">Microsoft: Multitenant storage/data approaches</a></li><li><a href="https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/service/sql-database">Microsoft: Multitenancy and Azure SQL Database</a></li><li><a href="https://learn.microsoft.com/en-gb/azure/architecture/antipatterns/noisy-neighbor/noisy-neighbor">Microsoft: Noisy Neighbor antipattern</a></li><li><a href="https://owasp.org/API-Security/editions/2023/en/0xa1-broken-object-level-authorization/">OWASP: Broken Object Level Authorization</a></li></ul>
+</aside>
+</section>
+<!-- kb-interview-scenarios:end --><div class="kb-callout--impact"><h3>Real-world impact</h3><p>For a project-management product, multi-tenancy succeeds when every customer context remains correct across interactive requests, caches, background work, capacity spikes, and lifecycle operations. Start with the isolation promise, then choose resource sharing. A tenant identifier is a thread that must remain intact through the whole system, not a single column that makes sharing safe by itself.</p></div>
+</section>
+<footer class="kb-references"><h2>Sources and further reading</h2><p>Original explanations and worked examples above; consult these primary references for the underlying ideas and implementation-specific details.</p><ul><li><a href="https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/overview">Microsoft Architecture Center: Architect multitenant solutions</a></li><li><a href="https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/overview">Microsoft Architecture Center: Architectural considerations for multitenancy</a></li></ul><p>Connect this lesson to: <a href="#/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh">Service Mesh</a>, <a href="#/system-design/backend-architecture/communication-and-routing/backend-for-frontend">Backend for Frontend (BFF)</a>, <a href="#/system-design/backend-architecture/code-and-domain-organization/domain-driven-design">Domain-Driven Design (DDD)</a>.</p></footer>
+</article>

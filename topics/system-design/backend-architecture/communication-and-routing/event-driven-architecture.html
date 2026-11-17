@@ -1,0 +1,220 @@
+<article class="kb-topic" data-node-id="0b36c2d3-9c94-47df-adce-d80bf6c3f720">
+<h1>Event-Driven Architecture</h1>
+<section data-section="hook-eli5" id="node-0b36c2d3-9c94-47df-adce-d80bf6c3f720-hook-eli5">
+<h2>🎯 The Hook & ELI5</h2>
+<div class="kb-callout--insight"><p><strong>ELI5 mental model.</strong> A bakery puts a finished-order slip on a notice board. The delivery desk and loyalty desk can each act on that news without the baker walking them through every step. The slip says what happened; it does not guarantee that everyone has already acted. Event-driven architecture builds workflows around similarly explicit facts and reactions.</p></div><p>When one component calls every downstream participant synchronously, its request path becomes coupled to their timing and availability. Event-driven architecture lets producers publish meaningful occurrences and consumers react through a communication channel. It can decouple processing time and support new reactions, but it introduces delivery, ordering, state, and observability decisions that must be made explicit.</p><div class="kb-callout--insight"><p>WHY it matters: an order can be accepted while dispatch preparation, analytics, and notification proceed at their own pace. The business must distinguish accepted from shipped, and consumers must handle duplicates or delays. An event is not a synonym for any message: a fact such as OrderPlaced differs from a command such as ReserveStock, which asks an owner to perform work.</p></div>
+</section>
+<section data-section="big-picture" id="node-0b36c2d3-9c94-47df-adce-d80bf6c3f720-big-picture">
+<h2>🗺️ High-Level Big Picture</h2>
+<p>Orders commits an order and durable publication intent in one local transaction. A relay publishes the event to a broker, which delivers it to Fulfillment and Notifications. Each consumer records/processes the event according to its own contract. The outbox closes a local state/publication-intent gap; it does not make the entire system one transaction or guarantee a single delivery.</p><figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Reliable publication and independent reactions to an order
+    accDescr: A local order transaction records an outbox entry; a relay and broker deliver to retry-safe consumers.
+    C[&quot;Customer request&quot;] --&gt; O[&quot;Orders use case&quot;]
+    O --&gt; T[&quot;Local transaction: order plus outbox&quot;]
+    T --&gt; R[&quot;Publication relay&quot;]
+    R --&gt; B[&quot;Broker or event channel&quot;]
+    B --&gt; F[&quot;Fulfillment consumer&quot;]
+    B --&gt; N[&quot;Notification consumer&quot;]
+    F --&gt; FD[&quot;Consumer-owned state and processed-event record&quot;]
+    N --&gt; ND[&quot;Notification intent and processed-event record&quot;]</pre><figcaption>Read the arrows as responsibilities and hand-offs, not as a promise that every step succeeds.</figcaption></figure>
+</section>
+<section data-section="mechanics" id="node-0b36c2d3-9c94-47df-adce-d80bf6c3f720-mechanics">
+<h2>🔍 Step-by-Step Mechanics</h2>
+<p>Follow the example one boundary at a time. Open each step to connect the familiar mental model to the internal mechanics.</p><details><summary>1. Name a fact with an owner and a business meaning</summary><p>A bakery slip reading baked is different from an instruction reading bake this. An <strong>event</strong> describes an occurrence; a <strong>command</strong> asks an owner to perform an action and may be rejected. Define who is authoritative for the fact, when it becomes true, and what a consumer may safely infer.</p>
+<p>OrderPlaced might mean a validated order has been recorded, not that stock is reserved or payment settled. Include a stable event identity, subject identity, type, version, and the information consumers need under the agreed contract. A timestamp helps describe occurrence time but does not establish a global total order across all producers. Avoid exposing private database rows as a public contract whose meaning changes whenever an internal table changes.</p></details>
+<details><summary>2. Commit state and publication intent together where required</summary><p>If the baker records a finished cake but forgets to post the slip, the delivery desk never learns about it. The corresponding software failure is a database commit followed by a crash before publishing. A <strong>transactional outbox</strong> records both the business state and a pending publication record within the same local database transaction.</p>
+<p>A relay later reads pending records and publishes them. If it publishes successfully but crashes before marking the record sent, it may publish again after restarting. That is a reason for stable event IDs and duplicate-safe consumers, not evidence that the outbox failed to be useful. Do not announce a completed fact before the authoritative transaction commits; consumers may otherwise act on work that is rolled back.</p></details>
+<details><summary>3. Understand the delivery promise of the channel</summary><p>A notice-board attendant can retry handing over a slip if nobody confirms receipt, but confirmations can also be lost. Brokers and transports provide particular durability, acknowledgment, retention, and redelivery guarantees. Understand the chosen configuration and failure boundaries rather than assuming the word queue specifies them.</p>
+<p>With at-least-once delivery, a consumer must expect the same message more than once. Acknowledging before a durable effect risks losing work on a crash; acknowledging after committing can lead to redelivery if the acknowledgment is lost. Exactly-once claims, when offered by a system, have a defined scope and do not automatically cover arbitrary external side effects such as an email provider or payment API.</p></details>
+<details><summary>4. Make one consumer effect safe to repeat</summary><p>The delivery desk should not dispatch two vans just because the same slip arrives twice. A consumer can track an event ID and coordinate that record with its local state change. If processed-event recording and the effect are separate, a crash between them can still lose or duplicate work.</p>
+<p>When the local database is the effect boundary, one transaction can combine the deduplication/inbox record with the update. When the effect is external, carry a stable idempotency key to an owner that supports it, or maintain a recovery/reconciliation workflow. Deduplication retention must cover the replay/redelivery window. A new handler version replaying old events may need a deliberately distinct projection identity rather than silently overwriting the historical processing contract.</p></details>
+<details><summary>5. Preserve the ordering that the business actually needs</summary><p>The warehouse cannot interpret packed before it knows which order is being packed. Events concerning one order may need a defined sequence or version, even when unrelated orders can proceed independently. Choose a partition/routing key and ordering contract that match that scope; do not assume all consumers see every event in one global order.</p>
+<p>A consumer can reject, defer, or reconcile a message whose expected previous version is missing. A derived read model may temporarily lag the authoritative state, so the interface should expose pending/in-progress status where appropriate. If the business requires an immediate invariant check, ask its authority synchronously or keep the decision within one owner rather than trusting a stale event-derived view.</p></details>
+<details><summary>6. Operate failures, schema changes, and replay as real workflows</summary><p>A smudged slip needs inspection rather than endless circulation. Distinguish transient failures from invalid or poison events; bound retries, record a failure reason, and route unresolved work to an inspectable error/dead-letter path where configured. Recovery must preserve event identity and business intent, not blindly generate new effects.</p>
+<p>Version event semantics as well as fields. Replay can rebuild a projection, but consumers that send real emails or call external providers must not repeat those effects unintentionally. Observe lag, retry age, dead-letter volume, and end-to-end business completion using correlation IDs. A healthy producer process is not proof that any consumer has completed its work. Document retention and recovery procedures before an incident makes them urgent.</p></details>
+</section>
+<section data-section="trade-offs" id="node-0b36c2d3-9c94-47df-adce-d80bf6c3f720-trade-offs">
+<h2>⚖️ Comparisons & Trade-Offs</h2>
+<p>Choose using the constraints of the system and its team. The table compares relevant choices; compatible ideas can be combined rather than ranked as universally better.</p><div class="kb-table-wrap"><table><caption>Choices, benefits, costs, and decision conditions</caption><thead><tr><th scope="col">Approach or condition</th><th scope="col">What you gain</th><th scope="col">What you give up</th><th scope="col">Choose when</th></tr></thead><tbody><tr><td>Synchronous request/reply</td><td>Immediate owner decision and a direct interaction trace</td><td>Caller/provider timing and availability coupling</td><td>An operation needs an authoritative near-term result.</td></tr><tr><td>Event notifications</td><td>New consumers can react without being called by the producer</td><td>Consumers may need another lookup; outcome is delayed</td><td>A fact occurred and downstream reactions can be independent.</td></tr><tr><td>Event-carried state for a read model</td><td>Consumers can maintain useful local views</td><td>Larger/versioned contracts and eventual consistency</td><td>Independent query views justify replication and lag handling.</td></tr><tr><td>Durable workflow/orchestration</td><td>An explicit owner for multi-step recovery and progress</td><td>Coordinator state and coupling to the business process</td><td>The business needs a traceable sequence rather than loosely inferred completion.</td></tr></tbody></table></div>
+</section>
+<section data-section="pitfalls" id="node-0b36c2d3-9c94-47df-adce-d80bf6c3f720-pitfalls">
+<h2>⚠️ Common Pitfalls, Bugs & What-If Scenarios</h2>
+<p>Treat a failure as a story: start with what a user observes, trace the boundary that failed, and choose a prevention that addresses the cause.</p><div class="kb-callout--pitfall"><h3>The order exists but nobody hears about it</h3><p><strong>Symptom:</strong> Fulfillment never starts after a successful order response.</p><p><strong>Root Cause:</strong> State committed before an unrecorded publication attempt, then the producer crashed.</p><p><strong>Fix/Prevention:</strong> Persist publication intent with the state transition and run a monitored relay with retry-safe identities.</p></div><div class="kb-callout--pitfall"><h3>One event creates two external effects</h3><p><strong>Symptom:</strong> A replay sends the same notification twice.</p><p><strong>Root Cause:</strong> Delivery was treated as exactly once, or deduplication did not cover the external side effect.</p><p><strong>Fix/Prevention:</strong> Define the effect boundary, persist processing intent/outcome appropriately, and use provider idempotency or explicit reconciliation where needed.</p></div><div class="kb-callout--pitfall"><h3>The interface lies about completion</h3><p><strong>Symptom:</strong> A customer sees shipped immediately after OrderPlaced.</p><p><strong>Root Cause:</strong> The event name or UI conflated one owner’s accepted fact with downstream completion.</p><p><strong>Fix/Prevention:</strong> Model distinct business states and observe the authoritative completion event/status; expose pending behavior honestly.</p></div>
+</section>
+<section data-section="mastery" id="node-0b36c2d3-9c94-47df-adce-d80bf6c3f720-mastery">
+<h2>🧠 Active Recall & Mastery Check</h2>
+<div class="kb-callout--insight"><p><strong>Summarize this in your own words</strong></p><p>Explain the opening analogy, trace the worked example, and name one condition that would change your architectural decision. Try answering before opening the cards.</p></div><details class="kb-question" data-recall-id="command-event"><summary>How does ReserveStock differ from StockReserved?</summary><p>ReserveStock asks the stock owner to act and can be rejected. StockReserved claims that the owner has already performed the reservation under its contract. Routing, ownership, error handling, and what consumers may infer differ even if both travel through the same broker.</p></details><details class="kb-question" data-recall-id="outbox-duplicate"><summary>Why can a correct outbox implementation publish the same event twice?</summary><p>The relay can publish successfully and fail before recording that success locally. Retrying the still-pending outbox record then republishes. The outbox protects against losing publication intent; stable identities and duplicate-safe processing handle the resulting uncertainty.</p></details><details class="kb-question" data-recall-id="ack-timing"><summary>Should a consumer acknowledge before or after its durable state change?</summary><p>Acknowledging before the change can lose work after a crash. Acknowledging afterward can permit redelivery if the acknowledgment is lost, so the effect must be safe to repeat. The correct design accounts for the transport’s exact acknowledgment and transaction capabilities.</p></details><details class="kb-question" data-recall-id="replay-side-effects"><summary>Why is rebuilding a projection different from replaying a notification consumer?</summary><p>A projection can often deterministically rebuild its own data in an isolated versioned store. A notification consumer may trigger externally visible effects again. Plan replay identity, deduplication scope, and side-effect suppression or reconciliation deliberately rather than applying one replay procedure everywhere.</p></details><!-- kb-interview-scenarios:start -->
+<section data-interview-scenarios aria-labelledby="node-0b36c2d3-9c94-47df-adce-d80bf6c3f720-interview-scenarios">
+<h3 id="node-0b36c2d3-9c94-47df-adce-d80bf6c3f720-interview-scenarios">Tricky &amp; Most-Asked Interview Scenarios</h3>
+<p>Practice making a decision under a concrete production constraint. Open each answer, explain your reasoning aloud, then rate your confidence. The budgets and organizations below are author-created assumptions.</p>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-database-commit-event-gap" data-scenario-basis="adapted-production">
+<summary>The database commits but event publishing fails. How will consumers learn about the change?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Writing an order in a notebook and then mailing a separate letter leaves a gap if the messenger crashes. An order commits, but the process dies before publishing OrderAccepted. Shipping never starts. Database state and broker publishing do not share an atomic transaction. What will you do?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Write the business change and an outbox entry in the same supported local transaction. A relay publishes committed outbox records and records dispatch progress. Give the event a stable identity and make consumers idempotent, because a crash after publication but before the relay records completion can cause another delivery.</p>
+<p>Monitor the age of undispatched entries, retry with bounded backoff and define retention/cleanup after safe delivery. Test crashes before commit, after commit and after broker acknowledgment. A change-data-capture relay is one implementation option; its ordering and checkpoint semantics still require verification.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: The database commits but event publishing fails. How will consumers learn about the change?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Commit order and outbox together"]
+    N1["Relay committed event"]
+    N2["Deduplicate consumer handling"]
+    N3["Track publication and backlog"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Commit order and outbox together → Relay committed event → Deduplicate consumer handling → Track publication and backlog.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You avoid losing publication intent after a successful local commit, but operate a relay, extra storage and duplicate handling. A broker/database transaction is an alternative only when the actual infrastructure supports the required atomic boundary; two sequential API calls are not one transaction.</p>
+<p>Follow-up trap: outbox delivery is not automatically exactly-once business execution. If a consumer calls an external payment provider, it needs its own idempotency/reconciliation contract. If event delivery is purely optional telemetry, a simpler best-effort path may be acceptable, but name that weaker guarantee explicitly.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-duplicate-delivery-external-effect" data-scenario-basis="adapted-production">
+<summary>A consumer receives the same event twice and sends two refunds. Where must deduplication be atomic?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Two copies of one instruction should not mean two payments. A broker redelivers RefundRequested after a consumer crash. The handler records processed IDs only after calling a remote refund API, so a crash can repeat the refund. What will you change and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Carry a stable business-operation identity through the event and the provider request. For local effects, atomically store the processed-event marker and resulting state change in the same transaction. For a remote refund, persist durable intent and use the provider&#x27;s idempotency/outcome lookup, reconciling an unknown result before issuing a new effect.</p>
+<p>Acknowledge broker delivery only after the required durable progress is recorded. Retain deduplication information for the real replay/redelivery window, and test concurrent duplicates as well as crash-after-effect. A process-local set cannot protect another instance or survive restart.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A consumer receives the same event twice and sends two refunds. Where must deduplication be atomic?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Read stable refund identity"]
+    N1["Persist handling intent"]
+    N2["Apply effect with deduplication"]
+    N3["Record durable completion"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Read stable refund identity → Persist handling intent → Apply effect with deduplication → Record durable completion.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain safe repeated handling but pay for durable deduplication, retention and reconciliation. An idempotent state-setting operation can be a simpler alternative to an additive effect when the domain permits it.</p>
+<p>Follow-up trap: broker exactly-once features are scoped to specific processing/storage boundaries and do not automatically cover an arbitrary external API. If the provider cannot deduplicate or expose outcomes, stop blind ambiguous retries and use manual reconciliation or a changed provider contract rather than promise exactly-once refunds.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-entity-events-out-of-order" data-scenario-basis="adapted-production">
+<summary>OrderShipped arrives before OrderPacked. How should a projection avoid going backwards?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Letters can arrive in a different order from when they were written. A dashboard receives entity events from parallel consumers, and a late OrderPacked event changes a shipped order back to packed. You need correct per-order state without global ordering. What will you do?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Define ordering needs per entity and include a monotonic entity version or another authoritative sequence in the event contract. Partition related events consistently where the broker supports it, and make the projection reject duplicate/older versions. If the update is a delta that cannot skip a version, detect the gap and buffer or rebuild from an authoritative source.</p>
+<p>Do not compare unrelated device wall-clock timestamps as if they prove causal order. Test redelivery, gaps and replay after a consumer restart. A full-state versioned event and an incremental delta require different recovery logic; document which one the projection consumes.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: OrderShipped arrives before OrderPacked. How should a projection avoid going backwards?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Receive entity version"]
+    N1["Detect duplicate older or gap"]
+    N2["Apply valid projection transition"]
+    N3["Recover missing sequence"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Receive entity version → Detect duplicate older or gap → Apply valid projection transition → Recover missing sequence.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You avoid global serialization and prevent stale overwrites, but carry version metadata and handle gaps. Serial processing per entity is a viable alternative, though partitioning alone may not cover multiple publishers or consumer-side concurrency.</p>
+<p>Follow-up trap: discarding all older events is unsafe when every delta matters. If a financial ledger requires every entry, preserve and reconcile the complete ordered ledger rather than treating it like a replaceable latest-status projection. Choose replay and ordering semantics from the business data, not a generic queue slogan.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-consumer-lag-user-feedback" data-scenario-basis="adapted-production">
+<summary>A successful write is absent from the read model for ten seconds. What should the UI promise?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A noticeboard updates later than the official ledger. An event-built order projection lags by ten seconds, so a newly accepted order appears missing and users submit again. The write owner knows the result, while the dashboard favors scalable reads. What will you change?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Return the accepted operation/order identity and authoritative outcome from the write path, then show a truthful pending-projection state instead of reporting absence as failure. Carry a version or receipt that lets the UI distinguish not-yet-projected from nonexistent. Offer an authoritative lookup for the user&#x27;s recent operation if the experience requires it.</p>
+<p>Measure event age, queue lag and processing failures, and alert when freshness exceeds the intended budget. Preserve idempotent creation so retries do not create new orders. Scaling consumers helps only when the bottleneck and ordering rules permit additional parallelism.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A successful write is absent from the read model for ten seconds. What should the UI promise?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Commit and return operation receipt"]
+    N1["Show accepted pending projection"]
+    N2["Observe event freshness"]
+    N3["Resolve through authoritative outcome"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Commit and return operation receipt → Show accepted pending projection → Observe event freshness → Resolve through authoritative outcome.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You keep a scalable asynchronous read model while making its delay explicit, but add UI states and possibly an authoritative fallback path. Reading directly from the write owner is a viable alternative when stronger immediate freshness matters more than independent read scaling.</p>
+<p>Follow-up trap: telling users to refresh cannot establish a freshness guarantee. If a credit or inventory decision cannot tolerate stale data, do not use this projection as its authority. Change that decision path or consistency requirement explicitly rather than hiding lag behind an optimistic display.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-notification-versus-state-transfer" data-scenario-basis="adapted-production">
+<summary>ID-only events cause thousands of callbacks to the producer. Should you put more state in the event?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A postcard saying something changed makes every recipient call the sender for details. A popular CustomerChanged notification contains only an ID; many consumers fetch the full record and overload the producer. Some consumers need only two stable facts. What event contract will you choose?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Decide whether this is a notification or event-carried state transfer. Include the minimal versioned facts needed for autonomous consumers when privacy and contract stability permit it. Keep sensitive or rarely needed data behind an authorized query rather than copying every internal field into the event.</p>
+<p>Document whether values describe the fact at event time or a later current lookup. Design schema evolution, deletion and replay handling before retaining personal data in durable streams. Consumers should not infer an immutable historical fact from an ID-only notification followed by a mutable current-state fetch.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: ID-only events cause thousands of callbacks to the producer. Should you put more state in the event?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Identify consumer information need"]
+    N1["Choose notification or carried facts"]
+    N2["Publish minimal versioned contract"]
+    N3["Govern retention and evolution"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Identify consumer information need → Choose notification or carried facts → Publish minimal versioned contract → Govern retention and evolution.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>Richer events reduce callback load and improve consumer autonomy, but duplicate data and increase compatibility, storage and privacy obligations. ID-only notification remains a viable alternative when authorized current-state lookup is essential and its load is acceptable.</p>
+<p>Follow-up trap: publishing the entire database row exports private schema and may retain deleted personal data in replayable logs. If data must be immediately revocable or cannot be replicated to every subscriber, prefer controlled lookup, scoped topics or tokenized references and accept the resulting dependency.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-event-disguises-command" data-scenario-basis="adapted-production">
+<summary>An OrderPlaced event requires Shipping to act and reply. Is this really decoupled choreography?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Calling an instruction a news bulletin does not make it optional. Orders publishes OrderPlaced but fails the workflow unless one specific Shipping service creates a shipment and responds. The required ownership and timeout are undocumented. What interaction will you model?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>If one participant is being asked to perform a required action, model an explicit command/workflow contract with an accountable owner, reply/outcome and timeout behavior. Keep events for committed facts that subscribers can interpret without an implicit obligation to satisfy the publisher&#x27;s hidden control flow.</p>
+<p>For a multi-step process, choose documented orchestration or carefully specified choreography and make recovery visible. Correlate commands and outcomes, handle duplicate requests, and record pending states durably. Naming conventions help communicate intent, but the actual dependency is defined by required behavior and failure handling.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: An OrderPlaced event requires Shipping to act and reply. Is this really decoupled choreography?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Identify required action owner"]
+    N1["Express command and outcome"]
+    N2["Persist pending workflow state"]
+    N3["Publish completed facts separately"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Identify required action owner → Express command and outcome → Persist pending workflow state → Publish completed facts separately.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain honest ownership and observable recovery but make coordination explicit rather than claiming total decoupling. Choreography is a viable alternative when participants genuinely react independently and the overall business process remains understandable and recoverable.</p>
+<p>Follow-up trap: sending a command through a broker does not turn it into an event. If Shipping later becomes an optional analytics subscriber, the interaction can become a one-way fact publication; remove the hidden completion dependency rather than retaining a timeout that contradicts the new semantics.</p>
+</div>
+</details>
+<aside class="kb-callout--insight" data-interview-research>
+<p>Researched 2026-11-17. These scenarios adapt documented production problems and architectural guidance. Interview frequency, rankings and company provenance for these exact prompts were not independently verified. Numeric budgets and organization details are author-created assumptions. Web search was available and used for this concept; primary sources support the technical reasoning, not a claim that these prompts recur in interviews.</p>
+<ul><li><a href="https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/event-driven">Microsoft: Event-driven architecture style</a></li><li><a href="https://martinfowler.com/articles/201701-event-driven.html">Martin Fowler: What do you mean by Event-Driven?</a></li><li><a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html">AWS: Transactional outbox pattern</a></li><li><a href="https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/">AWS: Making retries safe with idempotent APIs</a></li></ul>
+</aside>
+</section>
+<!-- kb-interview-scenarios:end --><div class="kb-callout--impact"><h3>Real-world impact</h3><p>For a bakery or retailer, event-driven flow makes delayed downstream work explicit and recoverable when its delivery and effect contracts are designed well. The key promises are the fact’s meaning, the authority that committed it, the scope of ordering, and how duplicate or interrupted work is resolved. Asynchrony changes coordination; it does not remove it.</p></div>
+</section>
+<footer class="kb-references"><h2>Sources and further reading</h2><p>Original explanations and worked examples above; consult these primary references for the underlying ideas and implementation-specific details.</p><ul><li><a href="https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/event-driven">Microsoft Architecture Center: Event-driven architecture style</a></li><li><a href="https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/">AWS Builders’ Library: Making retries safe with idempotent APIs</a></li><li><a href="https://aws.amazon.com/builders-library/challenges-with-distributed-systems/">AWS Builders’ Library: Challenges with distributed systems</a></li></ul><p>Connect this lesson to: <a href="#/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals">Distributed System Fundamentals</a>, <a href="#/system-design/backend-architecture/core-system-topologies/microservices-architecture">Microservices Architecture</a>, <a href="#/system-design/backend-architecture/code-and-domain-organization/domain-driven-design">Domain-Driven Design (DDD)</a>.</p></footer>
+</article>

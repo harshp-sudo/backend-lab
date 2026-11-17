@@ -1,0 +1,278 @@
+{
+  "status": "pass",
+  "topicId": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+  "path": "topics/system-design/backend-architecture/core-system-topologies/microservices-architecture.html",
+  "sourceSha256": "30cf45daf87d29229699d48f5764c921e3e755b584330049fd85a7e07477687a",
+  "reviewedOn": "2026-11-17",
+  "researchRecord": "specs/003-backfill-interview-scenarios/research/microservices-architecture.md",
+  "method": "Separate later editorial pass over all full answers and mapped primary references; structural checks are supporting evidence, not semantic approval.",
+  "scenarios": [
+    {
+      "key": "interview-lockstep-service-releases",
+      "status": "pass",
+      "criteria": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Microservices Architecture: Two microservices must deploy together for ordinary changes. Is the split giving you autonomy?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: Two microservices must deploy together for ordinary changes. Is the split giving you autonomy? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Two supposedly separate shops cannot change their menus unless both reopen together. Orders and Fulfillment make chatty calls and share internal data shapes; every release requires a coordinated deployment. Independent team delivery was the reason for the split. What boundary will you change and why?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Trace the changes and invariants that cross the boundary. Replace exposure of internal models with stable business contracts, move each decision to a clear owner and use compatible contract evolution. If the two services genuinely implement one tightly coupled capability, merge them or co-locate that responsibility instead of defending the existing service count.\n\nTest whether either side can deploy an ordinary compatible change without changing the other. Review data access and release history as well as diagrams: a clean API picture does not remove a shared-table dependency. Treat service boundaries as hypotheses to validate against real change patterns."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "A better boundary reduces coordination but requires migration and may produce fewer, larger services. Maintaining the split with explicit compatibility adapters is a viable alternative when independent scaling or isolation still provides strong value.\n\nFollow-up trap: asynchronous messages still couple consumers to semantics and do not automatically create autonomy. If two teams only coordinate because they lack additive versioning, fix contract practices before merging cohesive independent capabilities. If a strict invariant inherently spans the split, place that invariant under one owner or change its business timing explicitly."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "A better boundary reduces coordination but requires migration and may produce fewer, larger services. Maintaining the split with explicit compatibility adapters is a viable alternative when independent scaling or isolation still provides strong value.\n\nFollow-up trap: asynchronous messages still couple consumers to semantics and do not automatically create autonomy. If two teams only coordinate because they lack additive versioning, fix contract practices before merging cohesive independent capabilities. If a strict invariant inherently spans the split, place that invariant under one owner or change its business timing explicitly."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S1, S2 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      },
+      "technicalSources": [
+        "S1",
+        "S2"
+      ],
+      "basis": "adapted-production"
+    },
+    {
+      "key": "interview-checkout-critical-path-latency",
+      "status": "pass",
+      "criteria": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Microservices Architecture: Checkout crosses six synchronous services and exceeds 500ms. Which calls should disappear?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: Checkout crosses six synchronous services and exceeds 500ms. Which calls should disappear? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Waiting in six separate queues makes a short errand slow. Checkout spends 900ms on six sequential remote calls against a 500ms budget. Stock and payment authorization are essential; recommendations and analytics are not. What will you change without weakening purchase correctness?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Use distributed traces to identify the critical path and allocate one end-to-end deadline. Remove nonessential work from the synchronous purchase decision, run independent required reads concurrently where safe, and consider a local projection for data whose staleness is acceptable. Keep authoritative stock and payment decisions with their owners.\n\nDefine explicit partial or pending responses rather than silently skipping essential checks. Avoid replacing six sequential calls with unbounded fan-out; cap concurrency and handle each dependency's timeout. If the services continually exchange fine-grained steps of one decision, redraw that boundary instead of optimizing only the network transport."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You reduce user-visible latency and failure coupling but accept projection lag, asynchronous follow-up and more explicit response states. A coarser-grained service operation is a viable alternative when the data and invariant naturally belong together.\n\nFollow-up trap: adding a gateway changes where fan-out occurs, not the sum of dependent critical-path waits. If recommendations become a required fraud decision, they are no longer optional; incorporate that requirement into the latency/availability budget or return pending rather than claim the old optimization still preserves the new guarantee."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You reduce user-visible latency and failure coupling but accept projection lag, asynchronous follow-up and more explicit response states. A coarser-grained service operation is a viable alternative when the data and invariant naturally belong together.\n\nFollow-up trap: adding a gateway changes where fan-out occurs, not the sum of dependent critical-path waits. If recommendations become a required fraud decision, they are no longer optional; incorporate that requirement into the latency/availability budget or return pending rather than claim the old optimization still preserves the new guarantee."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S2, S3 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      },
+      "technicalSources": [
+        "S2",
+        "S3"
+      ],
+      "basis": "adapted-production"
+    },
+    {
+      "key": "interview-checkout-partial-commit-recovery",
+      "status": "pass",
+      "criteria": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Microservices Architecture: Payment succeeds but stock reservation fails. How do you recover across independent databases?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: Payment succeeds but stock reservation fails. How do you recover across independent databases? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "A travel agent books one part of a trip before another supplier refuses. Orders, Payments and Inventory commit independently, and a crash can happen after any step. You cannot run one local database transaction across them. What completion and recovery protocol will you implement?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Use a durable workflow with explicit participant states and stable operation identities. Choose an order appropriate to the business, such as reserving stock, authorizing payment and confirming the order. Persist transitions and make retried commands idempotent. Reconcile a timeout before treating an uncertain effect as absent.\n\nDefine compensations such as releasing a reservation or voiding/refunding a payment, with their own retries and monitoring. Show pending or failed states truthfully to the caller, and add manual resolution for irrecoverable cases. Test crashes between commit and acknowledgment, not only clean success and rejection."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You gain recoverable multi-owner workflows without pretending every step commits atomically, but manage intermediate states, compensation cost and operational visibility. Keeping the immediate invariant within one service/database is a viable alternative when the business boundary permits it.\n\nFollow-up trap: a refund is not equivalent to never charging, and compensation can fail. If the business requires a stronger immediate guarantee, reconsider ownership or supported transaction coordination rather than relabeling a saga ACID. An irreversible shipment should follow the necessary confirmation gates, not precede them casually."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You gain recoverable multi-owner workflows without pretending every step commits atomically, but manage intermediate states, compensation cost and operational visibility. Keeping the immediate invariant within one service/database is a viable alternative when the business boundary permits it.\n\nFollow-up trap: a refund is not equivalent to never charging, and compensation can fail. If the business requires a stronger immediate guarantee, reconsider ownership or supported transaction coordination rather than relabeling a saga ACID. An irreversible shipment should follow the necessary confirmation gates, not precede them casually."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S4 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      },
+      "technicalSources": [
+        "S4"
+      ],
+      "basis": "adapted-production"
+    },
+    {
+      "key": "interview-shared-writable-reporting-tables",
+      "status": "pass",
+      "criteria": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Microservices Architecture: Every service writes the same customer tables for easy reporting. What is the hidden cost?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: Every service writes the same customer tables for easy reporting. What is the hidden cost? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Different shops share one editable ledger and accidentally alter each other's records. Several microservices write common customer tables, while analysts depend on cross-service joins. Schema changes force coordinated deployments. You must preserve reporting while restoring ownership. What will you do?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Assign one authoritative writer for each business fact and stop new direct cross-service writes. Expose commands through that owner's contract, then migrate existing writers gradually with reconciliation. Build reporting projections or a warehouse from versioned facts/change streams so analytical reads do not dictate operational write schemas.\n\nTrack freshness, deletion and backfill semantics in the reporting pipeline. During migration, define which path is authoritative and compare outputs; avoid indefinite uncontrolled dual writes. Separate database ownership logically first if moving physical databases immediately would add risk without solving the responsibility problem."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You gain independent schema evolution and clearer invariants, but operate an eventually updated reporting model and a migration pipeline. A modular monolith with one deliberately governed transaction model is a valid alternative if shared ownership is real and independent deployment offers little benefit.\n\nFollow-up trap: database-per-service does not require a separate database server per service, while shared storage does not justify unrestricted writes. If a report drives an immediate credit decision, its stale projection may be unsuitable; obtain an authoritative decision through the owner rather than treating every query as analytics."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You gain independent schema evolution and clearer invariants, but operate an eventually updated reporting model and a migration pipeline. A modular monolith with one deliberately governed transaction model is a valid alternative if shared ownership is real and independent deployment offers little benefit.\n\nFollow-up trap: database-per-service does not require a separate database server per service, while shared storage does not justify unrestricted writes. If a report drives an immediate credit decision, its stale projection may be unsuitable; obtain an authoritative decision through the owner rather than treating every query as analytics."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S1, S2, S3 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      },
+      "technicalSources": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "basis": "adapted-production"
+    },
+    {
+      "key": "interview-downstream-resource-cascade",
+      "status": "pass",
+      "criteria": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Microservices Architecture: A slow recommendation service exhausts checkout connections. Where do you stop the cascade?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: A slow recommendation service exhausts checkout connections. Where do you stop the cascade? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "A blocked side corridor should not trap everyone in the building. Recommendations becomes slow, checkout waits on it, and shared connection/thread pools fill until payment requests fail too. Recommendation data is optional. What resilience boundary will you add and why?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Give the optional dependency a short bounded budget, cap its concurrent requests and isolate its resources from essential checkout work. Fail fast or temporarily open a circuit when repeated failures show the dependency is unhealthy, then probe recovery cautiously. Return checkout without recommendations using an explicit degraded state.\n\nSet retry ownership and budgets so application libraries, gateways and proxies do not all retry the same failure. Instrument pool utilization, queue depth and fallback rate. Test the slow-but-alive case under realistic traffic; a fast connection refusal often misses the resource-exhaustion failure."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You protect essential capacity and bound user latency, but recommendations may be absent while the dependency recovers. A cached stale recommendation is a viable fallback if its semantics and expiry are acceptable; a durable queue is useful for optional later work, not an immediate response.\n\nFollow-up trap: a circuit breaker is not a replacement for bounded concurrency, and a fallback must not invent successful payment authorization. If the dependency becomes mandatory for fraud prevention, fail closed or return pending according to business policy rather than reusing an optional-data fallback."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You protect essential capacity and bound user latency, but recommendations may be absent while the dependency recovers. A cached stale recommendation is a viable fallback if its semantics and expiry are acceptable; a durable queue is useful for optional later work, not an immediate response.\n\nFollow-up trap: a circuit breaker is not a replacement for bounded concurrency, and a fallback must not invent successful payment authorization. If the dependency becomes mandatory for fraud prevention, fail closed or return pending according to business policy rather than reusing an optional-data fallback."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S3 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      },
+      "technicalSources": [
+        "S3"
+      ],
+      "basis": "adapted-production"
+    },
+    {
+      "key": "interview-service-sprawl-small-team",
+      "status": "pass",
+      "criteria": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Microservices Architecture: Six engineers operate forty services and spend most weeks firefighting. Should you add a platform first?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: Six engineers operate forty services and spend most weeks firefighting. Should you add a platform first? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "A small crew maintains forty separate workshops and spends more time opening doors than making products. On-call noise, contract failures and deployment maintenance dominate delivery. There is no independent scaling or security need for many splits. What architecture decision will you make and why?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Measure the sources of operational cost and group tightly coupled capabilities by ownership and change patterns. Consolidate services that always change together into a smaller set of coherent deployables or a modular monolith, preserving external contracts during migration. Keep independently valuable boundaries rather than making consolidation an all-or-nothing ideology.\n\nStandardize deployment, observability and incident practices for the remaining services. Assign an accountable owner and recovery objective to each. Compare the cost of a shared platform with the smaller service estate; a platform cannot make arbitrary boundaries free to maintain."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You reduce network and operational overhead but regain shared release and resource boundaries for consolidated work. Investing in platform automation is a viable alternative when service autonomy is demonstrably valuable and the organization can sustain that investment.\n\nFollow-up trap: fewer services without internal module discipline can recreate uncontrolled coupling. If regulation requires a payment workload to stay isolated, retain that boundary even while merging others. Optimize the architecture for the team's constraints and business guarantees, not for the largest possible service count."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You reduce network and operational overhead but regain shared release and resource boundaries for consolidated work. Investing in platform automation is a viable alternative when service autonomy is demonstrably valuable and the organization can sustain that investment.\n\nFollow-up trap: fewer services without internal module discipline can recreate uncontrolled coupling. If regulation requires a payment workload to stay isolated, retain that boundary even while merging others. Optimize the architecture for the team's constraints and business guarantees, not for the largest possible service count."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S1, S2 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      },
+      "technicalSources": [
+        "S1",
+        "S2"
+      ],
+      "basis": "adapted-production"
+    }
+  ],
+  "findings": [
+    "All six concrete production decisions are distinct within this lesson.",
+    "Each answer recommends an action, gives implementation/debugging steps, costs and a viable alternative.",
+    "Each includes a meaningful trap and a changed-assumption response.",
+    "All original bytes reconstruct exactly; newly added source links remain within the marker span.",
+    "No verified exact-prompt interview-frequency, ranking or company claim."
+  ],
+  "corrections": [
+    "No substantive answer correction required after the separate pass."
+  ]
+}

@@ -1,0 +1,227 @@
+<article class="kb-topic" data-node-id="a5b7beee-bdbd-4987-9a41-8e16471b0a32">
+<h1>API Gateway Pattern</h1>
+<section data-section="hook-eli5" id="node-a5b7beee-bdbd-4987-9a41-8e16471b0a32-hook-eli5">
+<h2>🎯 The Hook & ELI5</h2>
+<div class="kb-callout--insight"><p><strong>ELI5 mental model.</strong> At a large office, visitors start at a reception desk instead of wandering through every department’s private corridors. Reception checks the request and sends it to the right place; sometimes it gathers answers from several desks. An API gateway plays a similar front-door role for clients while the departments still own their actual work.</p></div><p>A client that directly knows every backend service must handle many addresses, protocols, releases, and failure conditions. An API gateway provides a deliberate entry point that routes requests and may perform selected cross-cutting or composition work. It can simplify client interaction, but it also becomes an important dependency with its own latency, capacity, and availability requirements.</p><div class="kb-callout--insight"><p>WHY it matters: a shopping application should not have to discover internal Catalog, Availability, and Reviews addresses to display one product page. The gateway can offer a stable public route while services evolve behind it. That convenience is not a reason to move every business decision into the gateway or to stop services from enforcing their own access and data rules.</p></div>
+</section>
+<section data-section="big-picture" id="node-a5b7beee-bdbd-4987-9a41-8e16471b0a32-big-picture">
+<h2>🗺️ High-Level Big Picture</h2>
+<p>A public product-summary request reaches the gateway, which applies its entry policies and calls three service contracts. Catalog is required for the page; Reviews may be optional under a declared fallback policy. The client sees one documented response rather than internal endpoint details. The gateway’s aggregation is a chosen responsibility, not a requirement that every gateway implement all composition.</p><figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A gateway routes and composes a product summary
+    accDescr: A stable public entry point calls required catalog and availability capabilities plus optional reviews, then returns an explicit result.
+    C[&quot;Shopping client&quot;] --&gt; G[&quot;API gateway: public route and entry policies&quot;]
+    G --&gt; P[&quot;Catalog contract&quot;]
+    G --&gt; A[&quot;Availability contract&quot;]
+    G --&gt; R[&quot;Reviews contract: optional by page policy&quot;]
+    P --&gt; O[&quot;Composed response&quot;]
+    A --&gt; O
+    R --&gt; O
+    O --&gt; C</pre><figcaption>Read the arrows as responsibilities and hand-offs, not as a promise that every step succeeds.</figcaption></figure>
+</section>
+<section data-section="mechanics" id="node-a5b7beee-bdbd-4987-9a41-8e16471b0a32-mechanics">
+<h2>🔍 Step-by-Step Mechanics</h2>
+<p>Follow the example one boundary at a time. Open each step to connect the familiar mental model to the internal mechanics.</p><details><summary>1. Expose a stable public contract</summary><p>Reception gives visitors a clear request desk rather than a list of private employee extensions. A public route such as a product-summary capability is a contract for clients. The gateway maps that route to known upstream capabilities and translates protocol details where the design requires it.</p>
+<p>Keep internal topology separate from the public interface. Renaming an internal service should not automatically force a mobile application upgrade. Conversely, changing the meaning of a public response requires compatibility planning even if the internal route still exists. Avoid exposing arbitrary upstream URLs supplied by clients; routing should use deliberate configured contracts. A gateway can be replicated behind traffic distribution while retaining one logical public entry point.</p></details>
+<details><summary>2. Apply entry policies without stealing domain ownership</summary><p>A visitor badge establishes an admitted identity, but each department may still restrict access to particular files. A gateway can authenticate credentials, apply coarse request policies, limit request size/rate, and propagate a trusted identity context. The owning service must still enforce the authorization and data rules relevant to its operation.</p>
+<p>Do not trust a client-supplied tenant or user header simply because it passed through a gateway. The system needs a verified way to establish and propagate identity, with clear trust boundaries. Centralizing common checks can reduce repeated edge work, but service-level resource ownership and business invariants remain necessary. A gateway being the usual entry path is not proof that no other caller can ever reach an upstream service.</p></details>
+<details><summary>3. Compose a result only where the contract benefits</summary><p>Reception may gather a room number and an appointment time for one visitor, rather than ask the visitor to coordinate several desks. Gateway aggregation can reduce client round trips by collecting service results and returning an appropriate composite view. Keep composition limited and explicit; complex domain workflows may belong in a dedicated application service or a client-specific backend.</p>
+<p>For a product page, identify which fields are required and who owns them. Catalog may own the product title and current quoted price; Availability owns the authoritative stock decision. A composed browse view can be useful even when it is not a transactionally consistent snapshot across owners. Final purchase rules still need authoritative checks. Do not let an aggregated display accidentally become the owner of another service’s invariant.</p></details>
+<details><summary>4. Budget time and choose honest partial outcomes</summary><p>Reception cannot keep a visitor waiting forever because one department never answers. Give the gateway an overall deadline and allocate downstream work within that budget. Concurrent calls may reduce waiting compared with serial fan-out, but they also consume more simultaneous upstream capacity.</p>
+<p>Define required versus optional dependencies. If Reviews is unavailable, the page can explicitly say reviews are temporarily unavailable rather than pretend there are zero reviews. A missing required price may need a failed/pending response instead of a fabricated default. An illustrative partial view could be:</p>
+<pre><code class="language-json">{
+  &quot;productId&quot;: &quot;course-kit-42&quot;,
+  &quot;title&quot;: &quot;Starter pottery kit&quot;,
+  &quot;reviews&quot;: null,
+  &quot;reviewStatus&quot;: &quot;temporarily-unavailable&quot;
+}</code></pre>
+<p>That example shows only a review-fallback contract, not a complete purchase quotation. Document error meanings, cancellation behavior, and retry ownership so timeouts do not amplify into a retry storm.</p></details>
+<details><summary>5. Operate the gateway as a critical dependency</summary><p>A reception desk serving the entire office needs enough staff and a backup plan. A gateway needs capacity management, replicated runtime where appropriate, safe configuration rollout, health checks, observability, and bounded resource use. A single logical entry point need not be a single process or machine.</p>
+<p>Measure complete user-facing latency and upstream contributions, not just whether the gateway process is running. Correlate requests through the downstream services without logging secrets. Watch fan-out, large payload transformations, slow consumers, and global policies that accidentally penalize unrelated clients. A gateway outage can affect many capabilities, so test rollback and degradation plans rather than treating the component as free infrastructure.</p></details>
+<details><summary>6. Keep gateway, BFF, discovery, and mesh responsibilities distinct</summary><p>Reception, a department’s personal assistant, a building directory, and corridor security solve different problems. A <strong>BFF</strong> tailors backend behavior for a particular frontend experience. <strong>Service discovery</strong> helps find current service locations. A <strong>service mesh</strong> addresses service-to-service communication concerns. Implementations can overlap, but the intended responsibility should stay clear.</p>
+<p>A gateway may route to BFFs, use discovery to reach services, or run in an environment with a mesh. Those combinations do not justify copying all logic into every layer. Review where a policy or composition actually belongs and who owns its release. If all client changes queue behind a growing universal gateway codebase, separate client-specific composition or reconsider the contract boundaries.</p></details>
+</section>
+<section data-section="trade-offs" id="node-a5b7beee-bdbd-4987-9a41-8e16471b0a32-trade-offs">
+<h2>⚖️ Comparisons & Trade-Offs</h2>
+<p>Choose using the constraints of the system and its team. The table compares relevant choices; compatible ideas can be combined rather than ranked as universally better.</p><div class="kb-table-wrap"><table><caption>Choices, benefits, costs, and decision conditions</caption><thead><tr><th scope="col">Approach or condition</th><th scope="col">What you gain</th><th scope="col">What you give up</th><th scope="col">Choose when</th></tr></thead><tbody><tr><td>Clients call services directly</td><td>Fewer middle hops and direct capability access</td><td>Clients couple to topology, protocols and several failure paths</td><td>The service surface is small and client coordination is manageable.</td></tr><tr><td>Thin routing gateway</td><td>Stable entry, consistent edge policy and topology hiding</td><td>Another operational hop/dependency</td><td>Shared entry concerns justify central routing without heavy composition.</td></tr><tr><td>Gateway aggregation</td><td>Fewer client round trips and a composed public view</td><td>Fan-out complexity, partial outcomes and service coupling</td><td>The composite contract is clear and benefits consumers materially.</td></tr><tr><td>Gateway plus client-specific BFFs</td><td>Shared entry policies with independently tailored experience backends</td><td>Additional components, ownership and hop costs</td><td>Different client experiences need separate composition and delivery cadence.</td></tr></tbody></table></div>
+</section>
+<section data-section="pitfalls" id="node-a5b7beee-bdbd-4987-9a41-8e16471b0a32-pitfalls">
+<h2>⚠️ Common Pitfalls, Bugs & What-If Scenarios</h2>
+<p>Treat a failure as a story: start with what a user observes, trace the boundary that failed, and choose a prevention that addresses the cause.</p><div class="kb-callout--pitfall"><h3>Optional failure becomes false business data</h3><p><strong>Symptom:</strong> A product page displays zero reviews during a Reviews outage.</p><p><strong>Root Cause:</strong> The gateway converted unknown/unavailable into a valid empty result.</p><p><strong>Fix/Prevention:</strong> Represent partial status explicitly and agree which dependencies are optional; never fabricate a required business fact.</p></div><div class="kb-callout--pitfall"><h3>The front door is the whole application</h3><p><strong>Symptom:</strong> A simple feature needs changes to gateway logic and several services together.</p><p><strong>Root Cause:</strong> Domain workflows and shared business models accumulated in the edge layer.</p><p><strong>Fix/Prevention:</strong> Keep capability decisions with their owners and move experience-specific composition to a deliberate owner where warranted.</p></div><div class="kb-callout--pitfall"><h3>Central checks become the only checks</h3><p><strong>Symptom:</strong> An internal caller can access another customer’s records.</p><p><strong>Root Cause:</strong> Upstream services assumed a gateway admission decision was sufficient authorization for every resource.</p><p><strong>Fix/Prevention:</strong> Define trusted identity propagation and require the owning service to enforce resource and tenant access rules.</p></div>
+</section>
+<section data-section="mastery" id="node-a5b7beee-bdbd-4987-9a41-8e16471b0a32-mastery">
+<h2>🧠 Active Recall & Mastery Check</h2>
+<div class="kb-callout--insight"><p><strong>Summarize this in your own words</strong></p><p>Explain the opening analogy, trace the worked example, and name one condition that would change your architectural decision. Try answering before opening the cards.</p></div><details class="kb-question" data-recall-id="single-point"><summary>Does one logical API entry mean one physical gateway instance?</summary><p>No. The entry can be served by replicated gateway instances and traffic distribution. The gateway still remains a critical logical dependency, so capacity, policy/configuration rollout, and failure behavior need deliberate operation.</p></details><details class="kb-question" data-recall-id="partial-result"><summary>Why is an empty reviews array an unsafe fallback for every Reviews failure?</summary><p>An empty array can mean the service successfully found no reviews. An outage means the result is unknown. Distinguish those outcomes in the public contract and decide whether the field is optional rather than silently changing business meaning.</p></details><details class="kb-question" data-recall-id="authorization-owner"><summary>What authorization remains after gateway authentication?</summary><p>The service owning the requested resource must enforce relevant action, ownership, and tenant rules using verified identity context. Authentication at the front door is not a universal permission to access every record downstream.</p></details><details class="kb-question" data-recall-id="gateway-bff"><summary>When might aggregation move from a universal gateway to a BFF?</summary><p>When distinct frontend experiences need materially different compositions, payloads, ownership, or release cadence and a shared gateway becomes a coordination bottleneck. Keep common entry policies shared where useful while giving experience-specific behavior an explicit owner.</p></details><!-- kb-interview-scenarios:start -->
+<section data-interview-scenarios aria-labelledby="node-a5b7beee-bdbd-4987-9a41-8e16471b0a32-interview-scenarios">
+<h3 id="node-a5b7beee-bdbd-4987-9a41-8e16471b0a32-interview-scenarios">Tricky &amp; Most-Asked Interview Scenarios</h3>
+<p>Practice making a decision under a concrete production constraint. Open each answer, explain your reasoning aloud, then rate your confidence. The budgets and organizations below are author-created assumptions.</p>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-mobile-screen-fanout-budget" data-scenario-basis="adapted-production">
+<summary>A mobile screen needs six backend calls within 400ms. What should the gateway aggregate?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A receptionist can gather several answers while a visitor makes one trip. A mobile screen spends much of its time on cellular round trips to six backend services. Some backend reads are independent, but one expensive dependency dominates. You have a 400ms response budget. What will you aggregate and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Provide a screen-appropriate aggregate operation when it removes costly client round trips without hiding domain decisions. Execute independent downstream reads concurrently with bounded fan-out, one overall deadline and smaller dependency budgets. Return only the fields the screen needs, and keep authoritative business rules in their owning services.</p>
+<p>Trace aggregation latency and payload size. Give optional data an explicit omission or stale-data policy, and avoid chaining an aggregator to another aggregator repeatedly. If the screen needs substantial presentation-specific orchestration, a BFF behind the shared edge may be a clearer owner than a growing universal gateway policy.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A mobile screen needs six backend calls within 400ms. What should the gateway aggregate?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Receive one screen request"]
+    N1["Fan out bounded independent reads"]
+    N2["Apply explicit partial-data policy"]
+    N3["Return compact combined response"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Receive one screen request → Fan out bounded independent reads → Apply explicit partial-data policy → Return compact combined response.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You reduce mobile chattiness and simplify clients, but add server-side work, failure composition and a scaling hotspot. Direct parallel client requests are a viable alternative for a small number of fast independent services when network conditions permit them.</p>
+<p>Follow-up trap: aggregation does not make a slow essential dependency fast. If all six results must be fresh and complete, the slowest required path still bounds the response. Change the read model, underlying performance or response promise rather than claiming fan-out alone guarantees 400ms.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-optional-dependency-partial-response" data-scenario-basis="adapted-production">
+<summary>Order data succeeds but recommendations times out. Should the gateway fail the whole response?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A missing brochure should not prevent handing over a paid ticket. A gateway aggregates essential order status and optional recommendations. Recommendations stalls, and the gateway returns a generic 500 despite valid order data. What response and timeout policy will you choose?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Classify required and optional components in the API contract. Bound recommendation work separately, cancel or stop waiting when its budget expires, and return essential order data with an explicit partial/degraded indicator or an approved cached recommendation. Do not substitute invented order or payment state.</p>
+<p>Isolate optional fan-out concurrency and observe timeout/fallback rates so degradation remains visible. Test slow responses, failures and cancellation under load. Preserve meaningful upstream status rather than translating every outcome into one error. The client must know whether missing data is optional or the operation itself failed.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Order data succeeds but recommendations times out. Should the gateway fail the whole response?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Fetch essential and optional data"]
+    N1["Enforce separate deadlines"]
+    N2["Preserve authoritative essential result"]
+    N3["Label omitted or stale optional fields"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Fetch essential and optional data → Enforce separate deadlines → Preserve authoritative essential result → Label omitted or stale optional fields.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You improve useful availability but require clients to understand partial results and cache freshness. Failing the whole response is a viable alternative when the contract requires complete consistent data and partial information would be misleading.</p>
+<p>Follow-up trap: treating fraud authorization as optional because it is slow changes correctness. If recommendations become required to meet a contractual pricing decision, either wait within a redesigned budget or return a truthful pending/error outcome; do not keep the optional fallback after the guarantee changes.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-shared-quota-multiple-replicas" data-scenario-basis="adapted-production">
+<summary>Each gateway replica enforces a local limit, but a client exceeds the global quota. How will you coordinate?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Five entrances each counting visitors independently cannot enforce one building-wide limit. Five gateway replicas each allow 100 requests per minute for the same client. The product promises one shared quota, but a central counter may add latency and become unavailable. What will you design?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Define the quota key, time window, burst policy and acceptable enforcement error before choosing storage. For a strict shared quota, use an appropriate atomic shared limiter or coordinated allocation with explicit failure behavior. For a soft protective limit, local budgets or leased tokens can reduce coordination while allowing a documented bounded overshoot.</p>
+<p>Authenticate the quota identity instead of trusting an arbitrary header. Instrument allowed, rejected and unavailable decisions, test concurrent requests across replicas, and choose fail-open or fail-closed behavior by endpoint risk. A gateway product&#x27;s rate-limit feature needs its actual distributed semantics checked.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Each gateway replica enforces a local limit, but a client exceeds the global quota. How will you coordinate?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Establish authenticated quota key"]
+    N1["Check chosen shared or leased budget"]
+    N2["Allow reject or fail by policy"]
+    N3["Measure aggregate enforcement"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Establish authenticated quota key → Check chosen shared or leased budget → Allow reject or fail by policy → Measure aggregate enforcement.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>Shared enforcement improves fairness but adds coordination, latency and a failure dependency. Local limits are a viable alternative for approximate overload protection, provided callers are not promised a strict aggregate quota.</p>
+<p>Follow-up trap: scaling replicas silently multiplies an uncoordinated local allowance. If this becomes a hard billing or financial entitlement, a best-effort edge limiter is insufficient; enforce the authoritative entitlement in the responsible domain as well, and preserve its exact accounting semantics.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-authentication-versus-object-authorization" data-scenario-basis="adapted-production">
+<summary>The gateway validates a token. Can backend services trust every requested order ID?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A valid building pass does not grant access to every locker. The gateway authenticates a user, but an attacker changes an order ID and reaches another customer&#x27;s record. Internal service traffic can also bypass the public gateway. Where will authorization be enforced?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Keep edge authentication and coarse request filtering, then enforce object/action authorization at the service that owns the order. Propagate identity through a trusted, integrity-protected mechanism and prevent clients from forging internal identity headers. Backend services must verify the identity/context and check access to the specific resource.</p>
+<p>Test cross-user, cross-tenant and direct internal access attempts. Distinguish user identity from gateway workload identity; a trusted proxy is not automatically the business owner of the data. Log safe correlation and denied actions without leaking secrets or sensitive records.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: The gateway validates a token. Can backend services trust every requested order ID?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Authenticate client at edge"]
+    N1["Propagate trusted scoped context"]
+    N2["Authorize object at owning service"]
+    N3["Return only permitted data"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Authenticate client at edge → Propagate trusted scoped context → Authorize object at owning service → Return only permitted data.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain consistent resource protection across entry paths but perform checks in more than one layer and manage trusted identity propagation. Centralized policy evaluation is a viable alternative for shared policy decisions, while resource ownership/context still needs reliable enforcement.</p>
+<p>Follow-up trap: putting every object permission in gateway routing configuration couples the edge to changing domain state. If a single trusted internal batch actor needs broader access, grant a scoped explicit capability rather than dropping service-level checks for all internal traffic.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-gateway-domain-orchestration-growth" data-scenario-basis="adapted-production">
+<summary>Refund, tax and inventory workflows now live in gateway configuration. What should move out?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A receptionist should route requests rather than become every department&#x27;s manager. Gateway policies now calculate tax, orchestrate refunds and update stock. Releases need several domain teams, and failures are difficult to test. What boundary will you restore?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Keep the gateway focused on shared edge responsibilities such as routing, authentication, quotas and simple aggregation. Move authoritative business policy and durable workflows into cohesive application/domain services with explicit contracts and owners. Characterize existing behavior before migrating so external APIs remain compatible.</p>
+<p>Use the gateway to route gradually to the new owner, trace end-to-end outcomes and retain a rollback plan. A screen-specific BFF may own presentation composition, but it also should not duplicate financial or inventory authority. Separate transport convenience from business correctness.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Refund, tax and inventory workflows now live in gateway configuration. What should move out?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Classify edge and business responsibilities"]
+    N1["Move policy to accountable owner"]
+    N2["Route compatible API gradually"]
+    N3["Observe and retire old policy"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Classify edge and business responsibilities → Move policy to accountable owner → Route compatible API gradually → Observe and retire old policy.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain testable policy ownership and a smaller edge blast radius, but add or clarify service interactions and compatibility work. Keeping a small deterministic response transformation in the gateway is a viable alternative when it has no hidden domain state or workflow responsibility.</p>
+<p>Follow-up trap: moving all policies into one generic orchestration service can recreate the same central coupling. If the operation requires one immediate invariant, place that decision under a coherent owner; if it spans independent owners, use explicit durable workflow semantics rather than a sequence of unrecorded gateway calls.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-edge-release-shared-blast-radius" data-scenario-basis="adapted-production">
+<summary>A gateway rollout breaks every backend route. How will you reduce the shared entry-point risk?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A faulty front door can block access to otherwise healthy rooms. A routing-policy release sends all clients to an invalid destination, while backend services remain healthy. You need fast recovery and safer future changes. What will you do?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Roll back or disable the faulty policy through a tested recovery path, then verify representative routes and identities end to end. Keep gateway instances redundant and configuration changes versioned, validated and gradually rolled out. Use synthetic probes for critical paths rather than treating process health as proof of correct routing.</p>
+<p>Partition policy ownership or gateway deployments where distinct clients/security domains justify smaller blast radii. Apply timeout and resource controls so one bad route cannot exhaust all edge capacity. Exercise both instance failure and logically valid but wrong configuration in deployment tests.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A gateway rollout breaks every backend route. How will you reduce the shared entry-point risk?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Restore known-good routing"]
+    N1["Probe critical paths end to end"]
+    N2["Canary validated policy changes"]
+    N3["Isolate high-risk edge responsibilities"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Restore known-good routing → Probe critical paths end to end → Canary validated policy changes → Isolate high-risk edge responsibilities.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You reduce configuration blast radius and improve recovery at the cost of rollout complexity and possibly multiple gateways. One shared highly available gateway remains a viable alternative when change discipline and isolation meet the risk budget.</p>
+<p>Follow-up trap: multiple replicas loaded with the same bad configuration are all wrong together. If a proposal bypasses the gateway for emergency access, it must preserve authentication, authorization and operational control; an undocumented unprotected backend endpoint is not a safe rollback strategy.</p>
+</div>
+</details>
+<aside class="kb-callout--insight" data-interview-research>
+<p>Researched 2026-11-17. These scenarios adapt documented production problems and architectural guidance. Interview frequency, rankings and company provenance for these exact prompts were not independently verified. Numeric budgets and organization details are author-created assumptions. Web search was available and used for this concept; primary sources support the technical reasoning, not a claim that these prompts recur in interviews.</p>
+<ul><li><a href="https://learn.microsoft.com/en-us/azure/architecture/microservices/design/gateway">Microsoft: API gateways</a></li><li><a href="https://learn.microsoft.com/en-us/azure/architecture/patterns/gateway-aggregation">Microsoft: Gateway aggregation</a></li><li><a href="https://owasp.org/API-Security/editions/2023/en/0xa1-broken-object-level-authorization/">OWASP: Broken Object Level Authorization</a></li><li><a href="https://redis.io/docs/latest/commands/incr/">Redis: INCR and rate-limiter examples</a></li></ul>
+</aside>
+</section>
+<!-- kb-interview-scenarios:end --><div class="kb-callout--impact"><h3>Real-world impact</h3><p>A shopping gateway is useful when it makes the public interaction simpler without concealing failure or absorbing every business responsibility. Operate it as a real dependency, bound its fan-out, and keep required versus optional results honest. The architecture should reduce client complexity while preserving clear ownership behind the front door.</p></div>
+</section>
+<footer class="kb-references"><h2>Sources and further reading</h2><p>Original explanations and worked examples above; consult these primary references for the underlying ideas and implementation-specific details.</p><ul><li><a href="https://microservices.io/patterns/apigateway.html">Chris Richardson: API Gateway / Backends for Frontends</a></li><li><a href="https://samnewman.io/patterns/architectural/bff/">Sam Newman: Backends For Frontends</a></li></ul><p>Connect this lesson to: <a href="#/system-design/backend-architecture/communication-and-routing/backend-for-frontend">Backend for Frontend (BFF)</a>, <a href="#/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery">Service Discovery</a>, <a href="#/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh">Service Mesh</a>.</p></footer>
+</article>

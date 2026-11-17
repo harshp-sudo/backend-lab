@@ -1,0 +1,398 @@
+# Final Research: Modular Monolith
+
+State: reviewed. Separate editorial/source pass completed 2026-11-17 for all six permanent scenario keys. Exact interview frequency remains unverified; adaptations are disclosed. Browser/print acceptance is recorded separately.
+
+The JSON map records actual planning queries, implementation source checks (or explicit limitations), final selection/technical mappings and all eight per-card editorial dispositions. Vendor-specific sources are examples, not universal architectural guarantees.
+
+```json
+{
+  "topicId": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+  "title": "Modular Monolith",
+  "path": "topics/system-design/backend-architecture/core-system-topologies/modular-monolith.html",
+  "constitutionVersion": "1.2.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "modular monolith architecture production boundaries Shopify engineering",
+      "date": "2026-11-17",
+      "result": "success; concept-specific planning research found technical guidance; exact prompt recurrence unverified"
+    },
+    {
+      "query": "modular monolith Spring Modulith verifying module boundaries events site:docs.spring.io",
+      "date": "2026-11-17",
+      "result": "success; concept-specific planning research found technical guidance; exact prompt recurrence unverified"
+    },
+    {
+      "query": "Modular Monolith interview module boundaries transactions production site:spring.io",
+      "date": "2026-11-17",
+      "result": "success; concept-specific planning research found technical guidance; exact prompt recurrence unverified"
+    }
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "title": "Shopify: Deconstructing the Monolith",
+      "url": "https://shopify.engineering/deconstructing-monolith-designing-software-maximizes-developer-productivity",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Primary architectural or product guidance used for the specifically mapped decisions; not evidence of hiring frequency."
+    },
+    {
+      "id": "S2",
+      "title": "Shopify: Under Deconstruction",
+      "url": "https://shopify.engineering/shopify-monolith",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Primary architectural or product guidance used for the specifically mapped decisions; not evidence of hiring frequency."
+    },
+    {
+      "id": "S3",
+      "title": "Spring Modulith: Verifying Application Module Structure",
+      "url": "https://docs.spring.io/spring-modulith/reference/verification.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Primary architectural or product guidance used for the specifically mapped decisions; not evidence of hiring frequency."
+    },
+    {
+      "id": "S4",
+      "title": "Spring Modulith: Working with Application Events",
+      "url": "https://docs.spring.io/spring-modulith/reference/events.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Primary architectural or product guidance used for the specifically mapped decisions; not evidence of hiring frequency."
+    },
+    {
+      "id": "S5",
+      "title": "Microsoft: EF Core transactions (provider-specific example)",
+      "url": "https://learn.microsoft.com/en-us/ef/core/saving/transactions",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Atomic local writes require a genuinely participating database transaction; architectural layering alone supplies no atomicity."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-private-module-access",
+      "theme": "Developers bypass module APIs to query private internals. How will you make boundaries real?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "S1",
+        "S3"
+      ],
+      "technicalSources": [
+        "S1",
+        "S3"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Scenario organization, numbers, deadlines and proposed implementation details are author-created; sources support underlying mechanics, not an observed company incident or exact interview prompt.",
+      "limitations": "Exact recurrence/rank/company provenance unverified; vendor examples do not imply universal defaults.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Modular Monolith: Developers bypass module APIs to query private internals. How will you make boundaries real?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: Developers bypass module APIs to query private internals. How will you make boundaries real? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Labeled rooms are not private if every door stays open. A modular monolith has packages named Orders and Billing, but Orders imports Billing's persistence classes and reads its tables directly. Routine billing changes now break checkout. You must regain isolation without separate deployments. What will you do and why?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Define the small published Billing API in business terms and migrate callers to it, translating data at that boundary. Assign table and rule ownership so a package name is backed by an actual dependency policy. Add build-time architecture checks that reject access to internal packages and disallowed module dependencies; Spring Modulith verification is one implementation-specific option.\n\nInventory existing violations and reduce them deliberately rather than hiding every internal type behind a permissive shared package. Test the API's business behavior and track new violations in CI. Modules can share one process and database while keeping code and data responsibilities explicit."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You reduce accidental coupling and make refactoring safer, at the cost of API design and migration effort. Team conventions alone are a cheaper alternative for a tiny stable codebase, but provide weaker protection as contributors increase.\n\nFollow-up trap: exposing the internal entity through the public method preserves the coupling under a new name. If a hot read truly requires a cross-module projection, agree on an explicit read model or query contract rather than secretly reusing write internals. If existing modules remain inseparable for every change, revisit their responsibility boundaries."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You reduce accidental coupling and make refactoring safer, at the cost of API design and migration effort. Team conventions alone are a cheaper alternative for a tiny stable codebase, but provide weaker protection as contributors increase.\n\nFollow-up trap: exposing the internal entity through the public method preserves the coupling under a new name. If a hot read truly requires a cross-module projection, agree on an explicit read model or query contract rather than secretly reusing write internals. If existing modules remain inseparable for every change, revisit their responsibility boundaries."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S1, S3 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      }
+    },
+    {
+      "key": "interview-cyclic-order-billing-inventory",
+      "theme": "Orders, Billing and Inventory depend on one another in a cycle. Should every call become an event?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "S3",
+        "S4"
+      ],
+      "technicalSources": [
+        "S3",
+        "S4"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Scenario organization, numbers, deadlines and proposed implementation details are author-created; sources support underlying mechanics, not an observed company incident or exact interview prompt.",
+      "limitations": "Exact recurrence/rank/company provenance unverified; vendor examples do not imply universal defaults.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Modular Monolith: Orders, Billing and Inventory depend on one another in a cycle. Should every call become an event?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: Orders, Billing and Inventory depend on one another in a cycle. Should every call become an event? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Three departments each insist the other must approve first. Orders calls Billing, Billing calls Inventory, and Inventory calls Orders for business rules. Tests need the whole application and no module can be understood alone. Immediate stock validation is required during purchase. What dependency shape will you choose and why?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Draw the responsibilities behind the cycle before changing transports. Put the purchase workflow in an explicit application coordinator that invokes narrow capabilities, while each module owns its own invariant. Remove callbacks that merely ask another module to finish the same orchestration. Keep required immediate checks synchronous within the process.\n\nUse events for facts that can be handled later, such as a notification after an accepted order, with explicit transaction and delivery semantics. Add dependency-cycle checks so the repaired graph stays acyclic. If two modules jointly own every immediate decision, combine or redraw them instead of inventing a broker to disguise that relationship."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You gain an understandable dependency graph and smaller tests, but introduce an orchestration owner and explicit contracts. Moving a noncritical reaction to an event is an alternative for that edge; converting all edges changes timing and failure handling unnecessarily.\n\nFollow-up trap: asynchronous delivery does not erase conceptual coupling or guarantee an invariant before acceptance. If a later requirement allows stock confirmation to be pending, then a durable workflow with compensations becomes viable. State that changed promise rather than claiming the original immediate transaction remains intact."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You gain an understandable dependency graph and smaller tests, but introduce an orchestration owner and explicit contracts. Moving a noncritical reaction to an event is an alternative for that edge; converting all edges changes timing and failure handling unnecessarily.\n\nFollow-up trap: asynchronous delivery does not erase conceptual coupling or guarantee an invariant before acceptance. If a later requirement allows stock confirmation to be pending, then a durable workflow with compensations becomes viable. State that changed promise rather than claiming the original immediate transaction remains intact."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S3, S4 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      }
+    },
+    {
+      "key": "interview-cross-module-local-invariant",
+      "theme": "Two modules must enforce one immediate invariant. Can a modular monolith use one transaction?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "S4",
+        "S5"
+      ],
+      "technicalSources": [
+        "S4",
+        "S5"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Scenario organization, numbers, deadlines and proposed implementation details are author-created; sources support underlying mechanics, not an observed company incident or exact interview prompt.",
+      "limitations": "Exact recurrence/rank/company provenance unverified; vendor examples do not imply universal defaults.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Modular Monolith: Two modules must enforce one immediate invariant. Can a modular monolith use one transaction?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: Two modules must enforce one immediate invariant. Can a modular monolith use one transaction? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Two counters share one ledger even though their staff have separate responsibilities. Orders must reserve inventory and create an accepted order together; either both changes commit or neither does. Both modules currently use the same transactional database. What consistency boundary will you choose and why?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Use one local transaction initiated by the application use case when the same database and transaction infrastructure genuinely cover both writes. Invoke each module through its owned API; the order module must not mutate inventory tables directly. Let Inventory perform an atomic conditional reservation or appropriate concurrency check, not a read-then-write race.\n\nTest a failure after each write and concurrent attempts for the final unit. Keep the transaction short and avoid remote calls inside it. Document that this convenience depends on a shared local commit boundary; it is an extraction constraint, not evidence that the modules can already deploy independently."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You preserve the immediate invariant with simple recovery but accept transaction and data-tier coupling. Co-locating the tightly related invariant under one owner is another valid design. A saga is an alternative only if temporary partial completion and compensation are acceptable business semantics.\n\nFollow-up trap: a module API does not automatically create a transaction across separate databases. If one module moves to independently committed storage, revisit the invariant: retain a shared owner, preallocate rights, or change the workflow to pending states. Do not retain an atomicity claim after removing the atomic commit mechanism."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You preserve the immediate invariant with simple recovery but accept transaction and data-tier coupling. Co-locating the tightly related invariant under one owner is another valid design. A saga is an alternative only if temporary partial completion and compensation are acceptable business semantics.\n\nFollow-up trap: a module API does not automatically create a transaction across separate databases. If one module moves to independently committed storage, revisit the invariant: retain a shared owner, preallocate rights, or change the workflow to pending states. Do not retain an atomicity claim after removing the atomic commit mechanism."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S4, S5 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      }
+    },
+    {
+      "key": "interview-after-commit-listener-loss",
+      "theme": "An email listener fails after the order commits. How do you recover without rolling back the purchase?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "S4"
+      ],
+      "technicalSources": [
+        "S4"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Scenario organization, numbers, deadlines and proposed implementation details are author-created; sources support underlying mechanics, not an observed company incident or exact interview prompt.",
+      "limitations": "Exact recurrence/rank/company provenance unverified; vendor examples do not imply universal defaults.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Modular Monolith: An email listener fails after the order commits. How do you recover without rolling back the purchase?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: An email listener fails after the order commits. How do you recover without rolling back the purchase? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "A stamped order remains real even when the messenger loses its notification. A noncritical listener sends a receipt after a committed order. The process crashes before the listener finishes, and the customer received no email. Purchases must remain accepted, but notifications need eventual delivery. What will you do and why?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Record the obligation durably with the order transaction, using a persistent event-publication registry or outbox appropriate to the actual framework. A worker retries outstanding publications and marks completion only after the defined delivery step. Spring Modulith's publication tracking is a concrete example whose configured persistence and resubmission behavior must be verified.\n\nMake the handler idempotent with a stable publication key, observe backlog age and failed attempts, and provide a repair path. Test a crash after the main commit and after the external email is accepted but before local completion is recorded. The latter can still cause duplicate sends unless the provider or workflow deduplicates them."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You decouple purchase success from notification availability, but manage durable publication storage, retries and monitoring. Synchronous email is a simpler alternative only when the business accepts its latency and failure coupling; it still cannot undo an already accepted external effect reliably.\n\nFollow-up trap: an in-memory event callback is not durable delivery. If the reaction becomes a required credit authorization before acceptance, move it into the decision workflow rather than treating it as a best-effort after-commit notification. Reassess the business promise when criticality changes."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You decouple purchase success from notification availability, but manage durable publication storage, retries and monitoring. Synchronous email is a simpler alternative only when the business accepts its latency and failure coupling; it still cannot undo an already accepted external effect reliably.\n\nFollow-up trap: an in-memory event callback is not durable delivery. If the reaction becomes a required credit authorization before acceptance, move it into the decision workflow rather than treating it as a best-effort after-commit notification. Reassess the business promise when criticality changes."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S4 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      }
+    },
+    {
+      "key": "interview-shared-common-business-rules",
+      "theme": "A common package becomes everyone's business-rule dumping ground. What belongs there?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "technicalSources": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Scenario organization, numbers, deadlines and proposed implementation details are author-created; sources support underlying mechanics, not an observed company incident or exact interview prompt.",
+      "limitations": "Exact recurrence/rank/company provenance unverified; vendor examples do not imply universal defaults.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Modular Monolith: A common package becomes everyone's business-rule dumping ground. What belongs there?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: A common package becomes everyone's business-rule dumping ground. What belongs there? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "A communal cupboard becomes unusable when every team stores its private tools there. A common library now contains discount policy, invoice state transitions and generic string utilities. Any pricing change forces edits across modules. What will you move or share, and why?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Move business rules to the module that owns their meaning, then expose a narrow capability or an immutable agreed value where another module needs it. Keep a shared kernel small, deliberate and jointly governed; a utility should not silently decide domain policy. Use dependency checks to stop common code from importing business modules.\n\nCompare apparently identical concepts with the domain owners before unifying them. Billing's settled amount and Catalog's displayed price may need different models. Migrate one rule at a time with characterization tests so the boundary repair does not change behavior accidentally."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You restore ownership and reduce coordinated changes, but may accept small, intentional duplication and translation. A jointly maintained shared kernel is a viable alternative for genuinely identical, stable concepts when its change process is explicit.\n\nFollow-up trap: renaming common to platform does not establish ownership, and a remote shared service can worsen coupling if it holds unrelated rules. If two teams truly share one invariant and always change together, reconsider whether the proposed module split reflects reality rather than forcing separate copies of a single responsibility."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You restore ownership and reduce coordinated changes, but may accept small, intentional duplication and translation. A jointly maintained shared kernel is a viable alternative for genuinely identical, stable concepts when its change process is explicit.\n\nFollow-up trap: renaming common to platform does not establish ownership, and a remote shared service can worsen coupling if it holds unrelated rules. If two teams truly share one invariant and always change together, reconsider whether the proposed module split reflects reality rather than forcing separate copies of a single responsibility."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S1, S2, S3 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      }
+    },
+    {
+      "key": "interview-extraction-readiness-hidden-coupling",
+      "theme": "A module looks isolated in code but shares writable tables. Is it ready to become a service?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "technicalSources": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Scenario organization, numbers, deadlines and proposed implementation details are author-created; sources support underlying mechanics, not an observed company incident or exact interview prompt.",
+      "limitations": "Exact recurrence/rank/company provenance unverified; vendor examples do not imply universal defaults.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Modular Monolith: A module looks isolated in code but shares writable tables. Is it ready to become a service?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: A module looks isolated in code but shares writable tables. Is it ready to become a service? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "A room with its own door may still share plumbing that nobody mapped. A team wants to extract Shipping for independent releases. Its public package is clean, yet nightly jobs and Orders write the same shipment tables. You cannot freeze releases for a rewrite. What will you check and change first?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Audit data readers/writers, transaction scope, background jobs and operational dependencies, not only imports. Assign Shipping authoritative ownership and route writes through its API while still in the monolith. Replace private-table reads with explicit queries or projections, and test failure and compatibility at the proposed contract.\n\nMeasure whether independence solves a real delivery or scaling problem. Once the local boundary behaves independently, introduce a remote adapter and migrate traffic incrementally with observable rollback. Define durable messaging or reconciliation where a former local transaction becomes multiple commits; do not make two owners write the same data as an indefinite transition."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You reduce extraction risk and expose hidden coupling early, but postpone the separate deployment and temporarily maintain compatibility paths. Remaining a modular monolith is a valid alternative if independent deployment brings little measurable benefit.\n\nFollow-up trap: replacing a method call with HTTP creates network failure without solving ownership. If Shipping must still share one immediate invariant with Orders, keep that decision under one transactional owner or explicitly change to a pending workflow. Do not call a database-sharing deployment fully autonomous."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You reduce extraction risk and expose hidden coupling early, but postpone the separate deployment and temporarily maintain compatibility paths. Remaining a modular monolith is a valid alternative if independent deployment brings little measurable benefit.\n\nFollow-up trap: replacing a method call with HTTP creates network failure without solving ownership. If Shipping must still share one immediate invariant with Orders, keep that decision under one transactional owner or explicitly change to a pending workflow. Do not call a database-sharing deployment fully autonomous."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S1, S2, S3 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These scenarios adapt documented production problems and architectural guidance. Interview frequency, rankings and company provenance for these exact prompts were not independently verified. Numeric budgets and organization details are author-created assumptions. Web search was available and used for this concept; primary sources support the technical reasoning, not a claim that these prompts recur in interviews.",
+  "sourceNoteUrls": [
+    "https://shopify.engineering/deconstructing-monolith-designing-software-maximizes-developer-productivity",
+    "https://shopify.engineering/shopify-monolith",
+    "https://docs.spring.io/spring-modulith/reference/verification.html",
+    "https://docs.spring.io/spring-modulith/reference/events.html",
+    "https://learn.microsoft.com/en-us/ef/core/saving/transactions"
+  ],
+  "editorialReviewedOn": "2026-11-17"
+}
+```

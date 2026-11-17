@@ -1,0 +1,405 @@
+# Final Research: Domain-Driven Design (DDD)
+
+State: reviewed. Separate editorial/source pass completed 2026-11-17 for all six permanent scenario keys. Exact interview frequency remains unverified; adaptations are disclosed. Browser/print acceptance is recorded separately.
+
+The JSON map records actual planning queries, implementation source checks (or explicit limitations), final selection/technical mappings and all eight per-card editorial dispositions. Vendor-specific sources are examples, not universal architectural guarantees.
+
+```json
+{
+  "topicId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+  "title": "Domain-Driven Design (DDD)",
+  "path": "topics/system-design/backend-architecture/code-and-domain-organization/domain-driven-design.html",
+  "constitutionVersion": "1.2.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "site.martinfowler.com bounded context domain driven design",
+      "date": "2026-11-17",
+      "result": "success; concept-specific planning research found technical guidance; exact prompt recurrence unverified"
+    },
+    {
+      "query": "\"domain driven design\" \"interview\" aggregates consistency",
+      "date": "2026-11-17",
+      "result": "success; concept-specific planning research found technical guidance; exact prompt recurrence unverified"
+    },
+    {
+      "query": "site.learn.microsoft.com domain driven design aggregates transaction bounded contexts",
+      "date": "2026-11-17",
+      "result": "success; concept-specific planning research found technical guidance; exact prompt recurrence unverified"
+    }
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "title": "Martin Fowler: Bounded Context",
+      "url": "https://martinfowler.com/bliki/BoundedContext.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Primary architectural or product guidance used for the specifically mapped decisions; not evidence of hiring frequency."
+    },
+    {
+      "id": "S2",
+      "title": "Microsoft: Design a microservice domain model",
+      "url": "https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/microservice-domain-model",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Primary architectural or product guidance used for the specifically mapped decisions; not evidence of hiring frequency."
+    },
+    {
+      "id": "S3",
+      "title": "Microsoft: Domain analysis",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/microservices/model/domain-analysis",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Primary architectural or product guidance used for the specifically mapped decisions; not evidence of hiring frequency."
+    },
+    {
+      "id": "S4",
+      "title": "Microsoft: Anti-Corruption Layer",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/anti-corruption-layer",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Primary architectural or product guidance used for the specifically mapped decisions; not evidence of hiring frequency."
+    },
+    {
+      "id": "S5",
+      "title": "Microsoft: Handling optimistic concurrency conflicts",
+      "url": "https://learn.microsoft.com/en-us/ef/core/saving/concurrency",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Version checks prevent stale updates only when enforced during persistence and conflicts are handled; domain methods alone do not serialize competing commits."
+    },
+    {
+      "id": "S6",
+      "title": "AWS: Saga orchestration pattern",
+      "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/saga-orchestration.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "A durable multi-participant workflow has local commits and compensations, not automatic cross-service atomic rollback."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-customer-bounded-context-language",
+      "theme": "Billing and Support disagree on what Customer means. Should you force one shared entity?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "S1",
+        "S3"
+      ],
+      "technicalSources": [
+        "S1",
+        "S3"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Scenario organization, numbers, deadlines and proposed implementation details are author-created; sources support underlying mechanics, not an observed company incident or exact interview prompt.",
+      "limitations": "Exact recurrence/rank/company provenance unverified; vendor examples do not imply universal defaults.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Domain-Driven Design (DDD): Billing and Support disagree on what Customer means. Should you force one shared entity?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: Billing and Support disagree on what Customer means. Should you force one shared entity? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "One person can be a payer at one desk and an account contact at another. Billing needs tax and credit rules, while Support needs case history and contact preferences. A shared Customer entity keeps growing and changes force coordinated releases. What model boundary will you choose?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Define a bounded context for each distinct business meaning and give each an internally consistent vocabulary. Billing's payer and Support's contact can reference the same opaque external identity without sharing every field or lifecycle. Agree on explicit integration mappings and ownership of facts that cross contexts.\n\nWork through concrete business examples with domain experts before splitting code. Document when two identifiers refer to the same real-world party and how changes propagate. A bounded context is a model/language boundary, not automatically one database or one microservice per noun."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You gain clearer rules and independent evolution, but maintain translation and potentially duplicated representations. A deliberately small shared kernel is an alternative for genuinely identical stable concepts with joint governance.\n\nFollow-up trap: separate classes with the same confusing semantics do not solve the modeling problem. If both teams truly share one invariant and lifecycle, a unified model may be appropriate. Let evidence about meaning and change drive the boundary rather than assuming every department needs a separate service."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You gain clearer rules and independent evolution, but maintain translation and potentially duplicated representations. A deliberately small shared kernel is an alternative for genuinely identical stable concepts with joint governance.\n\nFollow-up trap: separate classes with the same confusing semantics do not solve the modeling problem. If both teams truly share one invariant and lifecycle, a unified model may be appropriate. Let evidence about meaning and change drive the boundary rather than assuming every department needs a separate service."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S1, S3 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      }
+    },
+    {
+      "key": "interview-aggregate-last-unit-concurrency",
+      "theme": "Two purchases read the final unit as available. How does an aggregate actually prevent overselling?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "S2",
+        "S5"
+      ],
+      "technicalSources": [
+        "S2",
+        "S5"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Scenario organization, numbers, deadlines and proposed implementation details are author-created; sources support underlying mechanics, not an observed company incident or exact interview prompt.",
+      "limitations": "Exact recurrence/rank/company provenance unverified; vendor examples do not imply universal defaults.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Domain-Driven Design (DDD): Two purchases read the final unit as available. How does an aggregate actually prevent overselling?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: Two purchases read the final unit as available. How does an aggregate actually prevent overselling? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "A rule saying only one child gets the last ticket is useless if two clerks decide separately. Two concurrent purchase commands both read stock=1 and succeed through an aggregate method. The business forbids overselling. What implementation will enforce the invariant?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Place the invariant under one authoritative consistency boundary and combine the domain check with persistence concurrency control. Use a conditional atomic update, a version check with retry/rejection, or suitable locking/transaction isolation so only one competing reservation commits. A method that checks an in-memory field alone is insufficient.\n\nLoad and modify through the aggregate's public behavior, persist with the chosen concurrency token, and handle conflicts as explicit application outcomes. Test simultaneous requests against the actual store. Keep unrelated reporting and remote effects outside the short transaction that protects stock allocation."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You preserve the invariant but may reject/retry contenders and serialize access to the hot resource. Preallocating disjoint stock rights is a viable alternative for distributed allocation, at the cost of stranded capacity and rebalancing complexity.\n\nFollow-up trap: naming a class AggregateRoot does not create database isolation. If backorders become acceptable, the business can change the invariant and allow provisional demand; that does not mean the strict final-unit guarantee was preserved by eventual reconciliation. State the revised promise clearly."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You preserve the invariant but may reject/retry contenders and serialize access to the hot resource. Preallocating disjoint stock rights is a viable alternative for distributed allocation, at the cost of stranded capacity and rebalancing complexity.\n\nFollow-up trap: naming a class AggregateRoot does not create database isolation. If backorders become acceptable, the business can change the invariant and allow provisional demand; that does not mean the strict final-unit guarantee was preserved by eventual reconciliation. State the revised promise clearly."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S2, S5 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      }
+    },
+    {
+      "key": "interview-oversized-aggregate-contention",
+      "theme": "One giant aggregate locks an entire customer account for unrelated edits. How do you shrink it safely?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "S2"
+      ],
+      "technicalSources": [
+        "S2"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Scenario organization, numbers, deadlines and proposed implementation details are author-created; sources support underlying mechanics, not an observed company incident or exact interview prompt.",
+      "limitations": "Exact recurrence/rank/company provenance unverified; vendor examples do not imply universal defaults.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Domain-Driven Design (DDD): One giant aggregate locks an entire customer account for unrelated edits. How do you shrink it safely?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: One giant aggregate locks an entire customer account for unrelated edits. How do you shrink it safely? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Locking a whole library to change one book title creates an unnecessary queue. A Customer aggregate includes every order, invoice and support case. Updates conflict even when the business operations are unrelated, and loading one account is expensive. What boundary will you redraw?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "List the invariants that truly require immediate consistency and keep only the state needed to enforce each within its aggregate boundary. Reference other aggregates by identity, and move large independent histories or read views into separate aggregates/projections. Avoid splitting a rule that genuinely must commit atomically just to reduce object size.\n\nMeasure conflict rates and transaction work before and after the change. Add tests for the preserved invariants and explicitly model cross-aggregate workflows using events or application coordination where delayed consistency is acceptable. Design read models for screens instead of loading a giant write aggregate to display a dashboard."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You reduce contention and memory/transaction cost, but introduce explicit cross-aggregate consistency decisions and possibly stale projections. Keeping a larger aggregate is a viable alternative when its immediate invariant outweighs the measured contention cost.\n\nFollow-up trap: one entity per aggregate can scatter a single invariant across independent commits. If a regulation requires simultaneous changes to several fields, keep that consistency boundary or choose a supported mechanism that actually provides it. Aggregate boundaries follow guarantees, not a fixed maximum class size."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You reduce contention and memory/transaction cost, but introduce explicit cross-aggregate consistency decisions and possibly stale projections. Keeping a larger aggregate is a viable alternative when its immediate invariant outweighs the measured contention cost.\n\nFollow-up trap: one entity per aggregate can scatter a single invariant across independent commits. If a regulation requires simultaneous changes to several fields, keep that consistency boundary or choose a supported mechanism that actually provides it. Aggregate boundaries follow guarantees, not a fixed maximum class size."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S2 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      }
+    },
+    {
+      "key": "interview-cross-context-order-workflow",
+      "theme": "Order acceptance spans Inventory and Payments contexts. Where does the workflow belong?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "S2",
+        "S3",
+        "S6"
+      ],
+      "technicalSources": [
+        "S2",
+        "S3",
+        "S6"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Scenario organization, numbers, deadlines and proposed implementation details are author-created; sources support underlying mechanics, not an observed company incident or exact interview prompt.",
+      "limitations": "Exact recurrence/rank/company provenance unverified; vendor examples do not imply universal defaults.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Domain-Driven Design (DDD): Order acceptance spans Inventory and Payments contexts. Where does the workflow belong?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: Order acceptance spans Inventory and Payments contexts. Where does the workflow belong? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Separate departments may use different ledgers while still cooperating on one purchase. Orders, Inventory and Payments have distinct models and commit independently. Product asks for a single completed checkout, including recovery after a partial failure. What coordination will you introduce?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Create an explicit application/process workflow that coordinates context-owned operations using stable identities and durable progress. Let Inventory own reservation validity and Payments own financial outcomes; do not pull their internal entities into one artificial cross-service aggregate. Return pending while required outcomes are unresolved.\n\nDefine timeouts, expiry, retries and business compensations, and translate each context's outcomes into the workflow's states. Reconcile uncertain commits before retrying a new effect. Use integration events for committed facts with reliable publication, and test crashes between every participant's local commit and its acknowledgment."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You preserve model autonomy and recover interrupted work, but manage intermediate states, coordination and compensation. If the strongest invariant and data can naturally belong to one context, one local transaction is a viable simpler alternative.\n\nFollow-up trap: a domain event in memory is not guaranteed delivery across a crash, and compensation is not an atomic rewind. If the business requires no externally visible partial outcome at all, reconsider boundaries or transaction support rather than claiming a saga automatically satisfies that stronger condition."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You preserve model autonomy and recover interrupted work, but manage intermediate states, coordination and compensation. If the strongest invariant and data can naturally belong to one context, one local transaction is a viable simpler alternative.\n\nFollow-up trap: a domain event in memory is not guaranteed delivery across a crash, and compensation is not an atomic rewind. If the business requires no externally visible partial outcome at all, reconsider boundaries or transaction support rather than claiming a saga automatically satisfies that stronger condition."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S2, S3, S6 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      }
+    },
+    {
+      "key": "interview-legacy-erp-anti-corruption",
+      "theme": "Legacy ERP codes are spreading into the new domain model. Where should translation happen?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "S4"
+      ],
+      "technicalSources": [
+        "S4"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Scenario organization, numbers, deadlines and proposed implementation details are author-created; sources support underlying mechanics, not an observed company incident or exact interview prompt.",
+      "limitations": "Exact recurrence/rank/company provenance unverified; vendor examples do not imply universal defaults.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Domain-Driven Design (DDD): Legacy ERP codes are spreading into the new domain model. Where should translation happen?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: Legacy ERP codes are spreading into the new domain model. Where should translation happen? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "A translator should explain an old dialect rather than make everyone speak it forever. A new fulfillment domain now uses ERP status codes and overloaded fields directly. Domain experts cannot understand its rules without the vendor manual. What boundary will protect the new model?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Introduce an anti-corruption layer at the ERP integration boundary. Translate its protocols, identifiers and meanings into application/domain concepts, including explicit handling for ambiguous or unsupported states. Keep the authoritative source of each fact clear so translation does not invent a second owner.\n\nUse example-based tests with domain experts for mappings such as shipped, cancelled and backordered. Isolate vendor errors and version changes in the adapter, and preserve correlation for reconciliation. Migrate one interaction at a time; the legacy system can remain unchanged while the new model becomes coherent."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You protect vocabulary and isolate vendor churn, but maintain translation, tests and another failure boundary. Direct integration is a viable cheaper alternative for a small disposable feature with no valuable independent model.\n\nFollow-up trap: renaming fields without translating meaning leaves semantic corruption intact. If the new system must expose the exact ERP schema to an external partner, adapt to that contract at its edge rather than allowing it to dictate every internal aggregate and business rule."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You protect vocabulary and isolate vendor churn, but maintain translation, tests and another failure boundary. Direct integration is a viable cheaper alternative for a small disposable feature with no valuable independent model.\n\nFollow-up trap: renaming fields without translating meaning leaves semantic corruption intact. If the new system must expose the exact ERP schema to an external partner, adapt to that contract at its edge rather than allowing it to dictate every internal aggregate and business rule."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S4 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      }
+    },
+    {
+      "key": "interview-simple-crud-tactical-ddd-cost",
+      "theme": "A reference-data editor has no complex rules. Does it need rich aggregates and domain events?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "S2",
+        "S3"
+      ],
+      "technicalSources": [
+        "S2",
+        "S3"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Scenario organization, numbers, deadlines and proposed implementation details are author-created; sources support underlying mechanics, not an observed company incident or exact interview prompt.",
+      "limitations": "Exact recurrence/rank/company provenance unverified; vendor examples do not imply universal defaults.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Domain-Driven Design (DDD): A reference-data editor has no complex rules. Does it need rich aggregates and domain events?"
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate pass compared all six prompts in this lesson: A reference-data editor has no complex rules. Does it need rich aggregates and domain events? tests its own boundary/failure, with a distinct changed-assumption response; it is not counted as a definition or a renamed foundational prompt."
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "A notebook does not always need the filing rules of a national archive. A small internal editor maintains country labels and display order. The team proposes elaborate aggregates, factories and events for every field despite minimal business behavior. What level of DDD will you use?"
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Use domain analysis to confirm the actual responsibility, language and invariants, then keep implementation proportionate. Straightforward application/data operations with explicit validation and authorization may be sufficient. Strategic boundaries can still clarify ownership without requiring every tactical pattern in a simple CRUD area.\n\nAdd rich domain behavior when meaningful invariants, lifecycle rules or competing interpretations appear. Keep a clean migration path by separating transport concerns from the core operation and testing important behavior. Complexity should protect a business guarantee, not merely satisfy a pattern checklist."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "You reduce ceremony and delivery cost but may refactor as the domain becomes richer. A rich model is a viable alternative where hidden approval, audit or lifecycle rules already exist and would otherwise be duplicated in procedural code.\n\nFollow-up trap: calling something CRUD can conceal consequential policy such as who may change an official currency or when a historic value becomes immutable. If those rules emerge, model them explicitly and strengthen tests. DDD asks for attention to business meaning; it does not mandate maximum object machinery everywhere."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "You reduce ceremony and delivery cost but may refactor as the domain becomes richer. A rich model is a viable alternative where hidden approval, audit or lifecycle rules already exist and would otherwise be duplicated in procedural code.\n\nFollow-up trap: calling something CRUD can conceal consequential policy such as who may change an official currency or when a historic value becomes immutable. If those rules emerge, model them explicitly and strengthen tests. DDD asks for attention to business meaning; it does not mandate maximum object machinery everywhere."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Separate pass checked mapped primary sources S2, S3 against this decision and its limits. All budgets/organizations are author assumptions; no exact interview-frequency/company claim is made."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three complete prose parts plus a valid decision-path diagram; native closed card uses existing shared controls."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These scenarios adapt documented production problems and architectural guidance. Interview frequency, rankings and company provenance for these exact prompts were not independently verified. Numeric budgets and organization details are author-created assumptions. Web search was available and used for this concept; primary sources support the technical reasoning, not a claim that these prompts recur in interviews.",
+  "sourceNoteUrls": [
+    "https://martinfowler.com/bliki/BoundedContext.html",
+    "https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/microservice-domain-model",
+    "https://learn.microsoft.com/en-us/azure/architecture/microservices/model/domain-analysis",
+    "https://learn.microsoft.com/en-us/azure/architecture/patterns/anti-corruption-layer",
+    "https://learn.microsoft.com/en-us/ef/core/saving/concurrency",
+    "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/saga-orchestration.html"
+  ],
+  "editorialReviewedOn": "2026-11-17"
+}
+```

@@ -1,0 +1,169 @@
+{
+  "status": "pass",
+  "topicId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+  "path": "topics/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture.html",
+  "sourceSha256": "57d34d9889e6ba85f48db13365fc3abd0fe77be4990b9ec315b49adbf4bc1ea1",
+  "browser": "141.0.7390.37",
+  "navigation": [
+    {
+      "base": "http://127.0.0.1:8020/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    },
+    {
+      "base": "http://127.0.0.1:8021/backend-lab/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    }
+  ],
+  "learning": {
+    "topicId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+    "path": "topics/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture.html",
+    "sourceSha256": "57d34d9889e6ba85f48db13365fc3abd0fe77be4990b9ec315b49adbf4bc1ea1",
+    "status": "pass",
+    "bases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "newKeys": [
+          "interview-rest-csv-same-application-port",
+          "interview-outbound-timeout-port-semantics",
+          "interview-in-memory-adapter-contract-gap",
+          "interview-provider-sdk-model-leak",
+          "interview-port-per-class-ceremony",
+          "interview-compatible-module-direct-port-call"
+        ],
+        "ratings": {
+          "interview-rest-csv-same-application-port": "hard",
+          "interview-outbound-timeout-port-semantics": "good",
+          "interview-in-memory-adapter-contract-gap": "easy",
+          "interview-provider-sdk-model-leak": "hard",
+          "interview-port-per-class-ceremony": "good",
+          "interview-compatible-module-direct-port-call": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "newKeys": [
+          "interview-rest-csv-same-application-port",
+          "interview-outbound-timeout-port-semantics",
+          "interview-in-memory-adapter-contract-gap",
+          "interview-provider-sdk-model-leak",
+          "interview-port-per-class-ceremony",
+          "interview-compatible-module-direct-port-call"
+        ],
+        "ratings": {
+          "interview-rest-csv-same-application-port": "hard",
+          "interview-outbound-timeout-port-semantics": "good",
+          "interview-in-memory-adapter-contract-gap": "easy",
+          "interview-provider-sdk-model-leak": "hard",
+          "interview-port-per-class-ceremony": "good",
+          "interview-compatible-module-direct-port-call": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      }
+    ]
+  },
+  "mobileThemes": {
+    "topicId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+    "path": "topics/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture.html",
+    "sourceSha256": "57d34d9889e6ba85f48db13365fc3abd0fe77be4990b9ec315b49adbf4bc1ea1",
+    "status": "pass",
+    "cases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-rest-csv-same-application-port",
+          "interview-outbound-timeout-port-semantics",
+          "interview-in-memory-adapter-contract-gap",
+          "interview-provider-sdk-model-leak",
+          "interview-port-per-class-ceremony",
+          "interview-compatible-module-direct-port-call"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-rest-csv-same-application-port",
+          "interview-outbound-timeout-port-semantics",
+          "interview-in-memory-adapter-contract-gap",
+          "interview-provider-sdk-model-leak",
+          "interview-port-per-class-ceremony",
+          "interview-compatible-module-direct-port-call"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-rest-csv-same-application-port",
+          "interview-outbound-timeout-port-semantics",
+          "interview-in-memory-adapter-contract-gap",
+          "interview-provider-sdk-model-leak",
+          "interview-port-per-class-ceremony",
+          "interview-compatible-module-direct-port-call"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-rest-csv-same-application-port",
+          "interview-outbound-timeout-port-semantics",
+          "interview-in-memory-adapter-contract-gap",
+          "interview-provider-sdk-model-leak",
+          "interview-port-per-class-ceremony",
+          "interview-compatible-module-direct-port-call"
+        ],
+        "renderedDiagrams": 7,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      }
+    ]
+  },
+  "errors": [],
+  "supportingFixture": "reading_fixture passed all 21 actual partials without learning writes."
+}

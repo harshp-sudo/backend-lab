@@ -1,0 +1,21 @@
+{
+  "phase": "reference-fixture-navigation",
+  "result": "pass",
+  "runs": [
+    {
+      "base": "http://127.0.0.1:8000",
+      "edges": 20,
+      "status": "pass",
+      "backForward": "pass",
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8001/backend-lab",
+      "edges": 20,
+      "status": "pass",
+      "backForward": "pass",
+      "errors": []
+    }
+  ],
+  "integrationStatus": "pending"
+}

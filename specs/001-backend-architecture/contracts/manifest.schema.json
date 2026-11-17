@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:backend-lab:manifest:v1",
+  "title": "Personal Learning Knowledge Base Manifest v1",
+  "description": "Recursive published navigation. Runtime routes and file locations are derived from ancestry and slugs.",
+  "$comment": "Global ID uniqueness, immutable identity, new UUIDv4 policy, file targets, conceptual alignment and batch membership require cross-file validation.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "roots"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "roots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "allOf": [
+          {
+            "$ref": "#/$defs/node"
+          },
+          {
+            "properties": {
+              "kind": {
+                "const": "hub"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "node": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "title",
+        "slug"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^\\S+$",
+          "description": "Permanent globally unique opaque identity. Newly created nodes use lowercase UUIDv4; existing IDs are preserved."
+        },
+        "kind": {
+          "enum": [
+            "hub",
+            "topic"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "slug": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "children": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/node"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "hub"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "required": [
+              "children"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "children"
+              ]
+            }
+          }
+        }
+      ],
+      "additionalProperties": true
+    }
+  }
+}

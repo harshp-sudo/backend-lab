@@ -1,0 +1,102 @@
+{
+  "status": "pass",
+  "topicId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+  "path": "topics/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals.html",
+  "sourceSha256": "6c76a52a1524bd3bf53e20f7d03a70a89deffdf839dd007fa01b4afd78156acb",
+  "outputs": [
+    {
+      "nodeId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+      "topicId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+      "sourceSha256": "6c76a52a1524bd3bf53e20f7d03a70a89deffdf839dd007fa01b4afd78156acb",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-distributed-system-fundamentals.pdf",
+      "completeTextBlocks": 151,
+      "diagramLabels": 39,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+      "topicId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+      "sourceSha256": "6c76a52a1524bd3bf53e20f7d03a70a89deffdf839dd007fa01b4afd78156acb",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-distributed-system-fundamentals.pdf",
+      "completeTextBlocks": 151,
+      "diagramLabels": 39,
+      "diagrams": 7,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    }
+  ],
+  "visualReview": {
+    "topicId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+    "path": "topics/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals.html",
+    "comparisonSheet": "/tmp/backend-interview-print-review/distributed-system-fundamentals-comparison.jpg",
+    "outputs": [
+      {
+        "theme": "light",
+        "pdf": "/tmp/backend-interview-pdfs/light-distributed-system-fundamentals.pdf",
+        "pages": 19,
+        "selectedPages": [
+          4,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/light-distributed-system-fundamentals-table.png",
+          "/tmp/backend-interview-print-review/light-distributed-system-fundamentals-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/light-distributed-system-fundamentals-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "ba44855b783a312ba0b8ea7387b428df7bd7194a39e506482f17a69c0d9a8808",
+        "reviewPanelSha256": [
+          "c447110ec01b075a48fd4ac536ec7eb708f3649b375e13845eb66fedd6473993",
+          "f33e522a8bb60254ee79063163ce16dd24d74b0082b7f1fa637c1093aa7838d9",
+          "ab20f3443baba535fafa87c80055a733a7cedf02c897a12d6f31401b5a5a4e3a"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      },
+      {
+        "theme": "dark",
+        "pdf": "/tmp/backend-interview-pdfs/dark-distributed-system-fundamentals.pdf",
+        "pages": 19,
+        "selectedPages": [
+          4,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/dark-distributed-system-fundamentals-table.png",
+          "/tmp/backend-interview-print-review/dark-distributed-system-fundamentals-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/dark-distributed-system-fundamentals-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "fc5d022ecbcdd0a49e53af7ab1882b07364593a5cf4dc2df6162cae1f2dc0baa",
+        "reviewPanelSha256": [
+          "c447110ec01b075a48fd4ac536ec7eb708f3649b375e13845eb66fedd6473993",
+          "f33e522a8bb60254ee79063163ce16dd24d74b0082b7f1fa637c1093aa7838d9",
+          "ab20f3443baba535fafa87c80055a733a7cedf02c897a12d6f31401b5a5a4e3a"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      }
+    ],
+    "reviewStatus": "pass",
+    "reviewedOn": "2026-11-17",
+    "reviewFindings": [
+      "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+      "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+      "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+      "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+    ]
+  },
+  "findings": [
+    "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+    "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+    "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+  ]
+}

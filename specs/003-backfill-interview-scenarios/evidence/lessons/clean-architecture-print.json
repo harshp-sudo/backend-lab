@@ -1,0 +1,102 @@
+{
+  "status": "pass",
+  "topicId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+  "path": "topics/system-design/backend-architecture/code-and-domain-organization/clean-architecture.html",
+  "sourceSha256": "e1ab624ca2a9d5845b2d307cc63b3fb33b45f0833411ee08a9e901f23ef9b04d",
+  "outputs": [
+    {
+      "nodeId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+      "topicId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+      "sourceSha256": "e1ab624ca2a9d5845b2d307cc63b3fb33b45f0833411ee08a9e901f23ef9b04d",
+      "kind": "topic",
+      "theme": "light",
+      "pdf": "/tmp/backend-interview-pdfs/light-clean-architecture.pdf",
+      "completeTextBlocks": 151,
+      "diagramLabels": 43,
+      "diagrams": 8,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    },
+    {
+      "nodeId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+      "topicId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+      "sourceSha256": "e1ab624ca2a9d5845b2d307cc63b3fb33b45f0833411ee08a9e901f23ef9b04d",
+      "kind": "topic",
+      "theme": "dark",
+      "pdf": "/tmp/backend-interview-pdfs/dark-clean-architecture.pdf",
+      "completeTextBlocks": 151,
+      "diagramLabels": 43,
+      "diagrams": 8,
+      "disclosuresRestored": true,
+      "mixedDisclosureStates": true,
+      "controlsHidden": true,
+      "status": "pass"
+    }
+  ],
+  "visualReview": {
+    "topicId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+    "path": "topics/system-design/backend-architecture/code-and-domain-organization/clean-architecture.html",
+    "comparisonSheet": "/tmp/backend-interview-print-review/clean-architecture-comparison.jpg",
+    "outputs": [
+      {
+        "theme": "light",
+        "pdf": "/tmp/backend-interview-pdfs/light-clean-architecture.pdf",
+        "pages": 19,
+        "selectedPages": [
+          5,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/light-clean-architecture-table.png",
+          "/tmp/backend-interview-print-review/light-clean-architecture-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/light-clean-architecture-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "2d9fdef110b834ef14ad56e755fd701715f52ea3c470d7d6d0e9a8092c335ad7",
+        "reviewPanelSha256": [
+          "8d6e0bb4680eb9c5f1ee52af223f41c7e5d774de4254b259ee611b0c6d3bd1d3",
+          "ee26c7310c7f89e359384fe9f783ad151b151681443830dffe8c9db1970629df",
+          "269c0735292c130aca1770bdc1b9d8e36d329babf009e2ed466d5ed576e47224"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      },
+      {
+        "theme": "dark",
+        "pdf": "/tmp/backend-interview-pdfs/dark-clean-architecture.pdf",
+        "pages": 19,
+        "selectedPages": [
+          5,
+          8,
+          18
+        ],
+        "rasterPanels": [
+          "/tmp/backend-interview-print-review/dark-clean-architecture-table.png",
+          "/tmp/backend-interview-print-review/dark-clean-architecture-first-scenario-diagram.png",
+          "/tmp/backend-interview-print-review/dark-clean-architecture-last-scenario-diagram.png"
+        ],
+        "pdfSha256": "e94ae6d821b9c89e00b0b8e9b184baa6bb9012ff5977540a7e6b2a0aae2738d8",
+        "reviewPanelSha256": [
+          "8d6e0bb4680eb9c5f1ee52af223f41c7e5d774de4254b259ee611b0c6d3bd1d3",
+          "ee26c7310c7f89e359384fe9f783ad151b151681443830dffe8c9db1970629df",
+          "269c0735292c130aca1770bdc1b9d8e36d329babf009e2ed466d5ed576e47224"
+        ],
+        "finalPDFMatchesReviewedPixels": true
+      }
+    ],
+    "reviewStatus": "pass",
+    "reviewedOn": "2026-11-17",
+    "reviewFindings": [
+      "Inspected actual PDF raster panels in both source themes: readable contrast, complete visible table/diagram regions, complete diagram boxes/arrows and captions.",
+      "Three selected pages per theme cover the decision-table area and first/last new scenario diagrams; all remaining source text and diagram labels are verified by full PDF extraction.",
+      "Long labels can wrap across lines; there is no missing text or clipped label after the shared SVG-label fix.",
+      "Final rerun PDFs match the visually reviewed raster panels pixel for pixel; exact PDF digests are recorded."
+    ]
+  },
+  "findings": [
+    "Every source paragraph, summary, label, table cell, caption and code block is present in actual PDF text.",
+    "All SVG diagram labels are present; diagrams render with nonzero source viewboxes in the host.",
+    "Both themes use readable print colors; controls are hidden and mixed disclosure states restore."
+  ]
+}

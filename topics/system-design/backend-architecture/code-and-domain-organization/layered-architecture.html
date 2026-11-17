@@ -1,0 +1,219 @@
+<article class="kb-topic" data-node-id="012a24bf-b2d7-4824-9a52-016ed4399c5e">
+<h1>Layered Architecture</h1>
+<section data-section="hook-eli5" id="node-012a24bf-b2d7-4824-9a52-016ed4399c5e-hook-eli5">
+<h2>🎯 The Hook & ELI5</h2>
+<div class="kb-callout--insight"><p><strong>ELI5 mental model.</strong> At a library, a reader asks the front desk for a book. The librarian applies borrowing rules, and the storage room holds the physical copies. These are different responsibilities even if everyone works in the same building. Layered architecture separates software responsibilities in the same way: receiving a request, making a decision, and accessing infrastructure are not one job.</p></div><p>Without a clear division of responsibility, an HTTP handler can become the place that parses input, decides policy, runs SQL, and sends email. Layered architecture groups related technical responsibilities and defines which layers may depend on which others. It helps people locate behavior and reason about changes; it does not by itself define the business domain or guarantee good boundaries.</p><div class="kb-callout--insight"><p>WHY it matters: changing the web interface should not require rewriting a loan-eligibility rule, and changing a database query should not redefine who may borrow a book. Distinguish a logical layer from a physical deployment tier: several layers may run inside one process, while multiple tiers communicate across network boundaries.</p></div>
+</section>
+<section data-section="big-picture" id="node-012a24bf-b2d7-4824-9a52-016ed4399c5e-big-picture">
+<h2>🗺️ High-Level Big Picture</h2>
+<p>A library borrowing request enters through a presentation adapter, reaches an application workflow, applies domain rules, and uses persistence to load/save state. This is one illustrative layering arrangement. Some layered systems put persistence at the bottom of a downward dependency stack; dependency-inverted designs let inner rules define an interface that outer infrastructure implements. Be explicit about which arrangement the code actually uses.</p><figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Responsibilities in a library borrowing request
+    accDescr: Presentation, application workflow, business rules, and persistence have distinct responsibilities; the diagram is logical, not a deployment map.
+    U[&quot;Reader&quot;] --&gt; P[&quot;Presentation: parse and respond&quot;]
+    P --&gt; A[&quot;Application: coordinate borrowing&quot;]
+    A --&gt; B[&quot;Business rules: may this loan begin&quot;]
+    A --&gt; D[&quot;Persistence access: load and save&quot;]
+    D --&gt; S[&quot;Database&quot;]
+    B --&gt; R[&quot;Loan decision&quot;]
+    R --&gt; A</pre><figcaption>Read the arrows as responsibilities and hand-offs, not as a promise that every step succeeds.</figcaption></figure>
+</section>
+<section data-section="mechanics" id="node-012a24bf-b2d7-4824-9a52-016ed4399c5e-mechanics">
+<h2>🔍 Step-by-Step Mechanics</h2>
+<p>Follow the example one boundary at a time. Open each step to connect the familiar mental model to the internal mechanics.</p><details><summary>1. Separate translation from the business request</summary><p>The front desk understands a reader’s form without deciding every borrowing rule itself. The <strong>presentation layer</strong> translates a transport-level request into an application-level operation. It handles concerns such as parsing, authentication integration, input shape, response status, and rendering a useful error.</p>
+<p>For <code>borrowBook(readerId, copyId)</code>, a missing identifier is a request-format problem. Whether that reader has exceeded the borrowing limit is a business decision. Keeping those distinctions explicit prevents the same rule from being implemented differently in a web handler and a future command-line import. Transport-specific objects should not become the only vocabulary the rest of the system can understand.</p></details>
+<details><summary>2. Put coordination in an application workflow</summary><p>The librarian coordinates several checks and records without making the desk itself the whole library. An <strong>application layer</strong> describes a use case: load the reader and copy, ask the domain whether a loan is allowed, save the resulting change, and arrange follow-up work. It owns the sequence and required transaction boundary for that use case.</p>
+<p>Coordination is not a reason to copy every rule into a giant service method. A workflow can ask a reader or loan policy to decide eligibility rather than embedding the rule beside database calls. Conversely, a domain object should not need to know how to write an HTTP response. Define a clear success/failure result that the presentation adapter can translate into its own protocol.</p></details>
+<details><summary>3. Keep rules distinguishable from storage mechanics</summary><p>A borrowing policy still makes sense if the library swaps its filing cabinets for a different catalog system. The <strong>domain layer</strong> captures concepts and constraints such as available copy, active loan, borrowing limit, or overdue restriction. Those rules should be testable without recreating the entire web request pipeline.</p>
+<p>A <strong>data-access or persistence layer</strong> handles queries, mapping, and storage interaction. Hiding SQL text behind a repository does not automatically hide all coupling: returning database row objects or lazy-loading entities into unrelated layers can leak storage behavior. Decide what representation crosses each boundary. For a small CRUD screen, direct mapping may be sufficient; for an invariant-rich borrowing workflow, explicit domain behavior is often easier to reason about.</p></details>
+<details><summary>4. State the dependency rule rather than guessing it</summary><p>A building directory is useful only when it tells people which doors they may use. In a strict downward layered arrangement, a layer uses the next permitted lower layer. A relaxed arrangement may permit some layers to skip intermediates. Neither rule can be inferred merely from folders named controllers, services, and repositories.</p>
+<p>Write the allowed dependency graph and check it. If the application layer needs persistence, one design depends on a concrete data-access service. A dependency-inverted alternative depends on an interface defined nearer the use case, with infrastructure implementing it. Clean and hexagonal architecture explore such boundary choices. The point is to choose the direction consciously, not to claim that every layered diagram has identical dependency semantics.</p></details>
+<details><summary>5. Understand local transactions and concurrent requests</summary><p>Two librarians can both see one available copy unless the final lending decision is coordinated. Layers organize code; they do not automatically serialize concurrent requests. The application workflow must combine the rule check and persisted state transition using an appropriate transaction/concurrency mechanism at the authoritative data boundary.</p>
+<p>An optimistic version check can reject a stale update; a uniqueness constraint may prevent two active loans for the same copy; a locking strategy has different contention costs. Choose according to the invariant. A transaction that stays open while calling a slow remote notification provider can hold resources unnecessarily. Persist a notification intent with the loan when recovery requires it, then perform remote work according to explicit delivery semantics.</p></details>
+<details><summary>6. Distinguish layers from tiers and test the right boundary</summary><p>The librarian and front desk can be separate jobs at the same desk, while a remote warehouse is another building. A <strong>layer</strong> is a logical responsibility boundary; a <strong>tier</strong> is a separately deployed runtime location. Moving each layer to a different service creates network costs and shared-release risks; it is not a prerequisite for layered architecture.</p>
+<p>Test rules directly, test application workflows with their interfaces, and test persistence mappings against the intended storage behavior. Add a small number of boundary-spanning checks for the important user journey. If tests can only verify a policy by starting the whole web/database stack, the responsibilities may be too entangled. If every layer merely passes an unchanged object onward, ask whether the layer provides a useful boundary or only ceremony.</p></details>
+</section>
+<section data-section="trade-offs" id="node-012a24bf-b2d7-4824-9a52-016ed4399c5e-trade-offs">
+<h2>⚖️ Comparisons & Trade-Offs</h2>
+<p>Choose using the constraints of the system and its team. The table compares relevant choices; compatible ideas can be combined rather than ranked as universally better.</p><div class="kb-table-wrap"><table><caption>Choices, benefits, costs, and decision conditions</caption><thead><tr><th scope="col">Approach or condition</th><th scope="col">What you gain</th><th scope="col">What you give up</th><th scope="col">Choose when</th></tr></thead><tbody><tr><td>Simple downward layers</td><td>Familiar placement of request, coordination and data access</td><td>Upper logic can become coupled to lower storage details</td><td>The domain is modest and the team understands the chosen dependency rule.</td></tr><tr><td>Dependency-inverted layers</td><td>Rules/use cases depend on deliberate abstractions</td><td>More interface and mapping decisions</td><td>Business policies need independence from transport or storage frameworks.</td></tr><tr><td>Vertical capability slices with internal layers</td><td>Related business changes stay close while responsibilities remain distinct</td><td>Boundary conventions must be consistent across slices</td><td>An application grows across several capabilities or teams.</td></tr><tr><td>A physical tier per logical layer</td><td>Potential separate runtime capacity/security boundaries</td><td>Network latency, distributed failures and deployment coordination</td><td>A measured operational requirement justifies each remote boundary.</td></tr></tbody></table></div>
+</section>
+<section data-section="pitfalls" id="node-012a24bf-b2d7-4824-9a52-016ed4399c5e-pitfalls">
+<h2>⚠️ Common Pitfalls, Bugs & What-If Scenarios</h2>
+<p>Treat a failure as a story: start with what a user observes, trace the boundary that failed, and choose a prevention that addresses the cause.</p><div class="kb-callout--pitfall"><h3>The controller becomes the business model</h3><p><strong>Symptom:</strong> A batch import permits loans the web interface rejects.</p><p><strong>Root Cause:</strong> Business eligibility logic lived only in the HTTP handler.</p><p><strong>Fix/Prevention:</strong> Move shared decisions into explicit application/domain behavior and let each presentation adapter translate the same result.</p></div><div class="kb-callout--pitfall"><h3>Every request makes a tour of empty pass-through methods</h3><p><strong>Symptom:</strong> Changing one field requires editing many nearly identical files.</p><p><strong>Root Cause:</strong> Layers were added for symmetry rather than a useful responsibility boundary.</p><p><strong>Fix/Prevention:</strong> Keep layers that isolate meaningful change or policy, and remove needless forwarding while preserving deliberate dependencies.</p></div><div class="kb-callout--pitfall"><h3>Three layers are mistaken for three services</h3><p><strong>Symptom:</strong> A simple borrowing request becomes a slow chain of tightly coupled network calls.</p><p><strong>Root Cause:</strong> Logical responsibility separation was equated with physical deployment separation.</p><p><strong>Fix/Prevention:</strong> Keep layers in one process unless an operational constraint justifies tiers; measure the added failure and release costs.</p></div>
+</section>
+<section data-section="mastery" id="node-012a24bf-b2d7-4824-9a52-016ed4399c5e-mastery">
+<h2>🧠 Active Recall & Mastery Check</h2>
+<div class="kb-callout--insight"><p><strong>Summarize this in your own words</strong></p><p>Explain the opening analogy, trace the worked example, and name one condition that would change your architectural decision. Try answering before opening the cards.</p></div><details class="kb-question" data-recall-id="layer-tier"><summary>Can a three-layer application run in one process?</summary><p>Yes. Layers describe logical responsibilities; tiers describe physical deployment locations. Presentation, application, domain, and persistence responsibilities can share a process. Separate deployment is an additional decision with network and operational costs.</p></details><details class="kb-question" data-recall-id="rule-location"><summary>Where does a maximum-active-loans policy belong?</summary><p>In explicit business behavior that the relevant use case invokes, not solely in an HTTP handler or a database mapper. The exact class arrangement can vary, but every interface that starts a loan must enforce the same policy through the authoritative workflow.</p></details><details class="kb-question" data-recall-id="dependency-rule"><summary>Is a folder structure enough to enforce layering?</summary><p>No. Define permitted imports/calls and test or review them. Strict, relaxed, and dependency-inverted variants differ. Inspect actual dependencies and representations crossing the boundaries instead of assuming conventional directory names provide enforcement.</p></details><details class="kb-question" data-recall-id="concurrent-loans"><summary>Why can correct rules still lend the same copy twice?</summary><p>Two requests can both read an available copy before either writes. Code layering does not solve concurrent state transitions. Use an authoritative transaction and an appropriate version, lock, or uniqueness mechanism so the invariant survives concurrent access.</p></details><!-- kb-interview-scenarios:start -->
+<section data-interview-scenarios aria-labelledby="node-012a24bf-b2d7-4824-9a52-016ed4399c5e-interview-scenarios">
+<h3 id="node-012a24bf-b2d7-4824-9a52-016ed4399c5e-interview-scenarios">Tricky &amp; Most-Asked Interview Scenarios</h3>
+<p>Practice making a decision under a concrete production constraint. Open each answer, explain your reasoning aloud, then rate your confidence. The budgets and organizations below are author-created assumptions.</p>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-pass-through-network-layers" data-scenario-basis="adapted-production">
+<summary>Six pass-through layers create six network hops. Which boundaries need to remain physical?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Passing a note through six desks is slow when five only forward it unchanged. A CRUD request crosses six deployed tiers with almost no policy between them. Network latency dominates the response budget, while the team calls every tier a required architectural layer. What will you change and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Separate logical responsibilities from physical deployment. Keep presentation, application policy and persistence responsibilities clear in code, but co-locate pass-through layers unless an actual scaling, security or ownership requirement justifies a network boundary. Profile the request path and remove needless serialization and round trips.</p>
+<p>Review strict versus relaxed layer access deliberately: an agreed read projection may bypass redundant orchestration, while writes still pass required policy. Test behavior and access controls after consolidation. A layer diagram describes dependency organization; it does not mandate one machine or service per box.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Six pass-through layers create six network hops. Which boundaries need to remain physical?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Measure forwarding overhead"]
+    N1["Separate layers from physical tiers"]
+    N2["Co-locate redundant hops"]
+    N3["Retest policy and latency"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Measure forwarding overhead → Separate layers from physical tiers → Co-locate redundant hops → Retest policy and latency.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You reduce latency and operational overhead while retaining logical separation, but give up independent physical scaling/isolation for co-located components. Keeping tiers separate is a viable alternative when a trust boundary or distinct resource demand requires it.</p>
+<p>Follow-up trap: removing every layer can also remove validation and authorization. If compliance mandates a physically isolated data tier, retain that boundary and optimize within its constraints. Measure the necessary hops rather than interpreting fewer boxes as the only performance objective.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-bypassed-pricing-policy" data-scenario-basis="adapted-production">
+<summary>A fast endpoint writes directly to the database and bypasses pricing checks. Where should the rule live?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A side door avoids the cashier as well as the queue. A new controller writes orders directly to persistence for speed, while batch jobs call an application service that validates discounts. Some API orders now receive invalid prices. What boundary will you repair and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Place the authoritative pricing/ordering rule in the shared domain or application use case, then route both HTTP and batch commands through it. Let controllers translate and validate transport shape; let repositories persist data rather than decide eligibility. Audit other write paths for the same bypass and add behavior tests for an invalid discount through each entry point.</p>
+<p>Measure the actual overhead before treating policy execution as expendable. Enforce simple data invariants in the database as defense in depth, but keep policy and its explanation in the responsible business layer. Return a consistent rejection rather than silently correcting prices in only one adapter.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A fast endpoint writes directly to the database and bypasses pricing checks. Where should the rule live?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Find all order write paths"]
+    N1["Centralize authoritative pricing use case"]
+    N2["Adapt HTTP and batch inputs"]
+    N3["Verify rejection consistently"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Find all order write paths → Centralize authoritative pricing use case → Adapt HTTP and batch inputs → Verify rejection consistently.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain consistent business decisions with one implementation, but may need to redesign an overly large application service. Direct read projections are an alternative for read-only views that cannot bypass a write invariant; they do not justify an unguarded write path.</p>
+<p>Follow-up trap: duplicating the rule in every controller makes the initial fix appear quick but invites drift. If a future import intentionally bypasses a rule, model that as an explicitly authorized business operation with its own constraints and audit trail, not a secret database shortcut.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-logical-layers-versus-tiers" data-scenario-basis="adapted-production">
+<summary>A team proposes a server for every layer. Will that improve independent scaling?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Separate folders do not require separate office buildings. A layered application runs well in one process, but an architecture review proposes deploying presentation, application and domain code on separate servers simply because they are distinct layers. There is no measured capacity issue. What will you recommend?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Keep logical layers in one deployable initially and choose physical tiers from measured operational constraints. Identify actual independent scaling units, such as CPU-heavy background work, and trust boundaries before adding remote calls. Ensure source dependencies stay intentional regardless of deployment placement.</p>
+<p>Prototype and load-test any proposed split, including serialization, authorization, timeout and partial-failure handling. Document how the split improves a concrete objective. If no benefit outweighs those costs, retain the simpler topology while preserving code boundaries that allow a later move.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: A team proposes a server for every layer. Will that improve independent scaling?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Identify operational requirement"]
+    N1["Choose logical dependencies"]
+    N2["Place physical boundaries selectively"]
+    N3["Measure split benefits and failures"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Identify operational requirement → Choose logical dependencies → Place physical boundaries selectively → Measure split benefits and failures.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>Co-location preserves fast calls and simpler failure handling but shares deployment and resources. Separate physical tiers are a valid alternative when a protected database network, distinct scaling profile or organizational boundary requires them.</p>
+<p>Follow-up trap: multiplying tiers does not automatically create microservices or independent business ownership. If application CPU becomes the bottleneck while storage is healthy, scaling whole stateless application replicas may be enough. If a sensitive adapter requires an isolated network zone, split that physical responsibility instead of distributing every conceptual layer.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-query-builder-leaks-upward" data-scenario-basis="adapted-production">
+<summary>Controllers depend on ORM query builders during a storage migration. How do you contain the leak?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Customers should order a meal, not operate the kitchen machinery. Controllers compose provider-specific queries and catch database exceptions directly. Switching storage now requires editing presentation code across the application. What contract will you introduce and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Identify the queries and commands the application actually needs, then expose purpose-specific application/repository operations with application-owned inputs and outputs. Translate provider models and exceptions in the data-access boundary, preserving useful distinctions such as not-found, conflict and unavailable. Avoid exporting a generic query builder that lets callers rebuild provider coupling.</p>
+<p>Migrate one use case at a time with behavior and adapter integration tests. For reports, an explicit read-query service can return a projection without forcing every result through a rich domain object. Verify pagination, ordering and null semantics rather than assuming two providers behave identically.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Controllers depend on ORM query builders during a storage migration. How do you contain the leak?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Inventory leaked query behavior"]
+    N1["Define use-case-shaped operations"]
+    N2["Translate at data boundary"]
+    N3["Verify real provider semantics"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Inventory leaked query behavior → Define use-case-shaped operations → Translate at data boundary → Verify real provider semantics.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You reduce storage leakage and localize provider changes, but maintain translation and explicit query operations. Direct ORM use is a viable simpler alternative for a small stable application that consciously accepts that coupling.</p>
+<p>Follow-up trap: a universal repository interface can become an untestable imitation of every database feature. If a new use case needs a provider-specific analytical query, isolate that capability explicitly and acknowledge its portability limit instead of pretending the entire application has become database-independent.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-use-case-transaction-owner" data-scenario-basis="adapted-production">
+<summary>Two repository writes partially succeed. Which layer should own their transaction?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>Writing half an invoice is not a completed sale. An application service saves an order, then its second repository call fails while updating a related local reservation. Both use the same transactional database, but each repository commits independently. What will you change and why?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Make the application use case own the transaction boundary for the business operation. Configure both repositories to participate in the same actual database transaction/session, and commit only after the required writes succeed. Keep repository methods from silently committing work that the use case expects to be atomic.</p>
+<p>Use concurrency constraints as well as rollback: a transaction does not automatically prevent overselling under every isolation level. Test failure between writes, commit failure and concurrent access against the real provider. EF Core transaction behavior is a provider-specific example, not a guarantee supplied by layered architecture itself.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Two repository writes partially succeed. Which layer should own their transaction?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Begin use-case transaction"]
+    N1["Execute participating writes"]
+    N2["Check invariant and concurrency"]
+    N3["Commit or roll back together"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Begin use-case transaction → Execute participating writes → Check invariant and concurrency → Commit or roll back together.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You gain one explicit local atomic boundary but couple those writes to a shared transactional resource and transaction lifetime. Moving the invariant into one aggregate/repository operation is another viable design. A durable workflow is an alternative when independent commits are intentional and temporary inconsistency is acceptable.</p>
+<p>Follow-up trap: wrapping remote service calls in the same application method does not enlist them automatically. If one write moves to a separate database, redesign the workflow or supported coordination rather than retaining an unsupported local-transaction promise. Keep slow external calls outside short database transactions where possible.</p>
+</div>
+</details>
+<details class="kb-question" data-recall-kind="interview" data-recall-id="interview-fake-repository-hides-provider-bug" data-scenario-basis="adapted-production">
+<summary>Unit tests pass with fake repositories, but production loses updates. What test is missing?</summary>
+<div data-scenario-part="scenario">
+<p><strong>The Scenario &amp; Constraint</strong></p>
+<p>A practice lock that never jams cannot prove the real door is safe. Fake repositories store objects in memory and every layered use-case test passes. Production behaves differently under concurrent writes and database constraints. What verification will you add without abandoning fast unit tests?</p>
+</div>
+<div data-scenario-part="decision">
+<p><strong>The Direct Answer &amp; Architectural Decision</strong></p>
+<p>Keep fast tests for application decisions, and add adapter integration tests using the real database engine/configuration for persistence semantics. Exercise unique constraints, concurrency conflicts, transaction rollback, ordering and provider error translation. Run selected end-to-end use cases through the actual repository boundary.</p>
+<p>Make the fake honor the contract where practical, but do not expand it into a second database implementation. Include the observed lost-update race as a regression with two concurrent actors. Separate a business-policy failure from an infrastructure-semantics failure so each test layer has a clear purpose.</p>
+<figure class="kb-diagram"><pre class="mermaid">flowchart TD
+    accTitle: Unit tests pass with fake repositories, but production loses updates. What test is missing?
+    accDescr: Decision and recovery responsibilities for this production scenario.
+    N0["Reproduce real lost-update race"]
+    N1["Test actual persistence adapter"]
+    N2["Translate infrastructure behavior"]
+    N3["Retain fast policy tests"]
+    N0 --> N1
+    N1 --> N2
+    N2 --> N3</pre><figcaption>Decision path: Reproduce real lost-update race → Test actual persistence adapter → Translate infrastructure behavior → Retain fast policy tests.</figcaption></figure>
+</div>
+<div data-scenario-part="trade-offs">
+<p><strong>Key Trade-Offs &amp; Follow-Up Traps</strong></p>
+<p>You catch provider-specific behavior and realistic transactions at the cost of slower setup and controlled test data. A lightweight substitute database is an alternative for some feedback, but may differ in precisely the locking or SQL feature under investigation.</p>
+<p>Follow-up trap: adding more mock expectations does not validate isolation behavior. If a provider change removes a required transaction feature, either choose a supported design or state the changed guarantee; do not weaken the production invariant just to keep an in-memory fake passing.</p>
+</div>
+</details>
+<aside class="kb-callout--insight" data-interview-research>
+<p>Researched 2026-11-17. These scenarios adapt documented production problems and architectural guidance. Interview frequency, rankings and company provenance for these exact prompts were not independently verified. Numeric budgets and organization details are author-created assumptions. Web search was available and used for this concept; primary sources support the technical reasoning, not a claim that these prompts recur in interviews.</p>
+<ul><li><a href="https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/n-tier">Microsoft: N-tier architecture style</a></li><li><a href="https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures">Microsoft: Common web application architectures</a></li><li><a href="https://learn.microsoft.com/en-us/ef/core/saving/transactions">Microsoft: EF Core transactions (implementation-specific example)</a></li><li><a href="https://learn.microsoft.com/en-us/ef/core/testing/choosing-a-testing-strategy">Microsoft: Choosing a testing strategy</a></li></ul>
+</aside>
+</section>
+<!-- kb-interview-scenarios:end --><div class="kb-callout--impact"><h3>Real-world impact</h3><p>A library backend gains clarity when request translation, use-case coordination, borrowing policy, and persistence have accountable roles. The benefit is safer change and more focused reasoning, not a prescribed number of folders. Separate logical concerns first; introduce physical tiers only when their operational benefit justifies their cost.</p></div>
+</section>
+<footer class="kb-references"><h2>Sources and further reading</h2><p>Original explanations and worked examples above; consult these primary references for the underlying ideas and implementation-specific details.</p><ul><li><a href="https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/n-tier">Microsoft Architecture Center: N-tier architecture style</a></li><li><a href="https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html">Robert C. Martin: The Clean Architecture</a></li></ul><p>Connect this lesson to: <a href="#/system-design/backend-architecture/core-system-topologies/monolithic-architecture">Monolithic Architecture</a>, <a href="#/system-design/backend-architecture/code-and-domain-organization/clean-architecture">Clean Architecture</a>, <a href="#/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture">Hexagonal Architecture</a>.</p></footer>
+</article>

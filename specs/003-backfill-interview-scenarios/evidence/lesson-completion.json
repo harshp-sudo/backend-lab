@@ -1,0 +1,877 @@
+{
+  "schemaVersion": 1,
+  "baselineSha256": "dd31a3f4d8d595cbe5463c87231b10cce293bf11d38caa1fdf624ada928f3e11",
+  "lessons": [
+    {
+      "topicId": "a1cef6f2-5f76-4376-980d-64af99310ec8",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/distributed-system-fundamentals.html",
+      "foundationalKeys": [
+        "timeout-meaning",
+        "idempotency-race",
+        "consistency-boundary",
+        "retry-budget"
+      ],
+      "interviewKeys": [
+        "interview-payment-timeout-unknown-outcome",
+        "interview-retry-storm-overload",
+        "interview-partition-cart-versus-stock",
+        "interview-read-after-profile-update",
+        "interview-offline-conflict-business-meaning",
+        "interview-slow-replica-failure-suspicion"
+      ],
+      "researchRecord": "specs/003-backfill-interview-scenarios/research/distributed-system-fundamentals.md",
+      "checks": {
+        "preservation": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/distributed-system-fundamentals-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "structure": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/distributed-system-fundamentals-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "editorial": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/distributed-system-fundamentals-editorial.json"
+          ],
+          "findings": "Separate source/editorial pass approved all six complete adapted scenarios against all eight criteria."
+        },
+        "browser": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/distributed-system-fundamentals-browser.json"
+          ],
+          "findings": "This exact lesson passed both-base click/direct refresh, every new confidence key, old/new backups, both themes/360px and all source diagrams."
+        },
+        "print": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/distributed-system-fundamentals-print.json"
+          ],
+          "findings": "This exact lesson has complete actual PDFs from light/dark, source/diagram text checks, inspected table/scenario raster panels, hidden controls and restored mixed disclosures."
+        }
+      },
+      "status": "pass",
+      "sourceSha256": "6c76a52a1524bd3bf53e20f7d03a70a89deffdf839dd007fa01b4afd78156acb"
+    },
+    {
+      "topicId": "1901acc7-9225-428a-9397-072cff3d36d0",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/monolithic-architecture.html",
+      "foundationalKeys": [
+        "server-count",
+        "local-transaction",
+        "modularity",
+        "extraction-test"
+      ],
+      "interviewKeys": [
+        "interview-small-team-launch-boundary",
+        "interview-same-rps-expensive-writes",
+        "interview-reporting-exhausts-checkout",
+        "interview-shared-artifact-safe-releases",
+        "interview-replicas-do-not-fix-database",
+        "interview-extract-one-capability-gradually"
+      ],
+      "researchRecord": "specs/003-backfill-interview-scenarios/research/monolithic-architecture.md",
+      "checks": {
+        "preservation": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/monolithic-architecture-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "structure": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/monolithic-architecture-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "editorial": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/monolithic-architecture-editorial.json"
+          ],
+          "findings": "Separate source/editorial pass approved all six complete adapted scenarios against all eight criteria."
+        },
+        "browser": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/monolithic-architecture-browser.json"
+          ],
+          "findings": "This exact lesson passed both-base click/direct refresh, every new confidence key, old/new backups, both themes/360px and all source diagrams."
+        },
+        "print": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/monolithic-architecture-print.json"
+          ],
+          "findings": "This exact lesson has complete actual PDFs from light/dark, source/diagram text checks, inspected table/scenario raster panels, hidden controls and restored mixed disclosures."
+        }
+      },
+      "status": "pass",
+      "sourceSha256": "8b193bfe38ac6ca56ae67ec11ee25a72bf34cf54a1c4a83690bd8648766179e2"
+    },
+    {
+      "topicId": "ab88a9ad-48ea-4968-becb-b0641aa6321d",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/modular-monolith.html",
+      "foundationalKeys": [
+        "module-proof",
+        "transaction-boundary",
+        "durable-events",
+        "extraction-cost"
+      ],
+      "interviewKeys": [
+        "interview-private-module-access",
+        "interview-cyclic-order-billing-inventory",
+        "interview-cross-module-local-invariant",
+        "interview-after-commit-listener-loss",
+        "interview-shared-common-business-rules",
+        "interview-extraction-readiness-hidden-coupling"
+      ],
+      "researchRecord": "specs/003-backfill-interview-scenarios/research/modular-monolith.md",
+      "checks": {
+        "preservation": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/modular-monolith-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "structure": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/modular-monolith-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "editorial": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/modular-monolith-editorial.json"
+          ],
+          "findings": "Separate source/editorial pass approved all six complete adapted scenarios against all eight criteria."
+        },
+        "browser": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/modular-monolith-browser.json"
+          ],
+          "findings": "This exact lesson passed both-base click/direct refresh, every new confidence key, old/new backups, both themes/360px and all source diagrams."
+        },
+        "print": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/modular-monolith-print.json"
+          ],
+          "findings": "This exact lesson has complete actual PDFs from light/dark, source/diagram text checks, inspected table/scenario raster panels, hidden controls and restored mixed disclosures."
+        }
+      },
+      "status": "pass",
+      "sourceSha256": "f7d71910f6a616c24f6f3692fd4588eea4df4ee08e0b5350e8beb6b055fbc06c"
+    },
+    {
+      "topicId": "11d759b2-bda9-45ba-a34d-0a0326cabd56",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/service-oriented-architecture.html",
+      "foundationalKeys": [
+        "protocol-definition",
+        "accepted-versus-done",
+        "compensation",
+        "soa-versus-microservices"
+      ],
+      "interviewKeys": [
+        "interview-legacy-contract-mediation",
+        "interview-integration-bus-outage",
+        "interview-service-contract-versioning",
+        "interview-long-running-approval-workflow",
+        "interview-business-policy-inside-middleware",
+        "interview-canonical-model-change-coupling"
+      ],
+      "researchRecord": "specs/003-backfill-interview-scenarios/research/service-oriented-architecture.md",
+      "checks": {
+        "preservation": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/service-oriented-architecture-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "structure": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/service-oriented-architecture-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "editorial": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/service-oriented-architecture-editorial.json"
+          ],
+          "findings": "Separate source/editorial pass approved all six complete adapted scenarios against all eight criteria."
+        },
+        "browser": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/service-oriented-architecture-browser.json"
+          ],
+          "findings": "This exact lesson passed both-base click/direct refresh, every new confidence key, old/new backups, both themes/360px and all source diagrams."
+        },
+        "print": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/service-oriented-architecture-print.json"
+          ],
+          "findings": "This exact lesson has complete actual PDFs from light/dark, source/diagram text checks, inspected table/scenario raster panels, hidden controls and restored mixed disclosures."
+        }
+      },
+      "status": "pass",
+      "sourceSha256": "870cfd5f446eaa43b2630ae1054795b3e43953072cb65f70bec82e50f53033e3"
+    },
+    {
+      "topicId": "04eae1bf-07bc-4646-8ce4-db2871fcfada",
+      "path": "topics/system-design/backend-architecture/core-system-topologies/microservices-architecture.html",
+      "foundationalKeys": [
+        "independence-test",
+        "data-ownership",
+        "saga-failure",
+        "monolith-extraction"
+      ],
+      "interviewKeys": [
+        "interview-lockstep-service-releases",
+        "interview-checkout-critical-path-latency",
+        "interview-checkout-partial-commit-recovery",
+        "interview-shared-writable-reporting-tables",
+        "interview-downstream-resource-cascade",
+        "interview-service-sprawl-small-team"
+      ],
+      "researchRecord": "specs/003-backfill-interview-scenarios/research/microservices-architecture.md",
+      "checks": {
+        "preservation": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/microservices-architecture-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "structure": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/microservices-architecture-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "editorial": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/microservices-architecture-editorial.json"
+          ],
+          "findings": "Separate source/editorial pass approved all six complete adapted scenarios against all eight criteria."
+        },
+        "browser": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/microservices-architecture-browser.json"
+          ],
+          "findings": "This exact lesson passed both-base click/direct refresh, every new confidence key, old/new backups, both themes/360px and all source diagrams."
+        },
+        "print": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/microservices-architecture-print.json"
+          ],
+          "findings": "This exact lesson has complete actual PDFs from light/dark, source/diagram text checks, inspected table/scenario raster panels, hidden controls and restored mixed disclosures."
+        }
+      },
+      "status": "pass",
+      "sourceSha256": "30cf45daf87d29229699d48f5764c921e3e755b584330049fd85a7e07477687a"
+    },
+    {
+      "topicId": "012a24bf-b2d7-4824-9a52-016ed4399c5e",
+      "path": "topics/system-design/backend-architecture/code-and-domain-organization/layered-architecture.html",
+      "foundationalKeys": [
+        "layer-tier",
+        "rule-location",
+        "dependency-rule",
+        "concurrent-loans"
+      ],
+      "interviewKeys": [
+        "interview-pass-through-network-layers",
+        "interview-bypassed-pricing-policy",
+        "interview-logical-layers-versus-tiers",
+        "interview-query-builder-leaks-upward",
+        "interview-use-case-transaction-owner",
+        "interview-fake-repository-hides-provider-bug"
+      ],
+      "researchRecord": "specs/003-backfill-interview-scenarios/research/layered-architecture.md",
+      "checks": {
+        "preservation": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/layered-architecture-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "structure": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/layered-architecture-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "editorial": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/layered-architecture-editorial.json"
+          ],
+          "findings": "Separate source/editorial pass approved all six complete adapted scenarios against all eight criteria."
+        },
+        "browser": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/layered-architecture-browser.json"
+          ],
+          "findings": "This exact lesson passed both-base click/direct refresh, every new confidence key, old/new backups, both themes/360px and all source diagrams."
+        },
+        "print": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/layered-architecture-print.json"
+          ],
+          "findings": "This exact lesson has complete actual PDFs from light/dark, source/diagram text checks, inspected table/scenario raster panels, hidden controls and restored mixed disclosures."
+        }
+      },
+      "status": "pass",
+      "sourceSha256": "5815f427794062a094795a79b6b7dcf367a6cf84f4aeb65f6210a60987eff0de"
+    },
+    {
+      "topicId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+      "path": "topics/system-design/backend-architecture/code-and-domain-organization/clean-architecture.html",
+      "foundationalKeys": [
+        "dependency-direction",
+        "four-circles",
+        "adapter-tests",
+        "error-semantics"
+      ],
+      "interviewKeys": [
+        "interview-framework-context-in-domain-tests",
+        "interview-orm-types-in-inner-port",
+        "interview-atomic-use-case-without-orm-import",
+        "interview-outward-execution-inward-source-dependency",
+        "interview-crud-abstraction-ceremony",
+        "interview-http-and-job-shared-policy"
+      ],
+      "researchRecord": "specs/003-backfill-interview-scenarios/research/clean-architecture.md",
+      "checks": {
+        "preservation": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/clean-architecture-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "structure": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/clean-architecture-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "editorial": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/clean-architecture-editorial.json"
+          ],
+          "findings": "Separate source/editorial pass approved all six complete adapted scenarios against all eight criteria."
+        },
+        "browser": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/clean-architecture-browser.json"
+          ],
+          "findings": "This exact lesson passed both-base click/direct refresh, every new confidence key, old/new backups, both themes/360px and all source diagrams."
+        },
+        "print": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/clean-architecture-print.json"
+          ],
+          "findings": "This exact lesson has complete actual PDFs from light/dark, source/diagram text checks, inspected table/scenario raster panels, hidden controls and restored mixed disclosures."
+        }
+      },
+      "status": "pass",
+      "sourceSha256": "e1ab624ca2a9d5845b2d307cc63b3fb33b45f0833411ee08a9e901f23ef9b04d"
+    },
+    {
+      "topicId": "7db3e3c3-10aa-4709-bf33-63848952d81f",
+      "path": "topics/system-design/backend-architecture/code-and-domain-organization/hexagonal-architecture.html",
+      "foundationalKeys": [
+        "driving-driven",
+        "six-ports",
+        "port-semantics",
+        "test-boundaries"
+      ],
+      "interviewKeys": [
+        "interview-rest-csv-same-application-port",
+        "interview-outbound-timeout-port-semantics",
+        "interview-in-memory-adapter-contract-gap",
+        "interview-provider-sdk-model-leak",
+        "interview-port-per-class-ceremony",
+        "interview-compatible-module-direct-port-call"
+      ],
+      "researchRecord": "specs/003-backfill-interview-scenarios/research/hexagonal-architecture.md",
+      "checks": {
+        "preservation": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/hexagonal-architecture-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "structure": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/hexagonal-architecture-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "editorial": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/hexagonal-architecture-editorial.json"
+          ],
+          "findings": "Separate source/editorial pass approved all six complete adapted scenarios against all eight criteria."
+        },
+        "browser": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/hexagonal-architecture-browser.json"
+          ],
+          "findings": "This exact lesson passed both-base click/direct refresh, every new confidence key, old/new backups, both themes/360px and all source diagrams."
+        },
+        "print": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/hexagonal-architecture-print.json"
+          ],
+          "findings": "This exact lesson has complete actual PDFs from light/dark, source/diagram text checks, inspected table/scenario raster panels, hidden controls and restored mixed disclosures."
+        }
+      },
+      "status": "pass",
+      "sourceSha256": "57d34d9889e6ba85f48db13365fc3abd0fe77be4990b9ec315b49adbf4bc1ea1"
+    },
+    {
+      "topicId": "a612a2d8-260a-4e97-82e7-b2851459e0c7",
+      "path": "topics/system-design/backend-architecture/code-and-domain-organization/domain-driven-design.html",
+      "foundationalKeys": [
+        "context-service",
+        "entity-value",
+        "aggregate-invariant",
+        "event-guarantee",
+        "model-cost"
+      ],
+      "interviewKeys": [
+        "interview-customer-bounded-context-language",
+        "interview-aggregate-last-unit-concurrency",
+        "interview-oversized-aggregate-contention",
+        "interview-cross-context-order-workflow",
+        "interview-legacy-erp-anti-corruption",
+        "interview-simple-crud-tactical-ddd-cost"
+      ],
+      "researchRecord": "specs/003-backfill-interview-scenarios/research/domain-driven-design.md",
+      "checks": {
+        "preservation": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/domain-driven-design-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "structure": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/domain-driven-design-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "editorial": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/domain-driven-design-editorial.json"
+          ],
+          "findings": "Separate source/editorial pass approved all six complete adapted scenarios against all eight criteria."
+        },
+        "browser": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/domain-driven-design-browser.json"
+          ],
+          "findings": "This exact lesson passed both-base click/direct refresh, every new confidence key, old/new backups, both themes/360px and all source diagrams."
+        },
+        "print": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/domain-driven-design-print.json"
+          ],
+          "findings": "This exact lesson has complete actual PDFs from light/dark, source/diagram text checks, inspected table/scenario raster panels, hidden controls and restored mixed disclosures."
+        }
+      },
+      "status": "pass",
+      "sourceSha256": "477c3f30a93c8be0715c1c076a2af53d2750a72da3680abe8e31e1fddf58594d"
+    },
+    {
+      "topicId": "0b36c2d3-9c94-47df-adce-d80bf6c3f720",
+      "path": "topics/system-design/backend-architecture/communication-and-routing/event-driven-architecture.html",
+      "foundationalKeys": [
+        "command-event",
+        "outbox-duplicate",
+        "ack-timing",
+        "replay-side-effects"
+      ],
+      "interviewKeys": [
+        "interview-database-commit-event-gap",
+        "interview-duplicate-delivery-external-effect",
+        "interview-entity-events-out-of-order",
+        "interview-consumer-lag-user-feedback",
+        "interview-notification-versus-state-transfer",
+        "interview-event-disguises-command"
+      ],
+      "researchRecord": "specs/003-backfill-interview-scenarios/research/event-driven-architecture.md",
+      "checks": {
+        "preservation": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/event-driven-architecture-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "structure": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/event-driven-architecture-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "editorial": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/event-driven-architecture-editorial.json"
+          ],
+          "findings": "Separate source/editorial pass approved all six complete adapted scenarios against all eight criteria."
+        },
+        "browser": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/event-driven-architecture-browser.json"
+          ],
+          "findings": "This exact lesson passed both-base click/direct refresh, every new confidence key, old/new backups, both themes/360px and all source diagrams."
+        },
+        "print": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/event-driven-architecture-print.json"
+          ],
+          "findings": "This exact lesson has complete actual PDFs from light/dark, source/diagram text checks, inspected table/scenario raster panels, hidden controls and restored mixed disclosures."
+        }
+      },
+      "status": "pass",
+      "sourceSha256": "3ad2ffb26dce35ad4e0e72015b2323da19e022f7ab34eefef30f93e2b2ac873a"
+    },
+    {
+      "topicId": "a5b7beee-bdbd-4987-9a41-8e16471b0a32",
+      "path": "topics/system-design/backend-architecture/communication-and-routing/api-gateway-pattern.html",
+      "foundationalKeys": [
+        "single-point",
+        "partial-result",
+        "authorization-owner",
+        "gateway-bff"
+      ],
+      "interviewKeys": [
+        "interview-mobile-screen-fanout-budget",
+        "interview-optional-dependency-partial-response",
+        "interview-shared-quota-multiple-replicas",
+        "interview-authentication-versus-object-authorization",
+        "interview-gateway-domain-orchestration-growth",
+        "interview-edge-release-shared-blast-radius"
+      ],
+      "researchRecord": "specs/003-backfill-interview-scenarios/research/api-gateway-pattern.md",
+      "checks": {
+        "preservation": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/api-gateway-pattern-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "structure": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/api-gateway-pattern-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "editorial": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/api-gateway-pattern-editorial.json"
+          ],
+          "findings": "Separate source/editorial pass approved all six complete adapted scenarios against all eight criteria."
+        },
+        "browser": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/api-gateway-pattern-browser.json"
+          ],
+          "findings": "This exact lesson passed both-base click/direct refresh, every new confidence key, old/new backups, both themes/360px and all source diagrams."
+        },
+        "print": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/api-gateway-pattern-print.json"
+          ],
+          "findings": "This exact lesson has complete actual PDFs from light/dark, source/diagram text checks, inspected table/scenario raster panels, hidden controls and restored mixed disclosures."
+        }
+      },
+      "status": "pass",
+      "sourceSha256": "9d00059b8eaaa28c200bf119ff9682fab320c0141c6603194de26aaf8e6db561"
+    },
+    {
+      "topicId": "1be329da-9367-4c1c-a4c8-0eff6ec862e1",
+      "path": "topics/system-design/backend-architecture/communication-and-routing/backend-for-frontend.html",
+      "foundationalKeys": [
+        "boundary-choice",
+        "rule-duplication",
+        "gateway-comparison",
+        "query-language"
+      ],
+      "interviewKeys": [
+        "interview-mobile-web-conflicting-payloads",
+        "interview-ios-android-ownership-boundary",
+        "interview-shared-library-release-coupling",
+        "interview-business-rule-drift-between-bffs",
+        "interview-old-mobile-client-compatibility",
+        "interview-single-frontend-extra-hop"
+      ],
+      "researchRecord": "specs/003-backfill-interview-scenarios/research/backend-for-frontend.md",
+      "checks": {
+        "preservation": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/backend-for-frontend-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "structure": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/backend-for-frontend-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "editorial": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/backend-for-frontend-editorial.json"
+          ],
+          "findings": "Separate source/editorial pass approved all six complete adapted scenarios against all eight criteria."
+        },
+        "browser": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/backend-for-frontend-browser.json"
+          ],
+          "findings": "This exact lesson passed both-base click/direct refresh, every new confidence key, old/new backups, both themes/360px and all source diagrams."
+        },
+        "print": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/backend-for-frontend-print.json"
+          ],
+          "findings": "This exact lesson has complete actual PDFs from light/dark, source/diagram text checks, inspected table/scenario raster panels, hidden controls and restored mixed disclosures."
+        }
+      },
+      "status": "pass",
+      "sourceSha256": "b6d0dec45c5de51f3ec10f041bb4dcb26cae9d38e1568aed06e660c926a7ede4"
+    },
+    {
+      "topicId": "5522e024-f6dd-471e-a3e4-41d0a60a5d2f",
+      "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-discovery.html",
+      "foundationalKeys": [
+        "discovery-selection",
+        "dns-ttl",
+        "client-server",
+        "readiness"
+      ],
+      "interviewKeys": [
+        "interview-terminating-endpoints-drain",
+        "interview-negative-dns-cache-new-service",
+        "interview-stale-registry-during-outage",
+        "interview-headless-service-client-balancing",
+        "interview-namespace-name-resolution",
+        "interview-vm-without-discovery-sdk"
+      ],
+      "researchRecord": "specs/003-backfill-interview-scenarios/research/service-discovery.md",
+      "checks": {
+        "preservation": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/service-discovery-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "structure": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/service-discovery-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "editorial": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/service-discovery-editorial.json"
+          ],
+          "findings": "Separate source/editorial pass approved all six complete adapted scenarios against all eight criteria."
+        },
+        "browser": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/service-discovery-browser.json"
+          ],
+          "findings": "This exact lesson passed both-base click/direct refresh, every new confidence key, old/new backups, both themes/360px and all source diagrams."
+        },
+        "print": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/service-discovery-print.json"
+          ],
+          "findings": "This exact lesson has complete actual PDFs from light/dark, source/diagram text checks, inspected table/scenario raster panels, hidden controls and restored mixed disclosures."
+        }
+      },
+      "status": "pass",
+      "sourceSha256": "36e23c0a254c8545580386e986007ce8d76aadee09b7bce135366d91cd011fd7"
+    },
+    {
+      "topicId": "84458963-012b-4a80-828a-2da27d8b509d",
+      "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/service-mesh.html",
+      "foundationalKeys": [
+        "planes",
+        "sidecars",
+        "identity-permission",
+        "control-outage"
+      ],
+      "interviewKeys": [
+        "interview-mesh-app-retry-multiplication",
+        "interview-strict-mtls-legacy-migration",
+        "interview-mtls-not-object-permission",
+        "interview-sidecar-ambient-measured-choice",
+        "interview-canary-traffic-unexpected-share",
+        "interview-mesh-business-fallback-limit"
+      ],
+      "researchRecord": "specs/003-backfill-interview-scenarios/research/service-mesh.md",
+      "checks": {
+        "preservation": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/service-mesh-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "structure": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/service-mesh-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "editorial": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/service-mesh-editorial.json"
+          ],
+          "findings": "Separate source/editorial pass approved all six complete adapted scenarios against all eight criteria."
+        },
+        "browser": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/service-mesh-browser.json"
+          ],
+          "findings": "This exact lesson passed both-base click/direct refresh, every new confidence key, old/new backups, both themes/360px and all source diagrams."
+        },
+        "print": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/service-mesh-print.json"
+          ],
+          "findings": "This exact lesson has complete actual PDFs from light/dark, source/diagram text checks, inspected table/scenario raster panels, hidden controls and restored mixed disclosures."
+        }
+      },
+      "status": "pass",
+      "sourceSha256": "c8a730fa8338f586b148744f88995e70879f562de141da3a1eb38aae0909a284"
+    },
+    {
+      "topicId": "689dd587-de37-4e22-9412-bd42b118da79",
+      "path": "topics/system-design/backend-architecture/infrastructure-and-multi-tenancy/multi-tenant-architecture.html",
+      "foundationalKeys": [
+        "tenant-user",
+        "shared-store",
+        "async-context",
+        "isolation-test"
+      ],
+      "interviewKeys": [
+        "interview-noisy-neighbor-fair-capacity",
+        "interview-enterprise-isolation-model",
+        "interview-tenant-filter-cache-key-leak",
+        "interview-per-tenant-restore-residency",
+        "interview-live-tenant-migration-single-writer",
+        "interview-tenant-customization-schema-sprawl"
+      ],
+      "researchRecord": "specs/003-backfill-interview-scenarios/research/multi-tenant-architecture.md",
+      "checks": {
+        "preservation": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/multi-tenant-architecture-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "structure": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/multi-tenant-architecture-structure.json"
+          ],
+          "findings": "Scoped current-profile checks pass; exact original source reconstructs and all original keys remain in order."
+        },
+        "editorial": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/multi-tenant-architecture-editorial.json"
+          ],
+          "findings": "Separate source/editorial pass approved all six complete adapted scenarios against all eight criteria."
+        },
+        "browser": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/multi-tenant-architecture-browser.json"
+          ],
+          "findings": "This exact lesson passed both-base click/direct refresh, every new confidence key, old/new backups, both themes/360px and all source diagrams."
+        },
+        "print": {
+          "status": "pass",
+          "evidence": [
+            "specs/003-backfill-interview-scenarios/evidence/lessons/multi-tenant-architecture-print.json"
+          ],
+          "findings": "This exact lesson has complete actual PDFs from light/dark, source/diagram text checks, inspected table/scenario raster panels, hidden controls and restored mixed disclosures."
+        }
+      },
+      "status": "pass",
+      "sourceSha256": "1338b170aae459c923ceb05e9c0a203ed24ef6f1a6fc00db7ecd2ff77a512fb6"
+    }
+  ]
+}

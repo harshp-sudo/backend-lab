@@ -1,0 +1,169 @@
+{
+  "status": "pass",
+  "topicId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+  "path": "topics/system-design/backend-architecture/code-and-domain-organization/clean-architecture.html",
+  "sourceSha256": "e1ab624ca2a9d5845b2d307cc63b3fb33b45f0833411ee08a9e901f23ef9b04d",
+  "browser": "141.0.7390.37",
+  "navigation": [
+    {
+      "base": "http://127.0.0.1:8020/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    },
+    {
+      "base": "http://127.0.0.1:8021/backend-lab/",
+      "clickedAndReloaded": 21,
+      "hubEdges": 20,
+      "consoleErrors": [],
+      "contentPathsRelative": true
+    }
+  ],
+  "learning": {
+    "topicId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+    "path": "topics/system-design/backend-architecture/code-and-domain-organization/clean-architecture.html",
+    "sourceSha256": "e1ab624ca2a9d5845b2d307cc63b3fb33b45f0833411ee08a9e901f23ef9b04d",
+    "status": "pass",
+    "bases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "newKeys": [
+          "interview-framework-context-in-domain-tests",
+          "interview-orm-types-in-inner-port",
+          "interview-atomic-use-case-without-orm-import",
+          "interview-outward-execution-inward-source-dependency",
+          "interview-crud-abstraction-ceremony",
+          "interview-http-and-job-shared-policy"
+        ],
+        "ratings": {
+          "interview-framework-context-in-domain-tests": "hard",
+          "interview-orm-types-in-inner-port": "good",
+          "interview-atomic-use-case-without-orm-import": "easy",
+          "interview-outward-execution-inward-source-dependency": "hard",
+          "interview-crud-abstraction-ceremony": "good",
+          "interview-http-and-job-shared-policy": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "newKeys": [
+          "interview-framework-context-in-domain-tests",
+          "interview-orm-types-in-inner-port",
+          "interview-atomic-use-case-without-orm-import",
+          "interview-outward-execution-inward-source-dependency",
+          "interview-crud-abstraction-ceremony",
+          "interview-http-and-job-shared-policy"
+        ],
+        "ratings": {
+          "interview-framework-context-in-domain-tests": "hard",
+          "interview-orm-types-in-inner-port": "good",
+          "interview-atomic-use-case-without-orm-import": "easy",
+          "interview-outward-execution-inward-source-dependency": "hard",
+          "interview-crud-abstraction-ceremony": "good",
+          "interview-http-and-job-shared-policy": "easy"
+        },
+        "initiallyUnrated": true,
+        "independentKeyboardDisclosure": true,
+        "reloadAndRevisit": true,
+        "originalStatusReviewAndConfidence": "unchanged",
+        "oldBackupReplacement": true,
+        "newBackupRestoration": true,
+        "unknownKeysPreserved": true
+      }
+    ]
+  },
+  "mobileThemes": {
+    "topicId": "d257fdd8-8532-4138-839b-7295ae2e2994",
+    "path": "topics/system-design/backend-architecture/code-and-domain-organization/clean-architecture.html",
+    "sourceSha256": "e1ab624ca2a9d5845b2d307cc63b3fb33b45f0833411ee08a9e901f23ef9b04d",
+    "status": "pass",
+    "cases": [
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-framework-context-in-domain-tests",
+          "interview-orm-types-in-inner-port",
+          "interview-atomic-use-case-without-orm-import",
+          "interview-outward-execution-inward-source-dependency",
+          "interview-crud-abstraction-ceremony",
+          "interview-http-and-job-shared-policy"
+        ],
+        "renderedDiagrams": 8,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8020/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-framework-context-in-domain-tests",
+          "interview-orm-types-in-inner-port",
+          "interview-atomic-use-case-without-orm-import",
+          "interview-outward-execution-inward-source-dependency",
+          "interview-crud-abstraction-ceremony",
+          "interview-http-and-job-shared-policy"
+        ],
+        "renderedDiagrams": 8,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "light",
+        "viewport": 360,
+        "newKeys": [
+          "interview-framework-context-in-domain-tests",
+          "interview-orm-types-in-inner-port",
+          "interview-atomic-use-case-without-orm-import",
+          "interview-outward-execution-inward-source-dependency",
+          "interview-crud-abstraction-ceremony",
+          "interview-http-and-job-shared-policy"
+        ],
+        "renderedDiagrams": 8,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      },
+      {
+        "base": "http://127.0.0.1:8021/backend-lab/",
+        "theme": "dark",
+        "viewport": 360,
+        "newKeys": [
+          "interview-framework-context-in-domain-tests",
+          "interview-orm-types-in-inner-port",
+          "interview-atomic-use-case-without-orm-import",
+          "interview-outward-execution-inward-source-dependency",
+          "interview-crud-abstraction-ceremony",
+          "interview-http-and-job-shared-policy"
+        ],
+        "renderedDiagrams": 8,
+        "keyboardAndPointer": "pass",
+        "sourceNoteVisible": true,
+        "pageOverflow": false,
+        "themeRerenderPreservesDetails": true,
+        "duplicateControls": false
+      }
+    ]
+  },
+  "errors": [],
+  "supportingFixture": "reading_fixture passed all 21 actual partials without learning writes."
+}
