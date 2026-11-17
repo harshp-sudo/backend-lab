@@ -1,0 +1,384 @@
+{
+  "topicId": "e549d388-02ef-40ac-b5ae-be62477f52bb",
+  "title": "Session-Based Authentication",
+  "path": "topics/system-design/authentication-backend-security/identity-and-token-authentication/session-based-authentication.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Session-Based Authentication\" interview session fixation logout distributed store",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "primer",
+      "title": "System Design Primer: Security",
+      "url": "https://github.com/donnemartin/system-design-primer#security",
+      "roles": [
+        "interview-evidence"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Core conceptual orientation checked during specification; its brief section explicitly needs updates and is not the sole protocol/crypto authority or evidence of interview frequency."
+    },
+    {
+      "id": "session",
+      "title": "OWASP: Session Management Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Opaque session lifecycle, cookie scope, regeneration, expiry and server-side invalidation; flags do not replace authorization/CSRF controls."
+    },
+    {
+      "id": "authn",
+      "title": "OWASP: Authentication Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Identity proof, reauthentication, safe responses and protection of authentication endpoints; deployment-specific choices remain explicit."
+    },
+    {
+      "id": "authz",
+      "title": "OWASP: Authorization Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Least privilege, default denial and resource/action authorization on every request, with trusted enforcement and failure handling."
+    },
+    {
+      "id": "xss",
+      "title": "OWASP: Cross Site Scripting Prevention Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Context-specific encoding, safe sinks, maintained rich-HTML sanitization and CSP defense in depth."
+    },
+    {
+      "id": "csrf",
+      "title": "OWASP: Cross-Site Request Forgery Prevention Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Framework token protection, signed/session-bound double submit, origin and SameSite defense boundaries; CORS is not universal CSRF protection."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-fixation",
+      "theme": "A pre-login session identifier survives login. What do you change?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "session"
+      ],
+      "technicalSources": [
+        "session"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "An attacker may have caused that identifier to be known before the victim authenticated. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Session-Based Authentication to fixation."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A pre-login session identifier survives login. What do you change?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Regenerate the authenticated session using the supported framework transition, invalidate the old authority and migrate only required nonprivileged state."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Regeneration must handle concurrent requests and cart continuity"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Simply changing the displayed user name does not establish a fresh credential boundary."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to session; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-load-balance",
+      "theme": "Users appear logged out when traffic hits another instance. What is missing?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "session"
+      ],
+      "technicalSources": [
+        "session"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Session records exist only in one process and instances restart. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Session-Based Authentication to load balance."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Users appear logged out when traffic hits another instance. What is missing?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Adopt a supported shared session architecture with access controls, lifecycle/expiry and outage behavior, or explicitly redesign the continuity contract."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A shared store adds dependency/latency"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Sticky routing may mask ordinary routing but does not itself preserve sessions after process loss."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to session; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-stolen-cookie",
+      "theme": "Logout deletes the browser cookie but a copied cookie still works. What now?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "session",
+        "authz"
+      ],
+      "technicalSources": [
+        "session",
+        "authz"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The product promises that session is no longer usable after logout. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Session-Based Authentication to stolen cookie."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Logout deletes the browser cookie but a copied cookie still works. What now?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Invalidate the authoritative server session and relevant caches, expire the matching cookie scope and test the copied identifier after the promised cut-off"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Central invalidation has consistency and availability costs"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Already executing effects may need a separate fresh-check boundary; cookie deletion cannot cancel them."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to session, authz; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-store-outage",
+      "theme": "The session store is unavailable. Should private operations trust userId from the client?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "session",
+        "authz"
+      ],
+      "technicalSources": [
+        "session",
+        "authz"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The service cannot resolve authenticated state under its required policy. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Session-Based Authentication to store outage."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The session store is unavailable. Should private operations trust userId from the client?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Reject or return a controlled unavailable result, preserve safe diagnostics and restore the store rather than bypass identity verification."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Availability is reduced"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A deliberately bounded verified cache can fit another documented risk model; arbitrary client identity is not that cache."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to session, authz; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-httponly-xss",
+      "theme": "HttpOnly is set, yet injected script changes an account setting. Why?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "session",
+        "xss"
+      ],
+      "technicalSources": [
+        "session",
+        "xss"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The browser can send the session cookie on same-origin requests even though script cannot read it. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Session-Based Authentication to httponly xss."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: HttpOnly is set, yet injected script changes an account setting. Why?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Fix the XSS source/sink and protect sensitive actions with appropriate authorization/assurance"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Additional controls add complexity"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: HttpOnly reduces direct cookie theft but does not make malicious same-origin code unable to act as the user."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to session, xss; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-timeout-policy",
+      "theme": "An active browser stays signed in forever. What lifetime was omitted?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "session",
+        "authn"
+      ],
+      "technicalSources": [
+        "session",
+        "authn"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Idle timers keep extending but policy requires a maximum authenticated session age. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Session-Based Authentication to timeout policy."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An active browser stays signed in forever. What lifetime was omitted?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Enforce an absolute lifetime alongside the idle policy on the server and use supported reauthentication/renewal behavior with clear user feedback."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: More reauthentication affects convenience"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: An absolute limit and an idle limit protect different exposure windows; cookie persistence alone cannot implement both correctly."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to session, authn; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the named references below. The System Design Primer provides core orientation where applicable; technical guarantees use the mapped primary sources. Exact interview frequency, rankings and company attribution were not independently verified. Security protocol and runtime examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://github.com/donnemartin/system-design-primer#security",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html"
+  ]
+}

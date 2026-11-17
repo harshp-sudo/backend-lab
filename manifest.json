@@ -656,6 +656,266 @@
               ]
             }
           ]
+        },
+        {
+          "id": "04b991bc-f6aa-4d9d-abda-ff9a6901963c",
+          "kind": "hub",
+          "title": "Message Queues & Event-Driven Systems",
+          "slug": "message-queues-event-driven",
+          "children": [
+            {
+              "id": "916b8e5f-16d7-4416-9738-430f4d1c17b6",
+              "kind": "hub",
+              "title": "Queue Foundations & Brokers",
+              "slug": "queue-foundations-and-brokers",
+              "children": [
+                {
+                  "id": "fa0ad0e8-a1ff-43f2-85e2-0542706bc220",
+                  "kind": "topic",
+                  "title": "Message Queue Fundamentals",
+                  "slug": "message-queue-fundamentals"
+                },
+                {
+                  "id": "bec9d26a-d810-410d-8bb2-4090f3095d3e",
+                  "kind": "topic",
+                  "title": "Apache Kafka",
+                  "slug": "apache-kafka"
+                },
+                {
+                  "id": "8ccf62a5-0515-4aa7-9019-6d1a90d0b5e9",
+                  "kind": "topic",
+                  "title": "RabbitMQ",
+                  "slug": "rabbitmq"
+                },
+                {
+                  "id": "7161059c-e0a9-45e7-8811-b554905227ba",
+                  "kind": "topic",
+                  "title": "AWS SQS",
+                  "slug": "aws-sqs"
+                }
+              ]
+            },
+            {
+              "id": "215b8192-4d05-4b2d-b464-d9535ad3ff66",
+              "kind": "hub",
+              "title": "Messaging & Event Patterns",
+              "slug": "messaging-and-event-patterns",
+              "children": [
+                {
+                  "id": "b4d6818a-21d1-45e0-b320-f033cc38d793",
+                  "kind": "topic",
+                  "title": "Publish-Subscribe Pattern",
+                  "slug": "publish-subscribe-pattern"
+                },
+                {
+                  "id": "d93cf373-8d7f-4066-a04d-02be7c79c039",
+                  "kind": "topic",
+                  "title": "Event Streaming",
+                  "slug": "event-streaming"
+                },
+                {
+                  "id": "a03c2009-7241-4c3b-beab-af8b7155e6cb",
+                  "kind": "topic",
+                  "title": "Event Sourcing",
+                  "slug": "event-sourcing"
+                },
+                {
+                  "id": "aa059746-e25e-409e-b671-337b7c7b58a0",
+                  "kind": "topic",
+                  "title": "CQRS",
+                  "slug": "cqrs"
+                }
+              ]
+            },
+            {
+              "id": "336ef7a1-adf0-4054-a4f5-0657a605ea5a",
+              "kind": "hub",
+              "title": "Delivery Guarantees & Ordering",
+              "slug": "delivery-guarantees-and-ordering",
+              "children": [
+                {
+                  "id": "9df63d61-0e6a-41e9-812d-779f46876ba0",
+                  "kind": "topic",
+                  "title": "Message Ordering",
+                  "slug": "message-ordering"
+                },
+                {
+                  "id": "b07e19c5-67dd-4128-9ead-388c633b1756",
+                  "kind": "topic",
+                  "title": "At-Least-Once Delivery",
+                  "slug": "at-least-once-delivery"
+                },
+                {
+                  "id": "a422b8b5-7b25-4493-90d3-986355f394ff",
+                  "kind": "topic",
+                  "title": "At-Most-Once Delivery",
+                  "slug": "at-most-once-delivery"
+                },
+                {
+                  "id": "9feb17c6-53b8-40b8-a2e9-3c7aac7d8a7e",
+                  "kind": "topic",
+                  "title": "Exactly-Once Processing",
+                  "slug": "exactly-once-processing"
+                }
+              ]
+            },
+            {
+              "id": "bd9347b5-a360-499c-8d94-799322981ac3",
+              "kind": "hub",
+              "title": "Scaling, Reliability & Flow Control",
+              "slug": "scaling-reliability-and-flow-control",
+              "children": [
+                {
+                  "id": "f2b1bc96-5928-436a-8963-0767481f952f",
+                  "kind": "topic",
+                  "title": "Consumer Groups",
+                  "slug": "consumer-groups"
+                },
+                {
+                  "id": "628fa4bf-df33-4a5a-b519-8eb68787a6c8",
+                  "kind": "topic",
+                  "title": "Dead Letter Queues (DLQ)",
+                  "slug": "dead-letter-queues"
+                },
+                {
+                  "id": "e9cbfe7e-a1f9-443f-bc12-172c034825f2",
+                  "kind": "topic",
+                  "title": "Backpressure Handling",
+                  "slug": "backpressure-handling"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "cf051d84-5b8d-4a05-b401-fc70af07653f",
+          "kind": "hub",
+          "title": "Authentication & Backend Security",
+          "slug": "authentication-backend-security",
+          "children": [
+            {
+              "id": "2a7e347e-150a-4ba5-b0d2-cd618ec4d79e",
+              "kind": "hub",
+              "title": "Identity & Token Authentication",
+              "slug": "identity-and-token-authentication",
+              "children": [
+                {
+                  "id": "d76f36d2-5f16-4ee8-b1ce-85e91c3c8290",
+                  "kind": "topic",
+                  "title": "Authentication vs Authorization",
+                  "slug": "authentication-vs-authorization"
+                },
+                {
+                  "id": "e549d388-02ef-40ac-b5ae-be62477f52bb",
+                  "kind": "topic",
+                  "title": "Session-Based Authentication",
+                  "slug": "session-based-authentication"
+                },
+                {
+                  "id": "5cd89282-500f-4b6c-b55a-1e4bb3d2d12f",
+                  "kind": "topic",
+                  "title": "JWT Authentication",
+                  "slug": "jwt-authentication"
+                },
+                {
+                  "id": "d9cf9dbc-14b5-4040-bc94-bc5101ff1bff",
+                  "kind": "topic",
+                  "title": "Refresh Token Rotation",
+                  "slug": "refresh-token-rotation"
+                }
+              ]
+            },
+            {
+              "id": "95bc8c10-8edb-4b9a-b39d-610add8dcb6b",
+              "kind": "hub",
+              "title": "Federated Identity & Access Control",
+              "slug": "federated-identity-and-access-control",
+              "children": [
+                {
+                  "id": "1b420c09-ea67-433f-a9ac-d98f510a9fdc",
+                  "kind": "topic",
+                  "title": "OAuth 2.0",
+                  "slug": "oauth-2-0"
+                },
+                {
+                  "id": "edf712a1-aa89-4636-89a5-1196650896f2",
+                  "kind": "topic",
+                  "title": "OpenID Connect",
+                  "slug": "openid-connect"
+                },
+                {
+                  "id": "e6576320-0358-4d26-9a83-be3045125360",
+                  "kind": "topic",
+                  "title": "Role-Based Access Control (RBAC)",
+                  "slug": "role-based-access-control"
+                },
+                {
+                  "id": "2e5da957-9623-4478-8a9c-388ac35e7d8c",
+                  "kind": "topic",
+                  "title": "Attribute-Based Access Control (ABAC)",
+                  "slug": "attribute-based-access-control"
+                }
+              ]
+            },
+            {
+              "id": "8fa60396-8123-4474-9628-2b945aa03b27",
+              "kind": "hub",
+              "title": "Cryptography & Secrets Management",
+              "slug": "cryptography-and-secrets-management",
+              "children": [
+                {
+                  "id": "9aebfca9-2a3e-4b50-a18f-e22e91685bb6",
+                  "kind": "topic",
+                  "title": "Password Hashing (bcrypt / Argon2)",
+                  "slug": "password-hashing"
+                },
+                {
+                  "id": "b9057d85-f10b-497f-9469-9f45417f3a6a",
+                  "kind": "topic",
+                  "title": "API Key Management",
+                  "slug": "api-key-management"
+                },
+                {
+                  "id": "cb035cf6-271e-48b6-8561-86d42b1ae621",
+                  "kind": "topic",
+                  "title": "Encryption at Rest & In Transit",
+                  "slug": "encryption-at-rest-and-in-transit"
+                },
+                {
+                  "id": "21ac5532-632d-4c85-ad75-8dd2e116b347",
+                  "kind": "topic",
+                  "title": "Secrets Management",
+                  "slug": "secrets-management"
+                }
+              ]
+            },
+            {
+              "id": "158a06bf-62ed-47ec-b844-44d3f8cff783",
+              "kind": "hub",
+              "title": "Common Web & API Vulnerabilities",
+              "slug": "common-web-and-api-vulnerabilities",
+              "children": [
+                {
+                  "id": "e3175c62-8182-4d2f-a5f5-71d76556d102",
+                  "kind": "topic",
+                  "title": "SQL Injection",
+                  "slug": "sql-injection"
+                },
+                {
+                  "id": "b4e2e63a-4696-4da7-b71d-d701aeb62924",
+                  "kind": "topic",
+                  "title": "Cross-Site Scripting (XSS)",
+                  "slug": "cross-site-scripting"
+                },
+                {
+                  "id": "70048dd8-c45b-454b-b17f-0554073d531e",
+                  "kind": "topic",
+                  "title": "CSRF Protection",
+                  "slug": "csrf-protection"
+                }
+              ]
+            }
+          ]
         }
       ]
     }

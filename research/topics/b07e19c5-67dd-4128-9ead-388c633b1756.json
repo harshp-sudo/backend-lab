@@ -1,0 +1,425 @@
+{
+  "topicId": "b07e19c5-67dd-4128-9ead-388c633b1756",
+  "title": "At-Least-Once Delivery",
+  "path": "topics/system-design/message-queues-event-driven/delivery-guarantees-and-ordering/at-least-once-delivery.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"At-Least-Once Delivery\" interview duplicate database commit acknowledgement",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "primer",
+      "title": "System Design Primer: Asynchronism, message queues, task queues and back pressure",
+      "url": "https://github.com/donnemartin/system-design-primer#asynchronism",
+      "roles": [
+        "interview-evidence"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Required core conceptual/interview-study reference, inspected 2026-11-17; historical product comparisons are not adopted as current guarantees or evidence of question frequency."
+    },
+    {
+      "id": "rconfirm",
+      "title": "RabbitMQ 4.1: Consumer acknowledgements and publisher confirms",
+      "url": "https://www.rabbitmq.com/docs/4.1/confirms",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Independent publisher/consumer acknowledgment boundaries, manual versus automatic ack and requeue behavior in AMQP 0-9-1."
+    },
+    {
+      "id": "svisibility",
+      "title": "Amazon SQS: Visibility timeout",
+      "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Receive/visibility/redelivery timing for current service documentation checked 2026-11-17; visibility is not an application-side-effect lock."
+    },
+    {
+      "id": "kapi",
+      "title": "Kafka Java client 4.1.2: KafkaConsumer",
+      "url": "https://kafka.apache.org/41/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Position versus committed position, manual progress handling, rebalances, thread-safety and asynchronous processing caveats."
+    },
+    {
+      "id": "outbox",
+      "title": "AWS Prescriptive Guidance: Transactional outbox",
+      "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Atomic local state/publication intent and remaining duplicate/consumer effect boundaries."
+    },
+    {
+      "id": "esource",
+      "title": "Azure Architecture Center: Event Sourcing pattern",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/event-sourcing",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Concurrency, snapshots, event evolution and projection rebuilding as separate design obligations."
+    },
+    {
+      "id": "retry",
+      "title": "Amazon Builders’ Library: Timeouts, retries and backoff with jitter",
+      "url": "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Unknown outcomes, retry amplification and bounded recovery; no universal timing constants are copied."
+    },
+    {
+      "id": "sdlq",
+      "title": "Amazon SQS: Dead-letter queues",
+      "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "maxReceiveCount, ordering implications and different Standard/FIFO DLQ retention timestamp behavior."
+    },
+    {
+      "id": "rdlx",
+      "title": "RabbitMQ 4.1: Dead letter exchanges",
+      "url": "https://www.rabbitmq.com/docs/4.1/dlx",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Dead-letter routing, reasons and safety caveats; transfer guarantees depend on queue type and configured strategy."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-credit-crash",
+      "theme": "A loyalty credit committed before the worker died. What does redelivery do?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "rconfirm",
+        "outbox"
+      ],
+      "technicalSources": [
+        "rconfirm",
+        "outbox"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The broker did not observe acknowledgment and the same purchase returns. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies At-Least-Once Delivery to credit crash."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A loyalty credit committed before the worker died. What does redelivery do?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Recognize the stable operation identity in the local atomic credit/dedup record, verify consistency and acknowledge without issuing another credit."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Identity storage costs space and needs lifecycle policy"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A non-idempotent external effect needs a provider/reconciliation strategy beyond this local transaction."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to rconfirm, outbox; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-dedup-race",
+      "theme": "Two workers both see no duplicate record. How do you prevent two effects?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "svisibility",
+        "outbox"
+      ],
+      "technicalSources": [
+        "svisibility",
+        "outbox"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Visibility expiry or recovery overlap lets both process the same intent concurrently. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies At-Least-Once Delivery to dedup race."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Two workers both see no duplicate record. How do you prevent two effects?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use a unique scoped identity and a transaction coordinating that identity with the local effect, handling conflict/retry under the database contract."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Contention adds latency"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A separate preflight lookup is useful for efficiency but cannot be the correctness boundary; a lease alone may expire while a worker still runs."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to svisibility, outbox; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-replay-horizon",
+      "theme": "A month-old redrive passes a week-long dedup table. What changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "outbox",
+        "esource"
+      ],
+      "technicalSources": [
+        "outbox",
+        "esource"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The operation must not be repeated even though replay beyond seven days is supported. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies At-Least-Once Delivery to replay horizon."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A month-old redrive passes a week-long dedup table. What changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Align durable deduplication or a stronger domain invariant with the supported replay horizon, and gate old live-effect redrive through reconciliation."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Long retention has storage/privacy cost"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Limiting replay is a viable alternative only if the product and recovery contract explicitly accept that limit."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to outbox, esource; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-external-unknown",
+      "theme": "A payment provider times out after receiving a request. Should you retry?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "outbox",
+        "retry"
+      ],
+      "technicalSources": [
+        "outbox",
+        "retry"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A local consumer cannot tell whether the provider charged the card. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies At-Least-Once Delivery to external unknown."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A payment provider times out after receiving a request. Should you retry?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Preserve the intent, use the same supported provider operation identity, query/reconcile the uncertain result and retry only under that provider’s document"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Without provider deduplication or outcome discovery, choose an explicit manual/omission/duplicate-risk policy"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A local marker cannot prove a remote charge occurred."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to outbox, retry; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-poison-loop",
+      "theme": "A malformed event retries forever and blocks useful work. What changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "sdlq",
+        "rdlx",
+        "retry"
+      ],
+      "technicalSources": [
+        "sdlq",
+        "rdlx",
+        "retry"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The decoder failure is deterministic and dependent ordering must be considered. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies At-Least-Once Delivery to poison loop."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A malformed event retries forever and blocks useful work. What changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Classify the permanent error, quarantine with diagnostic context after bounded policy and assign repair/redrive ownership"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Quarantine can interrupt ordered progress and does not complete the business operation"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Immediate retries help brief transient faults but only multiply this deterministic failure."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to sdlq, rdlx, retry; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-async-handoff",
+      "theme": "The listener acknowledges after handing work to a thread pool. Is that durable?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "rconfirm",
+        "svisibility",
+        "kapi"
+      ],
+      "technicalSources": [
+        "rconfirm",
+        "svisibility",
+        "kapi"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The only copy of unfinished work is now in process memory. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies At-Least-Once Delivery to async handoff."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The listener acknowledges after handing work to a thread pool. Is that durable?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Keep transport responsibility until a meaningful durable result or a supported durable handoff is committed; bound in-flight work and coordinate completion"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Holding responsibility longer affects throughput/timeouts"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A durable internal queue can be valid, but then its persistence and recovery become part of the end-to-end contract."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to rconfirm, svisibility, kapi; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the named references below. The System Design Primer provides core orientation where applicable; technical guarantees use the mapped primary sources. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://github.com/donnemartin/system-design-primer#asynchronism",
+    "https://www.rabbitmq.com/docs/4.1/confirms",
+    "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html",
+    "https://kafka.apache.org/41/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html",
+    "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html",
+    "https://learn.microsoft.com/en-us/azure/architecture/patterns/event-sourcing",
+    "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/",
+    "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html",
+    "https://www.rabbitmq.com/docs/4.1/dlx"
+  ]
+}

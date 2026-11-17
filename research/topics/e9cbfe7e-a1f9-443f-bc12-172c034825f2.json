@@ -1,0 +1,403 @@
+{
+  "topicId": "e9cbfe7e-a1f9-443f-bc12-172c034825f2",
+  "title": "Backpressure Handling",
+  "path": "topics/system-design/message-queues-event-driven/scaling-reliability-and-flow-control/backpressure-handling.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Backpressure Handling\" interview queue growing slow consumer",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "primer",
+      "title": "System Design Primer: Asynchronism, message queues, task queues and back pressure",
+      "url": "https://github.com/donnemartin/system-design-primer#asynchronism",
+      "roles": [
+        "interview-evidence"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Required core conceptual/interview-study reference, inspected 2026-11-17; historical product comparisons are not adopted as current guarantees or evidence of question frequency."
+    },
+    {
+      "id": "reactive",
+      "title": "Reactive Streams JVM: Specification",
+      "url": "https://github.com/reactive-streams/reactive-streams-jvm#specification",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Demand-controlled asynchronous handoff under the specification; not a guarantee that an unrelated broker/producer implements the same protocol."
+    },
+    {
+      "id": "overload",
+      "title": "Google SRE: Handling overload",
+      "url": "https://sre.google/sre-book/handling-overload/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Bounded work, resource/queue capacity and admission during sustained overload."
+    },
+    {
+      "id": "rprefetch",
+      "title": "RabbitMQ 4.1: Consumer prefetch",
+      "url": "https://www.rabbitmq.com/docs/4.1/consumer-prefetch",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Bounded unacknowledged deliveries and RabbitMQ-specific QoS scope; not a fleet-wide rate or business-transaction guarantee."
+    },
+    {
+      "id": "rconfirm",
+      "title": "RabbitMQ 4.1: Consumer acknowledgements and publisher confirms",
+      "url": "https://www.rabbitmq.com/docs/4.1/confirms",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Independent publisher/consumer acknowledgment boundaries, manual versus automatic ack and requeue behavior in AMQP 0-9-1."
+    },
+    {
+      "id": "retry",
+      "title": "Amazon Builders’ Library: Timeouts, retries and backoff with jitter",
+      "url": "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Unknown outcomes, retry amplification and bounded recovery; no universal timing constants are copied."
+    },
+    {
+      "id": "sdlq",
+      "title": "Amazon SQS: Dead-letter queues",
+      "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "maxReceiveCount, ordering implications and different Standard/FIFO DLQ retention timestamp behavior."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-slow-db",
+      "theme": "More workers make a growing backlog worse. What do you do?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "overload",
+        "reactive"
+      ],
+      "technicalSources": [
+        "overload",
+        "reactive"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The metadata database is saturated and extra concurrency increases timeouts. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Backpressure Handling to slow db."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: More workers make a growing backlog worse. What do you do?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Reduce/bound in-flight database work, control admission, diagnose the database limit and scale/optimize that bottleneck only when safe"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Lower concurrency may initially look slower but can restore useful throughput"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Adding workers helps only when worker capacity, not the shared sink, is limiting."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to overload, reactive; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-noncooperative",
+      "theme": "Clients ignore throttling and keep sending. Is backpressure enough?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "overload",
+        "reactive"
+      ],
+      "technicalSources": [
+        "overload",
+        "reactive"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The server has finite memory and cannot force those producers to honor demand. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Backpressure Handling to noncooperative."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Clients ignore throttling and keep sending. Is backpressure enough?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Enforce admission before acceptance, apply an explicit rejection/shedding/degradation contract and isolate essential tenants/work"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Rejection shifts retry responsibility and can harm clients"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Infinite buffering is not an alternative; authoritative accepted work needs a truthful recoverable outcome."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to overload, reactive; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-prefetch-memory",
+      "theme": "Prefetch is increased and workers run out of memory. What changed?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "rprefetch",
+        "rconfirm",
+        "overload"
+      ],
+      "technicalSources": [
+        "rprefetch",
+        "rconfirm",
+        "overload"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Many unacknowledged large messages now sit inside each consumer while processing stays slow. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Backpressure Handling to prefetch memory."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Prefetch is increased and workers run out of memory. What changed?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Bound prefetch in its RabbitMQ scope and application waiting/active bytes, measure message-size variation and acknowledge only after the promised durable r"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Smaller prefetch can reduce amortization"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A broker-side delivery count alone does not cap all process allocations or downstream connections."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to rprefetch, rconfirm, overload; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-timeout-permit",
+      "theme": "Concurrency rises beyond its limit during timeouts. Why?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "overload",
+        "retry"
+      ],
+      "technicalSources": [
+        "overload",
+        "retry"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A permit is released on timeout but the underlying database operation continues. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Backpressure Handling to timeout permit."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Concurrency rises beyond its limit during timeouts. Why?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Tie permits to actual operation termination/cancellation, bound abandoned work and ensure every completion/error path releases responsibility exactly once."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Holding permits can reject new work while old calls drain"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Releasing early hides saturation rather than increasing real capacity; cancellation must be supported, not assumed."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to overload, retry; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-redrive-budget",
+      "theme": "DLQ recovery overwhelms healthy live traffic. What is the policy?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "overload",
+        "retry",
+        "sdlq"
+      ],
+      "technicalSources": [
+        "overload",
+        "retry",
+        "sdlq"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Both use the same downstream database and the replay can run for hours. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Backpressure Handling to redrive budget."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: DLQ recovery overwhelms healthy live traffic. What is the policy?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Reserve essential live capacity, canary and pace redrive within a shared measured budget, stop on saturation/error growth and preserve stable identity."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Recovery takes longer and may need added verified capacity"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Unbounded retries at multiple layers multiply work rather than accelerating completion."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to overload, retry, sdlq; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-freshness",
+      "theme": "Queue depth falls but users still wait hours. What do you measure?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "overload",
+        "reactive"
+      ],
+      "technicalSources": [
+        "overload",
+        "reactive"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Workers process cheap recent items while old expensive tasks remain unresolved. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Backpressure Handling to freshness."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Queue depth falls but users still wait hours. What do you measure?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Track oldest business age, per-class/key fairness, resource-weighted backlog and completed outcomes; adjust scheduling/admission without violating required"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Fairness/age protection can reduce raw throughput"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A low count or fast recent percentile cannot establish that the accepted-work promise is being met."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to overload, reactive; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the named references below. The System Design Primer provides core orientation where applicable; technical guarantees use the mapped primary sources. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://github.com/donnemartin/system-design-primer#asynchronism",
+    "https://github.com/reactive-streams/reactive-streams-jvm#specification",
+    "https://sre.google/sre-book/handling-overload/",
+    "https://www.rabbitmq.com/docs/4.1/consumer-prefetch",
+    "https://www.rabbitmq.com/docs/4.1/confirms",
+    "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/",
+    "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html"
+  ]
+}

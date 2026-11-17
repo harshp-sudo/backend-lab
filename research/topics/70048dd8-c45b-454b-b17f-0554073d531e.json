@@ -1,0 +1,397 @@
+{
+  "topicId": "70048dd8-c45b-454b-b17f-0554073d531e",
+  "title": "CSRF Protection",
+  "path": "topics/system-design/authentication-backend-security/common-web-and-api-vulnerabilities/csrf-protection.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"CSRF\" interview SameSite CORS origin double submit cookie",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "primer",
+      "title": "System Design Primer: Security",
+      "url": "https://github.com/donnemartin/system-design-primer#security",
+      "roles": [
+        "interview-evidence"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Core conceptual orientation checked during specification; its brief section explicitly needs updates and is not the sole protocol/crypto authority or evidence of interview frequency."
+    },
+    {
+      "id": "csrf",
+      "title": "OWASP: Cross-Site Request Forgery Prevention Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Framework token protection, signed/session-bound double submit, origin and SameSite defense boundaries; CORS is not universal CSRF protection."
+    },
+    {
+      "id": "authz",
+      "title": "OWASP: Authorization Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Least privilege, default denial and resource/action authorization on every request, with trusted enforcement and failure handling."
+    },
+    {
+      "id": "session",
+      "title": "OWASP: Session Management Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Opaque session lifecycle, cookie scope, regeneration, expiry and server-side invalidation; flags do not replace authorization/CSRF controls."
+    },
+    {
+      "id": "jwt",
+      "title": "IETF RFC 8725: JSON Web Token Best Current Practices",
+      "url": "https://www.rfc-editor.org/rfc/rfc8725.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Algorithm verification, trusted keys, issuer/audience and distinct JWT usage profiles; not a universal authorization or revocation protocol."
+    },
+    {
+      "id": "xss",
+      "title": "OWASP: Cross Site Scripting Prevention Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Context-specific encoding, safe sinks, maintained rich-HTML sanitization and CSP defense in depth."
+    },
+    {
+      "id": "authn",
+      "title": "OWASP: Authentication Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Identity proof, reauthentication, safe responses and protection of authentication endpoints; deployment-specific choices remain explicit."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-no-read",
+      "theme": "An attacker cannot read the response but changes a victim’s email. Why?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "csrf",
+        "authz"
+      ],
+      "technicalSources": [
+        "csrf",
+        "authz"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The cookie-authenticated endpoint accepts a forged state-changing request. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies CSRF Protection to no read."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An attacker cannot read the response but changes a victim’s email. Why?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use the supported framework CSRF/session and appropriate origin checks before the mutation, then authorize the account/action and required assurance."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Token/origin integration adds work"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Blocking response access via CORS cannot undo an already accepted change."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to csrf, authz; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-jwt-cookie",
+      "theme": "The team replaces the session ID with a JWT cookie and removes CSRF checks. Is that justified?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "csrf",
+        "session",
+        "jwt"
+      ],
+      "technicalSources": [
+        "csrf",
+        "session",
+        "jwt"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The browser still attaches the authentication cookie automatically. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies CSRF Protection to jwt cookie."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The team replaces the session ID with a JWT cookie and removes CSRF checks. Is that justified?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Retain protection appropriate to the ambient-cookie request model and separately validate the JWT profile/lifecycle"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A deliberate explicitly attached bearer-header architecture has different classical CSRF assumptions but retains XSS/token risks"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A JWT label does not decide browser request intent."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to csrf, session, jwt; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-sibling-tenant",
+      "theme": "Untrusted tenant content on a sibling host reaches the app despite SameSite. What changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "csrf"
+      ],
+      "technicalSources": [
+        "csrf"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Those hosts share a browser site but are not the same origin. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies CSRF Protection to sibling tenant."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Untrusted tenant content on a sibling host reaches the app despite SameSite. What changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Treat sibling trust explicitly, enforce strict expected-origin and supported token policy, and consider domain isolation when untrusted content should not "
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Separate domains and stricter checks add operational/client complexity"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: SameSite alone cannot provide origin-level isolation under this site relationship."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to csrf; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-naive-double",
+      "theme": "Matching cookie and body tokens are accepted after cookie planting. What is missing?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "csrf"
+      ],
+      "technicalSources": [
+        "csrf"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The chosen pattern does not authenticate/bind the token to the intended session. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies CSRF Protection to naive double."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Matching cookie and body tokens are accepted after cookie planting. What is missing?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Replace it with the framework’s supported signed/session-bound double-submit or synchronizer mechanism and test the actual cookie scope/injection threat."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Binding and key/session lifecycle add work"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Random-looking equality alone does not prove the attacker could not choose both values."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to csrf; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-get-mutation",
+      "theme": "A cross-site link performs a state-changing GET. Will SameSite=Lax save it?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "csrf"
+      ],
+      "technicalSources": [
+        "csrf"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The endpoint mutates account state through a navigation-compatible request. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies CSRF Protection to get mutation."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A cross-site link performs a state-changing GET. Will SameSite=Lax save it?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Remove mutation from safe-method handling, require the proper state-changing operation and its supported CSRF/origin/authorization controls."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Clients may need migration"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Merely changing GET to POST without the remaining request checks does not finish the defense."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to csrf; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-xss-bypass",
+      "theme": "A script injected into the real app sends valid CSRF tokens. Is the token system broken?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "csrf",
+        "xss",
+        "authn"
+      ],
+      "technicalSources": [
+        "csrf",
+        "xss",
+        "authn"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The attacker’s code runs with trusted-origin browser capabilities. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies CSRF Protection to xss bypass."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A script injected into the real app sends valid CSRF tokens. Is the token system broken?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Fix the XSS source/sink, investigate effects and credential exposure, and retain correctly scoped CSRF/session/action controls rather than expecting them t"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Layered defenses cost effort"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Stronger action assurance can limit some consequences, but CSRF tokens alone are not an XSS isolation mechanism."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to csrf, xss, authn; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the named references below. The System Design Primer provides core orientation where applicable; technical guarantees use the mapped primary sources. Exact interview frequency, rankings and company attribution were not independently verified. Security protocol and runtime examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://github.com/donnemartin/system-design-primer#security",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html",
+    "https://www.rfc-editor.org/rfc/rfc8725.html",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html"
+  ]
+}

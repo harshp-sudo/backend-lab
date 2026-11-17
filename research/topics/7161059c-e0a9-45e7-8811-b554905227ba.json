@@ -1,0 +1,404 @@
+{
+  "topicId": "7161059c-e0a9-45e7-8811-b554905227ba",
+  "title": "AWS SQS",
+  "path": "topics/system-design/message-queues-event-driven/queue-foundations-and-brokers/aws-sqs.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"AWS SQS\" interview visibility timeout FIFO duplicate processing",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "svisibility",
+      "title": "Amazon SQS: Visibility timeout",
+      "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Receive/visibility/redelivery timing for current service documentation checked 2026-11-17; visibility is not an application-side-effect lock."
+    },
+    {
+      "id": "sfifo",
+      "title": "Amazon SQS: FIFO queues",
+      "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-fifo-queues.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Per-group FIFO behavior and queue-mode distinctions in the service; client processing must honor the required order."
+    },
+    {
+      "id": "sdedup",
+      "title": "Amazon SQS: Exactly-once processing and FIFO deduplication",
+      "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/FIFO-queues-exactly-once-processing.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Documented five-minute SendMessage deduplication scope; not atomicity of arbitrary consumer/database/provider effects."
+    },
+    {
+      "id": "sdelete",
+      "title": "Amazon SQS API: DeleteMessage",
+      "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_DeleteMessage.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Current receipt handles, possible stale-handle outcomes and Standard redelivery caveats after deletion."
+    },
+    {
+      "id": "sbatch",
+      "title": "Amazon SQS API: SendMessageBatch",
+      "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_SendMessageBatch.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Per-entry success/failure response handling; HTTP success does not prove each submitted entry succeeded."
+    },
+    {
+      "id": "sdlq",
+      "title": "Amazon SQS: Dead-letter queues",
+      "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "maxReceiveCount, ordering implications and different Standard/FIFO DLQ retention timestamp behavior."
+    },
+    {
+      "id": "outbox",
+      "title": "AWS Prescriptive Guidance: Transactional outbox",
+      "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Atomic local state/publication intent and remaining duplicate/consumer effect boundaries."
+    },
+    {
+      "id": "primer",
+      "title": "System Design Primer: Asynchronism, message queues, task queues and back pressure",
+      "url": "https://github.com/donnemartin/system-design-primer#asynchronism",
+      "roles": [
+        "interview-evidence"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Required core conceptual/interview-study reference, inspected 2026-11-17; historical product comparisons are not adopted as current guarantees or evidence of question frequency."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-visibility-overrun",
+      "theme": "A ten-minute task becomes visible while its worker still runs. What changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "svisibility"
+      ],
+      "technicalSources": [
+        "svisibility"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The configured visibility period is shorter than actual processing and two attempts can act on the same fulfillment intent. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies AWS SQS to visibility overrun."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A ten-minute task becomes visible while its worker still runs. What changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use a supported bounded visibility/extension plan and duplicate-safe effect ownership, monitor uncertainty and keep task identity stable across receipts."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Long visibility delays recovery of abandoned work; extensions can fail"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Neither timeout choice physically stops the original worker, so sink correctness still needs its own mechanism."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to svisibility; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-old-handle",
+      "theme": "Delete returned success but the message appears again. What do you inspect?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "sdelete"
+      ],
+      "technicalSources": [
+        "sdelete"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The handler reused a receipt handle from an earlier receive. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies AWS SQS to old handle."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Delete returned success but the message appears again. What do you inspect?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Follow the DeleteMessage receipt rules, track the relevant receive attempt and reconcile repeated business intent safely"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: More receipt/state tracking is needed"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Even a correct delete is not a cross-system atomic commit or permission to remove effect deduplication."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to sdelete; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-fifo-payment",
+      "theme": "A FIFO message triggers a payment twice after replay. Did FIFO fail?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "sdedup",
+        "svisibility",
+        "outbox"
+      ],
+      "technicalSources": [
+        "sdedup",
+        "svisibility",
+        "outbox"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The application replayed outside producer deduplication scope and did not protect the provider effect. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies AWS SQS to fifo payment."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A FIFO message triggers a payment twice after replay. Did FIFO fail?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use stable provider-supported intent/status semantics or a sink-local atomic effect/progress boundary, and define retention covering the supported replay w"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Additional state/coordination is required"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: FIFO send deduplication is a narrower service guarantee and cannot atomically include a nonparticipating payment provider."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to sdedup, svisibility, outbox; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-batch-partial",
+      "theme": "A successful batch response contains failed entries. Resend all?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "sbatch"
+      ],
+      "technicalSources": [
+        "sbatch"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Some fulfillment messages succeeded and others failed or remain uncertain. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies AWS SQS to batch partial."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A successful batch response contains failed entries. Resend all?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Record per-entry outcomes, retry only eligible unresolved work under its stable identity and classify permanent failures separately."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Per-entry tracking is more work than a batch flag"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Blind full resend can duplicate successful tasks, while treating HTTP success as complete loses failed tasks."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to sbatch; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-hot-group",
+      "theme": "More consumers do not clear one busy FIFO group. What can change?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "sfifo"
+      ],
+      "technicalSources": [
+        "sfifo"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Per-shipment order matters, but all unrelated shipments were assigned one group. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies AWS SQS to hot group."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: More consumers do not clear one busy FIFO group. What can change?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Choose independent business groups where invariants permit, bound worker concurrency and measure skew/sink capacity"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: More groups improve potential parallelism but change order scope"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If the entire workload truly needs one total order, scaling out consumers cannot remove that serialized boundary."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to sfifo; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-dlq-order",
+      "theme": "Skipping a failed FIFO item changes later business meaning. What do you do?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "sdlq",
+        "sfifo"
+      ],
+      "technicalSources": [
+        "sdlq",
+        "sfifo"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Later commands assume the missing earlier transition completed. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies AWS SQS to dlq order."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Skipping a failed FIFO item changes later business meaning. What do you do?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Define a per-entity failure/gap policy before redrive: pause/reconcile the sequence or explicitly change the business contract, with diagnosed repair and c"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Blocking preserves order but delays valid later work"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Moving to a DLQ can improve progress while breaking the original strict operation sequence; it is not invisible recovery."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to sdlq, sfifo; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the named references below. The System Design Primer provides core orientation where applicable; technical guarantees use the mapped primary sources. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html",
+    "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-fifo-queues.html",
+    "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/FIFO-queues-exactly-once-processing.html",
+    "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_DeleteMessage.html",
+    "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_SendMessageBatch.html",
+    "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html",
+    "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html",
+    "https://github.com/donnemartin/system-design-primer#asynchronism"
+  ]
+}

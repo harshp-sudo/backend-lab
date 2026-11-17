@@ -1,0 +1,368 @@
+{
+  "topicId": "2e5da957-9623-4478-8a9c-388ac35e7d8c",
+  "title": "Attribute-Based Access Control (ABAC)",
+  "path": "topics/system-design/authentication-backend-security/federated-identity-and-access-control/attribute-based-access-control.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"ABAC\" interview missing attributes policy decision freshness",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "primer",
+      "title": "System Design Primer: Security",
+      "url": "https://github.com/donnemartin/system-design-primer#security",
+      "roles": [
+        "interview-evidence"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Core conceptual orientation checked during specification; its brief section explicitly needs updates and is not the sole protocol/crypto authority or evidence of interview frequency."
+    },
+    {
+      "id": "abac",
+      "title": "NIST SP 800-162: ABAC Definition and Considerations",
+      "url": "https://csrc.nist.gov/pubs/sp/800/162/upd2/final",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Subject/object/action/environment attributes evaluated against policy; attribute provenance, policy combining and implementation assumptions are explicit design obligations."
+    },
+    {
+      "id": "authz",
+      "title": "OWASP: Authorization Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Least privilege, default denial and resource/action authorization on every request, with trusted enforcement and failure handling."
+    },
+    {
+      "id": "rbac",
+      "title": "NIST CSRC: Role-Based Access Control",
+      "url": "https://csrc.nist.gov/projects/role-based-access-control",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Original RBAC model and historical standards references for assignment, permissions, hierarchies and separation of duties; no latest-standard claim."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-self-clearance",
+      "theme": "A user changes clearance in JSON and reads a secret file. What is broken?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "abac",
+        "authz"
+      ],
+      "technicalSources": [
+        "abac",
+        "authz"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The policy expression is correct but its subject attributes come from the request. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Attribute-Based Access Control (ABAC) to self clearance."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A user changes clearance in JSON and reads a secret file. What is broken?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Resolve authority-bearing subject/resource facts from trusted sources, bind them to the verified principal/object and ignore/reject untrusted privilege ove"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Trusted lookups add cost and ownership work"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Input schema validity cannot turn a caller’s assertion into authoritative clearance."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to abac, authz; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-missing-classification",
+      "theme": "Classification lookup fails. Should the case become public?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "abac",
+        "authz"
+      ],
+      "technicalSources": [
+        "abac",
+        "authz"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The operation requires a known permitted classification. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Attribute-Based Access Control (ABAC) to missing classification."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Classification lookup fails. Should the case become public?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Map missing/indeterminate required facts to denial or controlled unavailability without releasing the case, then restore the attribute source under the dec"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Availability is reduced"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A scoped fresh cached result can be an explicit alternative; defaulting unknown to least sensitive silently changes the rule."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to abac, authz; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-conflicting-rules",
+      "theme": "One rule permits and another denies the same export. Which wins?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "abac",
+        "authz"
+      ],
+      "technicalSources": [
+        "abac",
+        "authz"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The team assumed a universal policy-engine default. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Attribute-Based Access Control (ABAC) to conflicting rules."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: One rule permits and another denies the same export. Which wins?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Specify the selected engine’s combining/outcome semantics, test the conflict and make the required business decision explicit in a versioned policy."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Explicit precedence increases modeling work"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Choosing a simpler single policy can reduce ambiguity; an assumed deny-overrides label is insufficient without actual engine behavior."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to abac, authz; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-reclassified",
+      "theme": "A file becomes confidential after a permit decision but before download. What happens?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "abac",
+        "authz"
+      ],
+      "technicalSources": [
+        "abac",
+        "authz"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The product requires current classification at release. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Attribute-Based Access Control (ABAC) to reclassified."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A file becomes confidential after a permit decision but before download. What happens?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Bind the decision to a supported authoritative resource/policy version and revalidate or reject on change at the release boundary, rather than serving a st"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Version coordination adds latency/contention"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Bounded cached reads may suit a weaker freshness promise but cannot satisfy this immediate classification requirement."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to abac, authz; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-rollout",
+      "theme": "A new policy suddenly denies most legitimate agents. How do you deploy safely?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "abac",
+        "authz"
+      ],
+      "technicalSources": [
+        "abac",
+        "authz"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The rule depends on an attribute not populated for older accounts. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Attribute-Based Access Control (ABAC) to rollout."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A new policy suddenly denies most legitimate agents. How do you deploy safely?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Test representative/missing-attribute cases, stage attribute readiness and policy rollout, use safe comparison/rollback and preserve denial for genuinely u"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Staging adds effort"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A blanket fail-open restores traffic by granting undefined access; explicit temporary limited policy is a different reviewed decision."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to abac, authz; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-too-complex",
+      "theme": "ABAC latency and explanations are worse than the original roles. What can change?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "abac",
+        "rbac",
+        "authz"
+      ],
+      "technicalSources": [
+        "abac",
+        "rbac",
+        "authz"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Most permissions are stable duties and only ownership is contextual. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Attribute-Based Access Control (ABAC) to too complex."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: ABAC latency and explanations are worse than the original roles. What can change?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use scoped roles for stable bundles and a small explicit ownership/relationship rule, retaining a single understandable enforcement/freshness model."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A hybrid still needs tests and source trust"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Full ABAC is justified when context needs its expressive power, not simply because it is more flexible."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to abac, rbac, authz; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the named references below. The System Design Primer provides core orientation where applicable; technical guarantees use the mapped primary sources. Exact interview frequency, rankings and company attribution were not independently verified. Security protocol and runtime examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://github.com/donnemartin/system-design-primer#security",
+    "https://csrc.nist.gov/pubs/sp/800/162/upd2/final",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html",
+    "https://csrc.nist.gov/projects/role-based-access-control"
+  ]
+}
