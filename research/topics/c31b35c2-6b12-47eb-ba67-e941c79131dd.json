@@ -1,0 +1,377 @@
+{
+  "topicId": "c31b35c2-6b12-47eb-ba67-e941c79131dd",
+  "title": "Leader Election",
+  "path": "topics/system-design/distributed-systems-scalability/distributed-transactions-and-coordination/leader-election.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Leader Election\" system design interview split brain quorum",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "raft",
+      "title": "Ongaro and Ousterhout: Raft extended paper",
+      "url": "https://raft.github.io/raft.pdf",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Terms, persistent votes, election/log safety and membership assumptions in the original Raft protocol."
+    },
+    {
+      "id": "etcd",
+      "title": "etcd v3.6: API guarantees",
+      "url": "https://etcd.io/docs/v3.6/learning/api_guarantees/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Explicit v3.6 KV consistency, weaker serializable read option, watch limitations and lease behavior."
+    },
+    {
+      "id": "fencing",
+      "title": "Martin Kleppmann: How to do distributed locking",
+      "url": "https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Original analysis of paused lease holders and resource-enforced fencing; not a blanket evaluation of every current Redis deployment."
+    },
+    {
+      "id": "overload",
+      "title": "Google SRE: Handling overload",
+      "url": "https://sre.google/sre-book/handling-overload/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Capacity, bounded queues, load shedding and retry-aware overload reasoning."
+    },
+    {
+      "id": "retry",
+      "title": "Amazon Builders’ Library: Timeouts, retries and backoff with jitter",
+      "url": "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Timeout uncertainty, safe repeated effects, retry amplification, bounded retries and jitter; URL redirects to the author's AWS Builder Center article."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-old-still-runs",
+      "theme": "The old leader resumes after a long pause. What stops its writes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "raft",
+        "fencing"
+      ],
+      "technicalSources": [
+        "raft",
+        "fencing"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A new leader was elected and workers already accepted a newer ownership epoch. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Leader Election to old still runs."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The old leader resumes after a long pause. What stops its writes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Require worker/storage mutations to validate the relevant epoch atomically and reject obsolete generations"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: This requires resource cooperation and durable generation handling"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Killing the old process is useful defense but not sufficient for delayed packets; unsupported external effects may need redesign."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to raft, fencing; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-minority-loss",
+      "theme": "A lone replica cannot reach the other two. Should it elect itself?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "raft",
+        "etcd"
+      ],
+      "technicalSources": [
+        "raft",
+        "etcd"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The supported three-member protocol requires a majority and the other pair may still communicate. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Leader Election to minority loss."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A lone replica cannot reach the other two. Should it elect itself?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Do not invent unilateral authority; preserve the quorum protocol and expose unavailable/pending coordination where needed"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: The minority loses coordination availability"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: An explicitly weaker local display may still work, but it must not mutate authoritative assignments as if it had won an election."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to raft, etcd; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-churn",
+      "theme": "Leaders change every few seconds under load. Shorten the timeout?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "raft",
+        "overload"
+      ],
+      "technicalSources": [
+        "raft",
+        "overload"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Process scheduling delays and network tails grow during peak demand. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Leader Election to churn."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Leaders change every few seconds under load. Shorten the timeout?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Correlate election changes with those delays, relieve resource pressure and tune supported timeout ranges against measured behavior rather than shortening "
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Longer timeouts can delay legitimate failover"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Separate detection-speed objectives from safety; a timeout does not prove death or fix overloaded coordination storage."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to raft, overload; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-lost-local-state",
+      "theme": "A controller restarts with yesterday’s local shard map. Use it?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "raft",
+        "etcd"
+      ],
+      "technicalSources": [
+        "raft",
+        "etcd"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The authoritative coordination log may contain newer placements. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Leader Election to lost local state."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A controller restarts with yesterday’s local shard map. Use it?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Recover/read the supported authoritative state and current generation before proposing or acting on assignments; treat local cached state as provisional an"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Recovery can delay readiness"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Using stale state may be acceptable for a read-only historical view, but not for assigning exclusive live ownership under the original promise."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to raft, etcd; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-membership",
+      "theme": "Can both sides replace failed voters independently?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "raft",
+        "etcd"
+      ],
+      "technicalSources": [
+        "raft",
+        "etcd"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A partitioned operations team proposes separate new member lists to restore availability. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Leader Election to membership."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Can both sides replace failed voters independently?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Follow one supported membership/recovery procedure with an explicit authority and fencing plan; do not let disconnected groups independently create competi"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Conservative recovery can prolong outage"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A deliberate disaster-recovery rebuild may change cluster identity/state, requiring explicit exclusion of obsolete participants and audit of lost updates."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to raft, etcd; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-external-task",
+      "theme": "A leader sends a bank transfer and loses leadership before reply. Reissue?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "fencing",
+        "retry"
+      ],
+      "technicalSources": [
+        "fencing",
+        "retry"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The bank cannot validate your election term and the transfer might have completed. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Leader Election to external task."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A leader sends a bank transfer and loses leadership before reply. Reissue?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use the bank’s supported stable intent/idempotency/status mechanism and durable workflow identity, reconciling the original outcome"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Provider cooperation and retained intent state are required"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Election orders your control plane, but cannot by itself guarantee exactly-once effects in an unrelated system."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to fencing, retry; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://raft.github.io/raft.pdf",
+    "https://etcd.io/docs/v3.6/learning/api_guarantees/",
+    "https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html",
+    "https://sre.google/sre-book/handling-overload/",
+    "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/"
+  ]
+}

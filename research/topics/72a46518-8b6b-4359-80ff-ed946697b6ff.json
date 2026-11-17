@@ -1,0 +1,362 @@
+{
+  "topicId": "72a46518-8b6b-4359-80ff-ed946697b6ff",
+  "title": "Fault Tolerance",
+  "path": "topics/system-design/distributed-systems-scalability/resilience-and-fault-tolerance-patterns/fault-tolerance.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Fault Tolerance\" system design interview correlated failure recovery",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "dr",
+      "title": "Azure Well-Architected: Disaster recovery",
+      "url": "https://learn.microsoft.com/en-us/azure/well-architected/reliability/disaster-recovery",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Explicit recovery objectives, failure-domain planning and tested recovery; examples are illustrative rather than provider promises."
+    },
+    {
+      "id": "cascade",
+      "title": "Google SRE: Addressing cascading failures",
+      "url": "https://sre.google/sre-book/addressing-cascading-failures/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Correlated overload, failure propagation, recovery capacity and controlled testing."
+    },
+    {
+      "id": "overload",
+      "title": "Google SRE: Handling overload",
+      "url": "https://sre.google/sre-book/handling-overload/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Capacity, bounded queues, load shedding and retry-aware overload reasoning."
+    },
+    {
+      "id": "raft",
+      "title": "Ongaro and Ousterhout: Raft extended paper",
+      "url": "https://raft.github.io/raft.pdf",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Terms, persistent votes, election/log safety and membership assumptions in the original Raft protocol."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-shared-zone",
+      "theme": "Three replicas disappear together. Was the service fault tolerant?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "dr",
+        "cascade"
+      ],
+      "technicalSources": [
+        "dr",
+        "cascade"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "They ran in one failure domain and the requirement covered loss of that domain. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Fault Tolerance to shared zone."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Three replicas disappear together. Was the service fault tolerant?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Place enough independent capacity/state across the required domains, inspect shared dependencies and validate the full routing/authority path under a domai"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: More domains add cost and coordination latency"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Independence must match the assumed failure; separate hosts alone do not address regional or shared-credential failure."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to dr, cascade; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-survivor-overload",
+      "theme": "Failover works, then the healthy region collapses. What changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "cascade",
+        "overload"
+      ],
+      "technicalSources": [
+        "cascade",
+        "overload"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The surviving region receives normal traffic plus cold-cache loads and retries. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Fault Tolerance to survivor overload."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Failover works, then the healthy region collapses. What changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Apply bounded admission/degradation, ramp traffic and test capacity under the full recovery mix"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Reserve capacity costs money and shedding affects users"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Adding instances may arrive too late or overload a shared database, so measure downstream and startup constraints."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to cascade, overload; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-corrupt-replica",
+      "theme": "A bad update reaches every replica. Promote one?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "dr"
+      ],
+      "technicalSources": [
+        "dr"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "All replicas contain the same erroneous deletion and the valid data existed yesterday. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Fault Tolerance to corrupt replica."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A bad update reaches every replica. Promote one?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Stop the damaging path, identify a valid recovery point, restore/replay through supported procedures and reconcile later legitimate changes before reopenin"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Historical restoration takes time and may lose/reconcile subsequent work"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Another equally corrupted replica cannot restore the missing truth; backup retention and integrity checks are essential."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to dr; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-unknown-payment",
+      "theme": "The payment dependency is down. Show paid to preserve availability?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "dr",
+        "cascade"
+      ],
+      "technicalSources": [
+        "dr",
+        "cascade"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Order tracking can serve some cached information, but payment correctness matters. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Fault Tolerance to unknown payment."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The payment dependency is down. Show paid to preserve availability?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Return the permitted order details with an explicit unavailable/unknown payment state and disable actions requiring confirmed payment authority"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A degraded view is less convenient, but inventing success violates the user promise"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A signed durable prior payment fact may support a narrower statement if its validity is established."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to dr, cascade; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-restore-objective",
+      "theme": "The backup restores in ten minutes. Is a ten-minute RTO proven?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "dr"
+      ],
+      "technicalSources": [
+        "dr"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Clients still need keys, DNS/routing changes, log replay and correctness checks. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Fault Tolerance to restore objective."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The backup restores in ten minutes. Is a ten-minute RTO proven?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Measure the end-to-end incident-to-useful-service path with those dependencies and compare the result with the agreed objective"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Full drills consume resources and coordination"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A narrower database-restore metric can still be useful, but must not be advertised as the whole service recovery objective."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to dr; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-failback-split",
+      "theme": "The old primary region returns with stale data. Route writes back immediately?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "dr",
+        "raft"
+      ],
+      "technicalSources": [
+        "dr",
+        "raft"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The recovery region has accepted authoritative updates during the outage. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Fault Tolerance to failback split."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The old primary region returns with stale data. Route writes back immediately?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Keep one supported authority, reconcile/rebuild the returning state and perform a verified ownership/routing handoff with obsolete writers fenced"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Failback may take longer than connectivity restoration"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: An active-active merge is an alternative only if its consistency/conflict model fits the data; it cannot be improvised after divergent irreversible actions"
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to dr, raft; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://learn.microsoft.com/en-us/azure/well-architected/reliability/disaster-recovery",
+    "https://sre.google/sre-book/addressing-cascading-failures/",
+    "https://sre.google/sre-book/handling-overload/",
+    "https://raft.github.io/raft.pdf"
+  ]
+}

@@ -526,6 +526,136 @@
               ]
             }
           ]
+        },
+        {
+          "id": "3afa2785-7567-44a0-9706-7a1af581b1ec",
+          "kind": "hub",
+          "title": "Distributed Systems & Scalability",
+          "slug": "distributed-systems-scalability",
+          "children": [
+            {
+              "id": "3f0d443b-8e2a-4571-a490-115156934900",
+              "kind": "hub",
+              "title": "Scaling & Traffic Distribution",
+              "slug": "scaling-and-traffic-distribution",
+              "children": [
+                {
+                  "id": "7018d866-3bba-4b0d-9eda-b2f9dccee551",
+                  "kind": "topic",
+                  "title": "Horizontal vs Vertical Scaling",
+                  "slug": "horizontal-vs-vertical-scaling"
+                },
+                {
+                  "id": "ccdbf5c1-599c-4b49-992e-1d0c0a3773fb",
+                  "kind": "topic",
+                  "title": "Load Balancing",
+                  "slug": "load-balancing"
+                },
+                {
+                  "id": "7696fe07-3043-4f12-b9fb-e0fba472934d",
+                  "kind": "topic",
+                  "title": "Consistent Hashing",
+                  "slug": "consistent-hashing"
+                }
+              ]
+            },
+            {
+              "id": "ab9354bd-774e-4cbf-9775-88e22c1613c3",
+              "kind": "hub",
+              "title": "Consistency Models & Trade-Offs",
+              "slug": "consistency-models-and-trade-offs",
+              "children": [
+                {
+                  "id": "5e383f18-b808-4a06-a6bc-172086450a64",
+                  "kind": "topic",
+                  "title": "CAP Theorem",
+                  "slug": "cap-theorem"
+                },
+                {
+                  "id": "d3264675-ea60-4faa-822e-9113345836ae",
+                  "kind": "topic",
+                  "title": "Eventual Consistency",
+                  "slug": "eventual-consistency"
+                },
+                {
+                  "id": "a8e8f310-fc69-46f5-84d0-3bea09b266c8",
+                  "kind": "topic",
+                  "title": "Strong Consistency",
+                  "slug": "strong-consistency"
+                }
+              ]
+            },
+            {
+              "id": "62405529-8062-455c-8881-1cb865815bbe",
+              "kind": "hub",
+              "title": "Distributed Transactions & Coordination",
+              "slug": "distributed-transactions-and-coordination",
+              "children": [
+                {
+                  "id": "e771361a-494b-4381-9f03-f9b768f81a5f",
+                  "kind": "topic",
+                  "title": "Distributed Transactions",
+                  "slug": "distributed-transactions"
+                },
+                {
+                  "id": "263bac5a-9c8e-4ae4-a620-f53d2aec914b",
+                  "kind": "topic",
+                  "title": "Two-Phase Commit (2PC)",
+                  "slug": "two-phase-commit"
+                },
+                {
+                  "id": "78a62b42-80f8-4480-a5e3-f3759a802e15",
+                  "kind": "topic",
+                  "title": "Saga Pattern",
+                  "slug": "saga-pattern"
+                },
+                {
+                  "id": "c31b35c2-6b12-47eb-ba67-e941c79131dd",
+                  "kind": "topic",
+                  "title": "Leader Election",
+                  "slug": "leader-election"
+                },
+                {
+                  "id": "bc144bae-d486-4b91-8331-faf24bd1e12b",
+                  "kind": "topic",
+                  "title": "Distributed Locking",
+                  "slug": "distributed-locking"
+                }
+              ]
+            },
+            {
+              "id": "72a2ef2c-047d-4e61-aeb0-76db61089cca",
+              "kind": "hub",
+              "title": "Resilience & Fault-Tolerance Patterns",
+              "slug": "resilience-and-fault-tolerance-patterns",
+              "children": [
+                {
+                  "id": "72a46518-8b6b-4359-80ff-ed946697b6ff",
+                  "kind": "topic",
+                  "title": "Fault Tolerance",
+                  "slug": "fault-tolerance"
+                },
+                {
+                  "id": "140db8b9-35a6-4fe6-b2b8-cd27cf62428c",
+                  "kind": "topic",
+                  "title": "Circuit Breaker Pattern",
+                  "slug": "circuit-breaker-pattern"
+                },
+                {
+                  "id": "0e405867-9057-4501-a031-82a7294baf04",
+                  "kind": "topic",
+                  "title": "Bulkhead Pattern",
+                  "slug": "bulkhead-pattern"
+                },
+                {
+                  "id": "0812c6c5-e954-4362-b97a-d6e818aa0237",
+                  "kind": "topic",
+                  "title": "Retry & Backoff Strategies",
+                  "slug": "retry-and-backoff-strategies"
+                }
+              ]
+            }
+          ]
         }
       ]
     }

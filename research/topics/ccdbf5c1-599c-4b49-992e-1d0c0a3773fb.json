@@ -1,0 +1,382 @@
+{
+  "topicId": "ccdbf5c1-599c-4b49-992e-1d0c0a3773fb",
+  "title": "Load Balancing",
+  "path": "topics/system-design/distributed-systems-scalability/scaling-and-traffic-distribution/load-balancing.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Load Balancing\" system design interview health checks sticky sessions",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "nginx",
+      "title": "NGINX: HTTP load balancing",
+      "url": "https://nginx.org/en/docs/http/load_balancing.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Round-robin, least connections, weights, affinity and passive health behavior; do not infer commercial features from the generic example."
+    },
+    {
+      "id": "upstream",
+      "title": "NGINX: upstream module",
+      "url": "https://nginx.org/en/docs/http/ngx_http_upstream_module.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Version/edition-specific upstream membership, connection and draining controls."
+    },
+    {
+      "id": "scale",
+      "title": "Microsoft Azure: Autoscaling guidance",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/best-practices/auto-scaling",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Capacity direction, scaling delay, state and downstream constraints; guidance checked on 2026-11-17."
+    },
+    {
+      "id": "retry",
+      "title": "Amazon Builders’ Library: Timeouts, retries and backoff with jitter",
+      "url": "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Timeout uncertainty, safe repeated effects, retry amplification, bounded retries and jitter; URL redirects to the author's AWS Builder Center article."
+    },
+    {
+      "id": "overload",
+      "title": "Google SRE: Handling overload",
+      "url": "https://sre.google/sre-book/handling-overload/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Capacity, bounded queues, load shedding and retry-aware overload reasoning."
+    },
+    {
+      "id": "cascade",
+      "title": "Google SRE: Addressing cascading failures",
+      "url": "https://sre.google/sre-book/addressing-cascading-failures/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Correlated overload, failure propagation, recovery capacity and controlled testing."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-persistent-skew",
+      "theme": "Round-robin leaves one backend overloaded. What do you inspect?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "nginx"
+      ],
+      "technicalSources": [
+        "nginx"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A few persistent connections carry most reports while connection counts are balanced. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Load Balancing to persistent skew."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Round-robin leaves one backend overloaded. What do you inspect?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Inspect per-connection request/work volume and determine whether selection is per connection or per request"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Rebalancing new connections may help slowly but cannot instantly move existing protocol state"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If exports become independent jobs, route them through a separate worker policy."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to nginx; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-shallow-probe",
+      "theme": "Health probes succeed while users receive database errors. What changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "nginx",
+        "cascade"
+      ],
+      "technicalSources": [
+        "nginx",
+        "cascade"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The probe hits a static endpoint; reports require a database connection. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Load Balancing to shallow probe."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Health probes succeed while users receive database errors. What changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Add a bounded readiness criterion for critical serving dependencies and inspect resource exhaustion, while retaining separate liveness checks"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Deep probes add load and can remove the entire fleet if a shared dependency fails"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If a report can be served in a documented degraded mode, readiness should reflect that rather than demanding optional functionality."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to nginx, cascade; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-graceful-deploy",
+      "theme": "A deployment drops long-running exports. How do you release safely?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "upstream"
+      ],
+      "technicalSources": [
+        "upstream"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Exports last minutes, but the orchestrator terminates a backend seconds after removal. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Load Balancing to graceful deploy."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A deployment drops long-running exports. How do you release safely?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Stop new assignments, align drain and termination deadlines, and persist job progress/output identity so clients can reconnect or recover"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Long draining slows rollout and retains capacity"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If the deadline is fixed, cancellations and partial-output handling must be explicit."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to upstream; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-sticky-crash",
+      "theme": "A failed sticky backend logs out its users. What do you fix?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "nginx",
+        "scale"
+      ],
+      "technicalSources": [
+        "nginx",
+        "scale"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Session data exists only in that backend memory. Restoring service matters more than cache locality. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Load Balancing to sticky crash."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A failed sticky backend logs out its users. What do you fix?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Move required session state to a supported shared/reconstructible contract and make backend replacement recover it"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Shared state adds a dependency and latency"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Keeping affinity may be a performance choice, but it cannot recover the failed machine’s only copy; a different availability requirement could permit sessi"
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to nginx, scale; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-retry-charge",
+      "theme": "May the balancer retry a timed-out payment POST?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "retry"
+      ],
+      "technicalSources": [
+        "retry"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The first backend might have completed a charge before the connection broke. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Load Balancing to retry charge."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: May the balancer retry a timed-out payment POST?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Do not blanket-retry an uncertain side effect"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Fewer transparent retries expose uncertainty to callers but avoid accidental duplicate effects"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Read-only operations may permit a different policy; a method name alone does not prove the endpoint has safe semantics."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to retry; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-failure-capacity",
+      "theme": "One of three backends fails and the other two collapse. What now?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "overload",
+        "cascade"
+      ],
+      "technicalSources": [
+        "overload",
+        "cascade"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The normal fleet ran near maximum sustainable concurrency. Traffic is now reassigned to survivors. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Load Balancing to failure capacity."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: One of three backends fails and the other two collapse. What now?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Shed/degrade optional work, cap in-flight requests and scale only within dependency budgets"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Reserve capacity costs money and rejections affect users"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A new selection algorithm cannot create missing compute; if workloads can queue, bounded delay may replace some immediate rejection."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to overload, cascade; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://nginx.org/en/docs/http/load_balancing.html",
+    "https://nginx.org/en/docs/http/ngx_http_upstream_module.html",
+    "https://learn.microsoft.com/en-us/azure/architecture/best-practices/auto-scaling",
+    "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/",
+    "https://sre.google/sre-book/handling-overload/",
+    "https://sre.google/sre-book/addressing-cascading-failures/"
+  ]
+}

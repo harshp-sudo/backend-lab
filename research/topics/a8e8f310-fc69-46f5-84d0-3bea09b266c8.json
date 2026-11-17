@@ -1,0 +1,375 @@
+{
+  "topicId": "a8e8f310-fc69-46f5-84d0-3bea09b266c8",
+  "title": "Strong Consistency",
+  "path": "topics/system-design/distributed-systems-scalability/consistency-models-and-trade-offs/strong-consistency.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Strong Consistency\" system design interview linearizability latency",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "linear",
+      "title": "Herlihy and Wing: Linearizability",
+      "url": "https://cs.brown.edu/~mph/HerlihyW90/p463-herlihy.pdf",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Original operation-history correctness condition and comparison with other conditions."
+    },
+    {
+      "id": "etcd",
+      "title": "etcd v3.6: API guarantees",
+      "url": "https://etcd.io/docs/v3.6/learning/api_guarantees/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Explicit v3.6 KV consistency, weaker serializable read option, watch limitations and lease behavior."
+    },
+    {
+      "id": "cap",
+      "title": "Gilbert and Lynch: Brewer’s Conjecture (2002)",
+      "url": "https://www.comp.nus.edu.sg/~gilbert/pubs/BrewersConjecture-SigAct.pdf",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Original asynchronous-model impossibility result and precise atomic consistency/availability definitions; an inaccessible MIT URL was replaced by the author's copy."
+    },
+    {
+      "id": "retry",
+      "title": "Amazon Builders’ Library: Timeouts, retries and backoff with jitter",
+      "url": "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Timeout uncertainty, safe repeated effects, retry amplification, bounded retries and jitter; URL redirects to the author's AWS Builder Center article."
+    },
+    {
+      "id": "commit",
+      "title": "Gray and Lamport: Consensus on Transaction Commit",
+      "url": "https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr-2003-96.pdf",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Atomic commit problem, classic 2PC blocking and distinction from fault-tolerant consensus-based commit."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-concurrent-reserve",
+      "theme": "Two current reads both return free. Can both reservations succeed?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "linear",
+        "etcd"
+      ],
+      "technicalSources": [
+        "linear",
+        "etcd"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Clients perform separate read and unconditional write calls against a linearizable register. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Strong Consistency to concurrent reserve."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Two current reads both return free. Can both reservations succeed?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Expose reserve-if-free as an atomic conditional operation at the authoritative object or use the required transaction boundary; handle a failed condition e"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Contention can reject callers and require a new decision"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Faster current reads do not make the pair atomic; if reservations span several resources, a larger transaction/workflow decision is needed."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to linear, etcd; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-overlap-read",
+      "theme": "A read returns version 8 while concurrent write 9 finishes. Is that a violation?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "linear"
+      ],
+      "technicalSources": [
+        "linear"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The read started before write 9 and returned afterward; version 8 was the prior valid state. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Strong Consistency to overlap read."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A read returns version 8 while concurrent write 9 finishes. Is that a violation?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Inspect the full history and whether the read can legally be placed before the overlapping write"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A stricter product requirement about response-time freshness would need a separately stated contract"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A read starting after write 9 completes cannot be ordered before that completed write."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to linear; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-local-cache",
+      "theme": "Can a cached current permission authorize an irreversible action?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "etcd",
+        "linear"
+      ],
+      "technicalSources": [
+        "etcd",
+        "linear"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The cache is refreshed by a watch but revocation must affect every action after acknowledgment. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Strong Consistency to local cache."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Can a cached current permission authorize an irreversible action?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Enforce authorization at a boundary with the required current-state/atomic-action semantics, or explicitly revise to a bounded permission protocol"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Synchronous authority checks can reduce availability and add latency"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A check followed by an unrelated later action can still race with revocation; choose a scope that matches the promised effect."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to etcd, linear; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-minority",
+      "theme": "A minority replica is reachable but cannot contact authority. Serve anyway?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "cap",
+        "etcd"
+      ],
+      "technicalSources": [
+        "cap",
+        "etcd"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Clients require the same linearizable object contract during a network split. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Strong Consistency to minority."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A minority replica is reachable but cannot contact authority. Serve anyway?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use the supported protocol’s valid read/commit path and reject or wait within a deadline when it cannot establish the guarantee"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A weaker explicitly labeled display read may remain useful"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: It must not be presented as an authoritative command result merely to improve an availability counter."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to cap, etcd; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-lost-response",
+      "theme": "A strong write times out. Was it not applied?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "linear",
+        "retry"
+      ],
+      "technicalSources": [
+        "linear",
+        "retry"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The connection breaks after the service may have committed the equipment reservation. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Strong Consistency to lost response."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A strong write times out. Was it not applied?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Treat the outcome as unknown and query/retry through a stable operation identity and supported status semantics, preserving the original intent rather than"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Operation history retention costs space and needs an expiry policy"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Strong ordering does not identify duplicate intent; if the original API has no reconciliation mechanism, expose uncertainty honestly."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to linear, retry; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-two-objects",
+      "theme": "Two individually strong records violate a joint budget. What changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "linear",
+        "commit"
+      ],
+      "technicalSources": [
+        "linear",
+        "commit"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The invariant limits combined reservations across records A and B; callers update them independently. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Strong Consistency to two objects."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Two individually strong records violate a joint budget. What changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Move the invariant to one supported atomic owner/conditional operation or use a transaction/workflow whose guarantees actually cover both records"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A common owner can bottleneck and a broader transaction costs coordination"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If the business can allocate independent rights, a decomposed model may avoid global coordination with different operational constraints."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to linear, commit; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://cs.brown.edu/~mph/HerlihyW90/p463-herlihy.pdf",
+    "https://etcd.io/docs/v3.6/learning/api_guarantees/",
+    "https://www.comp.nus.edu.sg/~gilbert/pubs/BrewersConjecture-SigAct.pdf",
+    "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/",
+    "https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr-2003-96.pdf"
+  ]
+}
