@@ -1,0 +1,24 @@
+# Local settings and credentials
+.aws/
+.codex/
+.env*
+# Development artifacts
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+node_modules/
+dist/
+build/
+*.log
+# Editor and OS files
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+.vscode/
+.idea/
+
+# Local verification reports and PDFs
+.cache/
