@@ -1,0 +1,399 @@
+{
+  "topicId": "bec9d26a-d810-410d-8bb2-4090f3095d3e",
+  "title": "Apache Kafka",
+  "path": "topics/system-design/message-queues-event-driven/queue-foundations-and-brokers/apache-kafka.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Apache Kafka\" interview consumer offset transaction rebalance failure",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "kdesign",
+      "title": "Apache Kafka 4.1: Design and delivery semantics",
+      "url": "https://kafka.apache.org/41/design/design/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Partitioned storage, publication/consumption semantics and scoped transaction boundaries; examples explicitly target the 4.1 series rather than a latest-version claim."
+    },
+    {
+      "id": "kproducer",
+      "title": "Apache Kafka 4.1: Producer configuration",
+      "url": "https://kafka.apache.org/41/configuration/producer-configs/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Acknowledgment, idempotence, retries, transaction identity and ordering constraints under explicit settings."
+    },
+    {
+      "id": "kconsumer",
+      "title": "Apache Kafka 4.1: Consumer configuration",
+      "url": "https://kafka.apache.org/41/configuration/consumer-configs/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Classic group, poll/progress, isolation and bounded-fetch controls; protocol and settings are named rather than inferred from generic consumer terminology."
+    },
+    {
+      "id": "kapi",
+      "title": "Kafka Java client 4.1.2: KafkaConsumer",
+      "url": "https://kafka.apache.org/41/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Position versus committed position, manual progress handling, rebalances, thread-safety and asynchronous processing caveats."
+    },
+    {
+      "id": "kprodapi",
+      "title": "Kafka Java client 4.1.2: KafkaProducer",
+      "url": "https://kafka.apache.org/41/javadoc/org/apache/kafka/clients/producer/KafkaProducer.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Transactional producer lifecycle, error handling and coupling output with consumed positions; external effects are outside that atomic boundary."
+    },
+    {
+      "id": "streams",
+      "title": "Apache Kafka 4.1 Streams: Core concepts",
+      "url": "https://kafka.apache.org/41/streams/core-concepts/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Partitioned stream processing, task/state and event-time concepts; not a guarantee of globally ordered external effects."
+    },
+    {
+      "id": "outbox",
+      "title": "AWS Prescriptive Guidance: Transactional outbox",
+      "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Atomic local state/publication intent and remaining duplicate/consumer effect boundaries."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-acks-isr",
+      "theme": "Three replicas are configured. Can one surviving copy always accept a safe write?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "kdesign",
+        "kproducer"
+      ],
+      "technicalSources": [
+        "kdesign",
+        "kproducer"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The business requires a specified replicated acknowledgment, but minimum ISR and election settings are not stated. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Apache Kafka to acks isr."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Three replicas are configured. Can one surviving copy always accept a safe write?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Set and verify producer/topic durability requirements together, trace publication with reduced ISR and choose explicit unavailable behavior when the promis"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Stronger acceptance can reject writes during failures"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Replica count alone cannot settle the trade-off; weakening requirements changes the durability/availability contract."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to kdesign, kproducer; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-async-prefix",
+      "theme": "Offset 12 finishes before 11. Commit 13 now?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "kapi"
+      ],
+      "technicalSources": [
+        "kapi"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The same partition is processed concurrently and recovery from 13 would skip 11. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Apache Kafka to async prefix."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Offset 12 finishes before 11. Commit 13 now?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Maintain a contiguous completed frontier per partition and commit only progress that does not skip unfinished required work; bound concurrency and handle f"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Tracking increases complexity and waiting can limit throughput"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Serial per-partition processing is simpler when the order/latency requirement permits it."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to kapi; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-rebalance-effect",
+      "theme": "A new consumer starts while the old worker still calls a provider. What now?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "kapi",
+        "kconsumer"
+      ],
+      "technicalSources": [
+        "kapi",
+        "kconsumer"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Partition reassignment happened during a slow external shipment operation. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Apache Kafka to rebalance effect."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A new consumer starts while the old worker still calls a provider. What now?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Stop/reconcile revoked work under the supported group lifecycle and make the provider intent/effect duplicate-safe; do not rely on assignment change to can"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Extra sink state or fencing/cooperation may be required"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Faster rebalancing does not alone make external effects exclusive or exactly once."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to kapi, kconsumer; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-retention-gap",
+      "theme": "A stopped analytics group returns after its history expired. Reset to latest?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "kdesign",
+        "streams"
+      ],
+      "technicalSources": [
+        "kdesign",
+        "streams"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Its contract requires a complete projection, not only future updates. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Apache Kafka to retention gap."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A stopped analytics group returns after its history expired. Reset to latest?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Detect the gap and rebuild/bootstrap from a supported snapshot or retained authority, then resume at the matching position"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Longer retention costs storage; bootstrap adds time and source load"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Latest-only restart is valid only under an explicitly different future-events contract."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to kdesign, streams; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-partition-change",
+      "theme": "Adding partitions changes per-shipment processing order. What do you plan?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "kdesign",
+        "kproducer"
+      ],
+      "technicalSources": [
+        "kdesign",
+        "kproducer"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Existing key-based routing may map new shipment records differently after expansion. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Apache Kafka to partition change."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Adding partitions changes per-shipment processing order. What do you plan?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use a planned key/ownership migration or another supported ordering transition, account for old in-flight records and verify consumer effect sequencing acr"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Migration adds coordination and delay"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: More partitions improve potential parallelism but do not automatically preserve one key’s complete historical processing path."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to kdesign, kproducer; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-external-sql",
+      "theme": "Kafka output is transactional but a SQL counter still doubles. Why?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "kdesign",
+        "kprodapi",
+        "outbox"
+      ],
+      "technicalSources": [
+        "kdesign",
+        "kprodapi",
+        "outbox"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A consumer commits the SQL update and crashes before its consumed progress is durably coordinated. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Apache Kafka to external sql."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Kafka output is transactional but a SQL counter still doubles. Why?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Put the sink effect and its dedup/progress record in a supported sink-local atomic boundary or use a connector/protocol with the required sink cooperation"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Sink state/retention and concurrency rules add work"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Kafka output transactions alone do not enlist an arbitrary SQL transaction; a different output topology may reduce the boundary."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to kdesign, kprodapi, outbox; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the named references below. The System Design Primer provides core orientation where applicable; technical guarantees use the mapped primary sources. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://kafka.apache.org/41/design/design/",
+    "https://kafka.apache.org/41/configuration/producer-configs/",
+    "https://kafka.apache.org/41/configuration/consumer-configs/",
+    "https://kafka.apache.org/41/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html",
+    "https://kafka.apache.org/41/javadoc/org/apache/kafka/clients/producer/KafkaProducer.html",
+    "https://kafka.apache.org/41/streams/core-concepts/",
+    "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html"
+  ]
+}

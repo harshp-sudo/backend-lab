@@ -1,0 +1,416 @@
+{
+  "topicId": "628fa4bf-df33-4a5a-b519-8eb68787a6c8",
+  "title": "Dead Letter Queues (DLQ)",
+  "path": "topics/system-design/message-queues-event-driven/scaling-reliability-and-flow-control/dead-letter-queues.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Dead Letter Queues\" interview poison message redrive ordering",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "primer",
+      "title": "System Design Primer: Asynchronism, message queues, task queues and back pressure",
+      "url": "https://github.com/donnemartin/system-design-primer#asynchronism",
+      "roles": [
+        "interview-evidence"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Required core conceptual/interview-study reference, inspected 2026-11-17; historical product comparisons are not adopted as current guarantees or evidence of question frequency."
+    },
+    {
+      "id": "sdlq",
+      "title": "Amazon SQS: Dead-letter queues",
+      "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "maxReceiveCount, ordering implications and different Standard/FIFO DLQ retention timestamp behavior."
+    },
+    {
+      "id": "rdlx",
+      "title": "RabbitMQ 4.1: Dead letter exchanges",
+      "url": "https://www.rabbitmq.com/docs/4.1/dlx",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Dead-letter routing, reasons and safety caveats; transfer guarantees depend on queue type and configured strategy."
+    },
+    {
+      "id": "rquorum",
+      "title": "RabbitMQ 4.1: Quorum queues",
+      "url": "https://www.rabbitmq.com/docs/4.1/quorum-queues",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Replicated queue safety assumptions and explicitly configured dead-letter transfer strategies, including their limitations."
+    },
+    {
+      "id": "sfifo",
+      "title": "Amazon SQS: FIFO queues",
+      "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-fifo-queues.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Per-group FIFO behavior and queue-mode distinctions in the service; client processing must honor the required order."
+    },
+    {
+      "id": "retry",
+      "title": "Amazon Builders’ Library: Timeouts, retries and backoff with jitter",
+      "url": "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Unknown outcomes, retry amplification and bounded recovery; no universal timing constants are copied."
+    },
+    {
+      "id": "overload",
+      "title": "Google SRE: Handling overload",
+      "url": "https://sre.google/sre-book/handling-overload/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Bounded work, resource/queue capacity and admission during sustained overload."
+    },
+    {
+      "id": "outbox",
+      "title": "AWS Prescriptive Guidance: Transactional outbox",
+      "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Atomic local state/publication intent and remaining duplicate/consumer effect boundaries."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-schema-poison",
+      "theme": "A schema mismatch causes endless retries. How do you unblock safely?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "sdlq",
+        "rdlx",
+        "retry"
+      ],
+      "technicalSources": [
+        "sdlq",
+        "rdlx",
+        "retry"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The error is deterministic while unrelated customer work can proceed. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Dead Letter Queues (DLQ) to schema poison."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A schema mismatch causes endless retries. How do you unblock safely?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Quarantine under bounded policy with sanitized diagnosis and an assigned owner, repair compatibility, then canary redrive with stable identity and checks f"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Isolation adds recovery operations"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If later work depends on the failed item, pause that key rather than pretending removing the predecessor preserves correctness."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to sdlq, rdlx, retry; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-outage-wave",
+      "theme": "A warehouse outage sends thousands of valid messages to DLQ. Are they poison?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "retry",
+        "overload",
+        "sdlq"
+      ],
+      "technicalSources": [
+        "retry",
+        "overload",
+        "sdlq"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Failures share a temporary dependency outage rather than invalid payloads. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Dead Letter Queues (DLQ) to outage wave."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A warehouse outage sends thousands of valid messages to DLQ. Are they poison?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Classify the outage, protect downstream capacity and use bounded delayed recovery/redrive after health returns, preserving unresolved-work ownership."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Retry thresholds still bound resources but cannot diagnose root cause alone"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Pausing/admission control may be safer than cycling the entire backlog through retries."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to retry, overload, sdlq; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-standard-age",
+      "theme": "A Standard SQS message expires soon after reaching DLQ. Why?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "sdlq"
+      ],
+      "technicalSources": [
+        "sdlq"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Operators expected its full lifetime to restart on movement. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Dead Letter Queues (DLQ) to standard age."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A Standard SQS message expires soon after reaching DLQ. Why?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Check original enqueue time and Standard retention semantics, increase the deliberately budgeted recovery window and alert before unresolved work expires."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Longer retention costs resources and policy review"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: FIFO movement has different timestamp semantics; a DLQ age metric may describe time since movement rather than total lifetime."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to sdlq; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-fifo-gap",
+      "theme": "A failed debit is removed and later debits proceed. Is the account sequence safe?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "sdlq",
+        "sfifo"
+      ],
+      "technicalSources": [
+        "sdlq",
+        "sfifo"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The workload requires exact dependent operation order. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Dead Letter Queues (DLQ) to fifo gap."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A failed debit is removed and later debits proceed. Is the account sequence safe?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Pause/recover the affected group/key or use an explicit domain-approved reconciliation/skip process"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Pausing sacrifices availability for that key"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Independent operations can tolerate isolation better, but FIFO delivery labeling cannot repair a missing required predecessor."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to sdlq, sfifo; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-rabbit-target",
+      "theme": "A RabbitMQ DLX is configured. Can you promise no transfer loss?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "rdlx",
+        "rquorum"
+      ],
+      "technicalSources": [
+        "rdlx",
+        "rquorum"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The queue type and dead-letter strategy have not been checked. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Dead Letter Queues (DLQ) to rabbit target."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A RabbitMQ DLX is configured. Can you promise no transfer loss?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Verify the RabbitMQ 4.1 source type, policies, target availability/permissions and documented strategy; use supported explicitly configured quorum at-least"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Stronger transfer adds resource/backpressure obligations"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Default dead-lettering and all queue types must not be advertised as equivalent to that mode."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to rdlx, rquorum; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-redrive-storm",
+      "theme": "Bulk redrive overloads a provider and repeats some effects. How do you recover?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "outbox",
+        "retry",
+        "overload",
+        "sdlq"
+      ],
+      "technicalSources": [
+        "outbox",
+        "retry",
+        "overload",
+        "sdlq"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Some earlier requests succeeded before acknowledgment was lost and live traffic continues. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Dead Letter Queues (DLQ) to redrive storm."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Bulk redrive overloads a provider and repeats some effects. How do you recover?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Stop the storm, reconcile uncertain effects, preserve intent identity, then use a small canary and paced redrive inside downstream budgets with explicit st"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Recovery takes longer"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Blind fresh-ID retries can create more business damage than delay; compensation may be a separately failing workflow rather than automatic rollback."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to outbox, retry, overload, sdlq; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the named references below. The System Design Primer provides core orientation where applicable; technical guarantees use the mapped primary sources. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://github.com/donnemartin/system-design-primer#asynchronism",
+    "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html",
+    "https://www.rabbitmq.com/docs/4.1/dlx",
+    "https://www.rabbitmq.com/docs/4.1/quorum-queues",
+    "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-fifo-queues.html",
+    "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/",
+    "https://sre.google/sre-book/handling-overload/",
+    "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html"
+  ]
+}

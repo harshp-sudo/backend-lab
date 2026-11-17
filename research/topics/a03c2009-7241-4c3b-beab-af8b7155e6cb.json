@@ -1,0 +1,377 @@
+{
+  "topicId": "a03c2009-7241-4c3b-beab-af8b7155e6cb",
+  "title": "Event Sourcing",
+  "path": "topics/system-design/message-queues-event-driven/messaging-and-event-patterns/event-sourcing.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Event Sourcing\" interview schema evolution snapshots replay side effects",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "primer",
+      "title": "System Design Primer: Asynchronism, message queues, task queues and back pressure",
+      "url": "https://github.com/donnemartin/system-design-primer#asynchronism",
+      "roles": [
+        "interview-evidence"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Required core conceptual/interview-study reference, inspected 2026-11-17; historical product comparisons are not adopted as current guarantees or evidence of question frequency."
+    },
+    {
+      "id": "esource",
+      "title": "Azure Architecture Center: Event Sourcing pattern",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/event-sourcing",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Concurrency, snapshots, event evolution and projection rebuilding as separate design obligations."
+    },
+    {
+      "id": "fsource",
+      "title": "Martin Fowler: Event Sourcing",
+      "url": "https://martinfowler.com/eaaDev/EventSourcing.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Authoritative event history, reconstruction and explicit external-interaction/replay concerns; local models are independently constructed."
+    },
+    {
+      "id": "outbox",
+      "title": "AWS Prescriptive Guidance: Transactional outbox",
+      "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Atomic local state/publication intent and remaining duplicate/consumer effect boundaries."
+    },
+    {
+      "id": "fcqrs",
+      "title": "Martin Fowler: CQRS",
+      "url": "https://martinfowler.com/bliki/CQRS.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Separate command/query models, possible shared database and deliberate use where modeling benefits justify complexity."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-oversell",
+      "theme": "Two last-unit reservations arrive together. How do you prevent overselling?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "esource"
+      ],
+      "technicalSources": [
+        "esource"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Both commands read the same stream version and each believes one unit remains. No cross-aggregate transaction is required. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Event Sourcing to oversell."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Two last-unit reservations arrive together. How do you prevent overselling?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use an event store with atomic expected-version append"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Conflicts add retries and latency"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A row-based conditional transaction may be simpler; separate streams cannot protect a shared stock invariant merely because their events are durable."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to esource; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-replay-mail",
+      "theme": "A rebuild is about to resend a million receipts. How do you make it safe?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "fsource",
+        "esource",
+        "outbox"
+      ],
+      "technicalSources": [
+        "fsource",
+        "esource",
+        "outbox"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Historical events must rebuild a projection, while only newly accepted orders should trigger live receipts. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Event Sourcing to replay mail."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A rebuild is about to resend a million receipts. How do you make it safe?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Run the projection in an isolated replay path without live gateways, catch up using explicit checkpoints and keep live delivery intents separate with dupli"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Isolation and handoff add operational work"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Simply checking wall-clock age is unsafe for delayed legitimate events; decide effect ownership explicitly."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to fsource, esource, outbox; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-snapshot-wrong",
+      "theme": "Snapshot recovery disagrees with a full replay. Which result do you trust?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "esource",
+        "fsource"
+      ],
+      "technicalSources": [
+        "esource",
+        "fsource"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A model change shipped and the snapshot covers an uncertain event position. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Event Sourcing to snapshot wrong."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Snapshot recovery disagrees with a full replay. Which result do you trust?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Stop promoting that snapshot, compare historical fixtures and regenerate from validated history with a covered position and model version"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Full recovery costs time and requires retained readable history"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If the log was discarded, reconstruction may be impossible; do not claim the snapshot is merely a disposable optimization then."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to esource, fsource; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-old-price",
+      "theme": "Replaying old orders changes their calculated totals. What is missing?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "fsource",
+        "esource"
+      ],
+      "technicalSources": [
+        "fsource",
+        "esource"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The handler consults today’s exchange-rate service but must reproduce the accepted historical amount. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Event Sourcing to old price."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Replaying old orders changes their calculated totals. What is missing?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use recorded decision-relevant historical values or a versioned historical source and make reconstruction deterministic"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Richer events require careful data ownership and lifecycle policy"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Re-running current business rules can be a separate simulation, but must not masquerade as historical reconstruction."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to fsource, esource; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-bad-event",
+      "theme": "An accepted quantity was wrong. Do you edit the historical event?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "esource"
+      ],
+      "technicalSources": [
+        "esource"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The business needs an explainable correction and existing projections have already processed the fact. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Event Sourcing to bad event."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An accepted quantity was wrong. Do you edit the historical event?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Record a supported correcting/compensating domain fact with causation and rebuild/update projections consistently"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Correction semantics add domain complexity"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A regulated deletion requirement may require a deliberately different storage/redaction design; append-only rhetoric does not settle that policy."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to esource; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-crud-cost",
+      "theme": "A small catalog CRUD service is slow to build. Does it need event sourcing?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "esource",
+        "fsource",
+        "fcqrs"
+      ],
+      "technicalSources": [
+        "esource",
+        "fsource",
+        "fcqrs"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Only current product descriptions and basic audit entries are required; no historical replay feature is funded. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Event Sourcing to crud cost."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A small catalog CRUD service is slow to build. Does it need event sourcing?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Prefer ordinary transactional current-state storage with an appropriate audit trail, documenting the requirements that would justify event sourcing later."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Future reconstruction may need redesign"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Event sourcing can fit a history-centered domain, but adopting compatibility/replay infrastructure without that need creates unnecessary delivery and opera"
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to esource, fsource, fcqrs; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the named references below. The System Design Primer provides core orientation where applicable; technical guarantees use the mapped primary sources. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://github.com/donnemartin/system-design-primer#asynchronism",
+    "https://learn.microsoft.com/en-us/azure/architecture/patterns/event-sourcing",
+    "https://martinfowler.com/eaaDev/EventSourcing.html",
+    "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html",
+    "https://martinfowler.com/bliki/CQRS.html"
+  ]
+}

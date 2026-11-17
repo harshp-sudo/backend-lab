@@ -1,0 +1,408 @@
+{
+  "topicId": "a422b8b5-7b25-4493-90d3-986355f394ff",
+  "title": "At-Most-Once Delivery",
+  "path": "topics/system-design/message-queues-event-driven/delivery-guarantees-and-ordering/at-most-once-delivery.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"At-Most-Once Delivery\" interview offset commit message loss",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "primer",
+      "title": "System Design Primer: Asynchronism, message queues, task queues and back pressure",
+      "url": "https://github.com/donnemartin/system-design-primer#asynchronism",
+      "roles": [
+        "interview-evidence"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Required core conceptual/interview-study reference, inspected 2026-11-17; historical product comparisons are not adopted as current guarantees or evidence of question frequency."
+    },
+    {
+      "id": "kdesign",
+      "title": "Apache Kafka 4.1: Design and delivery semantics",
+      "url": "https://kafka.apache.org/41/design/design/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Partitioned storage, publication/consumption semantics and scoped transaction boundaries; examples explicitly target the 4.1 series rather than a latest-version claim."
+    },
+    {
+      "id": "kapi",
+      "title": "Kafka Java client 4.1.2: KafkaConsumer",
+      "url": "https://kafka.apache.org/41/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Position versus committed position, manual progress handling, rebalances, thread-safety and asynchronous processing caveats."
+    },
+    {
+      "id": "kconsumer",
+      "title": "Apache Kafka 4.1: Consumer configuration",
+      "url": "https://kafka.apache.org/41/configuration/consumer-configs/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Classic group, poll/progress, isolation and bounded-fetch controls; protocol and settings are named rather than inferred from generic consumer terminology."
+    },
+    {
+      "id": "kproducer",
+      "title": "Apache Kafka 4.1: Producer configuration",
+      "url": "https://kafka.apache.org/41/configuration/producer-configs/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Acknowledgment, idempotence, retries, transaction identity and ordering constraints under explicit settings."
+    },
+    {
+      "id": "rconfirm",
+      "title": "RabbitMQ 4.1: Consumer acknowledgements and publisher confirms",
+      "url": "https://www.rabbitmq.com/docs/4.1/confirms",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Independent publisher/consumer acknowledgment boundaries, manual versus automatic ack and requeue behavior in AMQP 0-9-1."
+    },
+    {
+      "id": "rprefetch",
+      "title": "RabbitMQ 4.1: Consumer prefetch",
+      "url": "https://www.rabbitmq.com/docs/4.1/consumer-prefetch",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Bounded unacknowledged deliveries and RabbitMQ-specific QoS scope; not a fleet-wide rate or business-transaction guarantee."
+    },
+    {
+      "id": "outbox",
+      "title": "AWS Prescriptive Guidance: Transactional outbox",
+      "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Atomic local state/publication intent and remaining duplicate/consumer effect boundaries."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-presence",
+      "theme": "A live presence hint is lost during a crash. Is retry required?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "kdesign",
+        "kapi"
+      ],
+      "technicalSources": [
+        "kdesign",
+        "kapi"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Another fresh hint arrives shortly and no consequential decision relies solely on the missing pulse. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies At-Most-Once Delivery to presence."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A live presence hint is lost during a crash. Is retry required?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Accept the documented omission within its freshness budget, keep an authoritative refresh path and monitor loss/age"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: No retry lowers recovery overhead but loses intermediate observations"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If each pulse becomes billing/audit input, change to recoverable delivery and safe processing."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to kdesign, kapi; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-refund",
+      "theme": "A refund is missing after an offset commit. How do you redesign?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "kapi",
+        "outbox"
+      ],
+      "technicalSources": [
+        "kapi",
+        "outbox"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The consumer committed progress before calling the payment system and then crashed. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies At-Most-Once Delivery to refund."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A refund is missing after an offset commit. How do you redesign?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Reconcile the missing refund and replace this loss-prone protocol with durable responsibility, stable provider operation identity and explicit uncertain-ou"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Retries can duplicate effects without provider support"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Faster processing narrows but never removes the crash gap; authoritative money movement cannot rely on that timing."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to kapi, outbox; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-commit-unknown",
+      "theme": "The progress commit times out. May the worker send the one-time effect?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "kapi",
+        "kconsumer"
+      ],
+      "technicalSources": [
+        "kapi",
+        "kconsumer"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The application cannot establish commit success or current ownership. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies At-Most-Once Delivery to commit unknown."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The progress commit times out. May the worker send the one-time effect?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Stop that effect attempt and resolve progress/ownership using the supported consumer protocol, or use a stronger sink-side identity contract before proceed"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Stopping can omit work, which matches the chosen loss preference"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Proceeding blindly can allow both this worker and a replacement to act; a timeout is not proof of rejection."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to kapi, kconsumer; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-batch-loss",
+      "theme": "A single crash loses an entire batch. What do you change?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "kapi"
+      ],
+      "technicalSources": [
+        "kapi"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The measured omission burst exceeds the product’s disposable-sample loss budget. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies At-Most-Once Delivery to batch loss."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A single crash loses an entire batch. What do you change?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Reduce the precommitted unit and bound in-flight work, or adopt recoverable delivery if the required loss budget cannot be met by intentional omission."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Smaller commits reduce amortized throughput"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: No batch size makes the progress-before-effect crash window disappear."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to kapi; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-producer-repeat",
+      "theme": "Two identical notifications arrive despite at-most-once consumption. Why?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "kdesign",
+        "kproducer"
+      ],
+      "technicalSources": [
+        "kdesign",
+        "kproducer"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A producer retried with a new record identity after an uncertain publish. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies At-Most-Once Delivery to producer repeat."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Two identical notifications arrive despite at-most-once consumption. Why?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Trace both records and define stable business-intent identity at the producer/effect boundary when duplicate notification matters"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Deduplication needs retention and payload-conflict policy"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Two legitimate repeated notifications must not be collapsed just because their text matches."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to kdesign, kproducer; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-autoack",
+      "theme": "RabbitMQ auto-ack loses a job when a worker dies. Is that a broker bug?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "rconfirm",
+        "rprefetch"
+      ],
+      "technicalSources": [
+        "rconfirm",
+        "rprefetch"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The application acknowledged delivery automatically before completing durable work. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies At-Most-Once Delivery to autoack."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: RabbitMQ auto-ack loses a job when a worker dies. Is that a broker bug?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Recognize the configured loss window"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Manual acknowledgment adds redelivery/duplicate and prefetch responsibilities"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Automatic acknowledgment can still fit explicitly expendable input, but does not make business completion durable."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to rconfirm, rprefetch; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the named references below. The System Design Primer provides core orientation where applicable; technical guarantees use the mapped primary sources. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://github.com/donnemartin/system-design-primer#asynchronism",
+    "https://kafka.apache.org/41/design/design/",
+    "https://kafka.apache.org/41/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html",
+    "https://kafka.apache.org/41/configuration/consumer-configs/",
+    "https://kafka.apache.org/41/configuration/producer-configs/",
+    "https://www.rabbitmq.com/docs/4.1/confirms",
+    "https://www.rabbitmq.com/docs/4.1/consumer-prefetch",
+    "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html"
+  ]
+}

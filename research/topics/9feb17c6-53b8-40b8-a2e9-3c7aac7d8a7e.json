@@ -1,0 +1,449 @@
+{
+  "topicId": "9feb17c6-53b8-40b8-a2e9-3c7aac7d8a7e",
+  "title": "Exactly-Once Processing",
+  "path": "topics/system-design/message-queues-event-driven/delivery-guarantees-and-ordering/exactly-once-processing.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Exactly-Once Processing\" interview Kafka external database transactions",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "sqlite",
+      "title": "Python 3.10 sqlite3: Connection context manager",
+      "url": "https://docs.python.org/3.10/library/sqlite3.html#using-the-connection-as-a-context-manager",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Primary documentation for the local Python 3.10 SQLite transaction model: successful context exit commits, exceptions roll back. No distributed or production concurrent guarantee is inferred."
+    },
+    {
+      "id": "primer",
+      "title": "System Design Primer: Asynchronism, message queues, task queues and back pressure",
+      "url": "https://github.com/donnemartin/system-design-primer#asynchronism",
+      "roles": [
+        "interview-evidence"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Required core conceptual/interview-study reference, inspected 2026-11-17; historical product comparisons are not adopted as current guarantees or evidence of question frequency."
+    },
+    {
+      "id": "outbox",
+      "title": "AWS Prescriptive Guidance: Transactional outbox",
+      "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Atomic local state/publication intent and remaining duplicate/consumer effect boundaries."
+    },
+    {
+      "id": "esource",
+      "title": "Azure Architecture Center: Event Sourcing pattern",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/event-sourcing",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Concurrency, snapshots, event evolution and projection rebuilding as separate design obligations."
+    },
+    {
+      "id": "kprodapi",
+      "title": "Kafka Java client 4.1.2: KafkaProducer",
+      "url": "https://kafka.apache.org/41/javadoc/org/apache/kafka/clients/producer/KafkaProducer.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Transactional producer lifecycle, error handling and coupling output with consumed positions; external effects are outside that atomic boundary."
+    },
+    {
+      "id": "kapi",
+      "title": "Kafka Java client 4.1.2: KafkaConsumer",
+      "url": "https://kafka.apache.org/41/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Position versus committed position, manual progress handling, rebalances, thread-safety and asynchronous processing caveats."
+    },
+    {
+      "id": "kconsumer",
+      "title": "Apache Kafka 4.1: Consumer configuration",
+      "url": "https://kafka.apache.org/41/configuration/consumer-configs/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Classic group, poll/progress, isolation and bounded-fetch controls; protocol and settings are named rather than inferred from generic consumer terminology."
+    },
+    {
+      "id": "streams",
+      "title": "Apache Kafka 4.1 Streams: Core concepts",
+      "url": "https://kafka.apache.org/41/streams/core-concepts/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Partitioned stream processing, task/state and event-time concepts; not a guarantee of globally ordered external effects."
+    },
+    {
+      "id": "kdesign",
+      "title": "Apache Kafka 4.1: Design and delivery semantics",
+      "url": "https://kafka.apache.org/41/design/design/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Partitioned storage, publication/consumption semantics and scoped transaction boundaries; examples explicitly target the 4.1 series rather than a latest-version claim."
+    },
+    {
+      "id": "retry",
+      "title": "Amazon Builders’ Library: Timeouts, retries and backoff with jitter",
+      "url": "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Unknown outcomes, retry amplification and bounded recovery; no universal timing constants are copied."
+    },
+    {
+      "id": "kproducer",
+      "title": "Apache Kafka 4.1: Producer configuration",
+      "url": "https://kafka.apache.org/41/configuration/producer-configs/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Acknowledgment, idempotence, retries, transaction identity and ordering constraints under explicit settings."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-sql-crash",
+      "theme": "A worker dies after a SQL credit but before acknowledgment. What makes recovery safe?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "outbox",
+        "esource"
+      ],
+      "technicalSources": [
+        "outbox",
+        "esource"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The marker and credit can reside in one transactional database. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Exactly-Once Processing to sql crash."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A worker dies after a SQL credit but before acknowledgment. What makes recovery safe?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Commit the scoped unique intent and credit atomically, retain the outcome, then acknowledge"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Transactions and identity storage cost resources"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Separate marker/effect stores require a different protocol; a preliminary lookup cannot prevent a concurrent duplicate."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to outbox, esource; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-kafka-only",
+      "theme": "A Kafka transform needs one visible output per input position. What configuration boundary matters?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "kprodapi",
+        "kapi",
+        "kconsumer",
+        "streams"
+      ],
+      "technicalSources": [
+        "kprodapi",
+        "kapi",
+        "kconsumer",
+        "streams"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Outputs and consumed positions are both Kafka-managed and aborted results must not be visible. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Exactly-Once Processing to kafka only."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A Kafka transform needs one visible output per input position. What configuration boundary matters?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use the supported 4.1 transactional consume-transform-produce API or documented Streams processing mode, coordinate consumed offsets in the transaction and"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Transactions add abort/timeout/ownership overhead"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Producer idempotence alone does not coordinate input progress, and external sinks remain outside this boundary."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to kprodapi, kapi, kconsumer, streams; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-remote-card",
+      "theme": "The broker claims exactly-once but a card charge times out. What do you trust?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "outbox",
+        "retry"
+      ],
+      "technicalSources": [
+        "outbox",
+        "retry"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The provider is outside the broker transaction and may have accepted the charge. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Exactly-Once Processing to remote card."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The broker claims exactly-once but a card charge times out. What do you trust?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Keep the intent pending, reuse a supported provider identity, discover/reconcile its outcome and retry under the actual provider contract."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Without deduplication/discovery, automatic certainty is unavailable"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A saga can define compensation but does not retroactively make an unknown charge atomic with a broker commit."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to outbox, retry; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-new-id",
+      "theme": "A producer sends one order twice under different message IDs. Is offset-level safety enough?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "kdesign",
+        "outbox"
+      ],
+      "technicalSources": [
+        "kdesign",
+        "outbox"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Both records are valid transport inputs but represent one business action. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Exactly-Once Processing to new id."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A producer sends one order twice under different message IDs. Is offset-level safety enough?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Define stable business-intent identity upstream and enforce it at the effect boundary, with conflict checks so different legitimate actions remain distinct"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Identity coordination and retention add cost"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: One effect per input offset is a narrower promise and can correctly yield two effects for these two records."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to kdesign, outbox; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-expiry",
+      "theme": "A six-month replay exceeds stored deduplication history. How do you protect effects?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "esource",
+        "outbox"
+      ],
+      "technicalSources": [
+        "esource",
+        "outbox"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Only one month of identity records remains and old work can be redriven. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Exactly-Once Processing to expiry."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A six-month replay exceeds stored deduplication history. How do you protect effects?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Extend durable protection or enforce an authoritative invariant for that horizon, and route historical reconstruction away from live-effect execution until"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Longer retention costs resources"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Explicitly limiting supported replay is possible, but it changes the recovery promise and must be agreed before deleting protection."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to esource, outbox; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-slow-transaction",
+      "theme": "Long transformations keep Kafka transactions open and readers lag. What changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "kprodapi",
+        "kproducer",
+        "kconsumer"
+      ],
+      "technicalSources": [
+        "kprodapi",
+        "kproducer",
+        "kconsumer"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The work includes slow remote calls and frequently exceeds the configured transaction budget. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Exactly-Once Processing to slow transaction."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Long transformations keep Kafka transactions open and readers lag. What changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Measure the open-transaction/timeout path, bound transaction work and separate remote workflows from the Kafka atomic boundary using durable intent and ind"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Smaller batches add overhead; tuning timeouts can trade recovery delay for longer work but does not bring a remote provider into the transaction."
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Smaller batches add overhead; tuning timeouts can trade recovery delay for longer work but does not bring a remote provider into the transaction."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to kprodapi, kproducer, kconsumer; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the named references below. The System Design Primer provides core orientation where applicable; technical guarantees use the mapped primary sources. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://docs.python.org/3.10/library/sqlite3.html#using-the-connection-as-a-context-manager",
+    "https://github.com/donnemartin/system-design-primer#asynchronism",
+    "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html",
+    "https://learn.microsoft.com/en-us/azure/architecture/patterns/event-sourcing",
+    "https://kafka.apache.org/41/javadoc/org/apache/kafka/clients/producer/KafkaProducer.html",
+    "https://kafka.apache.org/41/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html",
+    "https://kafka.apache.org/41/configuration/consumer-configs/",
+    "https://kafka.apache.org/41/streams/core-concepts/",
+    "https://kafka.apache.org/41/design/design/",
+    "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/",
+    "https://kafka.apache.org/41/configuration/producer-configs/"
+  ]
+}

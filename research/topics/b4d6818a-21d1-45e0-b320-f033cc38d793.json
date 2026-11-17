@@ -1,0 +1,399 @@
+{
+  "topicId": "b4d6818a-21d1-45e0-b320-f033cc38d793",
+  "title": "Publish-Subscribe Pattern",
+  "path": "topics/system-design/message-queues-event-driven/messaging-and-event-patterns/publish-subscribe-pattern.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Publish-Subscribe Pattern\" interview slow subscriber durable subscription",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "pubsub",
+      "title": "Azure Architecture Center: Publisher-Subscriber pattern",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/publisher-subscriber",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Independent subscriptions and delivery/ordering considerations; concrete durability still follows the selected implementation."
+    },
+    {
+      "id": "competing",
+      "title": "Azure Architecture Center: Competing Consumers pattern",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/competing-consumers",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Shared work distribution, recovery and idempotent processing considerations."
+    },
+    {
+      "id": "rfanout",
+      "title": "RabbitMQ: Publish/Subscribe tutorial",
+      "url": "https://www.rabbitmq.com/tutorials/tutorial-three-python",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Fan-out exchange and separate subscriber queues; tutorial topology illustrates routing and is not claimed as a durable production configuration."
+    },
+    {
+      "id": "streams",
+      "title": "Apache Kafka 4.1 Streams: Core concepts",
+      "url": "https://kafka.apache.org/41/streams/core-concepts/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Partitioned stream processing, task/state and event-time concepts; not a guarantee of globally ordered external effects."
+    },
+    {
+      "id": "overload",
+      "title": "Google SRE: Handling overload",
+      "url": "https://sre.google/sre-book/handling-overload/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Bounded work, resource/queue capacity and admission during sustained overload."
+    },
+    {
+      "id": "outbox",
+      "title": "AWS Prescriptive Guidance: Transactional outbox",
+      "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Atomic local state/publication intent and remaining duplicate/consumer effect boundaries."
+    },
+    {
+      "id": "rreliable",
+      "title": "RabbitMQ 4.1: Reliability guide",
+      "url": "https://www.rabbitmq.com/docs/4.1/reliability",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Producer/broker/consumer responsibilities, ambiguous network failures and duplicate-safe recovery."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-shared-role",
+      "theme": "Risk and notifications share one queue and miss events. What changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "pubsub",
+        "competing",
+        "rfanout"
+      ],
+      "technicalSources": [
+        "pubsub",
+        "competing",
+        "rfanout"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Both applications require every eligible account fact, but their workers compete for one delivery stream. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Publish-Subscribe Pattern to shared role."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Risk and notifications share one queue and miss events. What changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Create independent application subscriptions under the selected broker, then let interchangeable workers share work within each application"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Separate subscriptions add retained state and monitoring"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If only one of the applications should act on each task, competing delivery may have been the right contract; clarify the role first."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to pubsub, competing, rfanout; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-slow-risk",
+      "theme": "Risk is a day behind. Must notifications stop?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "pubsub",
+        "overload"
+      ],
+      "technicalSources": [
+        "pubsub",
+        "overload"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Risk is independently recoverable and notifications are required to remain available. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Publish-Subscribe Pattern to slow risk."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Risk is a day behind. Must notifications stop?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Isolate subscription progress/resources, bound risk backlog/retention and control its catch-up load while notifications continue under their own guarantee."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Storage/quotas cost resources and eventual retention exhaustion needs an explicit fallback"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Shared broker failure can still affect both; independent subscriptions are not unlimited physical isolation."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to pubsub, overload; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-late-subscription",
+      "theme": "A new subscriber needs last month’s account history. Is subscribing enough?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "pubsub"
+      ],
+      "technicalSources": [
+        "pubsub"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The current channel promises only future publications and has no retained replay. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Publish-Subscribe Pattern to late subscription."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A new subscriber needs last month’s account history. Is subscribing enough?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Bootstrap from a supported authoritative snapshot/history with a defined handoff to live events, or choose retained history before promising completeness."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Bootstrap adds reconciliation and source load"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: An online-only listener can accept missing history, but that is a different product view."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to pubsub; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-filter-change",
+      "theme": "A new filter should include past premium accounts. What is missing?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "pubsub",
+        "streams"
+      ],
+      "technicalSources": [
+        "pubsub",
+        "streams"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Earlier events were excluded and the new consumer expects a complete derived view. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Publish-Subscribe Pattern to filter change."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A new filter should include past premium accounts. What is missing?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Determine whether historical replay exists and run an explicit bounded backfill/bootstrap with stable event/projection identity and a coordinated live catc"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Backfills consume capacity and may need a second view generation"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Merely editing the filter changes future eligibility, not necessarily already discarded history."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to pubsub, streams; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-mandatory-risk",
+      "theme": "An event secretly requires risk approval before billing success. What do you change?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "pubsub",
+        "outbox"
+      ],
+      "technicalSources": [
+        "pubsub",
+        "outbox"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The publisher claims final completion before the required subscriber has responded. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Publish-Subscribe Pattern to mandatory risk."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An event secretly requires risk approval before billing success. What do you change?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Model the mandatory approval as an explicit workflow/decision boundary with durable pending/final states and recovery ownership"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Explicit coordination adds latency/coupling, but the dependency already exists in business semantics"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Calling the message an event does not make the requirement optional."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to pubsub, outbox; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-schema-reader",
+      "theme": "A producer adds a field and one subscriber breaks. What now?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "pubsub",
+        "rreliable"
+      ],
+      "technicalSources": [
+        "pubsub",
+        "rreliable"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "That subscriber uses a strict decoder while others accept the new payload. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Publish-Subscribe Pattern to schema reader."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A producer adds a field and one subscriber breaks. What now?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Check the actual schema/reader compatibility contract, deploy a compatible versioning transition and recover failed deliveries with stable identity after r"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Compatibility support and parallel versions add work"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Assuming every additive change is safe ignores real decoder behavior; dropping the subscriber silently may violate a required reaction."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to pubsub, rreliable; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the named references below. The System Design Primer provides core orientation where applicable; technical guarantees use the mapped primary sources. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://learn.microsoft.com/en-us/azure/architecture/patterns/publisher-subscriber",
+    "https://learn.microsoft.com/en-us/azure/architecture/patterns/competing-consumers",
+    "https://www.rabbitmq.com/tutorials/tutorial-three-python",
+    "https://kafka.apache.org/41/streams/core-concepts/",
+    "https://sre.google/sre-book/handling-overload/",
+    "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html",
+    "https://www.rabbitmq.com/docs/4.1/reliability"
+  ]
+}

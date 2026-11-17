@@ -1,0 +1,373 @@
+{
+  "topicId": "21ac5532-632d-4c85-ad75-8dd2e116b347",
+  "title": "Secrets Management",
+  "path": "topics/system-design/authentication-backend-security/cryptography-and-secrets-management/secrets-management.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Secrets Management\" interview bootstrap rotation outage workload identity",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "primer",
+      "title": "System Design Primer: Security",
+      "url": "https://github.com/donnemartin/system-design-primer#security",
+      "roles": [
+        "interview-evidence"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Core conceptual orientation checked during specification; its brief section explicitly needs updates and is not the sole protocol/crypto authority or evidence of interview frequency."
+    },
+    {
+      "id": "secrets",
+      "title": "OWASP: Secrets Management Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Credential bootstrap/distribution, least privilege, dynamic/static lifecycle, rotation and audit; no universal manager availability claim."
+    },
+    {
+      "id": "authz",
+      "title": "OWASP: Authorization Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Least privilege, default denial and resource/action authorization on every request, with trusted enforcement and failure handling."
+    },
+    {
+      "id": "rest",
+      "title": "OWASP: REST Security Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "API credentials, token/access controls, safe error/log handling and TLS; API keys alone are insufficient for every sensitive resource."
+    },
+    {
+      "id": "crypto",
+      "title": "OWASP: Cryptographic Storage Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Layered data protection, authenticated modes and key lifecycle; protection depends on attacker and access boundaries."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-bootstrap-secret",
+      "theme": "Every container embeds the manager’s master password. What changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "secrets",
+        "authz"
+      ],
+      "technicalSources": [
+        "secrets",
+        "authz"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The image can be inspected and the credential fetches broad production secrets. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Secrets Management to bootstrap secret."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Every container embeds the manager’s master password. What changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Revoke/reconcile exposed authority, adopt a supported scoped workload identity/bootstrap path and separate runtime retrieval from manager administration."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Platform identity adds trust/configuration dependencies"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Moving the same shared password to another broadly readable file does not establish independent workload authority."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to secrets, authz; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-manager-down",
+      "theme": "The manager is down but the app has a valid cached credential. Must it stop immediately?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "secrets"
+      ],
+      "technicalSources": [
+        "secrets"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The documented policy permits bounded reuse and the dependency still accepts it. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Secrets Management to manager down."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The manager is down but the app has a valid cached credential. Must it stop immediately?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Continue only within the supported usable-lifetime/revocation/cache policy, monitor age and renewal failure and stop protected use when that authority no l"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Caching trades exposure/freshness for availability"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: An expired or revoked credential is a different case; inventing indefinite cache validity changes the policy."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to secrets; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-partial-rotation",
+      "theme": "Half the fleet uses the new password and half uses the old. How do you recover?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "secrets"
+      ],
+      "technicalSources": [
+        "secrets"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The dependency and manager permit a planned bounded migration but rollout failed. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Secrets Management to partial rotation."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Half the fleet uses the new password and half uses the old. How do you recover?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Inspect actual accepted versions, pace/repair client and pool reload, observe successful new use and retire old authority within the safe overlap or contro"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Overlap adds valid authority and prolonged stale clients need ownership"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A compromised old secret may require immediate revocation instead of availability-preserving rollback."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to secrets; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-lease-connection",
+      "theme": "A database connection works after its credential lease expires. Is the manager broken?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "secrets",
+        "authz"
+      ],
+      "technicalSources": [
+        "secrets",
+        "authz"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The team assumed credential expiry automatically terminates established sessions. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Secrets Management to lease connection."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A database connection works after its credential lease expires. Is the manager broken?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Verify the real database/manager connection and revocation semantics, configure session termination/limits where supported and align the advertised cut-off"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Termination can interrupt work and may need dependency cooperation"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A credential issuance label alone cannot guarantee the lifetime of every already authenticated connection."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to secrets, authz; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-debug-logs",
+      "theme": "A retrieval failure dumps the whole configuration into logs. What do you fix?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "secrets",
+        "rest"
+      ],
+      "technicalSources": [
+        "secrets",
+        "rest"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Those logs are accessible more broadly than the runtime credential store. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Secrets Management to debug logs."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A retrieval failure dumps the whole configuration into logs. What do you fix?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Redact values, restrict diagnostic access, revoke/reconcile exposed credentials and retain safe identifiers/error categories sufficient for operations."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Less public detail can slow diagnosis; controlled support tooling is an alternative"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Deleting a log line does not invalidate copies already read."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to secrets, rest; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-outbound-hash",
+      "theme": "The application stores only a hash of a provider credential and cannot call the provider. What was confused?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "secrets",
+        "crypto"
+      ],
+      "technicalSources": [
+        "secrets",
+        "crypto"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The provider requires the original credential for outbound authentication. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Secrets Management to outbound hash."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The application stores only a hash of a provider credential and cannot call the provider. What was confused?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use controlled recoverable secret storage or a supported credential-free workload identity protocol for that outbound use, while retaining one-way verifier"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Recoverability adds key/access risk"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: API key verifier storage and outbound secret distribution solve different needs; stronger hashing cannot recover required plaintext."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to secrets, crypto; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the named references below. The System Design Primer provides core orientation where applicable; technical guarantees use the mapped primary sources. Exact interview frequency, rankings and company attribution were not independently verified. Security protocol and runtime examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://github.com/donnemartin/system-design-primer#security",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html",
+    "https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html"
+  ]
+}

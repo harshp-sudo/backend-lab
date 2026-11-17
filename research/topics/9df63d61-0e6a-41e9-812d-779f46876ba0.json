@@ -1,0 +1,412 @@
+{
+  "topicId": "9df63d61-0e6a-41e9-812d-779f46876ba0",
+  "title": "Message Ordering",
+  "path": "topics/system-design/message-queues-event-driven/delivery-guarantees-and-ordering/message-ordering.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-17",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "\"Message Ordering\" interview partition retries concurrent consumers",
+      "date": "2026-11-17",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "primer",
+      "title": "System Design Primer: Asynchronism, message queues, task queues and back pressure",
+      "url": "https://github.com/donnemartin/system-design-primer#asynchronism",
+      "roles": [
+        "interview-evidence"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Required core conceptual/interview-study reference, inspected 2026-11-17; historical product comparisons are not adopted as current guarantees or evidence of question frequency."
+    },
+    {
+      "id": "kdesign",
+      "title": "Apache Kafka 4.1: Design and delivery semantics",
+      "url": "https://kafka.apache.org/41/design/design/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Partitioned storage, publication/consumption semantics and scoped transaction boundaries; examples explicitly target the 4.1 series rather than a latest-version claim."
+    },
+    {
+      "id": "kapi",
+      "title": "Kafka Java client 4.1.2: KafkaConsumer",
+      "url": "https://kafka.apache.org/41/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Position versus committed position, manual progress handling, rebalances, thread-safety and asynchronous processing caveats."
+    },
+    {
+      "id": "kconsumer",
+      "title": "Apache Kafka 4.1: Consumer configuration",
+      "url": "https://kafka.apache.org/41/configuration/consumer-configs/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Classic group, poll/progress, isolation and bounded-fetch controls; protocol and settings are named rather than inferred from generic consumer terminology."
+    },
+    {
+      "id": "rqueue",
+      "title": "RabbitMQ 4.1: Queues",
+      "url": "https://www.rabbitmq.com/docs/4.1/queues",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Queue types, ordering and delivery lifecycle under the selected queue/consumer configuration."
+    },
+    {
+      "id": "sfifo",
+      "title": "Amazon SQS: FIFO queues",
+      "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-fifo-queues.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Per-group FIFO behavior and queue-mode distinctions in the service; client processing must honor the required order."
+    },
+    {
+      "id": "esource",
+      "title": "Azure Architecture Center: Event Sourcing pattern",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/event-sourcing",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Concurrency, snapshots, event evolution and projection rebuilding as separate design obligations."
+    },
+    {
+      "id": "outbox",
+      "title": "AWS Prescriptive Guidance: Transactional outbox",
+      "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-17",
+      "supportRationale": "Atomic local state/publication intent and remaining duplicate/consumer effect boundaries."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-thread-pool",
+      "theme": "FIFO receipt still produces reversed account updates. What changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "rqueue",
+        "sfifo",
+        "kdesign"
+      ],
+      "technicalSources": [
+        "rqueue",
+        "sfifo",
+        "kdesign"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "One worker dispatches same-account records to concurrent tasks and update 42 commits before 41. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Message Ordering to thread pool."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: FIFO receipt still produces reversed account updates. What changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Serialize dependent work per account or enforce valid version transitions atomically at the sink"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Serial lanes reduce hot-key throughput"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If operations truly commute, relaxing order may be valid, but that must be a domain property rather than an optimization assumption."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to rqueue, sfifo, kdesign; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-offset-hole",
+      "theme": "Offset 12 finished while offset 11 is still running. What can you commit?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "kapi"
+      ],
+      "technicalSources": [
+        "kapi"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A crash must not skip unfinished work in the partition. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Message Ordering to offset hole."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Offset 12 finished while offset 11 is still running. What can you commit?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Keep a completion tracker and advance the committed next position only after the contiguous earlier prefix is durable"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Tracking gaps consumes memory and can block progress behind a slow task"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Serial partition processing simplifies recovery but sacrifices independent-key concurrency."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to kapi; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-missing-version",
+      "theme": "Account version 90 arrives before 89. Should you apply it?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "kdesign",
+        "esource"
+      ],
+      "technicalSources": [
+        "kdesign",
+        "esource"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Transitions depend on their predecessor and missing input may be delayed. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Message Ordering to missing version."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Account version 90 arrives before 89. Should you apply it?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Pause/buffer that key within a bound, investigate the gap and recover the missing event or use an explicitly supported business resolution"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Waiting costs availability/storage"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A latest-state replacement may tolerate skipping, but an incremental financial transition does not inherit that property."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to kdesign, esource; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-hot-key",
+      "theme": "One customer owns most traffic. Will more workers fix ordering throughput?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "kdesign",
+        "sfifo"
+      ],
+      "technicalSources": [
+        "kdesign",
+        "sfifo"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "All of that customer’s effects require serial execution in one ordered lane. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Message Ordering to hot key."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: One customer owns most traffic. Will more workers fix ordering throughput?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Measure the serial bottleneck, batch/optimize within the invariant and partition the business entity only if independent sub-invariants exist"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Stronger serialization caps throughput"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Arbitrarily splitting the key can scale ingestion while breaking the required effect order."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to kdesign, sfifo; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-repartition",
+      "theme": "New partitions reorder one account’s migration traffic. How do you prevent it?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "kdesign",
+        "kapi"
+      ],
+      "technicalSources": [
+        "kdesign",
+        "kapi"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Old work remains in the original lane while a changed mapping sends new work elsewhere. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Message Ordering to repartition."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: New partitions reorder one account’s migration traffic. How do you prevent it?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Plan a coordinated mapping cutover/drain or enforce a supported entity sequence/ownership protocol at the effect boundary with gap handling"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Draining can pause writes and sequence enforcement adds state"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Partition order is local; it never promised order across two lanes."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to kdesign, kapi; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-stale-worker",
+      "theme": "A reassigned worker commits an older result after its replacement. What protects the sink?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "kapi",
+        "kconsumer",
+        "outbox"
+      ],
+      "technicalSources": [
+        "kapi",
+        "kconsumer",
+        "outbox"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The old process survives a rebalance and can still reach the database. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Message Ordering to stale worker."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A reassigned worker commits an older result after its replacement. What protects the sink?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use the selected store’s atomic version/ownership fencing mechanism and reject obsolete writes, while coordinating progress under the consumer protocol."
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Fencing adds store checks and must cover the actual effect boundary"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A remote non-fenceable provider requires another idempotency/reconciliation contract; reassignment does not stop its earlier request."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to kapi, kconsumer, outbox; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-17. These are adapted production scenarios informed by concept-specific interview searches and the named references below. The System Design Primer provides core orientation where applicable; technical guarantees use the mapped primary sources. Exact interview frequency, rankings and company attribution were not independently verified. Protocol and product examples state their assumptions; the questions test reasoning rather than a universal product recommendation.",
+  "sourceNoteUrls": [
+    "https://github.com/donnemartin/system-design-primer#asynchronism",
+    "https://kafka.apache.org/41/design/design/",
+    "https://kafka.apache.org/41/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html",
+    "https://kafka.apache.org/41/configuration/consumer-configs/",
+    "https://www.rabbitmq.com/docs/4.1/queues",
+    "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-fifo-queues.html",
+    "https://learn.microsoft.com/en-us/azure/architecture/patterns/event-sourcing",
+    "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html"
+  ]
+}
