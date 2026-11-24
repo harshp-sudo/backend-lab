@@ -1,0 +1,392 @@
+{
+  "topicId": "517f2384-e081-44f8-9644-9d306b13d80c",
+  "title": "Rate Limiting & Throttling",
+  "path": "topics/system-design/performance-reliability/testing-traffic-shaping-and-resilience/rate-limiting-and-throttling.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-22",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "Rate Limiting Throttling production interview overload load shedding backpressure Google SRE",
+      "date": "2026-11-22",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "overload",
+      "title": "Google SRE: Handling overload",
+      "url": "https://sre.google/sre-book/handling-overload/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Overload may require degradation, rejection and client feedback."
+    },
+    {
+      "id": "cascade",
+      "title": "Google SRE: Addressing cascading failures",
+      "url": "https://sre.google/sre-book/addressing-cascading-failures/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Retry amplification and resource exhaustion spread failures."
+    },
+    {
+      "id": "bulkhead",
+      "title": "Azure Architecture Center: Bulkhead pattern",
+      "url": "https://learn.microsoft.com/en-us/azure/architecture/patterns/bulkhead",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Partitioning resources limits some blast radii but has utilization costs."
+    },
+    {
+      "id": "hikari",
+      "title": "HikariCP: configuration reference",
+      "url": "https://github.com/brettwooldridge/HikariCP",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Acquisition, idle, keepalive and lifetime settings apply at different ownership boundaries."
+    },
+    {
+      "id": "rfc429",
+      "title": "IETF RFC 6585: Additional HTTP status codes",
+      "url": "https://www.rfc-editor.org/rfc/rfc6585.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "429 and optional Retry-After communicate request-rate policy rejection."
+    },
+    {
+      "id": "rfc503",
+      "title": "IETF RFC 9110: HTTP semantics",
+      "url": "https://www.rfc-editor.org/rfc/rfc9110.html#name-503-service-unavailable",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "503 and Retry-After have service-availability semantics distinct from a specific identity quota."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-compliant-but-slow",
+      "theme": "Every caller meets its rate quota, but a slow database exhausts in-flight work. What changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "overload",
+        "hikari"
+      ],
+      "technicalSources": [
+        "overload",
+        "hikari"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The request rate is steady while database hold time increases tenfold. The origin runs out of connections and memory. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Rate Limiting & Throttling to compliant but slow."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Every caller meets its rate quota, but a slow database exhausts in-flight work. What changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Add or tighten a bounded in-flight/downstream admission budget with explicit queue/deadline limits and fair policy"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A per-caller rate limit still serves fairness but is not current capacity"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If admitted writes have unknown outcomes, error handling/retries must preserve operation identity rather than treat all refused and timed-out work identica"
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to overload, hikari; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-priority-surge",
+      "theme": "A surge of exports starves checkout reads. How do you protect the critical path?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "overload",
+        "bulkhead"
+      ],
+      "technicalSources": [
+        "overload",
+        "bulkhead"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Optional exports and interactive reads share workers and database sessions. Product policy allows refusing new exports during overload. What will you choose?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Rate Limiting & Throttling to priority surge."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A surge of exports starves checkout reads. How do you protect the critical path?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use validated operation/tenant priority with bounded independent admission or reserved critical capacity, and reject/defer new exports under an explicit co"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Reservations can strand idle capacity; weighted sharing is an alternative with more control complexity"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A client-supplied priority header is not authority to consume critical capacity."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to overload, bulkhead; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-queue-vs-deadline",
+      "theme": "Can a five-second shaping queue serve a 300 ms interactive request?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "overload",
+        "cascade"
+      ],
+      "technicalSources": [
+        "overload",
+        "cascade"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The system delays excess work for seconds and calls it throttling. Callers time out and retry before execution starts. What policy fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Rate Limiting & Throttling to queue vs deadline."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Can a five-second shaping queue serve a 300 ms interactive request?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Bound waiting by the remaining interactive deadline and queue resource budget, then refuse excess work early with a truthful response"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A queue can smooth short bursts when useful completion remains possible, but long waiting can create duplicate attempts and wasted work"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Merely returning a longer client timeout changes the contract and may worsen resource retention."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to overload, cascade; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-rejection-cpu",
+      "theme": "The service spends most CPU returning errors. Why does shedding fail to stabilize it?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "overload",
+        "rfc429",
+        "rfc503"
+      ],
+      "technicalSources": [
+        "overload",
+        "rfc429",
+        "rfc503"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Origin traffic is extreme; even authentication and constructing rejection responses consume its capacity. What additional controls will you use?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Rate Limiting & Throttling to rejection cpu."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The service spends most CPU returning errors. Why does shedding fail to stabilize it?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Move suitable cheap protection earlier at the edge/connection boundary, keep rejection paths minimal and bounded, and use cooperative client feedback/adapt"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Origin-side rejection is not free"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Avoid bypassing authentication on privileged paths just to save CPU; choose layered budgets with explicit limitations."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to overload, rfc429, rfc503; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-retry-multiplication",
+      "theme": "Three layers each allow four attempts during overload. What is the trap?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "cascade",
+        "rfc429",
+        "rfc503"
+      ],
+      "technicalSources": [
+        "cascade",
+        "rfc429",
+        "rfc503"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A caller, gateway and service each retry a failed downstream operation independently. One request can cause a multiplicative attempt tree. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Rate Limiting & Throttling to retry multiplication."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Three layers each allow four attempts during overload. What is the trap?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Choose an intentional retry owner, bound attempts and total retry demand, propagate remaining deadlines and use jitter"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Four attempts at three layers can produce up to 64 deepest-layer attempts in a simplified worst case"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Removing every retry may reduce resilience to a transient fault; retain only justified bounded recovery."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to cascade, rfc429, rfc503; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-global-budget",
+      "theme": "Each of twenty replicas enforces a local 100/s limit. Is the global API capped at 100/s?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "overload",
+        "rfc429"
+      ],
+      "technicalSources": [
+        "overload",
+        "rfc429"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The policy is intended as an aggregate protection boundary, but requests spread across replicas and scaling changes the total. What will you decide?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Rate Limiting & Throttling to global budget."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Each of twenty replicas enforces a local 100/s limit. Is the global API capped at 100/s?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: State whether the budget is per-instance or shared, and implement/document an aggregate mechanism or deliberate allocation/approximation across replicas"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A coordinated limiter adds latency/availability and state consistency trade-offs; local coarse protection remains useful even with a global policy"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Do not advertise an exact global bound from independent local counters or assume a managed gateway makes every quota exact."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to overload, rfc429; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-22. These are adapted production scenarios informed by exact-concept interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Worked numbers are hypothetical unless explicitly measured; runtime and platform assumptions are stated rather than presented as universal settings.",
+  "sourceNoteUrls": [
+    "https://sre.google/sre-book/handling-overload/",
+    "https://sre.google/sre-book/addressing-cascading-failures/",
+    "https://learn.microsoft.com/en-us/azure/architecture/patterns/bulkhead",
+    "https://github.com/brettwooldridge/HikariCP",
+    "https://www.rfc-editor.org/rfc/rfc6585.html",
+    "https://www.rfc-editor.org/rfc/rfc9110.html#name-503-service-unavailable"
+  ]
+}

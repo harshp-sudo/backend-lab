@@ -1,0 +1,399 @@
+{
+  "topicId": "676c2386-d2c6-4cd3-bae0-6a800bd84725",
+  "title": "Docker & Containerization",
+  "path": "topics/system-design/devops-deployment-observability/containers-orchestration-and-infrastructure/docker-and-containerization.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-22",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "Docker Containerization production interview image layers volumes secrets isolation",
+      "date": "2026-11-22",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "image",
+      "title": "Docker: What is an image?",
+      "url": "https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-an-image/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Images package a runtime filesystem/configuration while containers are running instances with isolation boundaries."
+    },
+    {
+      "id": "build",
+      "title": "Docker: Build best practices",
+      "url": "https://docs.docker.com/build/building/best-practices/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Build context, layers, digest selection and rebuild/patch policy shape reproducible image delivery."
+    },
+    {
+      "id": "buildsecrets",
+      "title": "Docker: Build secrets",
+      "url": "https://docs.docker.com/build/building/secrets/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Secret mounts avoid treating build arguments or copied credentials as safe secret storage."
+    },
+    {
+      "id": "volumes",
+      "title": "Docker: Volumes",
+      "url": "https://docs.docker.com/engine/storage/volumes/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Persistent volume ownership differs from a container's writable layer and lifecycle."
+    },
+    {
+      "id": "dockersec",
+      "title": "Docker Engine security",
+      "url": "https://docs.docker.com/engine/security/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Shared-kernel namespaces/cgroups and daemon privileges define container threat boundaries."
+    },
+    {
+      "id": "cascade",
+      "title": "Google SRE: Addressing cascading failures",
+      "url": "https://sre.google/sre-book/addressing-cascading-failures/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Retry amplification and resource exhaustion spread failures."
+    },
+    {
+      "id": "ghasec",
+      "title": "GitHub Actions: security hardening",
+      "url": "https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Untrusted inputs, action provenance and credential scope constrain workflow execution."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-mutable-tag",
+      "theme": "Two machines deploy the same tag but behave differently. What do you compare?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "image",
+        "build"
+      ],
+      "technicalSources": [
+        "image",
+        "build"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Production and staging both declare the api:latest tag. Their serving behavior differs after a registry update. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Docker & Containerization to mutable tag."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Two machines deploy the same tag but behave differently. What do you compare?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Inspect actual image identities and target platforms, compare configuration and dependencies, then deploy the same verified artifact identity through promo"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A digest proves selected content identity, not that it is safe or correctly configured"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Platform-specific variants and runtime secrets can still differ; locking a vulnerable image forever is not a maintenance strategy."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to image, build; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-layer-secret",
+      "theme": "A token was copied then removed in the next build step. Is rotation necessary?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "buildsecrets",
+        "build"
+      ],
+      "technicalSources": [
+        "buildsecrets",
+        "build"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The image was pushed to a shared registry and a build log printed the token. What response and prevention fit?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Docker & Containerization to layer secret."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A token was copied then removed in the next build step. Is rotation necessary?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Treat the credential as exposed, revoke/rotate it and inspect where it propagated"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Removing a later file or tag does not erase earlier layers, downloaded copies or logs"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Secret mounts reduce accidental persistence but cannot stop a build command intentionally copying or printing the value."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to buildsecrets, build; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-lost-uploads",
+      "theme": "Replacing a container loses customer uploads. What storage contract is missing?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "volumes",
+        "image"
+      ],
+      "technicalSources": [
+        "volumes",
+        "image"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The service writes under its local filesystem and deployment recreates containers. Customers expect files to survive. What changes?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Docker & Containerization to lost uploads."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Replacing a container loses customer uploads. What storage contract is missing?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Move durable objects to an explicitly managed volume/object store or database with appropriate ownership, availability and tested backup/restore"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A mounted volume changes lifetime, not application-level consistency or cross-host portability"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Sharing one directory between writers may introduce races; storage access and recovery semantics must match the workload."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to volumes, image; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-oom-limit",
+      "theme": "The container is repeatedly killed under load although the host has spare memory. What next?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "dockersec",
+        "cascade"
+      ],
+      "technicalSources": [
+        "dockersec",
+        "cascade"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A runtime memory limit is below the application’s peak working set and no graceful error appears. What evidence and change fit?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Docker & Containerization to oom limit."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The container is repeatedly killed under load although the host has spare memory. What next?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Inspect termination reason, measured working set and limits, reduce unnecessary retention or tune concurrency and runtime memory settings, then adjust the "
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Simply removing limits can move failure to other workloads or the host"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Container memory accounting includes more than a language heap; an OOM kill is not equivalent to an application exception with cleanup."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to dockersec, cascade; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-socket-privilege",
+      "theme": "A build helper requests the host Docker socket. Is it an ordinary file mount?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "dockersec",
+        "ghasec"
+      ],
+      "technicalSources": [
+        "dockersec",
+        "ghasec"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Untrusted build code would reach a daemon that can start privileged host containers. What boundary will you choose?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Docker & Containerization to socket privilege."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A build helper requests the host Docker socket. Is it an ordinary file mount?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Treat daemon access as substantial host authority, isolate untrusted build execution and avoid exposing the privileged socket"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Running as a non-root user inside the helper does not neutralize powerful daemon access"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Stronger isolation costs setup and resources; ordinary shared-kernel containers are not interchangeable with VM boundaries."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to dockersec, ghasec; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-stale-cache",
+      "theme": "A fast rebuild still contains an old vulnerable library. What policy is missing?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "build",
+        "image"
+      ],
+      "technicalSources": [
+        "build",
+        "image"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Cached build layers and a stable base identity keep reproducing the same old runtime after a security fix is published. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Docker & Containerization to stale cache."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A fast rebuild still contains an old vulnerable library. What policy is missing?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Update reviewed base/dependency inputs, rebuild and verify a new artifact, then promote it with provenance and compatibility checks"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Disabling all cache can increase time without updating pinned inputs"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Reproducibility and deliberate patch freshness need complementary processes."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to build, image; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-22. These are adapted production scenarios informed by exact-concept interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Worked numbers are hypothetical unless explicitly measured; runtime and platform assumptions are stated rather than presented as universal settings.",
+  "sourceNoteUrls": [
+    "https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-an-image/",
+    "https://docs.docker.com/build/building/best-practices/",
+    "https://docs.docker.com/build/building/secrets/",
+    "https://docs.docker.com/engine/storage/volumes/",
+    "https://docs.docker.com/engine/security/",
+    "https://sre.google/sre-book/addressing-cascading-failures/",
+    "https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions"
+  ]
+}

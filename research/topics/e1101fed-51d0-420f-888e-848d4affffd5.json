@@ -1,0 +1,392 @@
+{
+  "topicId": "e1101fed-51d0-420f-888e-848d4affffd5",
+  "title": "Memory Management",
+  "path": "topics/system-design/performance-reliability/concurrency-and-runtime-resource-management/memory-management.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-22",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "Memory Management production interview memory leak heap RSS garbage collection Node.js",
+      "date": "2026-11-22",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "memory",
+      "title": "Node.js: Understanding and tuning memory",
+      "url": "https://nodejs.org/en/learn/diagnostics/memory/understanding-and-tuning-memory",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Reachability, GC and heap/process accounting distinguish memory failure mechanisms."
+    },
+    {
+      "id": "snapshot",
+      "title": "Node.js: Using heap snapshots",
+      "url": "https://nodejs.org/en/learn/diagnostics/memory/using-heap-snapshot",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Capturing and comparing retained graphs has pause and memory costs."
+    },
+    {
+      "id": "streams",
+      "title": "Node.js stream API",
+      "url": "https://nodejs.org/api/stream.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Writable backpressure and buffer thresholds require producer cooperation."
+    },
+    {
+      "id": "cgroup",
+      "title": "Linux kernel: Control Group v2",
+      "url": "https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "CPU quota/throttling and memory accounting constrain container interpretations."
+    },
+    {
+      "id": "profile",
+      "title": "Node.js: Profiling applications",
+      "url": "https://nodejs.org/en/learn/getting-started/profiling",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Runtime profiling provides evidence of expensive code paths."
+    },
+    {
+      "id": "abort",
+      "title": "Node.js AbortController API",
+      "url": "https://nodejs.org/api/globals.html#class-abortcontroller",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Cancellation signals require actual API cooperation."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-staircase-retention",
+      "theme": "Memory rises after every completed export. Raise the heap?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "memory",
+        "snapshot"
+      ],
+      "technicalSources": [
+        "memory",
+        "snapshot"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Equivalent exports finish, but settled heap usage increases each time. A global completed-job registry stores full results. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Memory Management to staircase retention."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Memory rises after every completed export. Raise the heap?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Remove completed/error/cancelled work from the live registry and retain only bounded metadata required by the product"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A larger heap can buy time but preserves unbounded ownership"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If result replay is required, move that ownership to appropriately bounded storage rather than silently dropping the requirement."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to memory, snapshot; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-flat-heap-rss",
+      "theme": "The heap stays flat while RSS approaches the limit. What does a heap-only profile miss?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "memory",
+        "cgroup",
+        "streams"
+      ],
+      "technicalSources": [
+        "memory",
+        "cgroup",
+        "streams"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The service handles large binary downloads. heapUsed is steady, but process/container memory grows. What categories and mechanism will you investigate?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Memory Management to flat heap rss."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The heap stays flat while RSS approaches the limit. What does a heap-only profile miss?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Compare external/buffer usage, stream/application queues, native allocations, allocator behavior and other charged memory"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: RSS does not have to drop immediately after useful memory is released, so one snapshot is not proof of a leak"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A smaller managed heap alone may add GC pressure without addressing the retained buffers."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to memory, cgroup, streams; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-allocation-churn",
+      "theme": "Memory returns to baseline but p99 spikes during frequent collection. Is it a leak?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "memory",
+        "profile"
+      ],
+      "technicalSources": [
+        "memory",
+        "profile"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A bounded request path creates many short-lived intermediary objects. Retained size settles, but allocation and GC activity correlate with latency. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Memory Management to allocation churn."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Memory returns to baseline but p99 spikes during frequent collection. Is it a leak?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Profile allocation rate and the relevant request path, then reduce unnecessary intermediate copies/objects or choose bounded incremental processing"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Pooling every object can increase retained memory and complexity, and mutable reuse can introduce correctness bugs"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Correlation with GC needs investigation, not an assumption that every pause is caused by one allocator."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to memory, profile; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-queue-mib",
+      "theme": "Ten thousand 64 KiB queued tasks fit under a 512 MiB limit?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "memory",
+        "streams",
+        "cgroup"
+      ],
+      "technicalSources": [
+        "memory",
+        "streams",
+        "cgroup"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A worker queue stores complete payloads; item count is capped at ten thousand. The team believes a count limit proves memory safety. What will you calculate and do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Memory Management to queue mib."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Ten thousand 64 KiB queued tasks fit under a 512 MiB limit?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Compute 10,000 × 64 KiB = 625 MiB before object/runtime overhead, already above the whole container budget"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A smaller average payload does not protect against an allowed maximum or retained object graphs"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Account for queued age and caller deadlines as well as bytes."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to memory, streams, cgroup; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-snapshot-risk",
+      "theme": "The only replica is nearly out of memory. Take a full heap snapshot now?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "snapshot",
+        "memory"
+      ],
+      "technicalSources": [
+        "snapshot",
+        "memory"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The process serves critical traffic with little headroom, and a snapshot may pause it and allocate more memory. What evidence plan will you choose?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Memory Management to snapshot risk."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The only replica is nearly out of memory. Take a full heap snapshot now?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: First preserve lower-impact metrics and available sampling evidence, and route traffic away from a replica or reproduce on a controlled instance before a f"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A snapshot offers detailed retainers but can worsen the incident"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Never publish memory artifacts containing live tokens or customer data merely to obtain easier debugging."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to snapshot, memory; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-listener-lifetime",
+      "theme": "Completed requests remain reachable through an event listener. How do you verify cleanup?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "memory",
+        "abort"
+      ],
+      "technicalSources": [
+        "memory",
+        "abort"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Each request registers a listener capturing its context but cleanup runs only on success. Error and cancellation paths retain it. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Memory Management to listener lifetime."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Completed requests remain reachable through an event listener. How do you verify cleanup?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Give listener registration a scoped owner with idempotent cleanup on success, failure and cancellation"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: One-time listeners may help only when the event actually fires; they do not fix an event that never arrives"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: GC cannot reclaim a context while a live emitter still references its closure."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to memory, abort; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-22. These are adapted production scenarios informed by exact-concept interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Worked numbers are hypothetical unless explicitly measured; runtime and platform assumptions are stated rather than presented as universal settings.",
+  "sourceNoteUrls": [
+    "https://nodejs.org/en/learn/diagnostics/memory/understanding-and-tuning-memory",
+    "https://nodejs.org/en/learn/diagnostics/memory/using-heap-snapshot",
+    "https://nodejs.org/api/stream.html",
+    "https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html",
+    "https://nodejs.org/en/learn/getting-started/profiling",
+    "https://nodejs.org/api/globals.html#class-abortcontroller"
+  ]
+}

@@ -1,0 +1,403 @@
+{
+  "topicId": "20994b9a-22ea-4b17-8b3b-ca71c6238497",
+  "title": "Performance Monitoring",
+  "path": "topics/system-design/performance-reliability/lifecycle-and-production-observability/performance-monitoring.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-22",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "Performance Monitoring production interview latency percentiles metrics traces OpenTelemetry",
+      "date": "2026-11-22",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "otel",
+      "title": "OpenTelemetry: Signals",
+      "url": "https://opentelemetry.io/docs/concepts/signals/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Telemetry signals offer complementary operational evidence."
+    },
+    {
+      "id": "context",
+      "title": "OpenTelemetry: Context propagation",
+      "url": "https://opentelemetry.io/docs/concepts/context-propagation/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Trace context relates activity across asynchronous and network boundaries without being an authorization credential."
+    },
+    {
+      "id": "hist",
+      "title": "Prometheus: Histograms and summaries",
+      "url": "https://prometheus.io/docs/practices/histograms/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Distributions, counts and quantile aggregation require correct statistics."
+    },
+    {
+      "id": "metricnames",
+      "title": "Prometheus: Metric and label naming",
+      "url": "https://prometheus.io/docs/practices/naming/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Metric identity/units and label dimensions shape aggregation and bounded cardinality."
+    },
+    {
+      "id": "golden",
+      "title": "Google SRE: Monitoring distributed systems",
+      "url": "https://sre.google/sre-book/monitoring-distributed-systems/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "User symptoms and latency, traffic, errors and saturation guide operational monitoring."
+    },
+    {
+      "id": "probes",
+      "title": "Kubernetes: Liveness, readiness and startup probes",
+      "url": "https://kubernetes.io/docs/concepts/workloads/pods/probes/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Probe purposes/actions differ and misconfiguration can cascade."
+    },
+    {
+      "id": "k6model",
+      "title": "Grafana k6: Open and closed workload models",
+      "url": "https://grafana.com/docs/k6/latest/using-k6/scenarios/concepts/open-vs-closed/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Arrival scheduling changes the meaning of observed latency and offered load."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-green-probes-red-users",
+      "theme": "All probes pass, but order p99 and error rate violate the objective. What do you inspect?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "golden",
+        "otel",
+        "probes"
+      ],
+      "technicalSources": [
+        "golden",
+        "otel",
+        "probes"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The health handler is cheap and succeeds while pool acquisition and one tenant’s order requests stall. What evidence and response will you choose?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Performance Monitoring to green probes red users."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: All probes pass, but order p99 and error rate violate the objective. What do you inspect?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Scope the affected user operation/tenant/time window, inspect complete latency/error populations and trace acquisition versus SQL/transfer"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Probe success only establishes its sampled condition"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Use health checks for their intended control actions and user monitoring for the broader service contract."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to golden, otel, probes; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-percentile-average",
+      "theme": "Instance p95 values are 10 ms and 1,000 ms. Is global p95 505 ms?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "hist"
+      ],
+      "technicalSources": [
+        "hist"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The first instance handles 990 observations and the second only ten during the same window. What aggregation and additional view will you use?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Performance Monitoring to percentile average."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Instance p95 values are 10 ms and 1,000 ms. Is global p95 505 ms?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Combine the compatible observations/distributions and compute the population quantile; in the simple stated nearest-rank example, global p95 is 10 ms"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Averaging quantiles is not weighted distribution aggregation"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Global objectives and fairness/cohort objectives answer different questions; do not hide a small tenant behind a large fast population."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to hist; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-missing-trace-parent",
+      "theme": "A queue consumer looks unrelated to its originating request. What is missing?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "context",
+        "otel"
+      ],
+      "technicalSources": [
+        "context",
+        "otel"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "HTTP spans are linked, but trace context is lost during asynchronous handoff. What will you verify and propagate?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Performance Monitoring to missing trace parent."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A queue consumer looks unrelated to its originating request. What is missing?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use the selected OpenTelemetry propagator/library conventions to inject/extract appropriate context at the handoff boundary and establish correct parent/li"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Not every delayed or batched consumer should be forced into one simplistic synchronous parent chain"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Missing sampled spans do not prove missing business execution."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to context, otel; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-cardinality-explosion",
+      "theme": "A metric labels every raw order URL and user ID. How do you keep diagnosis without the bill?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "metricnames",
+        "otel",
+        "context"
+      ],
+      "technicalSources": [
+        "metricnames",
+        "otel",
+        "context"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A release creates huge series counts and exporter pressure. Operators still need to investigate individual failures. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Performance Monitoring to cardinality explosion."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A metric labels every raw order URL and user ID. How do you keep diagnosis without the bill?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Normalize route labels to bounded templates and retain only justified bounded dimensions"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Removing every label loses useful cohorts, while hashing IDs does not bound their count"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Telemetry must not become an unbounded resource owner inside the application."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to metricnames, otel, context; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-alert-noise",
+      "theme": "CPU pages every night during a healthy batch. What should the alert mean?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "golden",
+        "hist"
+      ],
+      "technicalSources": [
+        "golden",
+        "hist"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The batch uses spare CPU without harming interactive objectives, while a low-CPU lock incident was missed. What alert strategy will you design?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Performance Monitoring to alert noise."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: CPU pages every night during a healthy batch. What should the alert mean?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Page on an actionable user-impact/objective condition or well-justified imminent risk, using resource signals to explain and route investigation"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Waiting for severe user impact can detect too late, so meaningful predictive capacity alerts still have a role"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Avoid replacing useful early warnings with a blanket no-resource-alert rule."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to golden, hist; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-fix-or-traffic-drop",
+      "theme": "Latency improves just after a deployment rollback and traffic falls too. What can you claim?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "golden",
+        "otel",
+        "k6model"
+      ],
+      "technicalSources": [
+        "golden",
+        "otel",
+        "k6model"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The team wants to attribute all improvement to the rollback, but workload mix and arrival rate changed. What evidence and wording fit?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Performance Monitoring to fix or traffic drop."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Latency improves just after a deployment rollback and traffic falls too. What can you claim?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Compare equivalent cohorts/windows, resource/wait mechanisms and the suspected changed path, and reproduce a controlled before/after trial where feasible"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A rollback may still be the right incident action under uncertainty"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Keep absolute traffic/errors and distribution scope so lower demand or changed rejection does not masquerade as an algorithmic speedup."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to golden, otel, k6model; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-22. These are adapted production scenarios informed by exact-concept interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Worked numbers are hypothetical unless explicitly measured; runtime and platform assumptions are stated rather than presented as universal settings.",
+  "sourceNoteUrls": [
+    "https://opentelemetry.io/docs/concepts/signals/",
+    "https://opentelemetry.io/docs/concepts/context-propagation/",
+    "https://prometheus.io/docs/practices/histograms/",
+    "https://prometheus.io/docs/practices/naming/",
+    "https://sre.google/sre-book/monitoring-distributed-systems/",
+    "https://kubernetes.io/docs/concepts/workloads/pods/probes/",
+    "https://grafana.com/docs/k6/latest/using-k6/scenarios/concepts/open-vs-closed/"
+  ]
+}

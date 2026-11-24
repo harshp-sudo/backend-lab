@@ -1,0 +1,355 @@
+{
+  "topicId": "139fa1f6-f123-47ae-83e5-677ec708867c",
+  "title": "CPU Profiling",
+  "path": "topics/system-design/performance-reliability/concurrency-and-runtime-resource-management/cpu-profiling.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-22",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "CPU Profiling production interview flame graph sampling on CPU off CPU",
+      "date": "2026-11-22",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "profile",
+      "title": "Node.js: Profiling applications",
+      "url": "https://nodejs.org/en/learn/getting-started/profiling",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Runtime profiling provides evidence of expensive code paths."
+    },
+    {
+      "id": "flame",
+      "title": "Brendan Gregg: Flame Graphs",
+      "url": "https://www.brendangregg.com/flamegraphs.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Stack width represents sampled population rather than chronology."
+    },
+    {
+      "id": "cgroup",
+      "title": "Linux kernel: Control Group v2",
+      "url": "https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "CPU quota/throttling and memory accounting constrain container interpretations."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-mostly-waiting",
+      "theme": "An 800 ms request uses only 30 ms of CPU. Optimize its widest CPU function?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "profile",
+        "flame"
+      ],
+      "technicalSources": [
+        "profile",
+        "flame"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The CPU profile identifies a serializer, but the request trace shows a long connection/lock wait. What will you prioritize and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies CPU Profiling to mostly waiting."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An 800 ms request uses only 30 ms of CPU. Optimize its widest CPU function?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Investigate the wait owner and queue/lock/dependency timeline first"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: The serializer may still dominate CPU across many requests and matter for capacity"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Reassess after the waiting bottleneck changes."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to profile, flame; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-wide-parent",
+      "theme": "A routing function occupies 70% of flame width but little self-time. Rewrite it?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "flame",
+        "profile"
+      ],
+      "technicalSources": [
+        "flame",
+        "profile"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Most samples under the router are in a descendant compression function. What code path and context will you investigate?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies CPU Profiling to wide parent."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A routing function occupies 70% of flame width but little self-time. Rewrite it?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Follow the call ancestry to the actual executing frames, inspect payload size and repeated compression, and compare reducing unnecessary work or a verified"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Inlining or rewriting the router may save little inclusive descendant time"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Wide means frequently sampled ancestry, not automatically expensive local instructions."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to flame, profile; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-quota-vs-host",
+      "theme": "Host CPU is 20%, yet the service is throttled. Buy a faster algorithm or fix capacity?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "cgroup",
+        "profile"
+      ],
+      "technicalSources": [
+        "cgroup",
+        "profile"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The container has a one-core quota on a large host and sees scheduling delays during bursts. What will you measure before choosing?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies CPU Profiling to quota vs host."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Host CPU is 20%, yet the service is throttled. Buy a faster algorithm or fix capacity?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Inspect its quota/usage/throttling and request CPU demand, not only host averages"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Increasing quota costs capacity and may shift pressure to a database"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A profile can identify work to remove, but it cannot override the scheduler’s resource contract."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to cgroup, profile; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-misleading-speedup",
+      "theme": "A helper is twice as fast. Can the endpoint be twice as fast too?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "profile",
+        "flame"
+      ],
+      "technicalSources": [
+        "profile",
+        "flame"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The helper accounts for 40% of the relevant total time and all other work is unchanged. What bound and measurement will you present?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies CPU Profiling to misleading speedup."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A helper is twice as fast. Can the endpoint be twice as fast too?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use an explicit original model: 0.6 unchanged + 0.4/2 improved = 0.8 remaining, so the ideal speedup is 1.25×"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: The model assumes the measured fraction and unchanged remainder are valid"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Do not report a microbenchmark’s twofold result as an endpoint measurement."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to profile, flame; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-unresolved-stacks",
+      "theme": "The profile is mostly anonymous native frames. Is that enough to remove a feature?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "profile",
+        "flame"
+      ],
+      "technicalSources": [
+        "profile",
+        "flame"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A new build loses symbols and the suspected operation crosses JIT/native boundaries. What evidence will you recover first?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies CPU Profiling to unresolved stacks."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The profile is mostly anonymous native frames. Is that enough to remove a feature?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Retain the matching build/runtime metadata, configure the supported symbol/JIT stack workflow and recollect representative evidence on a suitable instance"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: More detailed collection may add overhead or require a controlled environment"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: An unresolved profile is a limitation to record, not a license to guess the hottest feature."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to profile, flame; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-profile-perturbation",
+      "theme": "Instrumentation changes throughput by 20%. How do you trust the result?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "profile",
+        "flame"
+      ],
+      "technicalSources": [
+        "profile",
+        "flame"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A detailed profiler adds enough work to alter queueing and tail latency. What before/after comparison will you use?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies CPU Profiling to profile perturbation."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Instrumentation changes throughput by 20%. How do you trust the result?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Measure collection overhead, narrow the instrumented scope or choose lower-impact sampling, and compare equivalent workload/windows with matching settings"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Sampling has uncertainty and may miss rare events, while detailed traces can answer specific questions"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Record the tool/version, collection window and limits instead of presenting perturbed percentages as production truth."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to profile, flame; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-22. These are adapted production scenarios informed by exact-concept interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Worked numbers are hypothetical unless explicitly measured; runtime and platform assumptions are stated rather than presented as universal settings.",
+  "sourceNoteUrls": [
+    "https://nodejs.org/en/learn/getting-started/profiling",
+    "https://www.brendangregg.com/flamegraphs.html",
+    "https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html"
+  ]
+}

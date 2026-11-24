@@ -1,0 +1,362 @@
+{
+  "topicId": "c6704130-66bf-4232-a331-1695631889dd",
+  "title": "Canary Deployment",
+  "path": "topics/system-design/devops-deployment-observability/ci-cd-and-release-strategies/canary-deployment.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-22",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "Canary Deployment production interview cohort metrics analysis rare errors",
+      "date": "2026-11-22",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "canary",
+      "title": "Google SRE Workbook: Canarying releases",
+      "url": "https://sre.google/workbook/canarying-releases/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Cohort-specific analysis, representative signals and observation windows bound release exposure decisions."
+    },
+    {
+      "id": "slos",
+      "title": "Google SRE Workbook: Implementing SLOs",
+      "url": "https://sre.google/workbook/implementing-slos/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "SLI definitions, objectives, windows and error budgets connect evidence to user requirements."
+    },
+    {
+      "id": "metrictypes",
+      "title": "Prometheus: Metric types",
+      "url": "https://prometheus.io/docs/concepts/metric_types/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Counter/gauge/histogram/summary semantics constrain interpretation and aggregation."
+    },
+    {
+      "id": "cascade",
+      "title": "Google SRE: Addressing cascading failures",
+      "url": "https://sre.google/sre-book/addressing-cascading-failures/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Retry amplification and resource exhaustion spread failures."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-global-green",
+      "theme": "Global success is 99%, but the candidate fails 20%. Would you promote?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "canary",
+        "slos"
+      ],
+      "technicalSources": [
+        "canary",
+        "slos"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A 5% candidate cohort generates a 20% error fraction. Control is healthy and the global error alert has not fired. What decision fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Canary Deployment to global green."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Global success is 99%, but the candidate fails 20%. Would you promote?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Stop expansion and evaluate/reverse candidate exposure using candidate-specific user outcomes"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: An acceptable risk threshold must be explicit and workload-specific"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Smaller exposure limits harm but produces fewer observations; a quiet global pager cannot replace a release decision gate."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to canary, slos; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-rare-route",
+      "theme": "No errors in 100 requests; the risky settlement path runs once daily. What now?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "canary"
+      ],
+      "technicalSources": [
+        "canary"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The timer finishes before any settlement request reaches the candidate. The feature changes settlement rounding. What will you require?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Canary Deployment to rare route."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: No errors in 100 requests; the risky settlement path runs once daily. What now?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Pause promotion for missing representative evidence, add safe targeted validation and include the affected operation/cohort in the evaluation window"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Longer live trials cost time and exposure; synthetic requests may miss real data"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: The simple independent-trial probability calculation is illustrative and does not cover correlated financial workflows."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to canary; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-biased-cohort",
+      "theme": "Candidate latency looks better because it serves only small tenants. How do you compare?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "canary"
+      ],
+      "technicalSources": [
+        "canary"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Control serves large tenants with expensive queries while candidate routing selects new small accounts. What analysis and placement changes fit?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Canary Deployment to biased cohort."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Candidate latency looks better because it serves only small tenants. How do you compare?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use a representative assignment and compare bounded like-for-like workload slices alongside user outcomes"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Perfect matching may be impractical and can increase complexity"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A faster average under an easier workload is not evidence of a faster implementation; broadening safely still requires a risk bound."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to canary; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-missing-telemetry",
+      "theme": "The candidate stops emitting metrics after deployment. Is that a pass?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "canary",
+        "metrictypes"
+      ],
+      "technicalSources": [
+        "canary",
+        "metrictypes"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The analyzer sees zero recorded errors because its candidate series disappears. Traffic continues reaching the release. What do you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Canary Deployment to missing telemetry."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The candidate stops emitting metrics after deployment. Is that a pass?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Treat missing evidence as an unknown/failing gate, check scrape/instrumentation and routing identities, and pause or contain exposure"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Assuming zero is dangerous; treating every monitoring failure as an immediate full rollback can also create instability"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Make the unknown-state policy explicit and verify recovery observability independently."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to canary, metrictypes; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-shared-overload",
+      "theme": "Control and candidate both degrade after a new query ships. Which version caused it?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "canary",
+        "cascade"
+      ],
+      "technicalSources": [
+        "canary",
+        "cascade"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A 2% candidate saturates a shared database with expensive work; both cohorts show similar bad latency. What action and inference are justified?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Canary Deployment to shared overload."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Control and candidate both degrade after a new query ships. Which version caused it?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Contain candidate work, inspect query/resource evidence and observe dependency recovery"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: An isolated database makes attribution easier but may not reproduce real sharing and costs more"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Rolling traffic back may not stop background queries; cancel or bound the causative work safely."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to canary, cascade; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-slow-leak",
+      "theme": "A five-minute canary passes, but memory exhaustion appears after six hours. What changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "canary",
+        "cascade"
+      ],
+      "technicalSources": [
+        "canary",
+        "cascade"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The release retains per-customer state slowly, so short windows never reach the dangerous heap size. What evaluation would you add?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Canary Deployment to slow leak."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A five-minute canary passes, but memory exhaustion appears after six hours. What changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Add duration-appropriate soak evidence and trend/resource analysis for the state lifetime, alongside targeted tests and bounded production exposure"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Long canaries slow delivery and may consume capacity; overly noisy resource gates cause false stops"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Short high-volume tests do not necessarily simulate hours of retained-state behavior."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to canary, cascade; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-22. These are adapted production scenarios informed by exact-concept interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Worked numbers are hypothetical unless explicitly measured; runtime and platform assumptions are stated rather than presented as universal settings.",
+  "sourceNoteUrls": [
+    "https://sre.google/workbook/canarying-releases/",
+    "https://sre.google/workbook/implementing-slos/",
+    "https://prometheus.io/docs/concepts/metric_types/",
+    "https://sre.google/sre-book/addressing-cascading-failures/"
+  ]
+}

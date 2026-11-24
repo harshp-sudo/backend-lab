@@ -1,0 +1,377 @@
+{
+  "topicId": "5a5d865f-bdfd-4a7a-ab55-0fe7e73fc4ea",
+  "title": "Asynchronous Processing",
+  "path": "topics/system-design/performance-reliability/concurrency-and-runtime-resource-management/asynchronous-processing.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-22",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "Asynchronous Processing production interview cancellation bounded concurrency event loop",
+      "date": "2026-11-22",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "event",
+      "title": "Node.js: Do not block the event loop",
+      "url": "https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Scheduling and event-loop/worker-pool blocking distinguish waiting from execution."
+    },
+    {
+      "id": "abort",
+      "title": "Node.js AbortController API",
+      "url": "https://nodejs.org/api/globals.html#class-abortcontroller",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Cancellation signals require actual API cooperation."
+    },
+    {
+      "id": "worker",
+      "title": "Node.js worker_threads API",
+      "url": "https://nodejs.org/api/worker_threads.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "CPU work and shared/transfer ownership have explicit Node worker semantics."
+    },
+    {
+      "id": "streams",
+      "title": "Node.js stream API",
+      "url": "https://nodejs.org/api/stream.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Writable backpressure and buffer thresholds require producer cooperation."
+    },
+    {
+      "id": "cascade",
+      "title": "Google SRE: Addressing cascading failures",
+      "url": "https://sre.google/sre-book/addressing-cascading-failures/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Retry amplification and resource exhaustion spread failures."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-slowest-child",
+      "theme": "Two independent reads are awaited in sequence. What can overlap safely?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "event",
+        "abort"
+      ],
+      "technicalSources": [
+        "event",
+        "abort"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A 300 ms endpoint waits about 80 ms for inventory and 120 ms for shipping. Neither needs the other result, and dependencies have bounded spare capacity. What will you change and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Asynchronous Processing to slowest child."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Two independent reads are awaited in sequence. What can overlap safely?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Start the independent reads under a bounded request-owned group, propagate one remaining deadline, and observe both outcomes/cleanup"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Sequential work is simpler and may be appropriate under tight dependency capacity"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Overlap changes partial-failure and cancellation behavior; if shipping depends on inventory location, the independence assumption no longer holds."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to event, abort; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-million-promises",
+      "theme": "An export starts one promise per record and runs out of memory. How do you keep it async?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "streams",
+        "event"
+      ],
+      "technicalSources": [
+        "streams",
+        "event"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A million records are mapped into pending operations before any batch completes. Each holds inputs and eventual results. What will you do within a fixed memory budget?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Asynchronous Processing to million promises."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An export starts one promise per record and runs out of memory. How do you keep it async?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Read/process bounded windows with a limited in-flight population and a sink that applies backpressure"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A giant aggregate may reduce code but not resource demand"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If the export must resume after failure, checkpoint durable progress rather than relying on pending promises."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to streams, event; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-cpu-in-async",
+      "theme": "An async image transform freezes unrelated requests. Why?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "event",
+        "worker"
+      ],
+      "technicalSources": [
+        "event",
+        "worker"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The function returns a promise but performs a large synchronous JavaScript transform before resolving. What execution change will you make?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Asynchronous Processing to cpu in async."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An async image transform freezes unrelated requests. Why?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Profile to confirm the CPU section, then move appropriate work to a bounded worker/process pool or redesign the computation"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Offload can cost more for tiny jobs and does not create unlimited CPU"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Verify whether shared native resources still couple workers to the main service."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to event, worker; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-timeout-race",
+      "theme": "A timeout wins Promise.race, but database load remains high. What is missing?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "abort",
+        "event"
+      ],
+      "technicalSources": [
+        "abort",
+        "event"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The caller receives a timeout after 200 ms while the underlying query continues for seconds. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Asynchronous Processing to timeout race."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A timeout wins Promise.race, but database load remains high. What is missing?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Propagate supported cancellation/deadlines through the actual database/client API and track the losing operation until terminal cleanup"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Cancellation may be best effort and cannot undo a committed effect"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Bound admission and use idempotency/reconciliation where the operation may already have taken effect."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to abort, event; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-partial-response",
+      "theme": "One optional recommendation service fails. Should every sibling read be cancelled?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "abort",
+        "cascade"
+      ],
+      "technicalSources": [
+        "abort",
+        "cascade"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "An order screen requires authoritative order facts but can omit recommendations if clearly labeled. What failure policy fits this contract?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Asynchronous Processing to partial response."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: One optional recommendation service fails. Should every sibling read be cancelled?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Keep required and optional outcomes distinct"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Partial responses add client and observability complexity; fail-all can be simpler when every fact is required"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Avoid swallowing all errors under a blanket best-effort catch."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to abort, cascade; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-background-promise",
+      "theme": "The API acknowledges a payment-receipt task, then the process crashes. Is await omission enough?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "event",
+        "cascade"
+      ],
+      "technicalSources": [
+        "event",
+        "cascade"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The endpoint starts an email task without awaiting it and promises delivery after accepting payment. Deployments sometimes lose the task. What ownership boundary will you use?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Asynchronous Processing to background promise."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The API acknowledges a payment-receipt task, then the process crashes. Is await omission enough?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Persist the intent in the payment transaction through an appropriate outbox or other durable acceptance path, then process it with retry/idempotency and vi"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Durability adds storage, relay and duplicate-effect handling"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Async scheduling and durable message processing solve different problems."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to event, cascade; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-22. These are adapted production scenarios informed by exact-concept interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Worked numbers are hypothetical unless explicitly measured; runtime and platform assumptions are stated rather than presented as universal settings.",
+  "sourceNoteUrls": [
+    "https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop",
+    "https://nodejs.org/api/globals.html#class-abortcontroller",
+    "https://nodejs.org/api/worker_threads.html",
+    "https://nodejs.org/api/stream.html",
+    "https://sre.google/sre-book/addressing-cascading-failures/"
+  ]
+}

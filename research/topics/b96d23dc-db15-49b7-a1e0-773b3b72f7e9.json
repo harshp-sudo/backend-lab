@@ -1,0 +1,425 @@
+{
+  "topicId": "b96d23dc-db15-49b7-a1e0-773b3b72f7e9",
+  "title": "Metrics & Monitoring",
+  "path": "topics/system-design/devops-deployment-observability/observability-and-telemetry-pillars/metrics-and-monitoring.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-22",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "Metrics Monitoring production interview RED USE SLI SLO Prometheus Grafana",
+      "date": "2026-11-22",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "red",
+      "title": "Grafana: The RED method",
+      "url": "https://grafana.com/blog/the-red-method-how-to-instrument-your-services/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Request rate, failure and duration complement resource-oriented diagnosis."
+    },
+    {
+      "id": "use",
+      "title": "Brendan Gregg: The USE Method",
+      "url": "https://www.brendangregg.com/usemethod.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Resource utilization, saturation and errors guide a methodical bottleneck investigation."
+    },
+    {
+      "id": "metrictypes",
+      "title": "Prometheus: Metric types",
+      "url": "https://prometheus.io/docs/concepts/metric_types/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Counter/gauge/histogram/summary semantics constrain interpretation and aggregation."
+    },
+    {
+      "id": "promquery",
+      "title": "Prometheus: Query functions",
+      "url": "https://prometheus.io/docs/prometheus/latest/querying/functions/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Rate/reset and histogram query semantics matter for valid time-series calculations."
+    },
+    {
+      "id": "hist",
+      "title": "Prometheus: Histograms and summaries",
+      "url": "https://prometheus.io/docs/practices/histograms/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Distributions, counts and quantile aggregation require correct statistics."
+    },
+    {
+      "id": "metricnames",
+      "title": "Prometheus: Metric and label naming",
+      "url": "https://prometheus.io/docs/practices/naming/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Metric identity/units and label dimensions shape aggregation and bounded cardinality."
+    },
+    {
+      "id": "grafana",
+      "title": "Grafana: Prometheus data source",
+      "url": "https://grafana.com/docs/grafana/latest/datasources/prometheus/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Prometheus data-source queries and dashboard access depend on the data pipeline and configured identity."
+    },
+    {
+      "id": "slos",
+      "title": "Google SRE Workbook: Implementing SLOs",
+      "url": "https://sre.google/workbook/implementing-slos/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "SLI definitions, objectives, windows and error budgets connect evidence to user requirements."
+    },
+    {
+      "id": "canary",
+      "title": "Google SRE Workbook: Canarying releases",
+      "url": "https://sre.google/workbook/canarying-releases/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Cohort-specific analysis, representative signals and observation windows bound release exposure decisions."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-red-use-investigation",
+      "theme": "p99 latency rises while average CPU stays low. Which signals do you inspect?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "red",
+        "use"
+      ],
+      "technicalSources": [
+        "red",
+        "use"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Checkout slows, but host CPU utilization is modest. Thread/connection queues may be saturated. What method fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Metrics & Monitoring to red use investigation."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: p99 latency rises while average CPU stays low. Which signals do you inspect?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Start with scoped RED latency/errors/rate and investigate relevant resources with USE, including queues, concurrency and dependency waits"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Low average CPU does not rule out blocking, one saturated core or constrained pools"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Collecting every metric without a decision question can increase noise and cost."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to red, use; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-counter-restarts",
+      "theme": "A deploy makes an error graph spike negative or huge. What query error is likely?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "promquery",
+        "metrictypes"
+      ],
+      "technicalSources": [
+        "promquery",
+        "metrictypes"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Individual replicas restart and counters reset at different times. The dashboard applies a rate to a pre-aggregated counter. What changes?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Metrics & Monitoring to counter restarts."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A deploy makes an error graph spike negative or huge. What query error is likely?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Apply rate to each source counter before aggregating the resulting rates, verify label identity and scrape continuity, and compare raw samples/reset events"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A gauge should not be treated as a counter"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Query changes cannot reconstruct requests that were never observed, and a short window with sparse samples has uncertainty."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to promquery, metrictypes; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-fleet-quantile",
+      "theme": "Can you average ten instance p99 values to report fleet p99?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "hist",
+        "promquery",
+        "metrictypes"
+      ],
+      "technicalSources": [
+        "hist",
+        "promquery",
+        "metrictypes"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Traffic differs greatly between instances and the dashboard averages reported quantiles. What measurement do you choose?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Metrics & Monitoring to fleet quantile."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Can you average ten instance p99 values to report fleet p99?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use mergeable compatible histogram/distribution data with correct query semantics, units and bucket resolution to calculate a fleet quantile, or explicitly"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Even a weighted average of p99s is not generally fleet p99"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Histograms trade resolution/cost and classic/native forms need appropriate supported queries; summaries have different aggregation properties."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to hist, promquery, metrictypes; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-label-explosion",
+      "theme": "A user_id label increases series count without bound. What will you preserve?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "metricnames",
+        "metrictypes"
+      ],
+      "technicalSources": [
+        "metricnames",
+        "metrictypes"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The metric backend slows after per-user diagnostics are added to a request counter. What redesign fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Metrics & Monitoring to label explosion."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A user_id label increases series count without bound. What will you preserve?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Remove/bound unbounded metric dimensions, keep route/status/service dimensions needed for aggregate decisions and move event-level identity to access-contr"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Removing labels loses per-user metric slicing but restores a sustainable aggregate model"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Hashing IDs does not reduce cardinality, and merely increasing storage postpones the same structural problem."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to metricnames, metrictypes; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-empty-panel",
+      "theme": "Grafana is blank while the service receives traffic. Is the SLI zero?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "grafana",
+        "slos",
+        "metrictypes"
+      ],
+      "technicalSources": [
+        "grafana",
+        "slos",
+        "metrictypes"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "One datasource credential expired, and one target has stopped scraping. What boundaries do you test?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Metrics & Monitoring to empty panel."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Grafana is blank while the service receives traffic. Is the SLI zero?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Inspect datasource/query errors, raw backend series, target status and sample freshness separately"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Filling absent samples with zero can conceal an outage"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A working panel does not prove all eligible user outcomes are represented, so measurement location and completeness remain part of the SLI contract."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to grafana, slos, metrictypes; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-budget-policy",
+      "theme": "The service has spent 400 of a 1,000-request error budget. Must every release stop?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "slos",
+        "canary"
+      ],
+      "technicalSources": [
+        "slos",
+        "canary"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "An objective permits 1,000 bad requests in the defined million-request window. Current use is 400, but errors are accelerating. What decision fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Metrics & Monitoring to budget policy."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The service has spent 400 of a 1,000-request error budget. Must every release stop?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Calculate remaining allowance and current burn in the defined window, then apply an explicit reliability/release policy with owners"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A budget is a decision mechanism, not a universal release rule"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Request-based allowance cannot be converted directly to downtime minutes, and changing eligibility to improve the chart undermines the objective."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to slos, canary; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-22. These are adapted production scenarios informed by exact-concept interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Worked numbers are hypothetical unless explicitly measured; runtime and platform assumptions are stated rather than presented as universal settings.",
+  "sourceNoteUrls": [
+    "https://grafana.com/blog/the-red-method-how-to-instrument-your-services/",
+    "https://www.brendangregg.com/usemethod.html",
+    "https://prometheus.io/docs/concepts/metric_types/",
+    "https://prometheus.io/docs/prometheus/latest/querying/functions/",
+    "https://prometheus.io/docs/practices/histograms/",
+    "https://prometheus.io/docs/practices/naming/",
+    "https://grafana.com/docs/grafana/latest/datasources/prometheus/",
+    "https://sre.google/workbook/implementing-slos/",
+    "https://sre.google/workbook/canarying-releases/"
+  ]
+}

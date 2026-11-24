@@ -916,6 +916,266 @@
               ]
             }
           ]
+        },
+        {
+          "id": "e269fe27-71ce-413b-9885-35e3acdb4770",
+          "kind": "hub",
+          "title": "Performance & Reliability",
+          "slug": "performance-reliability",
+          "children": [
+            {
+              "id": "345871dd-ccec-4fcb-84b8-64b84fb0bd4a",
+              "kind": "hub",
+              "title": "Database & Data Access Efficiency",
+              "slug": "database-and-data-access-efficiency",
+              "children": [
+                {
+                  "id": "4085d706-c197-4fc6-a038-a7926f37e749",
+                  "kind": "topic",
+                  "title": "Database Query Optimization",
+                  "slug": "database-query-optimization"
+                },
+                {
+                  "id": "614b7b22-8689-4fd6-aff8-925163133b2d",
+                  "kind": "topic",
+                  "title": "N+1 Query Problem",
+                  "slug": "n-plus-one-query-problem"
+                },
+                {
+                  "id": "95487716-369f-4937-a500-beaffce378a8",
+                  "kind": "topic",
+                  "title": "Connection Pooling",
+                  "slug": "connection-pooling"
+                }
+              ]
+            },
+            {
+              "id": "2967c544-d1a2-4f1e-a7f7-3b7c53c9432a",
+              "kind": "hub",
+              "title": "Concurrency & Runtime Resource Management",
+              "slug": "concurrency-and-runtime-resource-management",
+              "children": [
+                {
+                  "id": "5a5d865f-bdfd-4a7a-ab55-0fe7e73fc4ea",
+                  "kind": "topic",
+                  "title": "Asynchronous Processing",
+                  "slug": "asynchronous-processing"
+                },
+                {
+                  "id": "ab52ba74-c3fa-4c2d-b7d6-bd2e0a84c143",
+                  "kind": "topic",
+                  "title": "Thread Pools",
+                  "slug": "thread-pools"
+                },
+                {
+                  "id": "c632e6a8-808a-4b73-8d01-eb74675c01c1",
+                  "kind": "topic",
+                  "title": "Non-Blocking I/O",
+                  "slug": "non-blocking-io"
+                },
+                {
+                  "id": "e1101fed-51d0-420f-888e-848d4affffd5",
+                  "kind": "topic",
+                  "title": "Memory Management",
+                  "slug": "memory-management"
+                },
+                {
+                  "id": "139fa1f6-f123-47ae-83e5-677ec708867c",
+                  "kind": "topic",
+                  "title": "CPU Profiling",
+                  "slug": "cpu-profiling"
+                }
+              ]
+            },
+            {
+              "id": "daed7373-ba18-4aa1-8f4d-9d048a365eba",
+              "kind": "hub",
+              "title": "Testing, Traffic Shaping & Resilience",
+              "slug": "testing-traffic-shaping-and-resilience",
+              "children": [
+                {
+                  "id": "db141fa7-63f6-4756-85a7-5ed1f5c8bc17",
+                  "kind": "topic",
+                  "title": "Load Testing",
+                  "slug": "load-testing"
+                },
+                {
+                  "id": "30d3ebe2-f42f-41f4-a4fb-dfa1fe77f02b",
+                  "kind": "topic",
+                  "title": "Stress Testing",
+                  "slug": "stress-testing"
+                },
+                {
+                  "id": "517f2384-e081-44f8-9644-9d306b13d80c",
+                  "kind": "topic",
+                  "title": "Rate Limiting & Throttling",
+                  "slug": "rate-limiting-and-throttling"
+                },
+                {
+                  "id": "5eddde3b-fd4a-4443-8cbe-9e8e512fe426",
+                  "kind": "topic",
+                  "title": "Fault Isolation",
+                  "slug": "fault-isolation"
+                }
+              ]
+            },
+            {
+              "id": "994c553e-ed89-4d59-9df5-3375778546eb",
+              "kind": "hub",
+              "title": "Lifecycle & Production Observability",
+              "slug": "lifecycle-and-production-observability",
+              "children": [
+                {
+                  "id": "fb4f6ee5-00a3-4c38-9c74-1805e220912e",
+                  "kind": "topic",
+                  "title": "Graceful Shutdown",
+                  "slug": "graceful-shutdown"
+                },
+                {
+                  "id": "e66bf481-00b7-4273-8c00-81575ca0cf27",
+                  "kind": "topic",
+                  "title": "Health Checks",
+                  "slug": "health-checks"
+                },
+                {
+                  "id": "20994b9a-22ea-4b17-8b3b-ca71c6238497",
+                  "kind": "topic",
+                  "title": "Performance Monitoring",
+                  "slug": "performance-monitoring"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "3e6ae2aa-f9f9-415a-a5a3-a6dcbd21b190",
+          "kind": "hub",
+          "title": "DevOps, Deployment & Observability",
+          "slug": "devops-deployment-observability",
+          "children": [
+            {
+              "id": "9411ce7b-d75b-47b2-aece-94cbae5c6364",
+              "kind": "hub",
+              "title": "CI/CD & Release Strategies",
+              "slug": "ci-cd-and-release-strategies",
+              "children": [
+                {
+                  "id": "f5c730b3-fe65-46d1-b191-cd7192cb61c5",
+                  "kind": "topic",
+                  "title": "CI/CD Pipelines",
+                  "slug": "ci-cd-pipelines"
+                },
+                {
+                  "id": "33a50887-bb06-4085-814a-dde4a2b61a53",
+                  "kind": "topic",
+                  "title": "Blue-Green Deployment",
+                  "slug": "blue-green-deployment"
+                },
+                {
+                  "id": "c6704130-66bf-4232-a331-1695631889dd",
+                  "kind": "topic",
+                  "title": "Canary Deployment",
+                  "slug": "canary-deployment"
+                },
+                {
+                  "id": "d32e3029-f5ad-4d25-b091-4c40ea027263",
+                  "kind": "topic",
+                  "title": "Rolling Deployments",
+                  "slug": "rolling-deployments"
+                }
+              ]
+            },
+            {
+              "id": "0a008229-ea81-4d37-aba5-63046dbb0a49",
+              "kind": "hub",
+              "title": "Containers, Orchestration & Infrastructure",
+              "slug": "containers-orchestration-and-infrastructure",
+              "children": [
+                {
+                  "id": "676c2386-d2c6-4cd3-bae0-6a800bd84725",
+                  "kind": "topic",
+                  "title": "Docker & Containerization",
+                  "slug": "docker-and-containerization"
+                },
+                {
+                  "id": "a5bf7a71-cd5f-4c06-a3f4-3a5e0d95989d",
+                  "kind": "topic",
+                  "title": "Kubernetes",
+                  "slug": "kubernetes"
+                },
+                {
+                  "id": "c300697e-b064-4e73-b675-160cb8cc5e39",
+                  "kind": "topic",
+                  "title": "Container Orchestration",
+                  "slug": "container-orchestration"
+                },
+                {
+                  "id": "41822f50-775b-4a8f-8130-ab816c42f7fc",
+                  "kind": "topic",
+                  "title": "Infrastructure as Code",
+                  "slug": "infrastructure-as-code"
+                },
+                {
+                  "id": "f1de0b67-a92d-4d2f-88cd-596e51cef369",
+                  "kind": "topic",
+                  "title": "Horizontal Pod Autoscaling",
+                  "slug": "horizontal-pod-autoscaling"
+                }
+              ]
+            },
+            {
+              "id": "6ec86081-a518-4a78-8999-0331ec921600",
+              "kind": "hub",
+              "title": "Observability & Telemetry Pillars",
+              "slug": "observability-and-telemetry-pillars",
+              "children": [
+                {
+                  "id": "408c31b5-a1af-4709-9973-b785fa261bcb",
+                  "kind": "topic",
+                  "title": "Centralized Logging",
+                  "slug": "centralized-logging"
+                },
+                {
+                  "id": "b96d23dc-db15-49b7-a1e0-773b3b72f7e9",
+                  "kind": "topic",
+                  "title": "Metrics & Monitoring",
+                  "slug": "metrics-and-monitoring"
+                },
+                {
+                  "id": "48743329-a4b3-47ec-b769-26ca72c5d055",
+                  "kind": "topic",
+                  "title": "Distributed Tracing",
+                  "slug": "distributed-tracing"
+                },
+                {
+                  "id": "e1eabb1f-2f49-4678-a5e6-be63753d763e",
+                  "kind": "topic",
+                  "title": "OpenTelemetry",
+                  "slug": "opentelemetry"
+                }
+              ]
+            },
+            {
+              "id": "72689760-abd1-4397-9a57-f84d94689ee5",
+              "kind": "hub",
+              "title": "Incident Response & Business Continuity",
+              "slug": "incident-response-and-business-continuity",
+              "children": [
+                {
+                  "id": "63fcfe67-764e-4f4f-a62c-97a566c16206",
+                  "kind": "topic",
+                  "title": "Alerting & Incident Management",
+                  "slug": "alerting-and-incident-management"
+                },
+                {
+                  "id": "afec6446-5ca6-43e1-8932-ca38c72a4028",
+                  "kind": "topic",
+                  "title": "Disaster Recovery & Backup Strategies",
+                  "slug": "disaster-recovery-and-backup-strategies"
+                }
+              ]
+            }
+          ]
         }
       ]
     }
