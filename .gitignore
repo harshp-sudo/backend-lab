@@ -2,6 +2,10 @@
 .aws/
 .codex/
 .env*
+
+# Reference files (keep local)
+/docs/project/
+
 # Development artifacts
 __pycache__/
 *.pyc

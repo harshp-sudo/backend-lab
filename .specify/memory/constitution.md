@@ -1,30 +1,47 @@
-<!-- Sync impact: 1.3.0 -> 2.0.0. User-authorized presentation amendment, 2026-11-25.
-Align current publishing guide/skill and sources-only-v1 validation; retain recall profile
-constitution-1.2, complete evidence and frozen historical records. Migration acceptance pending. -->
 <!--
 Sync Impact Report
-Version change: 1.2.0 -> 1.3.0 (MINOR: incremental content-publishing workflow)
-Rationale: routine lesson requests inherit stable contracts; repeated platform planning,
-migration-specific validation and redundant evidence must not block catalog growth.
-Modified principles: II and VI clarify purposeful visual coverage without per-card quotas.
-Added section: Incremental Topic Publishing and Verification, preserving all learning gates.
-Aligned: root AGENTS.md, topic-publish skill, four Spec Kit content-profile entrypoints,
-spec/plan/tasks templates, docs/topic-publishing.md, generic validator profile and scoped runner.
-Existing content: no rewrite required; all six modules, recall/scenario counts, source
-honesty, immutable identities, mobile and print requirements remain in force.
-Historical backfill snapshots/evidence remain frozen and explicitly scoped.
+Version change: 2.0.0 -> 3.0.0 (MAJOR: teaching and interactive-visual contract)
+Rationale: mandatory project-anchored storytelling, section signposts, and per-lesson
+interactive visuals redefine lesson acceptance and require a managed widget lifecycle.
+Modified principles:
+- I. ELI5-First Narrative Learning -> I. Friendly, Concept-First Narrative Learning
+- II. Visual-First, Frictionless Navigation -> II. Purposeful Visuals and Frictionless Navigation
+- III. The Standard Topic Story Blueprint -> III. The Six-Act Story and Progressive Disclosure
+- V. Lightweight Static Architecture and Incremental Growth (widget asset integration)
+- VI. Complete, Mobile- and Print-Friendly Delivery (visual accessibility and fallbacks)
+Added sections:
+- Standardized Project Lens and Objective Engineering
+- Interactive and Animated Visuals Contract
+- Teaching Standard Adoption and Widget Rollout
+Expanded: lesson review gates, scenario anchoring, and governance amendment history.
+Removed sections: None. Superseded temporary sync comments consolidated here.
 Deferred placeholders: None.
+Follow-up work, not executed by this constitution-only command:
+- Specify the LabVisuals registry and app.js mount/cleanup integration, shared asset loading,
+  safe SVG/Canvas support, and index.html library loading where required.
+- Align publishing skills/guides, templates when needed, validators, and browser/print checks
+  after assessing the new contract; preserve frozen historical evidence.
+- Scope and verify existing-lesson migration; prior UI migration acceptance remains separate.
+This report is temporary review material; remove it before committing the amendment.
 -->
 # Personal Learning Knowledge Base Constitution
 
 ## Core Principles
 
-### I. ELI5-First Narrative Learning
+### I. Friendly, Concept-First Narrative Learning
 
 The project MUST be a single-page, static HTML/JavaScript/CSS living knowledge base for
 deep, frictionless personal learning across diverse topics. Every topic MUST tell a
 cohesive story in the order Context → Core Concept → Deep Dive → Real-World Impact.
 Disconnected fact dumps MUST NOT substitute for that narrative.
+
+Lessons MUST sound like a thoughtful, technically sharp friend explaining an idea over
+coffee or at a whiteboard: warm, direct, conversational, and respectful. They MUST avoid
+textbook stiffness, lecturer-like monologues, unexplained jargon, and patronizing language.
+Authors MUST keep the explanation engaging with relevant analogies, brief "aha!" callouts,
+and natural transitions such as "Imagine this..." or "Here's the catch..." where they help
+the reader connect ideas. Light, relevant humor MAY add personality; forced jokes, slang,
+and repeated catchphrases MUST NOT distract from understanding or technical precision.
 
 ELI5-first clarity is the highest-priority learning requirement. Every concept MUST begin
 with an intuitive mental model and a simple, real-world analogy before introducing jargon,
@@ -32,10 +49,15 @@ formal definitions, or complex mechanics. The opening MUST explain what problem 
 concept solves and why it matters, aiming to make the core idea click within 30 seconds.
 Necessary depth MUST remain available after this intuitive introduction.
 
-Rationale: learners need a familiar mental model before they can connect technical detail
-to a meaningful understanding.
+The primary teaching goal MUST be understanding a universal concept and its general
+trade-offs. The standardized project MUST provide a familiar lens, never an excuse to
+teach undocumented implementation quirks or defend a sub-optimal design. Examples and
+analogies MUST state relevant limits and MUST NOT sacrifice accuracy for entertainment.
 
-### II. Visual-First, Frictionless Navigation
+Rationale: a friendly voice and familiar mental model make precise ideas easier to follow
+without reducing their depth.
+
+### II. Purposeful Visuals and Frictionless Navigation
 
 Lessons MUST combine narrative with diagrams, flowcharts, comparison tables, or interactive
 visual aids wherever the concept benefits from them. Walls of text MUST NOT be the sole
@@ -46,6 +68,15 @@ scenarios when their relationship to it is clear. There is no per-scenario diagr
 New diagrams MUST teach a distinct relationship, sequence, constraint or failure path;
 repeated generic diagrams MUST NOT substitute for meaningful visual explanation.
 
+Every lesson MUST also include at least one purposeful interactive visual or animated
+diagram that makes motion, a state transition, or a trade-off over time visible. It MUST
+augment or enhance Mermaid rather than remove the required big-picture diagram. The
+visual MUST connect to the concept and an anchor-system workflow, with a clear action,
+observable consequence, and explanation of what the learner can infer. Examples include
+request flow, traffic splitting, queue backpressure, cache expiry, and changing latency.
+Decorative motion and unrelated charts MUST NOT count toward this requirement. One visual
+MAY support multiple mechanics or scenarios; there is no per-card animation quota.
+
 The interface MUST use a clean, modern documentation-dashboard layout with a recursive
 left sidebar, top-bar learning controls, and a main reading canvas. Navigation MUST support
 arbitrarily deep nesting without a hard-coded depth limit, starting with Domain → Category
@@ -55,36 +86,52 @@ ring; container nodes MUST reflect their descendant topics' progress.
 Rationale: visible relationships and predictable navigation reduce the effort required to
 understand a concept and return to it later.
 
-### III. The Standard Topic Story Blueprint
+### III. The Six-Act Story and Progressive Disclosure
 
-Every topic document MUST contain the following six modules in this order. A topic is
-incomplete if any module is missing or contains an unexplained placeholder.
+Every lesson MUST tell a connected Why -> What -> How -> So What story through the six
+modules below, in order. A topic is incomplete if any module is missing or contains an
+unexplained placeholder. Preserve the existing six section identities and recall keys;
+the act names describe teaching purpose, not a new routing or storage schema.
 
-1. **🎯 The Hook & ELI5 (Context):** State the problem and why it matters. Introduce a
-   simple real-world analogy before technical terminology, targeting intuitive understanding
-   within 30 seconds.
-2. **🗺️ High-Level Big Picture (Visual Diagram):** Embed a valid Mermaid flowchart, mind
-   map, architecture diagram, or other appropriate Mermaid diagram showing how the pieces
-   fit together.
-3. **🔍 Step-by-Step Mechanics (Low-Level Deep Dive):** Explain internal behavior in a
-   logical sequence using collapsible `<details>` cards or tabbed views to reveal depth
-   progressively. Connect each step to the opening mental model.
-4. **⚖️ Comparisons & Trade-Offs (Decision Matrix):** Include a structured comparison
-   table explaining why to choose the approach, the alternatives, the gains, and the costs.
+Every teaching section, including each module and nested explanatory section, MUST begin
+with one friendly sentence explaining why the detail matters and how it connects to the
+larger story. This signpost MUST be specific to the section and MAY be its first narrative
+sentence; repeated generic introductions MUST NOT replace useful orientation. Paragraphs
+MUST develop one idea at a time, with short transitions that connect cause and consequence.
+Dense walls of text, disconnected fact lists, and unexplained jumps in abstraction MUST
+be rewritten. Progressive disclosure MUST move depth out of the initial reading path
+without omitting essential reasoning or leaving the open narrative incomprehensible.
+
+1. **🎯 The Hook & ELI5 (Why):** Introduce a universal problem through a relatable situation
+   in the standardized project domain. Explain why it matters and give a simple analogy
+   before technical terms, targeting intuitive understanding within 30 seconds.
+2. **🗺️ High-Level Big Picture (What):** Explain the industry-standard solution with a
+   valid Mermaid diagram and an interactive or animated visual within a familiar domain
+   workflow. Show the relationship or behavior the visual helps the learner understand.
+3. **🔍 Step-by-Step Mechanics (How):** Explain behavior in a logical sequence, connecting
+   each step to the opening mental model. Keep the main narrative light; use native
+   `<details>` accordions for deep mechanics, code walkthroughs, and optional derivations.
+   Use recognizable examples from the anchor tech stack where suitable; explain unfamiliar
+   syntax and keep implementation details subordinate to the concept.
+4. **⚖️ Comparisons & Trade-Offs (When and Why):** Include a crisp comparison table of
+   alternatives, gains, costs, and the conditions that change the decision. Discuss better
+   tools or patterns when appropriate even when they are outside the anchor stack.
    When comparing approaches is not meaningful, compare applicable choices or conditions
    and explain the scope explicitly instead of inventing alternatives.
-5. **⚠️ Common Pitfalls, Bugs & "What-If" Scenarios:** Cover misconceptions, edge cases,
-   and failure modes using Symptom → Root Cause → Fix/Prevention. Explain consequences
+5. **⚠️ Common Pitfalls, Bugs & "What-If" Scenarios (What Breaks):** Cover misconceptions,
+   edge cases, and failure modes using Symptom → Root Cause → Fix/Prevention. Explain consequences
    in practical or real-world terms.
-6. **🧠 Active Recall & Mastery Check (Learning Engine):** Include the Feynman prompt
+6. **🧠 Active Recall & Mastery Check (So What):** Include the Feynman prompt
    "Summarize this in your own words" and three to five foundational active-recall
    flashcards or what-if questions with hidden or collapsible answers. In addition,
    include a dedicated subsection titled **Tricky & Most-Asked Interview Scenarios**
    containing five to seven distinct, real-world scenario-based interview questions.
    Each MUST ask what the learner would do and why under explicit production
    constraints, and MUST use the structured interactive answer format defined in the
-   research standard below. This subsection belongs inside module six; it MUST NOT
-   replace the foundational recall cards or introduce a seventh top-level story module.
+   research standard below. Use concrete prompts such as "Imagine this feature's traffic
+   doubles... what will you do and why?" within the standardized domain; changing names
+   alone MUST NOT count as distinct reasoning. This subsection belongs inside module six;
+   it MUST NOT replace foundational recall cards or introduce a seventh top-level story module.
    End by connecting the lesson to real-world impact and useful takeaways.
 
 Rationale: a consistent story structure lets learners focus on the subject while combining
@@ -126,6 +173,10 @@ server or heavy backend. Use HTML5, Tailwind CSS through a CDN or lightweight bu
 Vanilla ES6+ JavaScript or Alpine.js, Mermaid.js for diagrams, and Prism.js or Highlight.js
 for syntax-highlighted code and formulas where applicable. The architecture MUST remain
 zero-build or use only a lightweight build consistent with these constraints.
+
+Interactive visuals MUST use declarative lesson markup and registered, reusable static
+JavaScript assets through the visual-widget contract below. Optional visual libraries
+MUST be loaded by the host, not through executable scripts embedded in lesson partials.
 
 One navigation manifest, `manifest.json`, MUST be the source of truth for the recursive
 content hierarchy. Individual lessons MUST live in modular HTML partials, such as
@@ -180,11 +231,20 @@ require manual CSS or JavaScript edits to the core shell. Its diagrams, code hig
 collapsible content, and recall interactions MUST work through the shell's existing
 integration points without disrupting other lessons or dashboard behavior.
 
+Widgets MUST mount and clean up through the shared lifecycle, remain understandable with
+reduced motion, and provide keyboard-accessible controls and a textual explanation. Their
+layout and semantic colors MUST follow host CSS variables in both themes and fit mobile
+screens without clipping controls or essential visual content.
+
 The recursive sidebar MUST collapse into a usable drawer on mobile. Reading, navigation,
 self-testing, and theme controls MUST remain usable on small screens. Print styles MUST
 produce clean PDF output, preserving lesson content, diagrams, and readable comparisons
 while removing obstructive navigation and controls. Content hidden by interactive reading
 controls MUST remain available in the printed lesson.
+
+Animated, SVG, and Canvas visuals MUST provide a readable print representation and the
+explanations needed to understand their important states. A blank canvas, missing chart,
+or arbitrary animation frame MUST NOT stand in for the complete printed explanation.
 
 Rationale: complete explanations and adaptable presentation preserve the knowledge base's
 usefulness across devices and exported copies.
@@ -195,7 +255,6 @@ Lessons MUST use one compact Progress status selector near the title. Preserve a
 statuses and explicit mastery/review transitions; show the relevant review action/date
 in the same compact area. Do not add a second large promotional mastery card. Actual
 Feynman practice and the complete mastery-check module remain required.
-
 
 - **Left sidebar:** Provide a collapsible recursive tree for Domain → Category → Topic →
   Subtopic and deeper levels, with a visible completion badge or progress ring at every node.
@@ -217,7 +276,86 @@ Feynman practice and the complete mastery-check module remain required.
   govern implementation. A reference deck, if later supplied, MAY refine visual details
   without removing these requirements.
 
+### Interactive and Animated Visuals Contract
+
+Each lesson MUST provide the purposeful visual required by Principle II and explain its
+inputs, visible behavior, and takeaway. An interactive visual MUST expose a meaningful
+learner action and observable result; an animated demonstration MUST provide playback
+control. Merely revealing prose or running decorative motion MUST NOT count as a visual.
+
+- **Declarative hook:** Each widget root MUST expose
+  `data-visual-widget="<widget-name>"`, using a stable kebab-case widget name. HTML, SVG,
+  Canvas elements, explanatory text, and validated configuration MAY live in the partial.
+  Executable scripts, inline event handlers, and arbitrary executable configuration MUST
+  NOT be embedded in lesson partials or evaluated from their content.
+- **Registration:** Shared static assets MUST register both `setup(root, context)` and
+  `cleanup(root)` under `window.LabVisuals[widgetName]` before mounting. These functions
+  MUST keep state scoped to the widget instance, support multiple instances without
+  collisions, and tolerate repeated setup/cleanup without duplicate work or errors.
+- **Host lifecycle:** `app.js` MUST mount registered widgets after lesson insertion and
+  clean them up before route replacement or removal. Theme rerenders that replace a root
+  MUST follow the same cleanup/remount lifecycle. Adding a lesson with an existing widget
+  MUST NOT require a route-specific branch or manual core-shell change.
+- **Cleanup:** `cleanup(root)` MUST cancel owned requestAnimationFrame loops, timers, and
+  cancellable work; remove listeners; disconnect observers and subscriptions; dispose of
+  workers and chart instances; and release retained DOM references. Noncancelable async
+  callbacks MUST ignore unmounted instances. A failed setup MUST clean up partial
+  resources, show an explanatory fallback, and leave other lesson features usable.
+- **Lightweight assets:** Widgets SHOULD use zero-build HTML/SVG, animated SVG, or HTML5
+  Canvas to keep the static application lightweight and avoid unnecessary dependencies.
+  Rough.js and Chart.js MAY be used when they improve the explanation; shared CDN
+  dependencies MUST be version-pinned and loaded once through `index.html`. Pre-rendered
+  `.svg` charts and reproducible Python generation scripts MUST live in `/assets/visuals/`.
+  Static charts MAY complement a widget but MUST NOT alone satisfy the interactive or
+  animated visual requirement. Library failure MUST retain a useful text/static fallback.
+- **Accessible interaction:** Controls MUST have clear labels, keyboard operation, and
+  visible focus. Visuals MUST provide pause, restart, or step controls appropriate to the
+  demonstration and honor `prefers-reduced-motion` with manual steps or nonanimated state
+  changes that retain learning value. They MUST pause ongoing work while hidden or
+  off-screen and MUST NOT require flashing, timing-dependent reading, or color alone to
+  convey meaning.
+- **Responsive themes:** Visuals MUST use host Light/Dark CSS variables, semantic colors,
+  readable contrast, and responsive sizing. SVG view boxes and Canvas/chart resizing MUST preserve
+  labels and controls on mobile; theme changes MUST update visuals without duplicate
+  instances or losing independent learning state.
+- **Print and fallback:** Visuals MUST provide a static diagram/chart or annotated sequence of relevant
+  states and a textual takeaway for print, unavailable libraries, and unsupported graphics.
+  Canvas output MUST have an intentional print representation. Print MUST show the full
+  teaching content without requiring playback or interaction.
+
+Rationale: a shared, explicit lifecycle makes dynamic explanations reusable without
+leaking resources or making learning depend on motion, a particular theme, or a mouse.
+
 ## Content Workflow and Quality Gates
+
+### Standardized Project Lens and Objective Engineering
+
+Before authoring or substantively revising a lesson, authors MUST read
+`.specify/memory/anchor-system.md`. Its clean domain, component names, entities, workflows,
+and illustrative scale assumptions MUST be the canonical backdrop for ELI5 examples,
+Mermaid diagrams, widget demonstrations, code snippets, and interview scenarios. Use
+names such as Transaction Service, Quote Service, Aggregation Service, and Pricing Service
+consistently. Authors MUST NOT introduce obscure internal aliases or expose private project
+detail.
+
+Lessons MUST teach the universal concept first, using the project to make it relatable.
+They MUST NOT audit raw legacy shortcuts, teach organization-specific trivia, or justify
+a weak design merely because it appears in a project or fits the familiar stack. When
+an analogy is not a literal application, authors MUST explain its boundary instead of
+inventing project capabilities or distorting the concept. This preserves accurate
+teaching for disciplines beyond the example application's architecture.
+
+Authors MUST use the anchor's TypeScript/Node.js, Python/FastAPI, and database tools when
+they clarify the mechanism. They MUST compare industry-standard alternatives objectively and
+recommend a better-suited tool or pattern when constraints warrant it, including options
+outside that stack and state the relevant benefits, costs, and conditions. Authors MUST NOT
+present any tool or pattern as universally best. The anchor stack guides example syntax,
+not the dashboard runtime constraints in Principle V.
+
+Anchor workload figures MUST remain illustrative assumptions, with the scope and units
+needed to reason about them. Authors MUST NOT turn them into production measurements,
+performance guarantees, or unsupported business claims. Lessons MUST remain self-contained
+and MUST NOT require readers to inspect raw project documentation to understand an example.
 
 **Automated Taxonomy & Incremental Placement Protocol**
 
@@ -301,6 +439,31 @@ the six modules, three to five foundational cards, five to seven complete resear
 production scenarios, meaningful visuals, immutable IDs/recall keys and usable mobile/print
 output. Reduced planning overhead MUST NOT reduce content quality or completeness.
 
+### Teaching Standard Adoption and Widget Rollout
+
+Version 3.0.0 governs all new and substantively revised lessons. The required voice,
+section signposts, six-act progression, standard project naming, and meaningful visual
+behavior MUST be reviewed together; adding a widget MUST NOT substitute for complete
+explanations, recall, or researched interview answers.
+
+The LabVisuals registry, `app.js` lifecycle, shared asset loading, safe SVG/Canvas support,
+and any `index.html` library integration are required platform work, not capabilities
+delivered by this amendment. They MUST be specified, implemented, and verified through
+the full Spec Kit workflow before a dependent lesson is accepted. Authors MUST NOT work
+around missing host support with embedded scripts or report pending gates as passed.
+
+An implementation assessment MUST align the publishing workflow, relevant skills and
+templates, supported partial contract, validators, and browser/print checks. This
+constitution-only amendment does not modify those artifacts. Structural validation alone
+MUST NOT be represented as proof of friendly prose, technical accuracy, or teaching quality.
+
+Existing unchanged lessons retain their recorded acceptance baseline until explicitly
+migrated. A migration MUST define its inventory and preserve topic IDs, recall keys,
+progress, review history, confidence, sources, and research evidence. Neither this
+amendment nor an earlier presentation migration establishes v3.0.0 conformance. Frozen
+historical baselines MUST remain unchanged; adoption and verification remain pending
+until the relevant lessons and platform changes are delivered and reviewed.
+
 ### Interview Scenario Research and Answer Standard
 
 For every new or substantively revised topic lesson, the AI MUST research and author
@@ -309,6 +472,12 @@ subsection. Each question MUST concern the exact concept being taught and presen
 real production situation, an explicit constraint or failure, and a decision prompt:
 "What will you do and why?" Definition-only questions, vocabulary checks, and superficial
 rewrites of the same scenario MUST NOT count toward these five to seven questions.
+
+Scenario sets MUST use the anchor's standard domain and names, with engaging prompts
+that test the concept under concrete scale, latency, consistency, reliability, or budget
+constraints. They MUST test universal decisions rather than recall of private project
+behavior. Where an industry-standard alternative fits better than the anchor stack, the
+answer MUST explain and defend that alternative.
 
 **Web-grounded selection:** When web search is available, the AI MUST use it before
 selecting the scenario set. Searches MUST target the exact concept and its commonly
@@ -375,6 +544,21 @@ and failure analysis, three to five foundational recall questions, and the separ
 to seven complete interview scenarios. Review MUST verify the dedicated subsection,
 concept-specific production constraints, named research links and recorded evidence limitations,
 and all three structured answer parts in every independently collapsible scenario card.
+
+Editorial review MUST also verify a friendly conversational voice, purposeful analogies
+and transitions, one-sentence signposts for every teaching section, connected story flow,
+progressive disclosure, and accurate use of the standardized project lens. It MUST reject
+forced humor, dense fact dumps, legacy-design rationalizations, invented capabilities,
+and examples whose familiarity obscures the universal trade-off.
+
+Visual acceptance MUST verify the explained Mermaid diagram and at least one meaningful
+interactive or animated demonstration per lesson. Browser checks MUST exercise controls,
+keyboard access, reduced motion, mobile layout, both themes, repeated navigation, hidden
+visual pausing, and cleanup after route replacement, including setup-failure handling.
+They MUST confirm that callbacks, listeners, instances, and retained resources do not
+accumulate across repeated mounts. Print review MUST verify static visual states and full
+answers. Shared lifecycle/library/style changes require catalog-wide regression as above.
+
 Opening a topic through its manifest entry MUST load the intended lesson without a page
 reload. Topic additions MUST preserve existing navigation and learning state.
 
@@ -439,4 +623,13 @@ It migrates all current generic source paragraphs and shared controls; complete 
 research honesty, stable identities and learning state remain mandatory. Active publishing
 instructions and validation must align; frozen historical evidence remains historical.
 
-**Version**: 2.0.0 | **Ratified**: 2026-11-17 | **Last Amended**: 2026-11-25
+Version 3.0.0 establishes friendly conversational teaching, six-act progressive disclosure,
+purpose-driven signposts, the standardized anchor-system lens, and mandatory purposeful
+interactive visuals with a managed LabVisuals lifecycle. This is a MAJOR amendment because
+the visual requirement changes lesson acceptance and requires a new host integration
+contract. It preserves six modules, foundational recall, researched interview scenarios,
+named Sources, immutable identities, and learning state. Runtime integration, workflow
+alignment, and scoped lesson migration require subsequent implementation and acceptance;
+the amendment itself delivers governance only.
+
+**Version**: 3.0.0 | **Ratified**: 2026-11-17 | **Last Amended**: 2026-11-25
