@@ -3,9 +3,9 @@
 Ordinary topic requests use the existing dashboard and one end-to-end content pass.
 Full Spec Kit remains appropriate for application behavior, storage/schema changes,
 new learning requirements, or an explicitly requested migration/full feature cycle.
-The constitution is authoritative; this workflow changes overhead, not lesson depth.
-The markup/recall profile remains `constitution-1.2` because v1.3.0 changes workflow, not
-the lesson schema. For explicitly staged requests, keep one compact
+The constitution is authoritative; presentation changes do not reduce lesson depth.
+The markup/recall profile remains `constitution-1.2` because the v2.0.0 source-presentation amendment preserves the
+lesson/card schema. Current publishing explicitly selects researchPresentation sources-only-v1. For explicitly staged requests, keep one compact
 `docs/topic-requests/<request-slug>.md` checklist across stages: placement, one row per
 lesson, research notes and shared acceptance checks. Reuse it instead of generating
 separate spec/plan/data-model/contracts documents; create no request file unless needed.
@@ -19,8 +19,8 @@ separate spec/plan/data-model/contracts documents; create no request file unless
    only for new nodes. Preserve existing IDs/recall keys. Create every missing parent
    `_overview.html`; update affected child lists and meaningful roadmap diagrams.
 3. Research each exact concept in batches of independent searches. Verify technical
-   decisions with primary sources; disclose when question frequency is unverified or
-   search is unavailable. Reuse a credible source across scenarios where it actually
+   decisions with primary sources; record unverified frequency or unavailable search in maintainer research records. Do not
+   add generic research/disclaimer paragraphs to the website. Reuse a credible source across scenarios where it actually
    supports their decisions. Do not repeat identical searches across planning/authoring.
 4. Author every lesson in full: ELI5 first; six story modules; explained Mermaid diagram;
    collapsible mechanics; decision matrix; concrete failure stories; Feynman prompt;
@@ -58,8 +58,13 @@ production dashboard is absent is historical. Inspect a current lesson for final
   elements: `scenario`, `decision`, `trade-offs`. Each starts with `<p><strong>LABEL</strong></p>`
   followed by complete explanatory paragraphs. Labels are exactly `The Scenario & Constraint`,
   `The Direct Answer & Architectural Decision`, `Key Trade-Offs & Follow-Up Traps`.
-- One visible `<aside data-interview-research>` outside the scenario cards contains a
-  disclosure paragraph and named HTTPS source links. New lessons need no migration markers.
+- One visible `<aside data-interview-research>` outside the scenario cards contains an
+  `h4` Sources label and named HTTPS source links; no generic introductory paragraph.
+  New lessons need no migration markers. Keep contextual assumptions in answers.
+- Related internal links use a concise Related topics label and wrapping list. Omit empty
+  groups; preserve meaningful prose and external Sources and further reading footers.
+- The host supplies one compact Progress selector/review area; do not embed duplicate
+  controls or a promotional mastery banner in partials. Preserve Feynman practice.
 - Hubs use `.kb-hub`, matching identity/title, ELI5 orientation, Mermaid roadmap, reading
   guidance and `[data-child-links]` with every immediate child in manifest order.
 - No embedded scripts/styles/storage, inline handlers, extra document shell or host controls.
@@ -74,7 +79,7 @@ legacy lesson, write a fresh stable-ID record and change only its `researchRecor
 
 The record follows `check_research` in `tools/validate_content.py`. Required fields:
 
-- `topicId`, exact `title`, repository-relative `path`, `constitutionVersion` (`1.3.0`
+- `topicId`, exact `title`, repository-relative `path`, `constitutionVersion` (`2.0.0`
   for new records), ISO `researchedOn`, `state: "reviewed"` after review.
 - `searches`: actual `{query, date, result}` rows, including failures/limitations.
 - `sources`: `{id, title, url, roles, checkedOn, supportRationale}`; roles are
@@ -86,11 +91,13 @@ The record follows `check_research` in `tools/validate_content.py`. Required fie
   `direct-answer`, `decision-costs`, `follow-up`, `evidence`, `full-delivery`), each
   `{status: "pass"|"fail", rationale: "brief concrete finding"}`. Reviewed records have
   no failed findings. State why the criterion holds; do not duplicate the lesson prose.
-- `publicDisclosure`: exact first paragraph text of the public research note;
-  `sourceNoteUrls`: note URLs in order, covering the recorded sources.
+- `sourceNoteUrls`: visible named source URLs in exact order, covering recorded sources.
+  Existing `publicDisclosure` values are archived provenance, not rendered text. New
+  sources-only records may omit the field; never rewrite historical research to match UI.
 
 For `reported-recurring`, identify the precise claim the interview evidence supports.
-Technical documentation alone cannot prove interview frequency. Existing records provide
+Technical documentation alone cannot prove interview frequency. Record limitations in
+maintainer evidence without public boilerplate; preserve honest contextual claims. Existing records provide
 schema examples, not a required word count. A validator pass checks structure/consistency;
 substantive source and editorial review still belong to the author/reviewer.
 

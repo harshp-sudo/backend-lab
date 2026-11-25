@@ -1,0 +1,388 @@
+{
+  "topicId": "48743329-a4b3-47ec-b769-26ca72c5d055",
+  "title": "Distributed Tracing",
+  "path": "topics/system-design/devops-deployment-observability/observability-and-telemetry-pillars/distributed-tracing.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-22",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "Distributed Tracing production interview sampling context propagation clock skew",
+      "date": "2026-11-22",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "traces",
+      "title": "OpenTelemetry: Traces",
+      "url": "https://opentelemetry.io/docs/concepts/signals/traces/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Spans and relationships describe causally related operations across boundaries."
+    },
+    {
+      "id": "context",
+      "title": "OpenTelemetry: Context propagation",
+      "url": "https://opentelemetry.io/docs/concepts/context-propagation/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Trace context relates activity across asynchronous and network boundaries without being an authorization credential."
+    },
+    {
+      "id": "w3c",
+      "title": "W3C: Trace Context",
+      "url": "https://www.w3.org/TR/trace-context/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Trace identifiers/parent propagation convey correlation rather than trusted application authority."
+    },
+    {
+      "id": "sampling",
+      "title": "OpenTelemetry: Sampling",
+      "url": "https://opentelemetry.io/docs/concepts/sampling/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Head/tail selection changes which traces are retained and what conclusions are supported."
+    },
+    {
+      "id": "resiliency",
+      "title": "OpenTelemetry: Collector resiliency",
+      "url": "https://opentelemetry.io/docs/collector/resiliency/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Queue, retry, persistence and exporter behavior bound telemetry loss during outages."
+    },
+    {
+      "id": "semconv",
+      "title": "OpenTelemetry: Semantic conventions",
+      "url": "https://opentelemetry.io/docs/specs/semconv/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Shared resource/attribute conventions have versioned stability and migrations."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-queue-gap",
+      "theme": "HTTP spans connect but queued fulfillment has a new unrelated trace. Where do you inspect?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "context",
+        "traces",
+        "semconv"
+      ],
+      "technicalSources": [
+        "context",
+        "traces",
+        "semconv"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Messages cross a queue and a consumer starts asynchronous work after receiving them. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Distributed Tracing to queue gap."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: HTTP spans connect but queued fulfillment has a new unrelated trace. Where do you inspect?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Check supported carrier injection, intermediary preservation, extraction and active context at span creation"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Copying a trace ID string alone does not establish correct span parentage"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Reusing one context across unrelated messages can incorrectly merge work, and sampling/export gaps can still produce partial traces."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to context, traces, semconv; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-batch-links",
+      "theme": "One consumer batch contains fifty independently produced messages. Which one is the parent?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "traces",
+        "semconv"
+      ],
+      "technicalSources": [
+        "traces",
+        "semconv"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The batch has multiple causal inputs and the backend supports links. What representation fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Distributed Tracing to batch links."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: One consumer batch contains fifty independently produced messages. Which one is the parent?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Represent the batch operation with appropriate links to input contexts and choose any parent only when it reflects a genuine single upstream operation"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A span cannot simply acquire fifty parents"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Links add lookup/visualization complexity and backend support varies; treating the first message as the sole origin can hide the rest."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to traces, semconv; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-head-error",
+      "theme": "A 1% head sampler misses the one payment failure you need. What policy changes?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "sampling",
+        "resiliency"
+      ],
+      "technicalSources": [
+        "sampling",
+        "resiliency"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Operations wants every future failed request trace retained while controlling telemetry volume. What trade-off fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Distributed Tracing to head error."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A 1% head sampler misses the one payment failure you need. What policy changes?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Consider outcome-aware tail retention with adequate collection, trace routing and bounded wait resources, plus targeted instrumentation and reliable aggreg"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Tail selection costs memory/state and cannot guarantee unseen or late outcomes"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Raising head sampling may help but does not establish perfect error retention unless the complete collection/delivery path meets that stronger contract."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to sampling, resiliency; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-negative-time",
+      "theme": "A child appears to start before its remote parent. Is causal order broken?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "traces",
+        "context"
+      ],
+      "technicalSources": [
+        "traces",
+        "context"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Services use clocks with measurable skew and the backend draws a waterfall from wall timestamps. What investigation fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Distributed Tracing to negative time."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A child appears to start before its remote parent. Is causal order broken?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Check actual trace relationships, local durations, clock synchronization and backend correction assumptions"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Sorting wall timestamps is not a distributed ordering protocol"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Clock corrections can improve display but do not repair missing spans or establish causality where instrumentation never recorded it."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to traces, context; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-sum-parallel",
+      "theme": "Two parallel calls total 180 ms but the parent lasts 140 ms. What conclusion fits?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "traces"
+      ],
+      "technicalSources": [
+        "traces"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Calls of 80 ms and 100 ms overlap, with 40 ms serial work after them. What will you explain?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Distributed Tracing to sum parallel."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Two parallel calls total 180 ms but the parent lasts 140 ms. What conclusion fits?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Under the stated full-overlap assumptions, elapsed contribution is 100+40=140 ms; analyze the critical path and waits instead of summing child durations"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Concurrency can still consume more aggregate resource time than elapsed time"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Missing spans, nested children or incomplete overlap alter the interpretation, so a waterfall is evidence to inspect rather than a universal additive formu"
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to traces; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-untrusted-context",
+      "theme": "A client supplies trace headers and sensitive baggage. Can services trust them for tenant access?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "w3c",
+        "context"
+      ],
+      "technicalSources": [
+        "w3c",
+        "context"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "An external caller chooses correlation values and attempts to influence downstream behavior. What boundary fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Distributed Tracing to untrusted context."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A client supplies trace headers and sensitive baggage. Can services trust them for tenant access?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Keep authentication/authorization independent, validate and bound propagated context, and apply a deliberate privacy/trust policy at ingress"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Discarding all context can reduce cross-system diagnosis, but accepting it as authority is unsafe"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A sampled flag is not permission for unbounded telemetry resource use or privileged data access."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to w3c, context; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-22. These are adapted production scenarios informed by exact-concept interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Worked numbers are hypothetical unless explicitly measured; runtime and platform assumptions are stated rather than presented as universal settings.",
+  "sourceNoteUrls": [
+    "https://opentelemetry.io/docs/concepts/signals/traces/",
+    "https://opentelemetry.io/docs/concepts/context-propagation/",
+    "https://www.w3.org/TR/trace-context/",
+    "https://opentelemetry.io/docs/concepts/sampling/",
+    "https://opentelemetry.io/docs/collector/resiliency/",
+    "https://opentelemetry.io/docs/specs/semconv/"
+  ]
+}

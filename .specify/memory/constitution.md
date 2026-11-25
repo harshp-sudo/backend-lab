@@ -1,3 +1,6 @@
+<!-- Sync impact: 1.3.0 -> 2.0.0. User-authorized presentation amendment, 2026-11-25.
+Align current publishing guide/skill and sources-only-v1 validation; retain recall profile
+constitution-1.2, complete evidence and frozen historical records. Migration acceptance pending. -->
 <!--
 Sync Impact Report
 Version change: 1.2.0 -> 1.3.0 (MINOR: incremental content-publishing workflow)
@@ -188,6 +191,12 @@ usefulness across devices and exported copies.
 
 ## Interface and Presentation Contract
 
+Lessons MUST use one compact Progress status selector near the title. Preserve all three
+statuses and explicit mastery/review transitions; show the relevant review action/date
+in the same compact area. Do not add a second large promotional mastery card. Actual
+Feynman practice and the complete mastery-check module remain required.
+
+
 - **Left sidebar:** Provide a collapsible recursive tree for Domain → Category → Topic →
   Subtopic and deeper levels, with a visible completion badge or progress ring at every node.
   On mobile, expose this navigation through a collapsible drawer.
@@ -309,19 +318,19 @@ preparation sources, or published interview guidance. Verify technical answers a
 primary technical documentation or original architecture references where applicable.
 The AI MUST NOT present generic textbook definitions as evidence of interview frequency.
 
-The lesson MUST include source links supporting the scenario selection, either alongside
-the relevant cards or in a clearly associated source note. The research record MUST
-identify which questions reflect reported recurring patterns and which are adapted
-production variants. Claims about frequency, rankings, or named companies' interviews
-MUST be supported by the cited evidence; the subsection title alone is not evidence.
-When sources do not establish frequency, describe a scenario as an informed adaptation
-rather than claiming it is verified as frequently asked.
+The lesson MUST retain named source links supporting technical reasoning and scenario
+selection in a concise, visible Sources group outside closed question cards. It MUST NOT
+repeat generic authoring dates, adaptation/frequency disclaimers or research-process prose
+in the website, tooltips, hidden panels or print output. Context-specific assumptions and
+technical limitations MUST remain beside the explanations they qualify.
 
-If web search is unavailable or fails, the AI MUST state that limitation and identify
-the scenario set as based on existing knowledge rather than verified current interview
-research. If search returns insufficient evidence, it MUST disclose that narrower gap
-and label the inferred or adapted questions. These limitations MUST NOT silently remove
-the required five to seven complete scenario cards or justify invented sources.
+Maintainer research records MUST preserve actual queries/dates, sources, scenario basis,
+limitations and editorial review. Reported interview-frequency/company/ranking claims MUST
+have supporting evidence; otherwise record the scenario as an adaptation without inventing
+claims. Search failures or insufficient frequency evidence MUST be recorded in maintainer
+records. Removing public boilerplate MUST NOT weaken research or reduce scenario counts.
+Existing historical publicDisclosure fields remain provenance; new records need no public
+paragraph field. Canonical source links MUST match their ordered research mappings.
 
 **Structured interactive answers:** Every scenario MUST use its own native `<details>`
 card. Its `<summary>` MUST identify the production problem and decision being tested;
@@ -350,7 +359,7 @@ remain self-contained even when source links are unavailable to the reader.
 the compact publishing checklist; separate specs and plans are not mandatory. When a
 specification or plan is produced, every future topic specification MUST include acceptance
 criteria for the dedicated subsection, five-to-seven count, production constraints,
-research/source disclosure, and all three answer parts. Every future topic plan MUST
+named source links and maintainer evidence, and all three answer parts. Every future topic plan MUST
 include concept-specific question research, source verification, authoring, and affected
 content-contract/validation alignment. Task breakdowns and implementations MUST deliver
 the complete scenario set and verify independent disclosure behavior, stable identities,
@@ -364,7 +373,7 @@ Before accepting a new or revised lesson, review MUST verify all six modules, EL
 jargon for each concept, narrative continuity, valid rendered diagrams, complete trade-off
 and failure analysis, three to five foundational recall questions, and the separate five
 to seven complete interview scenarios. Review MUST verify the dedicated subsection,
-concept-specific production constraints, research links or explicit research limitation,
+concept-specific production constraints, named research links and recorded evidence limitations,
 and all three structured answer parts in every independently collapsible scenario card.
 Opening a topic through its manifest entry MUST load the intended lesson without a page
 reload. Topic additions MUST preserve existing navigation and learning state.
@@ -423,4 +432,11 @@ Conflicts MUST be resolved by revising the proposed work or adopting an explicit
 silent exceptions are not permitted. A material amendment MUST identify affected lessons,
 implementation behavior, and planning artifacts that require follow-up alignment.
 
-**Version**: 1.3.0 | **Ratified**: 2026-11-17 | **Last Amended**: 2026-11-17
+Version 2.0.0 changes mandatory public research presentation to concise Sources links and
+maintainer evidence, and requires compact explicit progress controls. This incompatible
+presentation amendment is authorized by the project owner's Simplify Lesson UI request.
+It migrates all current generic source paragraphs and shared controls; complete teaching,
+research honesty, stable identities and learning state remain mandatory. Active publishing
+instructions and validation must align; frozen historical evidence remains historical.
+
+**Version**: 2.0.0 | **Ratified**: 2026-11-17 | **Last Amended**: 2026-11-25

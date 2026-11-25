@@ -18,5 +18,6 @@
     "5522e024-f6dd-471e-a3e4-41d0a60a5d2f": "specs/003-backfill-interview-scenarios/research/service-discovery.md",
     "84458963-012b-4a80-828a-2da27d8b509d": "specs/003-backfill-interview-scenarios/research/service-mesh.md",
     "689dd587-de37-4e22-9412-bd42b118da79": "specs/003-backfill-interview-scenarios/research/multi-tenant-architecture.md"
-  }
+  },
+  "researchPresentation": "sources-only-v1"
 }

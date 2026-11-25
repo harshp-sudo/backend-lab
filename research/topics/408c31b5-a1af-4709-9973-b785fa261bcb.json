@@ -1,0 +1,377 @@
+{
+  "topicId": "408c31b5-a1af-4709-9973-b785fa261bcb",
+  "title": "Centralized Logging",
+  "path": "topics/system-design/devops-deployment-observability/observability-and-telemetry-pillars/centralized-logging.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-22",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "Centralized Logging production interview backpressure duplicates retention redaction",
+      "date": "2026-11-22",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "logging",
+      "title": "Kubernetes: Logging architecture",
+      "url": "https://kubernetes.io/docs/concepts/cluster-administration/logging/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Container stdout/stderr, rotation and node/cluster collectors have separate persistence duties."
+    },
+    {
+      "id": "logpressure",
+      "title": "Fluent Bit: Backpressure",
+      "url": "https://docs.fluentbit.io/manual/administration/backpressure",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Input pausing, memory/filesystem buffering and limits determine behavior under a slow sink."
+    },
+    {
+      "id": "collector",
+      "title": "OpenTelemetry: Collector",
+      "url": "https://opentelemetry.io/docs/collector/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Collector receive/process/export responsibilities and component stability differ from backend storage and visualization."
+    },
+    {
+      "id": "context",
+      "title": "OpenTelemetry: Context propagation",
+      "url": "https://opentelemetry.io/docs/concepts/context-propagation/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Trace context relates activity across asynchronous and network boundaries without being an authorization credential."
+    },
+    {
+      "id": "objectlock",
+      "title": "Amazon S3: Object Lock",
+      "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lock.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Versioned object retention/legal hold constrain deletion but do not prove backup integrity or recoverability."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-sink-outage",
+      "theme": "The log backend is down for ten minutes. What capacity and failure policy do you need?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "logpressure",
+        "logging"
+      ],
+      "technicalSources": [
+        "logpressure",
+        "logging"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Input averages 2,000 events/s at 500 raw bytes; request traffic must remain available. What will you size and bound?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Centralized Logging to sink outage."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The log backend is down for ten minutes. What capacity and failure policy do you need?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Start with 600 MB decimal raw payload, add measured overhead/margin and define memory/disk bounds, priority and overflow behavior"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Larger buffers buy time but not infinite retention"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If blocking producers is unacceptable, loss must be explicit; best-effort diagnostic logs may need separation from legally required audit records."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to logpressure, logging; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-retry-duplicates",
+      "theme": "An incident dashboard counts twice as many errors after recovery. What happened?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "logpressure",
+        "logging"
+      ],
+      "technicalSources": [
+        "logpressure",
+        "logging"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The backend accepted batches before losing acknowledgements, and collector retries replayed them. What evidence and design fit?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Centralized Logging to retry duplicates."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An incident dashboard counts twice as many errors after recovery. What happened?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Compare stable event identifiers, retry/offset history and raw records to distinguish duplicates from real repeated failures"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Deduplication costs indexing/state and needs a valid identity"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Dropping all repeated-looking messages can erase genuine recurring errors; an identical text or timestamp is not enough."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to logpressure, logging; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-secret-spread",
+      "theme": "An authorization header reaches the log sink. Is dashboard masking enough?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "logging",
+        "collector"
+      ],
+      "technicalSources": [
+        "logging",
+        "collector"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Raw events are replicated and some are buffered locally. A new UI mask hides the field from one screen. What response fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Centralized Logging to secret spread."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An authorization header reaches the log sink. Is dashboard masking enough?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Revoke/rotate the exposed credential, stop source emission and redact before future persistence"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Deleting one dashboard field does not remove earlier copies"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Redaction rules can miss variants, and overly broad deletion can damage required evidence; minimize data and define ownership early."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to logging, collector; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-clock-order",
+      "theme": "An order-completed event appears before order-created. Is the application necessarily wrong?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "logging",
+        "context"
+      ],
+      "technicalSources": [
+        "logging",
+        "context"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Events from different nodes have skewed clocks and arrive through differently delayed buffers. What investigation fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Centralized Logging to clock order."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An order-completed event appears before order-created. Is the application necessarily wrong?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Compare correlation/business identifiers, source versus ingestion time and trace relationships; inspect time synchronization and pipeline delay before infe"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Sorting by ingestion time only replaces one imperfect clock with another"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Strong business ordering belongs in the relevant transaction/event protocol, not an assumed global log ordering."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to logging, context; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-node-loss",
+      "theme": "A Pod was replaced and its last logs are gone. What architecture change fits?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "logging",
+        "logpressure"
+      ],
+      "technicalSources": [
+        "logging",
+        "logpressure"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Collection lag exceeded local rotation and then the node failed. No remote copy exists. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Centralized Logging to node loss."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A Pod was replaced and its last logs are gone. What architecture change fits?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Make the loss boundary explicit, tune supported local retention/collector throughput and monitor lag, then choose durable off-node acceptance for events th"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: More local disk does not survive loss of that disk"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Synchronous durable logging can affect request availability; ordinary stdout capture alone is not a complete disaster-proof logging service."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to logging, logpressure; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-audit-contract",
+      "theme": "Compliance requires every accepted money transfer to have immutable evidence. Can diagnostic logs satisfy it?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "logpressure",
+        "objectlock"
+      ],
+      "technicalSources": [
+        "logpressure",
+        "objectlock"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The current pipeline samples events and drops oldest chunks when its sink is unavailable. What design decision is needed?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Centralized Logging to audit contract."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Compliance requires every accepted money transfer to have immutable evidence. Can diagnostic logs satisfy it?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Define a durable business/audit recording boundary, integrity/access/retention rules and failure handling tied to acceptance of the transfer"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Stronger acknowledgement can add latency or reject work during outages"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Immutability alone does not establish completeness or correct business content, and extra log replicas do not fix producer-side loss."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to logpressure, objectlock; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-22. These are adapted production scenarios informed by exact-concept interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Worked numbers are hypothetical unless explicitly measured; runtime and platform assumptions are stated rather than presented as universal settings.",
+  "sourceNoteUrls": [
+    "https://kubernetes.io/docs/concepts/cluster-administration/logging/",
+    "https://docs.fluentbit.io/manual/administration/backpressure",
+    "https://opentelemetry.io/docs/collector/",
+    "https://opentelemetry.io/docs/concepts/context-propagation/",
+    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lock.html"
+  ]
+}

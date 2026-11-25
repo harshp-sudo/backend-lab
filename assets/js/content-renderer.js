@@ -1,6 +1,6 @@
 /** Trusted repository partial loading; optional enhancements never own navigation. */
 export async function loadArticle(entry,appBase,signal){
-  const response=await fetch(new URL(entry.path,appBase),{signal});
+  const response=await fetch(new URL(entry.path,appBase),{signal,cache:'no-cache'});
   if(!response.ok)throw Error(`Could not load ${entry.title} (${response.status}).`);
   const source=await response.text(),doc=new DOMParser().parseFromString(source,'text/html'),article=doc.body.firstElementChild;
   if(doc.body.children.length!==1||article?.tagName!=='ARTICLE'||article.dataset.nodeId!==entry.id||!article.classList.contains(entry.kind==='hub'?'kb-hub':'kb-topic')||article.querySelector('h1')?.textContent.trim()!==entry.title||doc.querySelector('script,style,link'))throw Error('The lesson file does not match its library entry.');

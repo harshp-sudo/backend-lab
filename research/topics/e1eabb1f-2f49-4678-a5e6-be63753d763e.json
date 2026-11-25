@@ -1,0 +1,451 @@
+{
+  "topicId": "e1eabb1f-2f49-4678-a5e6-be63753d763e",
+  "title": "OpenTelemetry",
+  "path": "topics/system-design/devops-deployment-observability/observability-and-telemetry-pillars/opentelemetry.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-22",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "OpenTelemetry production interview Collector exporters backpressure instrumentation",
+      "date": "2026-11-22",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "instrument",
+      "title": "OpenTelemetry: Instrumentation",
+      "url": "https://opentelemetry.io/docs/concepts/instrumentation/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Automatic/manual instrumentation choices affect coverage and duplicate signals."
+    },
+    {
+      "id": "otelspec",
+      "title": "OpenTelemetry: API and SDK overview",
+      "url": "https://opentelemetry.io/docs/specs/otel/overview/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Instrumentation APIs, SDK implementation and export have distinct responsibilities."
+    },
+    {
+      "id": "semconv",
+      "title": "OpenTelemetry: Semantic conventions",
+      "url": "https://opentelemetry.io/docs/specs/semconv/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Shared resource/attribute conventions have versioned stability and migrations."
+    },
+    {
+      "id": "distros",
+      "title": "OpenTelemetry: Collector distributions",
+      "url": "https://opentelemetry.io/docs/collector/distributions/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Distribution manifests determine available components; support and maturity differ by component/signal."
+    },
+    {
+      "id": "otlpreceiver",
+      "title": "OpenTelemetry: OTLP receiver component",
+      "url": "https://raw.githubusercontent.com/open-telemetry/opentelemetry-collector/main/receiver/otlpreceiver/README.md",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Component status and signals must be checked against the selected release."
+    },
+    {
+      "id": "batch",
+      "title": "OpenTelemetry: Batch processor component",
+      "url": "https://raw.githubusercontent.com/open-telemetry/opentelemetry-collector/main/processor/batchprocessor/README.md",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Batch processing has component-specific stability; batching is not durable backend storage."
+    },
+    {
+      "id": "transform",
+      "title": "OpenTelemetry: Transform processor component",
+      "url": "https://raw.githubusercontent.com/open-telemetry/opentelemetry-collector-contrib/main/processor/transformprocessor/README.md",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Transform support/status and error behavior are component-specific."
+    },
+    {
+      "id": "otelconfig",
+      "title": "OpenTelemetry: Collector configuration",
+      "url": "https://opentelemetry.io/docs/collector/configuration/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Collector components must be configured and enabled in the service pipeline."
+    },
+    {
+      "id": "resiliency",
+      "title": "OpenTelemetry: Collector resiliency",
+      "url": "https://opentelemetry.io/docs/collector/resiliency/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Queue, retry, persistence and exporter behavior bound telemetry loss during outages."
+    },
+    {
+      "id": "collector",
+      "title": "OpenTelemetry: Collector",
+      "url": "https://opentelemetry.io/docs/collector/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Collector receive/process/export responsibilities and component stability differ from backend storage and visualization."
+    },
+    {
+      "id": "context",
+      "title": "OpenTelemetry: Context propagation",
+      "url": "https://opentelemetry.io/docs/concepts/context-propagation/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Trace context relates activity across asynchronous and network boundaries without being an authorization credential."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-duplicate-spans",
+      "theme": "An auto agent creates the same HTTP spans as manual middleware. What will you keep?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "instrument",
+        "otelspec"
+      ],
+      "technicalSources": [
+        "instrument",
+        "otelspec"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The trace tree duplicates request operations and a request counter appears doubled after rollout. What diagnosis fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies OpenTelemetry to duplicate spans."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An auto agent creates the same HTTP spans as manual middleware. What will you keep?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Inventory instrumentation paths and SDK/provider setup, choose one owner per standard boundary and retain manual business spans where they add distinct mea"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Removing every manual span can lose business context; keeping overlapping counters makes aggregate rates wrong"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Similar names alone do not prove duplication, so inspect actual source/scope and events."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to instrument, otelspec; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-disabled-processor",
+      "theme": "A configured redaction transform never removes a sensitive field. Why?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "otelconfig",
+        "transform"
+      ],
+      "technicalSources": [
+        "otelconfig",
+        "transform"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The component exists in configuration but does not appear in service.pipelines.traces.processors. What will you change and verify?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies OpenTelemetry to disabled processor."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A configured redaction transform never removes a sensitive field. Why?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Enable the supported processor in the intended pipeline/order, test with harmless synthetic values and inspect exported output plus error behavior"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A configured component is not active automatically"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Logs/debug exporters or earlier persistence can leak fields before redaction, and transform syntax/status must match the selected component release."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to otelconfig, transform; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-collector-outage",
+      "theme": "The backend is unavailable for five minutes. Can a 30-second queue preserve everything?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "resiliency",
+        "collector"
+      ],
+      "technicalSources": [
+        "resiliency",
+        "collector"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Input is 10,000 spans/s and a hypothetical span-counted queue holds 300,000 with no successful export. What capacity/policy fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies OpenTelemetry to collector outage."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The backend is unavailable for five minutes. Can a 30-second queue preserve everything?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Calculate the 30-second raw coverage under those assumptions, then choose an explicit retention/loss budget, bounded storage/retry policy and recovery thro"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A real queue may count requests/bytes instead of spans; persistent storage survives only defined failures"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Larger queues cost memory/disk and do not guarantee exactly-once delivery or infinite outages."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to resiliency, collector; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-wrong-distro",
+      "theme": "A copied configuration references a processor absent from the installed binary. What now?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "distros",
+        "otlpreceiver",
+        "batch",
+        "transform"
+      ],
+      "technicalSources": [
+        "distros",
+        "otlpreceiver",
+        "batch",
+        "transform"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Startup fails although an online example worked for a different distribution/version. What will you verify?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies OpenTelemetry to wrong distro."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A copied configuration references a processor absent from the installed binary. What now?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Check the installed distribution manifest, component support/maturity and release-specific configuration, then choose a supported component or reviewed dis"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Contrib/core/custom distributions and versions can differ"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A stable protocol does not make every processor or signal stable, and a status on the current main branch is not a guarantee for an older binary."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to distros, otlpreceiver, batch, transform; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-missing-async",
+      "theme": "Telemetry reaches the backend, but async work is unrelated. Can changing the exporter fix it?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "context",
+        "instrument",
+        "semconv"
+      ],
+      "technicalSources": [
+        "context",
+        "instrument",
+        "semconv"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Spans arrive successfully under separate roots after a queue handoff. What boundary needs attention?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies OpenTelemetry to missing async."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Telemetry reaches the backend, but async work is unrelated. Can changing the exporter fix it?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Inspect application context injection/extraction/activation and selected messaging instrumentation/semantic conventions"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A Collector normally cannot infer missing application causality from timestamps"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Context is not authentication, and joining unrelated work by a reused ID can produce misleading traces."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to context, instrument, semconv; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-service-fragmentation",
+      "theme": "Each customer gets a different service.name and dashboards fragment. What identity belongs where?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "semconv",
+        "otelspec",
+        "transform"
+      ],
+      "technicalSources": [
+        "semconv",
+        "otelspec",
+        "transform"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A team uses customer IDs as service identity and sends raw personal fields as attributes. What redesign fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies OpenTelemetry to service fragmentation."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Each customer gets a different service.name and dashboards fragment. What identity belongs where?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use stable bounded service/resource identity, select appropriate bounded measurement attributes and minimize/redact personal data before export"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Simply hashing customer values preserves high cardinality and may preserve privacy risk"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A central transform helps enforce policy but does not remove already persisted copies or replace source minimization."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to semconv, otelspec, transform; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-22. These are adapted production scenarios informed by exact-concept interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Worked numbers are hypothetical unless explicitly measured; runtime and platform assumptions are stated rather than presented as universal settings.",
+  "sourceNoteUrls": [
+    "https://opentelemetry.io/docs/concepts/instrumentation/",
+    "https://opentelemetry.io/docs/specs/otel/overview/",
+    "https://opentelemetry.io/docs/specs/semconv/",
+    "https://opentelemetry.io/docs/collector/distributions/",
+    "https://raw.githubusercontent.com/open-telemetry/opentelemetry-collector/main/receiver/otlpreceiver/README.md",
+    "https://raw.githubusercontent.com/open-telemetry/opentelemetry-collector/main/processor/batchprocessor/README.md",
+    "https://raw.githubusercontent.com/open-telemetry/opentelemetry-collector-contrib/main/processor/transformprocessor/README.md",
+    "https://opentelemetry.io/docs/collector/configuration/",
+    "https://opentelemetry.io/docs/collector/resiliency/",
+    "https://opentelemetry.io/docs/collector/",
+    "https://opentelemetry.io/docs/concepts/context-propagation/"
+  ]
+}

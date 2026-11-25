@@ -1,0 +1,403 @@
+{
+  "topicId": "fb4f6ee5-00a3-4c38-9c74-1805e220912e",
+  "title": "Graceful Shutdown",
+  "path": "topics/system-design/performance-reliability/lifecycle-and-production-observability/graceful-shutdown.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-22",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "Graceful Shutdown production interview draining requests SIGTERM Kubernetes",
+      "date": "2026-11-22",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "termination",
+      "title": "Kubernetes: Termination of Pods",
+      "url": "https://kubernetes.io/docs/concepts/workloads/pods/pod-termination/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Normal graceful deletion includes hook/grace budgeting, endpoint propagation and eventual forced stop."
+    },
+    {
+      "id": "lifecycle",
+      "title": "Kubernetes: Pod lifecycle and termination",
+      "url": "https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Termination signals, hook/grace budgets and endpoint propagation need coordination."
+    },
+    {
+      "id": "http",
+      "title": "Node.js HTTP server API",
+      "url": "https://nodejs.org/api/http.html#serverclosecallback",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Stopping listeners and active-connection handling are version-specific."
+    },
+    {
+      "id": "signals",
+      "title": "Node.js: Process signal events",
+      "url": "https://nodejs.org/api/process.html#signal-events",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Installing a signal listener changes default termination behavior; cleanup must finish or enforce its own deadline."
+    },
+    {
+      "id": "hikari",
+      "title": "HikariCP: configuration reference",
+      "url": "https://github.com/brettwooldridge/HikariCP",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Acquisition, idle, keepalive and lifetime settings apply at different ownership boundaries."
+    },
+    {
+      "id": "event",
+      "title": "Node.js: Do not block the event loop",
+      "url": "https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Scheduling and event-loop/worker-pool blocking distinguish waiting from execution."
+    },
+    {
+      "id": "cascade",
+      "title": "Google SRE: Addressing cascading failures",
+      "url": "https://sre.google/sre-book/addressing-cascading-failures/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Retry amplification and resource exhaustion spread failures."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-routing-propagation",
+      "theme": "Readiness is false but requests still arrive during shutdown. What does that mean?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "termination",
+        "http"
+      ],
+      "technicalSources": [
+        "termination",
+        "http"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Routing changes have propagation delay and some clients hold existing connections. The service exits immediately after changing state. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Graceful Shutdown to routing propagation."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Readiness is false but requests still arrive during shutdown. What does that mean?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Treat withdrawal and local stop as overlapping processes"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A fixed delay can provide margin but cannot prove every route converged"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: For normal Kubernetes deletion, endpoint termination state also matters; readiness alone is not the complete protocol."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to termination, http; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-grace-arithmetic",
+      "theme": "An 8-second hook, 25-second request and cleanup must fit in 30 seconds. Will they?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "termination",
+        "signals"
+      ],
+      "technicalSources": [
+        "termination",
+        "signals"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The team assigns 30 seconds to the hook and another 30 to application drain, but the platform has one overall grace allowance. What budget and behavior will you choose?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Graceful Shutdown to grace arithmetic."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An 8-second hook, 25-second request and cleanup must fit in 30 seconds. Will they?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use the single remaining deadline: after 8 seconds only about 22 remain before margin, so a newly owned 25-second operation cannot be promised completion t"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A longer allowance slows rollout and increases overlap resources"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: An operation requiring longer durable completion needs handoff/resumption semantics, not a reset timer in every cleanup function."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to termination, signals; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-pool-closed-first",
+      "theme": "The database pool is closed before active requests finish. What ordering fixes it?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "http",
+        "termination",
+        "hikari"
+      ],
+      "technicalSources": [
+        "http",
+        "termination",
+        "hikari"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Shutdown sees the signal, closes every dependency, then waits for in-flight requests. Transactions now fail while the process is still alive. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Graceful Shutdown to pool closed first."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The database pool is closed before active requests finish. What ordering fixes it?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Stop new ownership first, then let active borrowers reach a known finish/cancel policy while required dependencies remain available"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Waiting forever can block deployment; a bounded forced phase remains necessary"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Cleanup order follows actual dependency ownership, not a generic list of close calls."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to http, termination, hikari; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-websocket-drain",
+      "theme": "server.close completes ordinary HTTP handling, but long-lived sockets remain. What is missing?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "http",
+        "termination"
+      ],
+      "technicalSources": [
+        "http",
+        "termination"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The service also accepts upgraded WebSocket connections. The team assumes an HTTP close-all call drains every protocol. What will you implement?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Graceful Shutdown to websocket drain."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: server.close completes ordinary HTTP handling, but long-lived sockets remain. What is missing?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Track the upgraded protocol’s connections separately and use its documented close/reconnect/resume behavior, with a bounded deadline and final resource rel"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Node’s generic HTTP connection methods do not uniformly close upgraded protocols"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A longer drain alone cannot finish an intentionally infinite session."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to http, termination; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-consumer-ack",
+      "theme": "A consumer receives a job as shutdown begins. Ack immediately to exit cleanly?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "termination",
+        "event"
+      ],
+      "technicalSources": [
+        "termination",
+        "event"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The business effect has not yet committed, and the process may be killed before finishing. What ownership and acknowledgement policy fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Graceful Shutdown to consumer ack."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A consumer receives a job as shutdown begins. Ack immediately to exit cleanly?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Stop fetching new work, finish the owned effect within the remaining budget if possible, and acknowledge only after the broker/business durability boundary"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Early acknowledgement can lose work; late acknowledgement can redeliver an effect that already happened"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: The selected broker’s lease/visibility/ack semantics must be verified before applying concrete commands."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to termination, event; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-hard-kill",
+      "theme": "A crash bypasses all cleanup and callers retry writes. Was graceful shutdown useless?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "termination",
+        "signals",
+        "cascade"
+      ],
+      "technicalSources": [
+        "termination",
+        "signals",
+        "cascade"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The ordinary deployment path is safe, but node loss interrupts a transaction near commit. What additional guarantees and investigation belong here?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Graceful Shutdown to hard kill."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A crash bypasses all cleanup and callers retry writes. Was graceful shutdown useless?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Keep the planned-transition improvements while designing crash recovery separately"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: No handler can guarantee execution after every failure"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Conversely, crash recovery does not justify needlessly dropping requests during a normal controlled rollout."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to termination, signals, cascade; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-22. These are adapted production scenarios informed by exact-concept interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Worked numbers are hypothetical unless explicitly measured; runtime and platform assumptions are stated rather than presented as universal settings.",
+  "sourceNoteUrls": [
+    "https://kubernetes.io/docs/concepts/workloads/pods/pod-termination/",
+    "https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination",
+    "https://nodejs.org/api/http.html#serverclosecallback",
+    "https://nodejs.org/api/process.html#signal-events",
+    "https://github.com/brettwooldridge/HikariCP",
+    "https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop",
+    "https://sre.google/sre-book/addressing-cascading-failures/"
+  ]
+}

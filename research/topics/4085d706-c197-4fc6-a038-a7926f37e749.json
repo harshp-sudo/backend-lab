@@ -1,0 +1,366 @@
+{
+  "topicId": "4085d706-c197-4fc6-a038-a7926f37e749",
+  "title": "Database Query Optimization",
+  "path": "topics/system-design/performance-reliability/database-and-data-access-efficiency/database-query-optimization.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-22",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "Database Query Optimization production interview slow query EXPLAIN PostgreSQL",
+      "date": "2026-11-22",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "pgplan",
+      "title": "PostgreSQL 18: Using EXPLAIN",
+      "url": "https://www.postgresql.org/docs/18/using-explain.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Plan estimates versus actual execution and measurement effects."
+    },
+    {
+      "id": "pgstats",
+      "title": "PostgreSQL 18: Planner statistics",
+      "url": "https://www.postgresql.org/docs/18/planner-stats.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Statistics and selectivity estimates guide access-path decisions."
+    },
+    {
+      "id": "pgstatements",
+      "title": "PostgreSQL 18: pg_stat_statements",
+      "url": "https://www.postgresql.org/docs/18/pgstatstatements.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Normalized query-call and execution measurements prioritize work."
+    },
+    {
+      "id": "orm",
+      "title": "SQLAlchemy 2.0: Relationship loading",
+      "url": "https://docs.sqlalchemy.org/en/20/orm/queryguide/relationships.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Loading strategies, fan-out, select-in loading and unexpected lazy loads."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-pool-or-sql",
+      "theme": "A 300 ms endpoint spends 180 ms waiting for a connection. What do you optimize first?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "pgplan",
+        "pgstatements"
+      ],
+      "technicalSources": [
+        "pgplan",
+        "pgstatements"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The traced orders request spends 180 ms in acquisition and 45 ms executing one statement. The database CPU is modest and the team proposes an index. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Database Query Optimization to pool or sql."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A 300 ms endpoint spends 180 ms waiting for a connection. What do you optimize first?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Investigate connection ownership and long-held transactions first, while keeping the SQL baseline"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: An index may still help the 45 ms portion, but cannot remove 180 ms of unrelated waiting"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If execution rises under contention, reassess both layers rather than treating this timing split as permanent."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to pgplan, pgstatements; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-skewed-tenant",
+      "theme": "A query is fast for most tenants and slow for the largest. Will you force its index?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "pgstats",
+        "pgplan"
+      ],
+      "technicalSources": [
+        "pgstats",
+        "pgplan"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The same query shape returns recent orders; the largest tenant owns half the table. Estimates predict a few rows, while observed processing is much larger. What will you check before forcing a plan?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Database Query Optimization to skewed tenant."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A query is fast for most tenants and slow for the largest. Will you force its index?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Inspect the selected parameters, row-estimate mismatch, statistics freshness and data correlation"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A forced plan may rescue one skewed case while harming broad reads or smaller tenants"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Follow-up: prepared and literal parameter paths can differ, so test the actual application execution path."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to pgstats, pgplan; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-many-cheap-calls",
+      "theme": "Every query takes 2 ms, yet the endpoint is slow. Is the database innocent?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "pgstatements",
+        "orm"
+      ],
+      "technicalSources": [
+        "pgstatements",
+        "orm"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A request makes 400 short statements and spends substantial time in network round trips. Each statement looks cheap in isolation. What will you do under an unchanged result contract?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Database Query Optimization to many cheap calls."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Every query takes 2 ms, yet the endpoint is slow. Is the database innocent?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Count statements per request and group repeated parent/child access"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: One huge join may multiply rows or break pagination; fewer calls alone is not proof of lower cost"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If the operations must observe a common snapshot, choose transaction/isolation behavior explicitly rather than assuming batching supplies it."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to pgstatements, orm; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-scan-is-rational",
+      "theme": "The planner selects a sequential scan despite an index. Should you disable scans?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "pgplan",
+        "pgstats"
+      ],
+      "technicalSources": [
+        "pgplan",
+        "pgstats"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A report legitimately reads 70% of orders and writes no data. An engineer wants to force index access because scans look bad. What will you choose and measure?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Database Query Optimization to scan is rational."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The planner selects a sequential scan despite an index. Should you disable scans?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Keep the rational candidate plans and compare actual representative work, I/O and total time"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Forcing an index can increase random access and distort all callers"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: The answer changes for a narrowly selective query, but the presence of an index alone does not establish that selectivity."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to pgplan, pgstats; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-diagnostic-write",
+      "theme": "Can you run EXPLAIN ANALYZE on a production UPDATE to see its cost?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "pgplan",
+        "pgstatements"
+      ],
+      "technicalSources": [
+        "pgplan",
+        "pgstatements"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The slow statement updates orders and may invoke triggers. You need evidence without causing duplicate customer effects. What is your diagnostic plan?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Database Query Optimization to diagnostic write."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Can you run EXPLAIN ANALYZE on a production UPDATE to see its cost?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Begin with a non-executing plan and existing workload evidence, then reproduce execution against controlled representative data with understood triggers an"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A rollback can undo transactional row changes but is not a universal eraser for external side effects or every sequence/trigger consequence"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: State that fidelity gap instead of claiming the local result proves production cost."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to pgplan, pgstatements; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-fast-read-slow-write",
+      "theme": "A new index improves reads but the write SLO regresses. Keep it?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "pgplan",
+        "pgstatements"
+      ],
+      "technicalSources": [
+        "pgplan",
+        "pgstatements"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A dashboard speeds up after an index is added, but ingestion latency and storage cost increase. Both workloads have stated objectives. What will you compare before deciding?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Database Query Optimization to fast read slow write."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A new index improves reads but the write SLO regresses. Keep it?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Measure the read benefit against write frequency, index-maintenance cost and the actual user objectives during the same workload window"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A local read win may be a global loss; caching/precomputation may shift cost instead of removing it"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Do not compare a warm read benchmark with a cold write incident as if they were equivalent trials."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to pgplan, pgstatements; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-22. These are adapted production scenarios informed by exact-concept interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Worked numbers are hypothetical unless explicitly measured; runtime and platform assumptions are stated rather than presented as universal settings.",
+  "sourceNoteUrls": [
+    "https://www.postgresql.org/docs/18/using-explain.html",
+    "https://www.postgresql.org/docs/18/planner-stats.html",
+    "https://www.postgresql.org/docs/18/pgstatstatements.html",
+    "https://docs.sqlalchemy.org/en/20/orm/queryguide/relationships.html"
+  ]
+}

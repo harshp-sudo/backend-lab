@@ -1,0 +1,412 @@
+{
+  "topicId": "a5bf7a71-cd5f-4c06-a3f4-3a5e0d95989d",
+  "title": "Kubernetes",
+  "path": "topics/system-design/devops-deployment-observability/containers-orchestration-and-infrastructure/kubernetes.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-22",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "Kubernetes production interview Pending Pods Service readiness troubleshooting",
+      "date": "2026-11-22",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "components",
+      "title": "Kubernetes: Components",
+      "url": "https://kubernetes.io/docs/concepts/overview/components/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Control-plane and node components reconcile workload intent and execute containers."
+    },
+    {
+      "id": "schedule",
+      "title": "Kubernetes: Scheduler",
+      "url": "https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Placement depends on resource and policy feasibility rather than desired replica count alone."
+    },
+    {
+      "id": "services",
+      "title": "Kubernetes: Services",
+      "url": "https://kubernetes.io/docs/concepts/services-networking/service/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Services select and expose workload endpoints with distinct network/readiness behavior."
+    },
+    {
+      "id": "storage",
+      "title": "Kubernetes: Persistent volumes",
+      "url": "https://kubernetes.io/docs/concepts/storage/persistent-volumes/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Persistent volume binding, reclaim and access semantics constrain stateful placement and recovery."
+    },
+    {
+      "id": "probes",
+      "title": "Kubernetes: Liveness, readiness and startup probes",
+      "url": "https://kubernetes.io/docs/concepts/workloads/pods/probes/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Probe purposes/actions differ and misconfiguration can cascade."
+    },
+    {
+      "id": "build",
+      "title": "Docker: Build best practices",
+      "url": "https://docs.docker.com/build/building/best-practices/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Build context, layers, digest selection and rebuild/patch policy shape reproducible image delivery."
+    },
+    {
+      "id": "orchestration",
+      "title": "Kubernetes: Overview",
+      "url": "https://kubernetes.io/docs/concepts/overview/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Orchestration manages desired workload state without becoming every surrounding operations platform."
+    },
+    {
+      "id": "hpa",
+      "title": "Kubernetes: Horizontal Pod Autoscaling",
+      "url": "https://kubernetes.io/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Periodic scaling uses metric type, request-normalized utilization, readiness and stabilization rules; actual capacity is separate."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-pending",
+      "theme": "New Pods remain Pending despite low average CPU. What next?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "schedule",
+        "components",
+        "storage"
+      ],
+      "technicalSources": [
+        "schedule",
+        "components",
+        "storage"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The API accepts five replicas but only two are scheduled. Nodes show 20% average CPU. What evidence matters?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Kubernetes to pending."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: New Pods remain Pending despite low average CPU. What next?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Inspect Pod events/conditions and scheduler constraints: requested rather than average resources, affinity, taints, quotas and volume topology"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Low current CPU does not imply free requested capacity, memory or a feasible zone"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Reducing requests blindly may improve placement while causing runtime contention."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to schedule, components, storage; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-empty-service",
+      "theme": "Service DNS works but requests fail. Where do you look?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "services",
+        "probes"
+      ],
+      "technicalSources": [
+        "services",
+        "probes"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Newly deployed Pods run and a Service name resolves, yet there are no successful connections. What order of diagnosis fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Kubernetes to empty service."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Service DNS works but requests fail. Where do you look?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Compare Service selectors and Pod labels, inspect ready endpoints and target/listening ports, then check the relevant network/policy path"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Changing DNS without endpoint evidence adds noise"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A direct Pod request can isolate one boundary but may bypass Service routing and policy, so it is not a complete replacement test."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to services, probes; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-image-not-crash",
+      "theme": "A Pod never starts after changing image credentials. Is application rollback the first step?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "components",
+        "build"
+      ],
+      "technicalSources": [
+        "components",
+        "build"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Events indicate image access failure before the process starts. The application team is investigating a suspected startup bug. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Kubernetes to image not crash."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A Pod never starts after changing image credentials. Is application rollback the first step?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Separate image-pull/authentication and node connectivity from application execution; verify the selected image identity and scoped pull credential"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A previous image may already be cached and appear to fix the symptom without solving access"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Rebuilding code does not repair registry permissions or a wrong platform image."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to components, build; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-volume-topology",
+      "theme": "A replacement cannot mount its data in another zone. What contract blocks recovery?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "storage",
+        "schedule"
+      ],
+      "technicalSources": [
+        "storage",
+        "schedule"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A stateful workload is rescheduled after node loss, but its volume is constrained to one zone. What will you inspect and choose?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Kubernetes to volume topology."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A replacement cannot mount its data in another zone. What contract blocks recovery?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Inspect PV/PVC binding, storage-class/topology/access constraints and the actual storage provider’s recovery capabilities"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A Pod controller cannot make local data regionally durable"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Forcing detach or multiwriter access without provider/application guarantees risks corruption; more replicas do not repair a missing data copy."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to storage, schedule; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-control-plane",
+      "theme": "The API server is unavailable, but existing requests still succeed. How urgent is it?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "components",
+        "orchestration"
+      ],
+      "technicalSources": [
+        "components",
+        "orchestration"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Serving containers remain on healthy nodes while operations cannot change objects or replace failures. What response fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Kubernetes to control plane."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The API server is unavailable, but existing requests still succeed. How urgent is it?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Treat it as loss of management/reconciliation capacity, assess application dependencies and restore the control plane using the platform’s supported proced"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Existing data-plane operation may continue, but new failures cannot be assumed recoverable and workloads may depend on API access"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Claiming either instant total outage or no user risk ignores these boundaries."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to components, orchestration; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-reconcile-fight",
+      "theme": "Manual replica edits keep reverting. Who owns the value?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "components",
+        "hpa"
+      ],
+      "technicalSources": [
+        "components",
+        "hpa"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "An operator changes replica count while an autoscaler and deployment configuration also write desired state. The count oscillates. What will you change?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Kubernetes to reconcile fight."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Manual replica edits keep reverting. Who owns the value?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Identify resource/field ownership and the active controllers, choose one intended scaling authority, and reconcile declarative configuration with that choi"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Disabling automation may be a temporary containment action but leaves operational work"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Repeated imperative edits do not establish durable intent when another controller legitimately reconciles the same field."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to components, hpa; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-22. These are adapted production scenarios informed by exact-concept interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Worked numbers are hypothetical unless explicitly measured; runtime and platform assumptions are stated rather than presented as universal settings.",
+  "sourceNoteUrls": [
+    "https://kubernetes.io/docs/concepts/overview/components/",
+    "https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/",
+    "https://kubernetes.io/docs/concepts/services-networking/service/",
+    "https://kubernetes.io/docs/concepts/storage/persistent-volumes/",
+    "https://kubernetes.io/docs/concepts/workloads/pods/probes/",
+    "https://docs.docker.com/build/building/best-practices/",
+    "https://kubernetes.io/docs/concepts/overview/",
+    "https://kubernetes.io/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/"
+  ]
+}

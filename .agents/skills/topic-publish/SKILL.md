@@ -20,7 +20,7 @@ catalog integration and verification instead of repeating setup per file.
 
 Keep all six ELI5-first modules, 3–5 foundational recall cards and 5–7 researched production
 scenarios with complete decisions, trade-offs and follow-up traps. Research the exact
-concept, verify answers against primary sources and disclose unsupported frequency claims.
+concept, verify answers against primary sources and record evidence/frequency limitations in maintainer research records. Do not repeat generic research dates or adaptation/frequency boilerplate on the website.
 Use purposeful visual coverage: a relevant explained diagram may serve multiple scenarios.
 Maintain concise source mappings/editorial findings without duplicating answers in evidence.
 
@@ -31,3 +31,5 @@ browser, print, source or editorial gate is incomplete, not a reason to truncate
 
 Deliver the placement justification, manifest change and links to all complete lesson/hub
 files with honest check results. Do not modify historical migration baselines for new topics.
+
+Use current sources-only-v1 presentation: a visible h4 Sources label and named links in the existing data-interview-research aside, with no generic intro paragraph. Preserve ordered research mappings and contextual assumptions. Related topics use a concise wrapping link group without filler preambles; distinguish external further-reading footers. The host owns one compact Progress selector/review area; retain complete Feynman/mastery practice in lessons. Existing publicDisclosure fields remain archived evidence; new records may omit them.

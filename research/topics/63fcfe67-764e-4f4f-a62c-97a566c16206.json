@@ -1,0 +1,425 @@
+{
+  "topicId": "63fcfe67-764e-4f4f-a62c-97a566c16206",
+  "title": "Alerting & Incident Management",
+  "path": "topics/system-design/devops-deployment-observability/incident-response-and-business-continuity/alerting-and-incident-management.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-22",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "Alerting Incident Management production interview Alertmanager escalation SLO incident command",
+      "date": "2026-11-22",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "alertmanager",
+      "title": "Prometheus: Alertmanager",
+      "url": "https://prometheus.io/docs/alerting/latest/alertmanager/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Grouping, routing, deduplication, silences and inhibition control notification behavior."
+    },
+    {
+      "id": "amconfig",
+      "title": "Prometheus: Alerting configuration",
+      "url": "https://prometheus.io/docs/alerting/latest/configuration/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Route matching and inhibition configuration have explicit ordering and matcher semantics."
+    },
+    {
+      "id": "incident",
+      "title": "Google SRE Workbook: Incident response",
+      "url": "https://sre.google/workbook/incident-response/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Incident roles, coordination, mitigation and communication reduce unmanaged recovery work."
+    },
+    {
+      "id": "postmortem",
+      "title": "Google SRE: Postmortem culture",
+      "url": "https://sre.google/sre-book/postmortem-culture/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Blameless review and actionable follow-up turn incident evidence into prevention."
+    },
+    {
+      "id": "promquery",
+      "title": "Prometheus: Query functions",
+      "url": "https://prometheus.io/docs/prometheus/latest/querying/functions/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Rate/reset and histogram query semantics matter for valid time-series calculations."
+    },
+    {
+      "id": "metrictypes",
+      "title": "Prometheus: Metric types",
+      "url": "https://prometheus.io/docs/concepts/metric_types/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Counter/gauge/histogram/summary semantics constrain interpretation and aggregation."
+    },
+    {
+      "id": "slos",
+      "title": "Google SRE Workbook: Implementing SLOs",
+      "url": "https://sre.google/workbook/implementing-slos/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "SLI definitions, objectives, windows and error budgets connect evidence to user requirements."
+    },
+    {
+      "id": "canary",
+      "title": "Google SRE Workbook: Canarying releases",
+      "url": "https://sre.google/workbook/canarying-releases/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Cohort-specific analysis, representative signals and observation windows bound release exposure decisions."
+    },
+    {
+      "id": "dr",
+      "title": "AWS: Disaster recovery strategies",
+      "url": "https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Backup/restore, standby and multi-site recovery trade recovery objectives against cost and complexity."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-page-storm",
+      "theme": "One database outage generates five hundred pages. How do you reduce noise safely?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "alertmanager",
+        "amconfig"
+      ],
+      "technicalSources": [
+        "alertmanager",
+        "amconfig"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Every application instance reports its dependency failure and responders cannot see new unrelated incidents. What routing policy fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Alerting & Incident Management to page storm."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: One database outage generates five hundred pages. How do you reduce noise safely?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Group symptoms by meaningful service/environment/incident dimensions and use narrowly matched inhibition for known source/target relationships"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Grouping by instance defeats consolidation; suppressing an entire organization can hide a second outage"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Inhibition controls notifications, not the underlying firing state or service recovery."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to alertmanager, amconfig; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-no-series",
+      "theme": "An availability alert resolves when the exporter disappears. Is the service healthy?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "promquery",
+        "metrictypes",
+        "slos"
+      ],
+      "technicalSources": [
+        "promquery",
+        "metrictypes",
+        "slos"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The rule expression returns no series after collection fails. Customer errors may continue. What response fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Alerting & Incident Management to no series."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An availability alert resolves when the exporter disappears. Is the service healthy?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Treat measurement availability as a separate signal, inspect scrape/rule/notification health and use independent user-facing evidence"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Always paging on one missing sample can create noise"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A blank chart cannot establish the outcome either way; duration, scope and response policy need to reflect real risk."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to promquery, metrictypes, slos; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-wrong-route",
+      "theme": "A critical page reaches a general inbox instead of the on-call. What do you inspect?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "amconfig",
+        "alertmanager"
+      ],
+      "technicalSources": [
+        "amconfig",
+        "alertmanager"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A broad matching child route appears before a specialized route and sibling matching stops. What change fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Alerting & Incident Management to wrong route."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A critical page reaches a general inbox instead of the on-call. What do you inspect?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Inspect actual labels, matcher order, inherited receiver settings and continue behavior, then test representative alert routes without sending production m"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Setting continue true everywhere can create duplicates and conflicting ownership"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Delivery success to the wrong inbox is not successful incident response, and config validity alone does not test the intended route."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to amconfig, alertmanager; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-competing-fixes",
+      "theme": "Two teams simultaneously change routing and database settings. Who should coordinate?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "incident"
+      ],
+      "technicalSources": [
+        "incident"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "User impact grows and nobody knows which action caused the latest change. What immediate response fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Alerting & Incident Management to competing fixes."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Two teams simultaneously change routing and database settings. Who should coordinate?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Establish incident command, operations and communication ownership, record current impact/actions, and coordinate bounded changes with evidence and checkpo"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Formal roles should scale to team size rather than add ceremony, but no coordination invites conflicting actions"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Waiting for a perfect root cause can prolong avoidable impact."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to incident; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-rollback-data",
+      "theme": "The quickest rollback may invalidate writes already accepted. What decision fits?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "incident",
+        "canary",
+        "dr"
+      ],
+      "technicalSources": [
+        "incident",
+        "canary",
+        "dr"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A new release is implicated, but its data format differs from the old application. What will the response lead require?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Alerting & Incident Management to rollback data."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The quickest rollback may invalidate writes already accepted. What decision fits?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Check compatibility and accepted effects before rollback, select safe containment or a compatible forward/data repair path, and preserve evidence for recon"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Traffic reduction or partial disablement may cost features while avoiding worse data loss"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Restoring a backup can discard newer legitimate writes and needs an explicit business recovery decision."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to incident, canary, dr; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-quiet-pager",
+      "theme": "The pager is silent after a broad silence was added. Can the incident close?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "alertmanager",
+        "incident",
+        "postmortem"
+      ],
+      "technicalSources": [
+        "alertmanager",
+        "incident",
+        "postmortem"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Backlog remains and telemetry is stale, but no new notification arrives. What closure and learning criteria fit?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Alerting & Incident Management to quiet pager."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The pager is silent after a broad silence was added. Can the incident close?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Verify fresh user outcomes, backlog/data correctness, delivery health and residual ownership; narrow/remove the silence with an owner/expiry"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A quiet notifier is not service recovery"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Overlong incident status can distract after mitigation, so hand off explicit residual risks instead of either ignoring them or keeping every task in emerge"
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to alertmanager, incident, postmortem; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-22. These are adapted production scenarios informed by exact-concept interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Worked numbers are hypothetical unless explicitly measured; runtime and platform assumptions are stated rather than presented as universal settings.",
+  "sourceNoteUrls": [
+    "https://prometheus.io/docs/alerting/latest/alertmanager/",
+    "https://prometheus.io/docs/alerting/latest/configuration/",
+    "https://sre.google/workbook/incident-response/",
+    "https://sre.google/sre-book/postmortem-culture/",
+    "https://prometheus.io/docs/prometheus/latest/querying/functions/",
+    "https://prometheus.io/docs/concepts/metric_types/",
+    "https://sre.google/workbook/implementing-slos/",
+    "https://sre.google/workbook/canarying-releases/",
+    "https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html"
+  ]
+}

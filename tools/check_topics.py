@@ -106,13 +106,13 @@ def atomic_json(path, value):
 def fingerprint(root, item, browser):
     # No global manifest hash: an unrelated new topic does not invalidate this lesson.
     files = runtime_files(root) + ['tools/validate_content.py','tools/check_topics.py',
-        'tests/dashboard/check_dashboard.py','tests/dashboard/requirements.txt',
+        'tests/dashboard/check_dashboard.py','tests/dashboard/requirements.txt','tests/content/publishing.json',
         '.specify/memory/constitution.md']
     config = vc.load_json(root/'tests/content/publishing.json')
     record = config.get('researchRecords',{}).get(item['node']['id'],config['researchDirectory']+'/'+item['node']['id']+'.json')
     files += [item['relative_path']]
     if item['node']['kind']=='topic': files.append(record)
-    return vc.sha256(json.dumps({'contract':config['recallProfile'],'node':signature(item),'browser':browser,
+    return vc.sha256(json.dumps({'contract':config['recallProfile'],'researchPresentation':config['researchPresentation'],'node':signature(item),'browser':browser,
         'files':{p:vc.sha256((root/p).read_bytes()) for p in files}},sort_keys=True).encode())
 
 
@@ -168,7 +168,7 @@ async def render_node(browser, checks, item, bases, inventory):
                     assert not await card.evaluate('(e)=>e.open')
                 if node['kind']=='topic':
                     assert await page.locator('#global-percent').inner_text()=='0%'
-                    await page.get_by_role('button',name='Mark as Mastered',exact=True).click()
+                    await page.locator('#topic-status').select_option('mastered')
                     await page.reload();await checks.ready(page,True)
                     assert await page.locator('#topic-status').input_value()=='mastered'
                     assert await page.locator('#global-percent').inner_text()==str(int(100/inventory['topicCount']+.5))+'%'
@@ -193,11 +193,25 @@ async def render_node(browser, checks, item, bases, inventory):
     return cases
 
 
+async def bounded_checks(items, worker, limit):
+    """Bound page memory; cancel unfinished siblings when one required check fails."""
+    gate=asyncio.Semaphore(limit)
+    async def one(item):
+        async with gate:return await worker(item)
+    tasks=[asyncio.create_task(one(item)) for item in items]
+    try:return await asyncio.gather(*tasks)
+    except BaseException:
+        for task in tasks:task.cancel()
+        await asyncio.gather(*tasks,return_exceptions=True)
+        raise
+
+
 async def browser_run(args, root, selected, report, previous):
     checks=load_browser_checks()
     from playwright.async_api import async_playwright
     version=importlib.metadata.version('playwright')
     report['playwright']=version
+    report['jobs']=args.jobs
     if 'playwright=='+version not in (root/'tests/dashboard/requirements.txt').read_text().splitlines():
         raise vc.ValidationError('Install the pinned Playwright version from tests/dashboard/requirements.txt')
     inventory=checks.current_inventory(root)
@@ -206,10 +220,10 @@ async def browser_run(args, root, selected, report, previous):
             browser=await playwright.chromium.launch(headless=True,args=['--no-sandbox'])
             try:
                 report['browser']=browser.version
-                for item in selected:
+                async def verify_item(item):
                     key=fingerprint(root,item,{'chromium':browser.version,'playwright':version})
                     old=next((r for r in previous.get('nodes',[]) if r.get('nodeId')==item['node']['id']),{})
-                    if not args.no_cache and previous.get('executionStatus')=='complete' and reusable(old,key):
+                    if not args.no_cache and reusable(old,key):
                         row={**old,'reused':True};report['nodes'].append(row)
                         print('Reused:',item['relative_path'],flush=True)
                     else:
@@ -220,13 +234,14 @@ async def browser_run(args, root, selected, report, previous):
                         row['browserCases']=await render_node(browser,checks,item,bases,inventory)
                         row['phase']='print'
                         atomic_json(args.report,report)
-                        pdfs=await checks.print_articles(browser,SimpleNamespace(base_url=bases[0],pdf_dir=args.pdf_dir,node_ids={item['node']['id']}),root)
+                        pdfs=await checks.print_articles(browser,SimpleNamespace(base_url=bases[0],pdf_dir=args.pdf_dir,node_ids={item['node']['id']},inventory=inventory),root)
                         row['outputs']=[{**entry,'sha256':vc.sha256(Path(entry['pdf']).read_bytes())} for entry in pdfs['checks']]
                         row['status']='pass'
                         row['phase']='complete'
                         row['seconds']=round(time.monotonic()-started,2)
                         print('Verified:',item['relative_path'],flush=True)
                     atomic_json(args.report,report)
+                await bounded_checks(selected,verify_item,args.jobs)
             finally:
                 await browser.close()
 
@@ -243,6 +258,7 @@ def main(argv=None):
     parser.add_argument('--pdf-dir',type=Path,default=Path('.cache/topic-checks/pdfs'))
     parser.add_argument('--static-only',action='store_true',help='Intrinsic validation only; never claims browser/print acceptance')
     parser.add_argument('--no-cache',action='store_true')
+    parser.add_argument('--jobs',type=int,choices=[1,2],default=2,help='Bound concurrent page checks (default 2)')
     args=parser.parse_args(argv);root=args.repo_root.resolve()
     args.report=args.report.resolve();args.pdf_dir=str(args.pdf_dir.resolve())
     previous={}

@@ -1,0 +1,368 @@
+{
+  "topicId": "afec6446-5ca6-43e1-8932-ca38c72a4028",
+  "title": "Disaster Recovery & Backup Strategies",
+  "path": "topics/system-design/devops-deployment-observability/incident-response-and-business-continuity/disaster-recovery-and-backup-strategies.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-22",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "Disaster Recovery Backup Strategies production interview RPO RTO restore corruption failback",
+      "date": "2026-11-22",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "dr",
+      "title": "AWS: Disaster recovery strategies",
+      "url": "https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Backup/restore, standby and multi-site recovery trade recovery objectives against cost and complexity."
+    },
+    {
+      "id": "backup",
+      "title": "PostgreSQL 18: Backup and restore",
+      "url": "https://www.postgresql.org/docs/18/backup.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Backup strategies differ in consistency, scope and restore mechanics."
+    },
+    {
+      "id": "pitr",
+      "title": "PostgreSQL 18: Continuous archiving and point-in-time recovery",
+      "url": "https://www.postgresql.org/docs/18/continuous-archiving.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "PostgreSQL base backups and continuous WAL history support a bounded recoverable point."
+    },
+    {
+      "id": "objectlock",
+      "title": "Amazon S3: Object Lock",
+      "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lock.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Versioned object retention/legal hold constrain deletion but do not prove backup integrity or recoverability."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-rpo-gap",
+      "theme": "Failure is at 12:00 but the latest verified recoverable point is 11:42. Does a 15-minute RPO hold?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "dr",
+        "pitr"
+      ],
+      "technicalSources": [
+        "dr",
+        "pitr"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Backups were scheduled every ten minutes, but archiving/validation lagged. What evidence and response fit?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Disaster Recovery & Backup Strategies to rpo gap."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Failure is at 12:00 but the latest verified recoverable point is 11:42. Does a 15-minute RPO hold?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: The actual gap is 18 minutes, exceeding the stated 15-minute objective under these times"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A job start or uploaded file timestamp is not a verified recoverable point"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Reducing the schedule alone may not fix archive gaps, and business loss reconciliation may involve external systems."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to dr, pitr; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-replicated-delete",
+      "theme": "An accidental deletion reaches every replica. What recovery path fits?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "backup",
+        "pitr",
+        "dr"
+      ],
+      "technicalSources": [
+        "backup",
+        "pitr",
+        "dr"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The error is discovered four hours later and the team has fast failover but no recent clean live copy. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Disaster Recovery & Backup Strategies to replicated delete."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An accidental deletion reaches every replica. What recovery path fits?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Contain further damage, select a retained clean historical recovery point and restore in isolation, then verify/reconcile later legitimate work before cont"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Promoting a current replica preserves the deletion"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Returning to an earlier point can lose valid later changes; replay/reconciliation must distinguish bad and legitimate effects rather than blindly restoring"
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to backup, pitr, dr; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-wal-gap",
+      "theme": "A PostgreSQL base backup exists, but one required WAL segment is missing. Can you promise the target timestamp?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "pitr",
+        "backup"
+      ],
+      "technicalSources": [
+        "pitr",
+        "backup"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Recovery requires a continuous archive through the chosen target. One segment in the necessary chain is unavailable. What response fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Disaster Recovery & Backup Strategies to wal gap."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A PostgreSQL base backup exists, but one required WAL segment is missing. Can you promise the target timestamp?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Determine the actual usable recovery boundary and locate a validated alternative backup/history chain if available"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A newer filename elsewhere does not fill a missing chain segment"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Logical dumps and filesystem base backups have different recovery workflows; do not treat arbitrary files as interchangeable PITR inputs."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to pitr, backup; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-key-loss",
+      "theme": "An immutable encrypted backup survives, but its key service account was deleted. What is missing?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "objectlock",
+        "dr"
+      ],
+      "technicalSources": [
+        "objectlock",
+        "dr"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The incident removes production identities and the only known decryption access. What recovery design fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Disaster Recovery & Backup Strategies to key loss."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An immutable encrypted backup survives, but its key service account was deleted. What is missing?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Include supported key recovery/independent recovery identities, configuration and dependency access in the protected recovery set and test them under the p"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Immutability protects selected deletion/overwrite behavior, not decryption ability or application integrity"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Broadly copying secrets everywhere increases compromise risk; independent controlled access needs deliberate design."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to objectlock, dr; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-rto-math",
+      "theme": "Can a 600 GB restore at 100 MB/s meet a one-hour RTO?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "dr",
+        "backup"
+      ],
+      "technicalSources": [
+        "dr",
+        "backup"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Assume decimal units, sustained transfer and serial 10-minute detection, 20-minute provisioning and 15-minute verification/cutover. What conclusion fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Disaster Recovery & Backup Strategies to rto math."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Can a 600 GB restore at 100 MB/s meet a one-hour RTO?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Transfer alone takes 100 minutes; the stated serial path totals 145 minutes"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Parallel stages, compression and faster storage can change timings but must be measured"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A calculated throughput model is not an executed production restore or a guarantee under disaster contention."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to dr, backup; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-failback-split",
+      "theme": "The old region returns after failover. Can both accept writes during failback?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "dr",
+        "pitr"
+      ],
+      "technicalSources": [
+        "dr",
+        "pitr"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The recovery region has accepted new orders while the original region retains an older view. What coordination fits?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Disaster Recovery & Backup Strategies to failback split."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The old region returns after failover. Can both accept writes during failback?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Establish one intended write authority or a deliberately supported multiwriter conflict protocol, synchronize/validate data and plan a bounded cutover with"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Turning on old routing without ownership can produce split-brain and divergent orders"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Active-active is a separate consistency design, not a switch that makes stale databases safe to merge automatically."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to dr, pitr; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-22. These are adapted production scenarios informed by exact-concept interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Worked numbers are hypothetical unless explicitly measured; runtime and platform assumptions are stated rather than presented as universal settings.",
+  "sourceNoteUrls": [
+    "https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html",
+    "https://www.postgresql.org/docs/18/backup.html",
+    "https://www.postgresql.org/docs/18/continuous-archiving.html",
+    "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lock.html"
+  ]
+}

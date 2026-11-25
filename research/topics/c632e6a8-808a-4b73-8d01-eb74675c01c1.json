@@ -1,0 +1,377 @@
+{
+  "topicId": "c632e6a8-808a-4b73-8d01-eb74675c01c1",
+  "title": "Non-Blocking I/O",
+  "path": "topics/system-design/performance-reliability/concurrency-and-runtime-resource-management/non-blocking-io.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-22",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "Non-Blocking I/O production interview slow event loop backpressure Node.js",
+      "date": "2026-11-22",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "event",
+      "title": "Node.js: Do not block the event loop",
+      "url": "https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Scheduling and event-loop/worker-pool blocking distinguish waiting from execution."
+    },
+    {
+      "id": "streams",
+      "title": "Node.js stream API",
+      "url": "https://nodejs.org/api/stream.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Writable backpressure and buffer thresholds require producer cooperation."
+    },
+    {
+      "id": "worker",
+      "title": "Node.js worker_threads API",
+      "url": "https://nodejs.org/api/worker_threads.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "CPU work and shared/transfer ownership have explicit Node worker semantics."
+    },
+    {
+      "id": "http",
+      "title": "Node.js HTTP server API",
+      "url": "https://nodejs.org/api/http.html#serverclosecallback",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Stopping listeners and active-connection handling are version-specific."
+    },
+    {
+      "id": "executor",
+      "title": "Java 21: ThreadPoolExecutor",
+      "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.html",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Worker growth, queue bounds and rejection semantics control overload."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-slow-reader",
+      "theme": "A file endpoint handles many connections but memory rises with slow clients. What do you change?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "streams",
+        "event"
+      ],
+      "technicalSources": [
+        "streams",
+        "event"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The file producer reads at 10 MiB/s per connection while some receivers accept 1 MiB/s. Output buffering grows continuously. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Non-Blocking I/O to slow reader."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A file endpoint handles many connections but memory rises with slow clients. What do you change?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use a backpressure-aware stream path that pauses production when the destination signals saturation"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Prebuffering is simpler for small bounded results but unsafe for unlimited files/clients"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If another transform buffers whole files, fixing only the socket writer will not bound the pipeline."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to streams, event; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-one-large-parse",
+      "theme": "One huge JSON request delays every small request. Is the network blocking?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "event",
+        "worker"
+      ],
+      "technicalSources": [
+        "event",
+        "worker"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The network client is asynchronous, yet event-loop delay spikes while a large response is parsed and transformed. What diagnosis and fix fit?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Non-Blocking I/O to one large parse."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: One huge JSON request delays every small request. Is the network blocking?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Profile the synchronous parse/transform and bound accepted body size"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Moving work to workers cannot create unlimited CPU and may duplicate large buffers"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Switching one HTTP client library will not move synchronous application work off the event loop."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to event, worker; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-split-frame",
+      "theme": "A callback receives half a frame. Should the connection be rejected immediately?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "streams",
+        "http"
+      ],
+      "technicalSources": [
+        "streams",
+        "http"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A valid protocol message can span several network reads; the application expects one callback to contain one message. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Non-Blocking I/O to split frame."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A callback receives half a frame. Should the connection be rejected immediately?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Use the protocol library’s framing state or retain a bounded partial frame until sufficient data arrives, validating lengths and deadlines"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Rejecting every split frame breaks valid clients"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A fixed maximum must fit the documented message contract, and timeout choices must accommodate legitimate slow paths."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to streams, http; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-native-pool",
+      "theme": "DNS/crypto or file operations slow down although JavaScript callbacks are short. Where do you look?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "event",
+        "worker"
+      ],
+      "technicalSources": [
+        "event",
+        "worker"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Several asynchronous native operations share runtime resources and queue while the event loop itself remains responsive. What will you measure before adding JavaScript workers?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Non-Blocking I/O to native pool."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: DNS/crypto or file operations slow down although JavaScript callbacks are short. Where do you look?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Identify each API’s actual runtime/OS execution path and inspect native-worker demand, operation duration and admitted concurrency"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: JavaScript worker threads and the runtime native pool are different resources; adding one is not a guaranteed fix for the other"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Preserve deadline and cancellation ownership across any offload boundary."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to event, worker; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-trickle-input",
+      "theme": "A client sends one byte before every idle timeout and holds resources forever. What limit is missing?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "http",
+        "streams"
+      ],
+      "technicalSources": [
+        "http",
+        "streams"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The service has only an idle socket timeout, and a few trickling clients retain parsing state for minutes. What will you change without breaking legitimate streaming clients?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Non-Blocking I/O to trickle input."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A client sends one byte before every idle timeout and holds resources forever. What limit is missing?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Define total/header/body progress policies and size limits for the actual protocol, with bounded admitted connections and memory"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A short total timeout can break valid uploads or long-lived streams, so one blanket value is not a complete policy"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Admission fairness may also need tenant/client scope rather than raw IP alone."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to http, streams; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-blocking-alternative",
+      "theme": "The service has fifty short concurrent requests. Must it be rewritten as an event loop?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "event",
+        "executor"
+      ],
+      "technicalSources": [
+        "event",
+        "executor"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A bounded blocking-worker implementation meets the latency and resource objectives at its expected scale. A rewrite promises theoretical socket scalability. What will you decide?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies Non-Blocking I/O to blocking alternative."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The service has fifty short concurrent requests. Must it be rewritten as an event loop?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Keep the simpler model unless measurements or planned workload growth identify waiting-resource overhead as a real problem"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: The answer changes for many mostly idle connections or a measured thread-memory ceiling"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Both models still need bounds, deadlines and truthful failure outcomes."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to event, executor; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-22. These are adapted production scenarios informed by exact-concept interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Worked numbers are hypothetical unless explicitly measured; runtime and platform assumptions are stated rather than presented as universal settings.",
+  "sourceNoteUrls": [
+    "https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop",
+    "https://nodejs.org/api/stream.html",
+    "https://nodejs.org/api/worker_threads.html",
+    "https://nodejs.org/api/http.html#serverclosecallback",
+    "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.html"
+  ]
+}

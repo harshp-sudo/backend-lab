@@ -1,0 +1,392 @@
+{
+  "topicId": "f5c730b3-fe65-46d1-b191-cd7192cb61c5",
+  "title": "CI/CD Pipelines",
+  "path": "topics/system-design/devops-deployment-observability/ci-cd-and-release-strategies/ci-cd-pipelines.html",
+  "constitutionVersion": "1.3.0",
+  "researchedOn": "2026-11-22",
+  "state": "reviewed",
+  "searches": [
+    {
+      "query": "CI/CD Pipelines production interview failed release artifact promotion credentials concurrency",
+      "date": "2026-11-22",
+      "result": "success; exact-concept search executed, but independent frequency/rank/company evidence was insufficient; prompts are original production adaptations and technical decisions use checked primary sources"
+    }
+  ],
+  "sources": [
+    {
+      "id": "gha",
+      "title": "GitHub Actions: deployment environments",
+      "url": "https://docs.github.com/en/actions/concepts/workflows-and-actions/deployment-environments",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Environment protection gates and scoped secret access separate artifact preparation from deployment authority."
+    },
+    {
+      "id": "ghasec",
+      "title": "GitHub Actions: security hardening",
+      "url": "https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Untrusted inputs, action provenance and credential scope constrain workflow execution."
+    },
+    {
+      "id": "artifacts",
+      "title": "GitHub Actions: workflow artifacts",
+      "url": "https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Artifacts preserve produced outputs across jobs; caches have a different reproducibility role."
+    },
+    {
+      "id": "build",
+      "title": "Docker: Build best practices",
+      "url": "https://docs.docker.com/build/building/best-practices/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Build context, layers, digest selection and rebuild/patch policy shape reproducible image delivery."
+    },
+    {
+      "id": "deploy",
+      "title": "Kubernetes: Deployments",
+      "url": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Deployment controllers coordinate ReplicaSets, availability/surge budgets and rollout progress."
+    },
+    {
+      "id": "canary",
+      "title": "Google SRE Workbook: Canarying releases",
+      "url": "https://sre.google/workbook/canarying-releases/",
+      "roles": [
+        "technical-primary"
+      ],
+      "checkedOn": "2026-11-22",
+      "supportRationale": "Cohort-specific analysis, representative signals and observation windows bound release exposure decisions."
+    }
+  ],
+  "scenarios": [
+    {
+      "key": "interview-artifact-mismatch",
+      "theme": "Staging passes, but production rebuilt a dependency differently. What will you change?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "artifacts",
+        "build"
+      ],
+      "technicalSources": [
+        "artifacts",
+        "build"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Two stages rebuild the same source commit using movable dependencies. The resulting images differ and production fails. What will you do and why?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies CI/CD Pipelines to artifact mismatch."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: Staging passes, but production rebuilt a dependency differently. What will you change?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Build and identify the release artifact once, test that object and promote it through environments with separately versioned validated configuration"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A genuine environment-specific build needs its own identity and checks"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A commit SHA alone does not identify all build inputs, and a cache hit is not proof that output is the tested release."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to artifacts, build; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-untrusted-pr",
+      "theme": "A contribution workflow needs tests, but the proposed job exposes deployment secrets. What boundary fits?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "ghasec",
+        "gha"
+      ],
+      "technicalSources": [
+        "ghasec",
+        "gha"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "An external change can edit build/test code. A reusable workflow currently runs it with production credentials. What will you do?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies CI/CD Pipelines to untrusted pr."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A contribution workflow needs tests, but the proposed job exposes deployment secrets. What boundary fits?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Run untrusted preparation with minimal permissions and isolate deployment authority behind validated trusted inputs and environment policy"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: A manual approval does not sanitize malicious code a privileged job later executes"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Keep provider-specific trigger and policy behavior explicit rather than assuming all pull-request events have the same trust model."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to ghasec, gha; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-concurrent-promotions",
+      "theme": "A slow older release overwrites a newer one. Which state should own promotion?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "gha",
+        "artifacts",
+        "deploy"
+      ],
+      "technicalSources": [
+        "gha",
+        "artifacts",
+        "deploy"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Release B becomes healthy before release A finishes. A later switches the same environment back to its older version. What will you coordinate?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies CI/CD Pipelines to concurrent promotions."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A slow older release overwrites a newer one. Which state should own promotion?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Serialize or supersede promotions for the target environment using release/artifact identity and recorded current state"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Global serialization can unnecessarily block independent environments"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: If concurrent schema changes share a database, application-job isolation alone does not remove that common state dependency."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to gha, artifacts, deploy; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-flaky-gate",
+      "theme": "An integration test passes after the fifth retry. Should promotion proceed automatically?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "canary",
+        "artifacts"
+      ],
+      "technicalSources": [
+        "canary",
+        "artifacts"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "The test intermittently detects incorrect order totals. Retrying until green masks its failure rate. What policy and investigation will you use?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies CI/CD Pipelines to flaky gate."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: An integration test passes after the fifth retry. Should promotion proceed automatically?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Treat the failure as evidence: preserve inputs/artifact/logs, distinguish test-environment instability from a real race, and block or use an explicitly jus"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Quarantining a known flaky test can unblock work only with visibility and replacement coverage for its risk"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: A green pipeline does not compensate for unresolved evidence of an actual business invariant defect."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to canary, artifacts; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-cache-poison",
+      "theme": "A fast cached build contains unexpected executable output. What do you trust?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "ghasec",
+        "artifacts",
+        "build"
+      ],
+      "technicalSources": [
+        "ghasec",
+        "artifacts",
+        "build"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "Less-trusted workflows can populate cache keys consumed by a release build. Tests examine one subset while the later privileged stage executes cached content. What changes?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies CI/CD Pipelines to cache poison."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: A fast cached build contains unexpected executable output. What do you trust?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Audit the trust and identity of cache inputs, make a correct clean rebuild possible and verify the actual release artifact"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: Disabling caches can raise cost but is preferable to a hidden authority bridge"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: Dependency/action verification and artifact checks serve different parts of the chain."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to ghasec, artifacts, build; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    },
+    {
+      "key": "interview-partial-migration",
+      "theme": "The schema step succeeds and application deployment fails. Is rerunning the old image enough?",
+      "basis": "adapted-production",
+      "selectionSources": [
+        "deploy",
+        "canary"
+      ],
+      "technicalSources": [
+        "deploy",
+        "canary"
+      ],
+      "supportedInterviewClaim": "none",
+      "assumptions": "A pipeline removes a column before all serving versions stop reading it. Application rollout then fails halfway. What recovery and future change will you choose?",
+      "limitations": "Constructed production interview prompt; exact frequency, ranking and company attribution are unverified.",
+      "editorial": {
+        "concept-specificity": {
+          "status": "pass",
+          "rationale": "Applies CI/CD Pipelines to partial migration."
+        },
+        "distinctness": {
+          "status": "pass",
+          "rationale": "Separate constraint/decision: The schema step succeeds and application deployment fails. Is rerunning the old image enough?"
+        },
+        "production-prompt": {
+          "status": "pass",
+          "rationale": "Prompt states a production failure or workload bound and asks for a justified response."
+        },
+        "direct-answer": {
+          "status": "pass",
+          "rationale": "Reviewed action: Determine current schema and serving versions, restore a compatible application/data path and reconcile any persistent effects"
+        },
+        "decision-costs": {
+          "status": "pass",
+          "rationale": "Reviewed cost/alternative: The old image may be incompatible with the new schema"
+        },
+        "follow-up": {
+          "status": "pass",
+          "rationale": "Reviewed trap: One pipeline does not make multiple application/database actions atomic or universally reversible."
+        },
+        "evidence": {
+          "status": "pass",
+          "rationale": "Primary support mapped to deploy, canary; interview frequency is not claimed."
+        },
+        "full-delivery": {
+          "status": "pass",
+          "rationale": "Three labeled parts are self-contained; native disclosure and host confidence integration use stable keys."
+        }
+      }
+    }
+  ],
+  "publicDisclosure": "Researched 2026-11-22. These are adapted production scenarios informed by exact-concept interview searches and the primary references below. Exact interview frequency, rankings and company attribution were not independently verified. Worked numbers are hypothetical unless explicitly measured; runtime and platform assumptions are stated rather than presented as universal settings.",
+  "sourceNoteUrls": [
+    "https://docs.github.com/en/actions/concepts/workflows-and-actions/deployment-environments",
+    "https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions",
+    "https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts",
+    "https://docs.docker.com/build/building/best-practices/",
+    "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
+    "https://sre.google/workbook/canarying-releases/"
+  ]
+}
