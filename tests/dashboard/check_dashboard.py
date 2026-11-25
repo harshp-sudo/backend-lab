@@ -184,7 +184,7 @@ async def lessons(browser,args,root):
                 await q.get_by_role('button',name='Good',exact=True).click();assert await q.evaluate('(e)=>e.open')
                 await summary.focus();await page.keyboard.press('Space');assert not await q.evaluate('(e)=>e.open');questions+=1
             if node['kind']=='topic':
-                await page.get_by_role('button',name='Mark as Mastered',exact=True).click()
+                await page.locator('#topic-status').select_option('mastered')
                 assert await page.locator('#topic-status').input_value()=='mastered'
                 await page.reload();await ready(page,True)
                 assert await page.locator('#topic-status').input_value()=='mastered'
@@ -300,7 +300,7 @@ async def persistence_failures(browser,args,root):
         context=await browser.new_context()
         script='if(!localStorage.getItem("backend-lab.learning.v1"))localStorage.setItem("backend-lab.learning.v1","{broken");' if mode=='corrupt' else 'Storage.prototype.setItem=function(){throw new DOMException("Quota exceeded","QuotaExceededError")};'
         await context.add_init_script(script);page=await context.new_page();await page.goto(args.base_url+'#'+node['route']);await ready(page,True)
-        await page.get_by_role('button',name='Mark as Mastered',exact=True).click();assert 'not saved' in (await page.locator('#persistence-notice').inner_text()).lower()
+        await page.locator('#topic-status').select_option('mastered');assert 'not saved' in (await page.locator('#persistence-notice').inner_text()).lower()
         raw=await page.evaluate('localStorage.getItem("backend-lab.learning.v1")');assert raw==('{broken' if mode=='corrupt' else None)
         async with page.expect_download() as dl:await page.locator('#export-progress').click()
         backup=json.loads(Path(await (await dl.value).path()).read_text());assert backup['state']['topics'][node['id']]['status']=='mastered'
@@ -333,9 +333,9 @@ def source_print_texts(source):
     sys.path.insert(0,str(Path(__file__).resolve().parents[2]))
     from tools import validate_content as vc
     parser=vc.parsed_article(source)
-    tags={'p','summary','h1','h2','h3','th','td','figcaption','li','code'}
+    tags={'p','summary','h1','h2','h3','h4','th','td','figcaption','li','code'}
     # Decorative leading heading emoji are not reliably encoded by PDF fonts.
-    return [re.sub(r'^[^\w]+','',e.text()) if e.tag in {'h1','h2','h3'} else e.text()
+    return [re.sub(r'^[^\w]+','',e.text()) if e.tag in {'h1','h2','h3','h4'} else e.text()
             for e in parser.root.all() if e.tag in tags and e.text()]
 
 
@@ -466,6 +466,8 @@ async def check_expanded_host(browser,args,root):
                 assert await page.locator('html').get_attribute('data-theme')==theme
                 assert await page.locator('[data-interview-scenarios] > h3').inner_text()=='Tricky & Most-Asked Interview Scenarios'
                 assert await page.locator('[data-interview-research]').is_visible()
+                assert await page.locator('[data-interview-research] > h4').inner_text()=='Sources'
+                assert await page.locator('[data-interview-research] p').count()==0
                 assert await page.locator('pre.mermaid svg').count()==own['diagrams']
                 assert await page.locator('[data-host-confidence]').count()==len(own['foundationalKeys'])+len(own['interviewKeys'])
                 for key in own['interviewKeys']:
@@ -519,7 +521,7 @@ async def print_articles(browser,args,root):
     out=Path(args.pdf_dir);out.mkdir(parents=True,exist_ok=True);nodes=catalog(root);checks=[]
     if getattr(args,'node_ids',None) is not None:
         nodes=[n for n in nodes if n['id'] in args.node_ids]
-    inventory=current_inventory(root)
+    inventory=getattr(args,'inventory',None) or current_inventory(root)
     context=await browser.new_context(viewport={'width':1440,'height':1100});page=await context.new_page();await page.goto(args.base_url);await ready(page)
     for theme in ['light','dark']:
         if await page.locator('html').get_attribute('data-theme')!=theme:await page.locator('#theme-toggle').click()
@@ -551,8 +553,10 @@ async def print_articles(browser,args,root):
                 from tools import validate_content as vc
                 for label in vc.ANSWER_PARTS.values():
                     assert max(full.count(normalized(label)) for full in streams)>=len(inventory['nodes'][node['id']]['interviewKeys'])
+            assert not re.search(r'Researched\s+\d{4}-\d{2}-\d{2}',text)
             assert 'How did that feel?' not in text
             assert 'Mark as Mastered' not in text
+            assert not any(label in text for label in ['MAKE IT YOURS','Can you explain it in your own words?','A concept you can carry with you.','Start another review','Complete review'])
             checks.append({'nodeId':node['id'],'topicId':node['id'],'sourceSha256':inventory['nodes'][node['id']]['sourceSha256'],'kind':node['kind'],'theme':theme,'pdf':str(filename),'completeTextBlocks':len(expected),'diagramLabels':len(diagram_text),'diagrams':inventory['nodes'][node['id']]['diagrams'],'disclosuresRestored':True,'mixedDisclosureStates':True,'controlsHidden':True,'status':'pass'})
             print('PDF complete:',theme,node['slug'],flush=True)
         print('PDF theme complete:',theme,flush=True)

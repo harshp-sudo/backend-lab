@@ -151,31 +151,34 @@ function updateProgress(){
 }
 function learningControls(article,entry){
   if(entry.kind!=='topic')return;
-  const select=h('select',{id:'topic-status','aria-label':'Topic learning status'});
+  const select=h('select',{id:'topic-status','aria-label':'Progress'});
   for(const [value,label] of Object.entries(labelStatus))select.append(h('option',{value},label));
-  const toolbar=h('div',{class:'lesson-toolbar','data-host-controls':''},h('label',{for:'topic-status'},'Your understanding'),select,h('span',{class:'muted'},'Progress is yours to decide.'));
+  const toolbar=h('div',{class:'lesson-toolbar','data-host-controls':''},h('div',{class:'progress-status'},h('label',{for:'topic-status'},'Progress'),select),h('div',{class:'review-controls',hidden:true}));
   article.querySelector('h1').after(toolbar);
   for(const question of article.querySelectorAll('details.kb-question')){
     const group=h('div',{class:'confidence-controls',role:'group','aria-label':'How confidently could you answer?','data-host-confidence':''},h('span',{},'How did that feel?'));
     for(const value of ['hard','good','easy'])group.append(action(value[0].toUpperCase()+value.slice(1),'confidence',{'data-key':question.dataset.recallId,'data-confidence':value,'aria-pressed':'false'}));
     question.append(group);
   }
-  const footer=h('div',{class:'mastery-footer','data-host-controls':'',id:'mastery-actions'});article.append(footer);refreshLearningControls();
+  refreshLearningControls();
 }
 function refreshLearningControls(){
-  if(current?.entry.kind!=='topic')return;const record=topicRecord(store.state,current.entry.id),select=$('#topic-status');if(!select)return;select.value=record.status;
+  if(current?.entry.kind!=='topic')return;
+  const record=topicRecord(store.state,current.entry.id),select=$('#topic-status');if(!select)return;
+  if(select.value!==record.status)select.value=record.status;
   for(const button of main.querySelectorAll('[data-confidence]'))button.setAttribute('aria-pressed',String(record.confidence[button.dataset.key]?.rating===button.dataset.confidence));
-  const footer=$('#mastery-actions');if(!footer)return;const hadFocus=footer.contains(document.activeElement);
-  footer.replaceChildren(h('div',{},h('p',{class:'eyebrow'},'MAKE IT YOURS'),h('h2',{},record.status==='mastered'?'A concept you can carry with you.':'Can you explain it in your own words?'),h('p',{class:'muted'},record.status==='mastered'?'You marked this concept as mastered. Revisit it to keep the connections strong.':'When the mental model clicks, mark your understanding. You can always come back.')));
+  const controls=main.querySelector('.review-controls');if(!controls)return;
+  const review=record.review,signature=JSON.stringify([record.status,review?.lastReviewed,review?.intervalIndex,review?.session]);
+  if(controls.dataset.signature===signature)return;
+  const ownedFocus=controls.contains(document.activeElement);controls.dataset.signature=signature;controls.replaceChildren();controls.hidden=record.status!=='mastered';
   if(record.status==='mastered'){
-    footer.append(h('span',{class:'mastered-label'},'✓ Mastered'));
-    const session=record.review.session;
-    if(session?.completedAt===null)footer.append(action('Complete review','complete-review',{class:'primary-button','data-session':session.id}));
-    else footer.append(action(session?.completedAt?'Start another review':'Start review','start-review',{class:'primary-button'}));
-    footer.append(h('p',{class:'muted'},`Next review: ${dateLabel(Date.parse(record.review.lastReviewed)+[3,7,14,30][record.review.intervalIndex]*86400000)}.`));
+    const session=review.session,due=Date.parse(review.lastReviewed)+[3,7,14,30][review.intervalIndex]*86400000;
+    const shortDate=new Intl.DateTimeFormat(undefined,{month:'short',day:'numeric'}).format(new Date(due));
+    controls.append(h('time',{datetime:new Date(due).toISOString(),'aria-label':'Next review: '+dateLabel(due),class:'review-date'},'Next '+shortDate));
+    if(session?.completedAt===null)controls.append(action('Complete review','complete-review',{'data-session':session.id}));
+    else controls.append(action(session?.completedAt?'Start another review':'Start review','start-review'));
   }
-  else footer.append(action('Mark as Mastered','master-topic',{class:'primary-button'}));
-  if(hadFocus)focusHeading(footer.querySelector('h2'));
+  if(ownedFocus)(controls.querySelector('button')||select).focus({preventScroll:true});
 }
 async function enhanceCurrent(article,entry,serial=routeSerial){
   const generation=++themeSerial;
@@ -226,7 +229,6 @@ document.addEventListener('click',event=>{
     const name=button.dataset.action;
     if(name==='retry-catalog')boot();if(name==='retry-route')navigate();
     if(name==='retry-enhancements'&&current)void enhanceCurrent(main.querySelector('article'),current.entry);
-    if(name==='master-topic'&&current)store.update(s=>markStatus(s,current.entry.id,'mastered',new Date().toISOString()));
     if(name==='confidence'&&current)store.update(s=>rateQuestion(s,current.entry.id,button.dataset.key,button.dataset.confidence,new Date().toISOString()));
     if(name==='start-review'&&current)store.update(s=>startReview(s,current.entry.id,new Date().toISOString()));
     if(name==='complete-review'&&current)store.update(s=>completeReview(s,current.entry.id,button.dataset.session,new Date().toISOString()));

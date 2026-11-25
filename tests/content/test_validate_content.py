@@ -154,7 +154,7 @@ class ArticleTests(FixtureBase):
         self.item = self.index['/domain/example']
         self.html = article(self.item)
 
-    def errors(self, html): return vc.check_article(self.item, html, self.index)
+    def errors(self, html): return vc.check_article(self.item, html, self.index,research_presentation='disclosure-v1')
 
     def test_valid_topic_article(self): self.assertEqual(self.errors(self.html), [])
 
@@ -200,7 +200,7 @@ class HubTests(FixtureBase):
         super().setUp();self.index=vc.index_manifest(self.data,self.root)
         self.item=self.index['/domain'];self.html=hub_article(self.item)
 
-    def errors(self,html):return vc.check_article(self.item,html,self.index)
+    def errors(self,html):return vc.check_article(self.item,html,self.index,research_presentation='disclosure-v1')
 
     def test_valid_hub(self):self.assertEqual(self.errors(self.html),[])
 
@@ -218,7 +218,7 @@ class HubTests(FixtureBase):
         data=catalog(hub([topic('first'),topic('second')]))
         index=vc.index_manifest(data,self.root);item=index['/domain'];source=hub_article(item)
         bad=source.replace('#/domain/first','#/domain/TEMP').replace('#/domain/second','#/domain/first').replace('#/domain/TEMP','#/domain/second')
-        self.assertTrue(vc.check_article(item,bad,index))
+        self.assertTrue(vc.check_article(item,bad,index,research_presentation='disclosure-v1'))
         self.assertTrue(self.errors(self.html.replace('#/domain/example','#/unknown')))
 
     def test_section_link_grammar(self):

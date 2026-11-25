@@ -1,6 +1,7 @@
 """Publishing grows beyond a frozen batch without weakening current lesson contracts."""
 import copy
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -18,6 +19,8 @@ def write_catalog(root, data):
         item['path'].parent.mkdir(parents=True,exist_ok=True)
         source=(article(item).replace(vc.INTERVIEW_START,'').replace(vc.INTERVIEW_END,'')
                 if item['node']['kind']=='topic' else hub_article(item))
+        if item['node']['kind']=='topic':
+            source=re.sub(r'(<aside\b[^>]*data-interview-research[^>]*>)\s*<p>(.*?)</p>',lambda m:m[1]+'<h4>Sources</h4><ul>'+''.join('<li>'+a+'</li>' for a in re.findall(r'<a\b.*?</a>',m[2],re.S))+'</ul>',source,flags=re.S)
         item['path'].write_text(source)
     return index
 
@@ -30,13 +33,13 @@ def research(item):
         searches=[dict(query='Fixture exact-concept question research',date='2026-11-17',result='success; frequency unverified')],
         sources=[dict(id='S1',title='Fixture primary source',url='https://example.com/source',roles=['technical-primary'],checkedOn='2026-11-17',supportRationale='Fixture source mapping')],
         scenarios=[dict(key=key,theme='Constraint '+key,basis='adapted-production',selectionSources=['S1'],technicalSources=['S1'],supportedInterviewClaim='none',assumptions='Fixture bounded assumptions',limitations='Frequency unverified',editorial={criterion:dict(status='pass',rationale='Fixture review finding') for criterion in vc.EDITORIAL_CRITERIA}) for key in vc.article_inventory(source)['interviewKeys']],
-        publicDisclosure=note.all('p')[0].text(),sourceNoteUrls=['https://example.com/source'])
+        publicDisclosure=note.all('p')[0].text() if note.all('p') else 'Archived original evidence: adaptation frequency not independently verified.',sourceNoteUrls=['https://example.com/source'])
 
 
 class PublishingTests(FixtureBase):
     def setUp(self):
         super().setUp()
-        self.expected=dict(profile='topic-publishing',recallProfile=vc.CURRENT_PROFILE,researchDirectory='research/topics')
+        self.expected=dict(profile='topic-publishing',recallProfile=vc.CURRENT_PROFILE,researchPresentation='sources-only-v1',researchDirectory='research/topics')
         self.index=write_catalog(self.root,self.data)
         self.records()
 
@@ -46,6 +49,25 @@ class PublishingTests(FixtureBase):
                 path=self.root/'research/topics'/ (item['node']['id']+'.json')
                 path.parent.mkdir(parents=True,exist_ok=True)
                 path.write_text(json.dumps(research(item)))
+
+    def test_current_requires_explicit_presentation(self):
+        for value in [None,'unknown','disclosure-v1']:
+            expected=copy.deepcopy(self.expected)
+            if value is None:expected.pop('researchPresentation')
+            else:expected['researchPresentation']=value
+            self.assertEqual(vc.validate(self.root,expected)['result'],'fail')
+
+    def test_future_record_needs_sources_and_evidence_without_public_paragraph(self):
+        item=self.index['/domain/example'];record=research(item);record.pop('publicDisclosure',None);record['constitutionVersion']='2.0.0'
+        path=self.root/'research/topics'/(item['node']['id']+'.json');path.write_text(json.dumps(record))
+        self.assertEqual(vc.validate(self.root,self.expected)['result'],'pass')
+        source=item['path'].read_text();item['path'].write_text(source.replace('<h4>Sources</h4>','<h4>Sources</h4><p>Adapted research process commentary.</p>'))
+        self.assertEqual(vc.validate(self.root,self.expected)['result'],'fail')
+
+    def test_future_publishing_rejects_related_filler(self):
+        item=self.index['/domain/example'];source=item['path'].read_text()
+        item['path'].write_text(source.replace('</article>','<footer><p>Continue by comparing the related decisions:</p><a href="#/domain/example">Next</a></footer></article>'))
+        self.assertEqual(vc.validate(self.root,self.expected)['result'],'fail')
 
     def test_new_topic_and_new_discipline_need_no_migration_files(self):
         before=copy.deepcopy(self.data)

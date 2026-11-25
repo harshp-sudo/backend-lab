@@ -13,6 +13,7 @@ SLUG = re.compile(r'[a-z0-9]+(?:-[a-z0-9]+)*')
 SECTIONS = ('hook-eli5', 'big-picture', 'mechanics', 'trade-offs', 'pitfalls', 'mastery')
 CHECKERS = {}
 CURRENT_PROFILE = 'constitution-1.2'
+PRESENTATIONS = ('disclosure-v1', 'sources-only-v1')
 INTERVIEW_TITLE = 'Tricky & Most-Asked Interview Scenarios'
 INTERVIEW_START = '<!-- kb-interview-scenarios:start -->'
 INTERVIEW_END = '<!-- kb-interview-scenarios:end -->'
@@ -233,7 +234,7 @@ def article_inventory(source):
     }
 
 
-def check_interviews(article, mastery, source, topic_id):
+def check_interviews(article, mastery, source, topic_id, *, research_presentation='disclosure-v1'):
     errors = []
     # Preservation markers belong to the backfill migration, not to new lessons.
     marked = INTERVIEW_START in source or INTERVIEW_END in source
@@ -299,16 +300,33 @@ def check_interviews(article, mastery, source, topic_id):
         errors.append('Research note must remain visible')
     elif any(any(e is notes[0] for e in c.all()) for c in group_cards):
         errors.append('Research note must be visible outside closed question cards')
+    if research_presentation == 'sources-only-v1' and len(notes) == 1:
+        note = notes[0]
+        children = [e for e in note.children if isinstance(e, Element)]
+        if (note.tag != 'aside' or not children or children[0].tag != 'h4' or children[0].text() != 'Sources'
+                or len(note.all('h4')) != 1 or note.all('p')
+                or any(e.tag not in ('ul','ol') for e in children[1:])
+                or any(isinstance(e,str) and e.strip() for e in note.children)):
+            errors.append('Current source group needs Sources heading and references without intro prose')
+        for parent in [article] + article.all():
+            if any(e is note for e in parent.all()) and (parent.tag == 'details' or 'hidden' in parent.attrs or parent.attrs.get('aria-hidden') == 'true'):
+                errors.append('Sources cannot be inside hidden or collapsible content')
+    elif research_presentation == 'disclosure-v1' and len(notes) == 1:
+        if not notes[0].all('p'): errors.append('Historical research disclosure paragraph is required')
+    elif research_presentation not in PRESENTATIONS:
+        errors.append('Unknown research presentation')
     return errors
 
 
-def check_article(item, source, index, *, recall_profile=CURRENT_PROFILE):
+def check_article(item, source, index, *, recall_profile=CURRENT_PROFILE, research_presentation='disclosure-v1'):
     parser = ArticleParser(); parser.feed(source); parser.finish()
     errors = list(parser.errors)
     top = [c for c in parser.root.children if isinstance(c, Element)]
     if len(top) != 1 or top[0].tag != 'article': return errors + ['Exactly one root article is required']
     if any(isinstance(c,str) and c.strip() for c in parser.root.children): errors.append('Text outside root article')
     article = top[0]; node = item['node']; kind = node['kind']
+    if research_presentation == 'sources-only-v1' and 'Continue by comparing the related decisions:' in article.text():
+        errors.append('Related-topic filler preamble is forbidden')
     if article.attrs.get('data-node-id') != node['id']: errors.append('Article identity does not match manifest')
     if not article.has_class('kb-topic' if kind == 'topic' else 'kb-hub'): errors.append('Wrong article role class')
     headings = article.all('h1')
@@ -350,7 +368,7 @@ def check_article(item, source, index, *, recall_profile=CURRENT_PROFILE):
         if 'Summarize this in your own words' not in mastery.text(): errors.append('Missing Feynman prompt')
         questions = [el for el in mastery.all('details') if el.has_class('kb-question')]
         if recall_profile == CURRENT_PROFILE:
-            errors.extend(check_interviews(article, mastery, source, node['id']))
+            errors.extend(check_interviews(article, mastery, source, node['id'], research_presentation=research_presentation))
         elif recall_profile == 'legacy-1.1':
             if not 3 <= len(questions) <= 5: errors.append('Expected three to five recall items')
         else: errors.append('Unknown recall profile')
@@ -435,9 +453,10 @@ def https_url(value):
     except ValueError: return False
 
 
-def check_research(record, source, item, *, constitution_versions=('1.2.0',)):
+def check_research(record, source, item, *, constitution_versions=('1.2.0',), research_presentation='disclosure-v1'):
     """Check evidence shape and claim/basis consistency, not source credibility or prose quality."""
     errors=[]
+    if research_presentation not in PRESENTATIONS: errors.append('Unknown research presentation')
     if record.get('state') not in ('draft','reviewed'): errors.append('Research state must be draft or reviewed')
     if record.get('constitutionVersion') not in constitution_versions: errors.append('Research constitution version mismatch')
     if record.get('title')!=item['node']['title']: errors.append('Research exact concept title mismatch')
@@ -505,13 +524,13 @@ def check_research(record, source, item, *, constitution_versions=('1.2.0',)):
     notes=[e for e in parser.root.all() if 'data-interview-research' in e.attrs]
     if len(notes)==1:
         ps=notes[0].all('p');public=ps[0].text() if ps else ''
-        if record.get('publicDisclosure')!=public: errors.append('Exact public disclosure differs from research record')
+        if research_presentation == 'disclosure-v1' and record.get('publicDisclosure')!=public: errors.append('Exact public disclosure differs from research record')
         urls=[a.attrs.get('href') for a in notes[0].all('a')]
         if record.get('sourceNoteUrls')!=urls or set(urls)!={s.get('url') for s in sources}:
             errors.append('Public source links do not match final source record')
-        if any(r.get('basis')=='adapted-production' for r in rows) and not ('adapt' in public.lower() and 'not independently verified' in public.lower()):
+        if research_presentation == 'disclosure-v1' and any(r.get('basis')=='adapted-production' for r in rows) and not ('adapt' in public.lower() and 'not independently verified' in public.lower()):
             errors.append('Adapted scenarios require visible frequency limitation')
-        if 'search was unavailable' in public.lower() and any('success' in s.get('result','').lower() for s in searches):
+        if research_presentation == 'disclosure-v1' and 'search was unavailable' in public.lower() and any('success' in s.get('result','').lower() for s in searches):
             errors.append('Public unavailable-search claim contradicts successful research')
     return errors
 
@@ -653,7 +672,11 @@ def validate(root, expected, baseline=None, *, lesson=None):
     if lesson: report['selectedLesson']=lesson
     def check(name, status, artifact, message):
         report['checks'].append(dict(name=name, status=status, artifact=str(artifact), message=message))
+    presentation = expected.get('researchPresentation', 'disclosure-v1')
+    report['researchPresentation'] = presentation
     try:
+        if presentation not in PRESENTATIONS or (expected.get('profile') == 'topic-publishing' and expected.get('researchPresentation') != 'sources-only-v1'):
+            raise ValidationError('Current publishing requires explicit sources-only-v1 research presentation')
         if expected.get('recallProfile',CURRENT_PROFILE) != CURRENT_PROFILE:
             raise ValidationError('Production validation cannot waive the current recall profile')
         manifest = load_json(root / 'manifest.json')
@@ -694,7 +717,7 @@ def validate(root, expected, baseline=None, *, lesson=None):
             source = item['path'].read_bytes().decode('utf-8')
         except (OSError, UnicodeError) as exc:
             check('content', 'fail', relative, f'Unreadable partial: {exc}'); continue
-        errors = checker(item, source, index)
+        errors = checker(item, source, index, research_presentation=presentation)
         if item['node']['kind']=='topic':
             inventory=article_inventory(source)
             inventory.update(topicId=item['node']['id'],path=relative,sourceSha256=sha256(source.encode('utf-8')))
@@ -713,7 +736,7 @@ def validate(root, expected, baseline=None, *, lesson=None):
                     if record.get('topicId') != item['node']['id'] or record.get('path') != relative:
                         errors.append('Research identity/path differs from manifest')
                     if record.get('state') != 'reviewed': errors.append('Publishing requires reviewed research')
-                    errors.extend(check_research(record,source,item,constitution_versions=('1.2.0','1.3.0')))
+                    errors.extend(check_research(record,source,item,constitution_versions=('1.2.0','1.3.0','2.0.0'),research_presentation=presentation))
                 except (OSError,ValidationError,TypeError,AttributeError) as exc:
                     errors.append(f'Invalid/missing research record {relative_record}: {exc}')
         report['counts'].setdefault('diagrams',0)

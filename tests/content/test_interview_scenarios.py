@@ -20,7 +20,7 @@ class ScenarioStructureTests(FixtureBase):
         self.html = article(self.item)
 
     def errors(self, html, **kwargs):
-        return vc.check_article(self.item, html, self.index, **kwargs)
+        return vc.check_article(self.item, html, self.index, research_presentation='disclosure-v1', **kwargs)
 
     def test_current_positive_and_bounds(self):
         for count in [5, 7]:
@@ -152,7 +152,7 @@ class ResearchEvidenceTests(FixtureBase):
         self.record['constitutionVersion']='1.2.0'
 
     def test_valid_authored_mapping(self):
-        self.assertEqual(vc.check_research(self.record,self.source,self.item),[])
+        self.assertEqual(vc.check_research(self.record,self.source,self.item,research_presentation='disclosure-v1'),[])
 
     def test_invalid_research_fields_and_claims(self):
         mutations=[lambda r:r.update(state='approved'),
@@ -170,17 +170,17 @@ class ResearchEvidenceTests(FixtureBase):
         for mutate in mutations:
             record=copy.deepcopy(self.record);mutate(record)
             with self.subTest(record=record.get('state')):
-                self.assertTrue(vc.check_research(record,self.source,self.item))
+                self.assertTrue(vc.check_research(record,self.source,self.item,research_presentation='disclosure-v1'))
 
     def test_reviewed_requires_every_editorial_disposition(self):
         record=copy.deepcopy(self.record);record['state']='reviewed'
         record['scenarios'][0]['editorial']['decision-costs']['status']='fail'
-        self.assertTrue(vc.check_research(record,self.source,self.item))
+        self.assertTrue(vc.check_research(record,self.source,self.item,research_presentation='disclosure-v1'))
 
     def test_malformed_evidence_rows_return_failures_not_tracebacks(self):
         for field,value in [('scenarios',['bad']*5),('sources',['bad']),('searches',['bad'])]:
             record=copy.deepcopy(self.record);record[field]=value
-            with self.subTest(field=field):self.assertTrue(vc.check_research(record,self.source,self.item))
+            with self.subTest(field=field):self.assertTrue(vc.check_research(record,self.source,self.item,research_presentation='disclosure-v1'))
 
 
 if __name__ == '__main__': unittest.main()
